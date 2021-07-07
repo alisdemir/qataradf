@@ -23,9 +23,9 @@
 							"itemname": "toString('CRFR_20210321.csv')"
 						}
 					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
+					"integrationRuntime": {
+						"referenceName": "integrationRuntime10min",
+						"type": "IntegrationRuntimeReference"
 					},
 					"traceLevel": "None",
 					"cacheSinks": {
