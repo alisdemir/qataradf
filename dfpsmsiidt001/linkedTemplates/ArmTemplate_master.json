@@ -1,0 +1,197 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfpsmsiidt001"
+		},
+		"ls_dsqlpqtr_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_dsqlpqtr'"
+		},
+		"ls_psmsii_syntodls_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_psmsii_syntodls'"
+		},
+		"ls_psmsii_syntodsqlp_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_psmsii_syntodsqlp'"
+		},
+		"ls_psmsii_syntoobasesql_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_psmsii_syntoobasesql'"
+		},
+		"ls_psmsii_syntosql_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_psmsii_syntosql'"
+		},
+		"ls_qtrsqldb_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_qtrsqldb'"
+		},
+		"ls_psmsii_syntodls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dlsapsmsiidt001.dfs.core.windows.net"
+		},
+		"pendp_psmsii_adftodls_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/047cf264-f2a3-43e7-b2e5-1ab1fc225ba1/resourceGroups/rg-psmsii-dt-001/providers/Microsoft.Storage/storageAccounts/dlsapsmsiidt001"
+		},
+		"pendp_psmsii_adftodls_properties_groupId": {
+			"type": "string",
+			"defaultValue": "dfs"
+		},
+		"pendp_psmsii_adftodls_properties_fqdns": {
+			"type": "array",
+			"defaultValue": [
+				"dlsapsmsiidt001.dfs.core.windows.net"
+			]
+		},
+		"pendp_psmsii_adftodsqlp_properties_privateLinkResourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/047cf264-f2a3-43e7-b2e5-1ab1fc225ba1/resourceGroups/rg-psmsii-dt-001/providers/Microsoft.Synapse/workspaces/synpsmsiidt001ws1"
+		},
+		"pendp_psmsii_adftodsqlp_properties_groupId": {
+			"type": "string",
+			"defaultValue": "sql"
+		},
+		"pendp_psmsii_adftodsqlp_properties_fqdns": {
+			"type": "array",
+			"defaultValue": [
+				"synpsmsiidt001ws1.sql.azuresynapse.net"
+			]
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "dfpsmsiidt001_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"ls_dsqlpqtr_connectionString": {
+						"value": "[parameters('ls_dsqlpqtr_connectionString')]"
+					},
+					"ls_qtrsqldb_connectionString": {
+						"value": "[parameters('ls_qtrsqldb_connectionString')]"
+					},
+					"ls_psmsii_syntodls_accountKey": {
+						"value": "[parameters('ls_psmsii_syntodls_accountKey')]"
+					},
+					"ls_psmsii_syntodsqlp_connectionString": {
+						"value": "[parameters('ls_psmsii_syntodsqlp_connectionString')]"
+					},
+					"ls_psmsii_syntoobasesql_connectionString": {
+						"value": "[parameters('ls_psmsii_syntoobasesql_connectionString')]"
+					},
+					"ls_psmsii_syntosql_connectionString": {
+						"value": "[parameters('ls_psmsii_syntosql_connectionString')]"
+					},
+					"pendp_psmsii_adftodls_properties_privateLinkResourceId": {
+						"value": "[parameters('pendp_psmsii_adftodls_properties_privateLinkResourceId')]"
+					},
+					"pendp_psmsii_adftodls_properties_groupId": {
+						"value": "[parameters('pendp_psmsii_adftodls_properties_groupId')]"
+					},
+					"pendp_psmsii_adftodls_properties_fqdns": {
+						"value": "[parameters('pendp_psmsii_adftodls_properties_fqdns')]"
+					},
+					"pendp_psmsii_adftodsqlp_properties_privateLinkResourceId": {
+						"value": "[parameters('pendp_psmsii_adftodsqlp_properties_privateLinkResourceId')]"
+					},
+					"pendp_psmsii_adftodsqlp_properties_groupId": {
+						"value": "[parameters('pendp_psmsii_adftodsqlp_properties_groupId')]"
+					},
+					"pendp_psmsii_adftodsqlp_properties_fqdns": {
+						"value": "[parameters('pendp_psmsii_adftodsqlp_properties_fqdns')]"
+					},
+					"ls_psmsii_syntodls_properties_typeProperties_url": {
+						"value": "[parameters('ls_psmsii_syntodls_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "dfpsmsiidt001_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'dfpsmsiidt001_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "dfpsmsiidt001_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'dfpsmsiidt001_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "dfpsmsiidt001_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'dfpsmsiidt001_ArmTemplate_2')]"
+			]
+		}
+	]
+}

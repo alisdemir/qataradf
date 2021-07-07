@@ -1,0 +1,52 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "dfpsmsiidt001"
+		},
+		"ls_dsqlpqtr_connectionString": {
+			"value": ""
+		},
+		"ls_psmsii_syntodls_accountKey": {
+			"value": ""
+		},
+		"ls_psmsii_syntodsqlp_connectionString": {
+			"value": ""
+		},
+		"ls_psmsii_syntoobasesql_connectionString": {
+			"value": ""
+		},
+		"ls_psmsii_syntosql_connectionString": {
+			"value": ""
+		},
+		"ls_qtrsqldb_connectionString": {
+			"value": ""
+		},
+		"ls_psmsii_syntodls_properties_typeProperties_url": {
+			"value": "https://dlsapsmsiidt001.dfs.core.windows.net"
+		},
+		"pendp_psmsii_adftodls_properties_privateLinkResourceId": {
+			"value": "/subscriptions/047cf264-f2a3-43e7-b2e5-1ab1fc225ba1/resourceGroups/rg-psmsii-dt-001/providers/Microsoft.Storage/storageAccounts/dlsapsmsiidt001"
+		},
+		"pendp_psmsii_adftodls_properties_groupId": {
+			"value": "dfs"
+		},
+		"pendp_psmsii_adftodls_properties_fqdns": {
+			"value": [
+				"dlsapsmsiidt001.dfs.core.windows.net"
+			]
+		},
+		"pendp_psmsii_adftodsqlp_properties_privateLinkResourceId": {
+			"value": "/subscriptions/047cf264-f2a3-43e7-b2e5-1ab1fc225ba1/resourceGroups/rg-psmsii-dt-001/providers/Microsoft.Synapse/workspaces/synpsmsiidt001ws1"
+		},
+		"pendp_psmsii_adftodsqlp_properties_groupId": {
+			"value": "sql"
+		},
+		"pendp_psmsii_adftodsqlp_properties_fqdns": {
+			"value": [
+				"synpsmsiidt001ws1.sql.azuresynapse.net"
+			]
+		}
+	}
+}
