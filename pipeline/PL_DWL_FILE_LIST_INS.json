@@ -1,0 +1,30 @@
+{
+	"name": "PL_DWL_FILE_LIST_INS",
+	"properties": {
+		"activities": [
+			{
+				"name": "P_DWL_FILE_LIST_INS",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_DWL_FILE_LIST_INS]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodsqlp",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2021-05-25T14:24:53Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

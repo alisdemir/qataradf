@@ -1,0 +1,40 @@
+{
+	"name": "PL_STG_TRANS_TO_TRANSACTION_copy1",
+	"properties": {
+		"activities": [
+			{
+				"name": "df_transfer_stg_Trans_to_Trans",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_transfer_stg_Trans_to_Trans",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"sink1": {
+								"schemaName": "dwh",
+								"tableName": "DWB_TRANSACTIONS"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2021-05-20T12:54:47Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

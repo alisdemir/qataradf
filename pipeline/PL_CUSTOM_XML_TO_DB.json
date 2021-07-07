@@ -1,0 +1,46 @@
+{
+	"name": "PL_CUSTOM_XML_TO_DB",
+	"properties": {
+		"activities": [
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_custom_xml_to_db",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"DECLARATION": {
+								"schemaName": "dwh",
+								"tableName": "STG_CUSTOMS_DEC"
+							},
+							"ITEM": {
+								"schemaName": "dwh",
+								"tableName": "STG_CUSTOMS_ITEM"
+							},
+							"SUPERVISOR": {
+								"schemaName": "dwh",
+								"tableName": "STG_CUSTOMS_SUPV"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": []
+	}
+}

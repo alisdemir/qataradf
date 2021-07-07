@@ -1,0 +1,35 @@
+{
+	"name": "PL_EXEC_P_DQ_MAIN",
+	"properties": {
+		"activities": [
+			{
+				"name": "P_DQ_MAIN",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderStoredProcedureName": "[dwh].[P_DQ_MAIN]",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_stg_transactions",
+						"type": "DatasetReference"
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2021-05-20T12:52:25Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}
