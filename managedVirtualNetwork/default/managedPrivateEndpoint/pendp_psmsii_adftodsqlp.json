@@ -1,0 +1,10 @@
+{
+	"name": "pendp_psmsii_adftodsqlp",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/047cf264-f2a3-43e7-b2e5-1ab1fc225ba1/resourceGroups/rg-psmsii-dt-001/providers/Microsoft.Synapse/workspaces/synpsmsiidt001ws1",
+		"groupId": "sql",
+		"fqdns": [
+			"synpsmsiidt001ws1.sql.azuresynapse.net"
+		]
+	}
+}
