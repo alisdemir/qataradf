@@ -1,0 +1,116 @@
+{
+	"name": "dls_processing_csv_folder",
+	"properties": {
+		"description": "csv files under processing container",
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Storage_DL_QTR"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "processing"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "TRANSACTION_DATE",
+				"type": "String"
+			},
+			{
+				"name": "TRANSACTION_TYPE_CODE",
+				"type": "String"
+			},
+			{
+				"name": "ITEM_GROUP",
+				"type": "String"
+			},
+			{
+				"name": "ITEM_CODE",
+				"type": "String"
+			},
+			{
+				"name": "ITEM_BARCODE",
+				"type": "String"
+			},
+			{
+				"name": "COMPANY_CR",
+				"type": "String"
+			},
+			{
+				"name": "OTHER_ENTITY_CR",
+				"type": "String"
+			},
+			{
+				"name": "STORE_CODE",
+				"type": "String"
+			},
+			{
+				"name": "TARGET_STORE_CODE",
+				"type": "String"
+			},
+			{
+				"name": "QUANTITY",
+				"type": "String"
+			},
+			{
+				"name": "UOM",
+				"type": "String"
+			},
+			{
+				"name": "SELLING_PRICE",
+				"type": "String"
+			},
+			{
+				"name": "LOCAL_PURCHASE_ORDER",
+				"type": "String"
+			},
+			{
+				"name": "SALES_ORDER",
+				"type": "String"
+			},
+			{
+				"name": "DELIVER_NOTE_NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "GOOD_RECEIVED_NOTE",
+				"type": "String"
+			},
+			{
+				"name": "INVOICE_NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "RETURN_NOTE_NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "CUSTOMER_STATEMENT_NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "Internal_Transfer_Number_code",
+				"type": "String"
+			},
+			{
+				"name": "NUMBER_OF_INVOICES",
+				"type": "String"
+			},
+			{
+				"name": "NOTES",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

@@ -1,0 +1,18 @@
+{
+	"name": "dls_processing_bin",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "synpsmsiidt001ws1-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "processing"
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

@@ -1,0 +1,21 @@
+{
+	"name": "dls_processing_binary",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Storage_DL_QTR"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "processing"
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}
