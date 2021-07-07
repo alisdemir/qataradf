@@ -2,7 +2,7 @@
 	"name": "dls_upload_bin",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "synpsmsiidt001ws1-WorkspaceDefaultStorage",
+			"referenceName": "ls_psmsii_syntodls",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
