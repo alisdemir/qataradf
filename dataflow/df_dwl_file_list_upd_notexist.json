@@ -1,0 +1,45 @@
+{
+	"name": "df_dwl_file_list_upd_notexist",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_dwl_file_list",
+						"type": "DatasetReference"
+					},
+					"name": "dwhfilelist"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_stg_file_list",
+						"type": "DatasetReference"
+					},
+					"name": "stgfilelist"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_dwl_file_list",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "NotExists"
+				},
+				{
+					"name": "AlterRow1"
+				},
+				{
+					"name": "idisexpected"
+				}
+			],
+			"script": "source(output(\n\t\tID as integer,\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISEXPECTED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(input(\n\t\tID as integer,\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+		}
+	}
+}
