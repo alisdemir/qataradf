@@ -1,0 +1,112 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfpsmsiidt001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/df_dwl_file_list_upd_exist')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_dwl_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "dwhfilelist"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_stg_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "stgfilelist"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_dwl_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Exists"
+						},
+						{
+							"name": "AlterRow2"
+						},
+						{
+							"name": "DerivedColumn1"
+						}
+					],
+					"script": "source(output(\n\t\tID as integer,\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:false,\n\tbroadcast: 'auto')~> Exists\nExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow2\nAlterRow2 derive(ID_ISEXPECTED = 1,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tID as integer,\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink2"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_stg_file_list_upd')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_dwl_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "dwhfilelist"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_stg_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "stgfilelistsrc"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_stg_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "stgfilelisttrgt"
+						}
+					],
+					"transformations": [
+						{
+							"name": "notExists"
+						},
+						{
+							"name": "idisexpected"
+						},
+						{
+							"name": "AlterRow1"
+						}
+					],
+					"script": "parameters{\n\titemname as string (toString('CRFR_20210321.csv'))\n}\nsource(output(\n\t\tID as integer,\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelistsrc\nstgfilelistsrc, dwhfilelist exists(stgfilelistsrc@DS_FILENAME == dwhfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> notExists\nAlterRow1 derive(ID_ISEXPECTED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nnotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> stgfilelisttrgt"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

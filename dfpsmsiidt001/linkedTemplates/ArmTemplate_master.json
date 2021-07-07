@@ -93,9 +93,6 @@
 					"ls_dsqlpqtr_connectionString": {
 						"value": "[parameters('ls_dsqlpqtr_connectionString')]"
 					},
-					"ls_qtrsqldb_connectionString": {
-						"value": "[parameters('ls_qtrsqldb_connectionString')]"
-					},
 					"ls_psmsii_syntodls_accountKey": {
 						"value": "[parameters('ls_psmsii_syntodls_accountKey')]"
 					},
@@ -108,23 +105,8 @@
 					"ls_psmsii_syntosql_connectionString": {
 						"value": "[parameters('ls_psmsii_syntosql_connectionString')]"
 					},
-					"pendp_psmsii_adftodls_properties_privateLinkResourceId": {
-						"value": "[parameters('pendp_psmsii_adftodls_properties_privateLinkResourceId')]"
-					},
-					"pendp_psmsii_adftodls_properties_groupId": {
-						"value": "[parameters('pendp_psmsii_adftodls_properties_groupId')]"
-					},
-					"pendp_psmsii_adftodls_properties_fqdns": {
-						"value": "[parameters('pendp_psmsii_adftodls_properties_fqdns')]"
-					},
-					"pendp_psmsii_adftodsqlp_properties_privateLinkResourceId": {
-						"value": "[parameters('pendp_psmsii_adftodsqlp_properties_privateLinkResourceId')]"
-					},
-					"pendp_psmsii_adftodsqlp_properties_groupId": {
-						"value": "[parameters('pendp_psmsii_adftodsqlp_properties_groupId')]"
-					},
-					"pendp_psmsii_adftodsqlp_properties_fqdns": {
-						"value": "[parameters('pendp_psmsii_adftodsqlp_properties_fqdns')]"
+					"ls_qtrsqldb_connectionString": {
+						"value": "[parameters('ls_qtrsqldb_connectionString')]"
 					},
 					"ls_psmsii_syntodls_properties_typeProperties_url": {
 						"value": "[parameters('ls_psmsii_syntodls_properties_typeProperties_url')]"
@@ -146,6 +128,24 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"pendp_psmsii_adftodls_properties_privateLinkResourceId": {
+						"value": "[parameters('pendp_psmsii_adftodls_properties_privateLinkResourceId')]"
+					},
+					"pendp_psmsii_adftodls_properties_groupId": {
+						"value": "[parameters('pendp_psmsii_adftodls_properties_groupId')]"
+					},
+					"pendp_psmsii_adftodls_properties_fqdns": {
+						"value": "[parameters('pendp_psmsii_adftodls_properties_fqdns')]"
+					},
+					"pendp_psmsii_adftodsqlp_properties_privateLinkResourceId": {
+						"value": "[parameters('pendp_psmsii_adftodsqlp_properties_privateLinkResourceId')]"
+					},
+					"pendp_psmsii_adftodsqlp_properties_groupId": {
+						"value": "[parameters('pendp_psmsii_adftodsqlp_properties_groupId')]"
+					},
+					"pendp_psmsii_adftodsqlp_properties_fqdns": {
+						"value": "[parameters('pendp_psmsii_adftodsqlp_properties_fqdns')]"
 					}
 				}
 			},
