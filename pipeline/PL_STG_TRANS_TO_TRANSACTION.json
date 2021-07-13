@@ -1,0 +1,39 @@
+{
+	"name": "PL_STG_TRANS_TO_TRANSACTION",
+	"properties": {
+		"activities": [
+			{
+				"name": "STG_TO_TRANSACTIONS",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderStoredProcedureName": "DWH.P_TRANSACTION_UPD",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "dsqlp_parametric",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "dwh",
+							"tableName": "DWB_transactions"
+						}
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2021-07-07T09:31:28Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,34 @@
+{
+	"name": "ds_stg_file_list",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodsqlp",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Dedicated_SQL"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "DS_FILENAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_ISEXPECTED",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DS_EMAIL",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dwh",
+			"table": "STG_FILE_LIST"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

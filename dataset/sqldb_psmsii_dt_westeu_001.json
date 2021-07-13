@@ -1,0 +1,13 @@
+{
+	"name": "sqldb_psmsii_dt_westeu_001",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntosql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

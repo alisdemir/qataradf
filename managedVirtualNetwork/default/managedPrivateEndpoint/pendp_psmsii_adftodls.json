@@ -1,0 +1,10 @@
+{
+	"name": "pendp_psmsii_adftodls",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/047cf264-f2a3-43e7-b2e5-1ab1fc225ba1/resourceGroups/rg-psmsii-dt-001/providers/Microsoft.Storage/storageAccounts/dlsapsmsiidt001",
+		"groupId": "dfs",
+		"fqdns": [
+			"dlsapsmsiidt001.dfs.core.windows.net"
+		]
+	}
+}

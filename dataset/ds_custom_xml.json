@@ -1,0 +1,31 @@
+{
+	"name": "ds_custom_xml",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"fileName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Storage_DL_QTR"
+		},
+		"annotations": [],
+		"type": "Xml",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "dene.xml",
+					"type": "Expression"
+				},
+				"fileSystem": "input"
+			},
+			"nullValue": "null"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

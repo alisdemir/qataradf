@@ -1,0 +1,41 @@
+{
+	"name": "PL_STG_FILE_LIST_UPD",
+	"properties": {
+		"description": "Stg file list tablosunu update eden pipeline",
+		"activities": [
+			{
+				"name": "df_stg_file_list_upd",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_stg_file_list_upd",
+						"type": "DataFlowReference",
+						"parameters": {
+							"itemname": "toString('CRFR_20210321.csv')"
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "integrationRuntime10min",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "None",
+					"cacheSinks": {
+						"firstRowOnly": true
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2021-07-07T09:39:42Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

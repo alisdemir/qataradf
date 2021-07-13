@@ -1,0 +1,217 @@
+{
+	"name": "PL_DAILY_MAIN",
+	"properties": {
+		"activities": [
+			{
+				"name": "PL_STG_FILE_LIST_INS",
+				"description": "deneme2",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_FILE_TRANSFER",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_STG_FILE_LIST_INS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_FILE_TRANSFER",
+				"description": "deneme2",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_FILE_TRANSFER",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_DWL_FILE_LIST_UPD",
+				"description": "deneme",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_STG_FILE_LIST_INS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DWL_FILE_LIST_UPD",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_STG_FILE_LIST_UPD",
+				"description": "deneme",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_STG_FILE_LIST_INS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_STG_FILE_LIST_UPD",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_MAIL_TO_NOTEXISTS",
+				"description": "deneme",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_DWL_FILE_LIST_UPD",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_MAIL_TO_NOTEXISTS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_CSV_TO_STG",
+				"description": "deneme",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_STG_FILE_LIST_UPD",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_CSV_TO_STG",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
+				"description": "deneme",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_EXEC_P_DQ_MAIN",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_EXEC_P_DQ_MAIN",
+				"description": "deneme",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_CSV_TO_STG",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_EXEC_P_DQ_MAIN",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_STG_TRANS_TO_TRANSACTION",
+				"description": "deneme2",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_EXPORT_AND_EMAIL_ERRLOG",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_STG_TRANS_TO_TRANSACTION",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_DWL_FILE_LIST_ARC",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_STG_TRANS_TO_TRANSACTION",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DWL_FILE_LIST_ARC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"variables": {
+			"deneme": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-07-07T09:31:29Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

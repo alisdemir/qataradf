@@ -1,0 +1,18 @@
+{
+	"name": "dls_upload_bin",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "upload"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
