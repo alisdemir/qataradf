@@ -34,6 +34,104 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "RationDate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RationDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Group Code",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Group Code",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "OperationType",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OperationType",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Supply/Distribution",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Supply/Distribution",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "FromAccountCR",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "FromAccountCR",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ToAccountCR",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ToAccountCR",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Amount",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Amount",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CustomDeclarationNo",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CustomDeclarationNo",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
