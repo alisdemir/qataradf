@@ -21,7 +21,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "EntityList.csv",
+					"value": "All Transactions_copy.csv",
 					"type": "Expression"
 				},
 				"fileSystem": "processing"
