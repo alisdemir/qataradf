@@ -145,7 +145,8 @@
 													"body": {
 														"value": "{\"EmailType\":\"NotExpectedFile\"}",
 														"type": "Expression"
-													}
+													},
+													"disableCertValidation": false
 												}
 											}
 										],
