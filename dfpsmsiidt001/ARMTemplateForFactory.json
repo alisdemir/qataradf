@@ -1903,7 +1903,8 @@
 														"referenceName": "integrationRuntime10min",
 														"type": "IntegrationRuntimeReference"
 													},
-													"traceLevel": "Coarse"
+													"traceLevel": "Coarse",
+													"runConcurrently": true
 												}
 											}
 										]
@@ -1976,7 +1977,7 @@
 						}
 					}
 				],
-				"concurrency": 10,
+				"concurrency": 1,
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:55:14Z"
 			},

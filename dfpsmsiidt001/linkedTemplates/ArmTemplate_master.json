@@ -93,12 +93,6 @@
 					"ls_dsqlpqtr_connectionString": {
 						"value": "[parameters('ls_dsqlpqtr_connectionString')]"
 					},
-					"ls_psmsii_syntoobasesql_connectionString": {
-						"value": "[parameters('ls_psmsii_syntoobasesql_connectionString')]"
-					},
-					"ls_psmsii_syntosql_connectionString": {
-						"value": "[parameters('ls_psmsii_syntosql_connectionString')]"
-					},
 					"ls_qtrsqldb_connectionString": {
 						"value": "[parameters('ls_qtrsqldb_connectionString')]"
 					},
@@ -107,6 +101,12 @@
 					},
 					"ls_psmsii_syntodsqlp_connectionString": {
 						"value": "[parameters('ls_psmsii_syntodsqlp_connectionString')]"
+					},
+					"ls_psmsii_syntoobasesql_connectionString": {
+						"value": "[parameters('ls_psmsii_syntoobasesql_connectionString')]"
+					},
+					"ls_psmsii_syntosql_connectionString": {
+						"value": "[parameters('ls_psmsii_syntosql_connectionString')]"
 					},
 					"pendp_psmsii_adftodls_properties_privateLinkResourceId": {
 						"value": "[parameters('pendp_psmsii_adftodls_properties_privateLinkResourceId')]"
