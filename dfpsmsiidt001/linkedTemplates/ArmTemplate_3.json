@@ -13,45 +13,11 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/df_transerrlog_to_errlogcontainer')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_stg_transaction_error_log",
-								"type": "DatasetReference"
-							},
-							"name": "transactionerrorlog"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dls_errorlog_csv",
-								"type": "DatasetReference"
-							},
-							"name": "errorlogcsv"
-						}
-					],
-					"transformations": [
-						{
-							"name": "stgfilename"
-						}
-					],
-					"script": "parameters{\n\tp_stg_filename as string (STG_FILENAME)\n}\nsource(output(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_GROUP as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_SOURCE_WAREHOUSE as string,\n\t\tID_TARGET_WAREHOUSE as string,\n\t\tMT_QUANTITY as string,\n\t\tID_UOM as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_LPO as string,\n\t\tID_SALES_ORDER as string,\n\t\tID_DELIVERY_NOTE as string,\n\t\tID_GRN as string,\n\t\tID_INVOICE as string,\n\t\tID_RETURN_NOTE as string,\n\t\tID_CUSTOMS_STATEMENT as string,\n\t\tID_REFERANCE_CODE as string,\n\t\tID_TRANSFER_CODE as string,\n\t\tMT_INVOICE_COUNT as string,\n\t\tDS_TRANSACTION_REASON as string,\n\t\tSK_ID as integer,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> transactionerrorlog\ntransactionerrorlog derive(STG_FILENAME = replace(STG_FILENAME,'.','_err.')) ~> stgfilename\nstgfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'STG_FILENAME',\n\tumask: 0777,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tID_YEARMONTHDAY,\n\t\tID_TRANSACTION_TYPE,\n\t\tID_ITEM_GROUP,\n\t\tID_ITEM_CODE,\n\t\tID_ITEM_BARCODE,\n\t\tID_ENTITY_CR,\n\t\tID_CUSTOMER_ENTITY_CR,\n\t\tID_SOURCE_WAREHOUSE,\n\t\tID_TARGET_WAREHOUSE,\n\t\tMT_QUANTITY,\n\t\tID_UOM,\n\t\tMT_DISCOUNT_AMOUNT,\n\t\tID_LPO,\n\t\tID_SALES_ORDER,\n\t\tID_DELIVERY_NOTE,\n\t\tID_GRN,\n\t\tID_INVOICE,\n\t\tID_RETURN_NOTE,\n\t\tID_CUSTOMS_STATEMENT,\n\t\tID_REFERANCE_CODE,\n\t\tID_TRANSFER_CODE,\n\t\tMT_INVOICE_COUNT,\n\t\tDS_TRANSACTION_REASON,\n\t\tID_ERROR_CODE,\n\t\tDS_ERROR_CODE\n\t)) ~> errorlogcsv"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_CSV_TO_STG')]",
+			"name": "[concat(parameters('factoryName'), '/PL_STG_FILE_LIST_INS_HASH_DIST')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"description": "Insert file names to stg file list table from processing container ",
 				"activities": [
 					{
 						"name": "GetFileList",
@@ -105,101 +71,11 @@
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "IsFileNameCorrect",
-									"type": "IfCondition",
-									"dependsOn": [
-										{
-											"activity": "lookupFileName",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@equals(if(\nempty(activity('lookupFileName').output.value)\n,0,1),1)\n",
-											"type": "Expression"
-										},
-										"ifFalseActivities": [
-											{
-												"name": "Send E_Mail",
-												"type": "WebActivity",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
-													"connectVia": {
-														"referenceName": "integrationRuntime10min",
-														"type": "IntegrationRuntimeReference"
-													},
-													"method": "POST",
-													"headers": {},
-													"body": {
-														"value": "{\"EmailType\":\"NotExpectedFile\"}",
-														"type": "Expression"
-													},
-													"disableCertValidation": false
-												}
-											}
-										],
-										"ifTrueActivities": [
-											{
-												"name": "FilestoSTG",
-												"type": "ExecuteDataFlow",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"dataflow": {
-														"referenceName": "df_csv_to_stg",
-														"type": "DataFlowReference",
-														"parameters": {
-															"fileName": {
-																"value": "'@{item().name}'",
-																"type": "Expression"
-															}
-														},
-														"datasetParameters": {
-															"processingCsv": {
-																"FileName": {
-																	"value": "@item().name\n",
-																	"type": "Expression"
-																}
-															},
-															"stgTransactions": {}
-														}
-													},
-													"staging": {},
-													"integrationRuntime": {
-														"referenceName": "integrationRuntime10min",
-														"type": "IntegrationRuntimeReference"
-													},
-													"traceLevel": "Coarse"
-												}
-											}
-										]
-									}
-								},
-								{
-									"name": "lookupFileName",
-									"type": "Lookup",
+									"name": "df_stg_file_list_ins_hash_dist",
+									"type": "ExecuteDataFlow",
 									"dependsOn": [],
 									"policy": {
-										"timeout": "7.00:00:00",
+										"timeout": "1.00:00:00",
 										"retry": 0,
 										"retryIntervalInSeconds": 30,
 										"secureOutput": false,
@@ -207,21 +83,23 @@
 									},
 									"userProperties": [],
 									"typeProperties": {
-										"source": {
-											"type": "SqlDWSource",
-											"sqlReaderQuery": {
-												"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[DWL_FILE_LIST] where DS_FILENAME= ','''',item().name,'''') ",
-												"type": "Expression"
+										"dataflow": {
+											"referenceName": "df_stg_file_list_ins_hash_dist",
+											"type": "DataFlowReference",
+											"parameters": {
+												"itemname": "toString('CRFR_20210321.csv')"
 											},
-											"queryTimeout": "02:00:00",
-											"partitionOption": "None"
+											"datasetParameters": {
+												"dummy": {},
+												"stgfilelist": {}
+											}
 										},
-										"dataset": {
-											"referenceName": "ds_dwl_file_list",
-											"type": "DatasetReference",
-											"parameters": {}
+										"staging": {},
+										"compute": {
+											"coreCount": 8,
+											"computeType": "General"
 										},
-										"firstRowOnly": false
+										"traceLevel": "Fine"
 									}
 								}
 							]
@@ -249,7 +127,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlDWSource",
-								"sqlReaderQuery": "truncate table [dwh].[STG_TRANSACTIONS];\nselect 1;",
+								"sqlReaderQuery": "truncate table [dwh].[STG_FILE_LIST];\nselect 1;",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -262,18 +140,19 @@
 					}
 				],
 				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:55:14Z"
+				"lastPublishTime": "2021-05-26T14:24:08Z"
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_EXPORT_AND_EMAIL_ERRLOG')]",
+			"name": "[concat(parameters('factoryName'), '/PL_STG_FILE_LIST_UPD')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"description": "Stg file list tablosunu update eden pipeline",
 				"activities": [
 					{
-						"name": "df_transerrlog_to_errlogcontainer",
+						"name": "df_stg_file_list_upd",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -286,14 +165,15 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "df_transerrlog_to_errlogcontainer",
+								"referenceName": "df_stg_file_list_upd",
 								"type": "DataFlowReference",
 								"parameters": {
-									"p_stg_filename": "STG_FILENAME"
+									"itemname": "toString('CRFR_20210321.csv')"
 								},
 								"datasetParameters": {
-									"transactionerrorlog": {},
-									"errorlogcsv": {}
+									"dwhfilelist": {},
+									"stgfilelistsrc": {},
+									"stgfilelisttrgt": {}
 								}
 							},
 							"staging": {},
@@ -306,18 +186,23 @@
 								"firstRowOnly": true
 							}
 						}
-					},
+					}
+				],
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:54:43Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_STG_TRANS_TO_TRANSACTION_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
 					{
-						"name": "lapp-qtr-errorlogs-to-entities",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "df_transerrlog_to_errlogcontainer",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"name": "df_transfer_stg_Trans_to_Trans",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -327,26 +212,32 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
-							"connectVia": {
-								"referenceName": "integrationRuntime10min",
-								"type": "IntegrationRuntimeReference"
+							"dataflow": {
+								"referenceName": "df_transfer_stg_Trans_to_Trans",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source2": {},
+									"sink1": {
+										"schemaName": "dwh",
+										"tableName": "DWB_TRANSACTIONS"
+									}
+								}
 							},
-							"method": "POST",
-							"headers": {},
-							"body": {
-								"value": "{\"EmailType\":\"TransactionFileErrors\"}",
-								"type": "Expression"
-							}
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
 						}
 					}
 				],
 				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:55:22Z"
+				"lastPublishTime": "2021-05-20T12:54:47Z"
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/df_transerrlog_to_errlogcontainer')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_DAILY_MAIN')]",
@@ -576,8 +467,7 @@
 				"lastPublishTime": "2021-05-25T14:24:57Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_CSV_TO_STG')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_ERRLOG')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_STG_FILE_LIST_UPD')]"
 			]
 		}
 	]
