@@ -204,6 +204,7 @@
 				}
 			}
 		],
+		"concurrency": 5,
 		"annotations": [],
 		"lastPublishTime": "2021-05-20T12:55:14Z"
 	},
