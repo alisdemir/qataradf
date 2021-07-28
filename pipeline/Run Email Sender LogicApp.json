@@ -16,10 +16,6 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": "https://prod-95.eastus.logic.azure.com:443/workflows/86257f463fb04ebb9c8476a37346b2e2/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kTjRzjrynRIoJcc_DRhdAMfCiRXjjhfXIzGhEDYt-bM",
-					"connectVia": {
-						"referenceName": "AutoResolveIntegrationRuntime",
-						"type": "IntegrationRuntimeReference"
-					},
 					"method": "POST",
 					"body": {
 						"value": "@concat('{','}')",
@@ -28,6 +24,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "Dev"
+		},
 		"annotations": [],
 		"lastPublishTime": "2021-05-20T12:50:45Z"
 	},

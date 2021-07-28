@@ -31,10 +31,6 @@
 									"value": "https://management.azure.com/subscriptions/@{pipeline().parameters.SubscriptionID}/resourceGroups/@{pipeline().parameters.Synapse_ResourceGroupName}/providers/Microsoft.Synapse/workspaces/@{pipeline().parameters.SynapseWorkspace}/sqlPools/@{pipeline().parameters.SynapseDedicatedSQLPool}/?api-version=2019-06-01-preview",
 									"type": "Expression"
 								},
-								"connectVia": {
-									"referenceName": "AutoResolveIntegrationRuntime",
-									"type": "IntegrationRuntimeReference"
-								},
 								"method": "GET",
 								"authentication": {
 									"type": "MSI",
@@ -100,15 +96,14 @@
 									"value": "https://management.azure.com/subscriptions/@{pipeline().parameters.SubscriptionID}/resourceGroups/@{pipeline().parameters.Synapse_ResourceGroupName}/providers/Microsoft.Synapse/workspaces/@{pipeline().parameters.SynapseWorkspace}/sqlPools/@{pipeline().parameters.SynapseDedicatedSQLPool}/@{pipeline().parameters.Action}?api-version=2019-06-01-preview",
 									"type": "Expression"
 								},
-								"connectVia": {
-									"referenceName": "AutoResolveIntegrationRuntime",
-									"type": "IntegrationRuntimeReference"
-								},
 								"method": "POST",
 								"headers": {
 									"Nothing": "Nothing"
 								},
-								"body": "@concat('{','}')",
+								"body": {
+									"value": "@concat('{','}')",
+									"type": "Expression"
+								},
 								"authentication": {
 									"type": "MSI",
 									"resource": "https://management.azure.com/"
@@ -167,6 +162,9 @@
 				"type": "string",
 				"defaultValue": "047cf264-f2a3-43e7-b2e5-1ab1fc225ba1"
 			}
+		},
+		"folder": {
+			"name": "PL_TOOL"
 		},
 		"annotations": [],
 		"lastPublishTime": "2021-04-21T14:08:07Z"
