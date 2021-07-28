@@ -210,6 +210,9 @@
 				"type": "String"
 			}
 		},
+		"folder": {
+			"name": "PL_MAIN"
+		},
 		"annotations": [],
 		"lastPublishTime": "2021-05-25T14:24:57Z"
 	},

@@ -32,6 +32,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "PL_MAIN"
+		},
 		"annotations": [],
 		"lastPublishTime": "2021-05-20T12:52:28Z"
 	},

@@ -209,6 +209,9 @@
 			}
 		],
 		"concurrency": 1,
+		"folder": {
+			"name": "PL_MAIN"
+		},
 		"annotations": [],
 		"lastPublishTime": "2021-05-20T12:55:14Z"
 	},
