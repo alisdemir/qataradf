@@ -133,7 +133,8 @@
 												"linkedService": {
 													"referenceName": "ls_psmsii_syntodls",
 													"type": "LinkedServiceReference"
-												}
+												},
+												"folderPath": "processing"
 											},
 											"integrationRuntime": {
 												"referenceName": "integrationRuntime10min",
