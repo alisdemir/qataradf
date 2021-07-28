@@ -20,10 +20,6 @@
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_ITEM_GROUP",
-				"type": "nvarchar"
-			},
-			{
 				"name": "ID_ITEM_CODE",
 				"type": "nvarchar"
 			},
@@ -40,11 +36,7 @@
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_SOURCE_WAREHOUSE",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_TARGET_WAREHOUSE",
+				"name": "ID_COMPANY_STORE_CODE",
 				"type": "nvarchar"
 			},
 			{
@@ -52,43 +44,11 @@
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_UOM",
-				"type": "nvarchar"
-			},
-			{
 				"name": "MT_DISCOUNT_AMOUNT",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_LPO",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_SALES_ORDER",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_DELIVERY_NOTE",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_GRN",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_INVOICE",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_RETURN_NOTE",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_CUSTOMS_STATEMENT",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_REFERANCE_CODE",
+				"name": "ID_COMMON_REF_CODE",
 				"type": "nvarchar"
 			},
 			{
@@ -96,11 +56,7 @@
 				"type": "nvarchar"
 			},
 			{
-				"name": "MT_INVOICE_COUNT",
-				"type": "nvarchar"
-			},
-			{
-				"name": "DS_TRANSACTION_REASON",
+				"name": "ID_INVOICE_NUMBER",
 				"type": "nvarchar"
 			},
 			{
