@@ -1,6 +1,21 @@
 {
 	"name": "PL_CUSTOM_MAIN",
 	"properties": {
+		"activities": [
+			{
+				"name": "PL_CUSTOM_XML_TO_DB",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_CUSTOM_XML_TO_DB",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
 		"folder": {
 			"name": "PL_CUSTOM"
 		},
