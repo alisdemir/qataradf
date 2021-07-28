@@ -133,7 +133,8 @@
 												"referenceName": "integrationRuntime10min",
 												"type": "IntegrationRuntimeReference"
 											},
-											"traceLevel": "Coarse"
+											"traceLevel": "Coarse",
+											"runConcurrently": true
 										}
 									}
 								]
