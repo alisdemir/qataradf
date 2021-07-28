@@ -1904,7 +1904,7 @@
 														"type": "IntegrationRuntimeReference"
 													},
 													"traceLevel": "Coarse",
-													"runConcurrently": true
+													"runConcurrently": false
 												}
 											}
 										]
