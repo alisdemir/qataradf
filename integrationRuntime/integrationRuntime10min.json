@@ -7,7 +7,7 @@
 				"location": "West Europe",
 				"dataFlowProperties": {
 					"computeType": "General",
-					"coreCount": 8,
+					"coreCount": 32,
 					"timeToLive": 60,
 					"cleanup": false
 				}
