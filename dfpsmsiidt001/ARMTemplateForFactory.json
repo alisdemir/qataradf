@@ -1336,6 +1336,9 @@
 						"defaultValue": "047cf264-f2a3-43e7-b2e5-1ab1fc225ba1"
 					}
 				},
+				"folder": {
+					"name": "PL_TOOL"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-04-21T14:08:07Z"
 			},
@@ -1508,6 +1511,9 @@
 						"type": "string",
 						"defaultValue": "047cf264-f2a3-43e7-b2e5-1ab1fc225ba1"
 					}
+				},
+				"folder": {
+					"name": "PL_TOOL"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-04-21T14:10:28Z"
@@ -1754,6 +1760,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "PL_TOOL"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-25T14:24:40Z"
 			},
@@ -1899,10 +1908,6 @@
 														}
 													},
 													"staging": {
-														"linkedService": {
-															"referenceName": "ls_psmsii_syntodls",
-															"type": "LinkedServiceReference"
-														},
 														"folderPath": "processing"
 													},
 													"integrationRuntime": {
@@ -1984,6 +1989,9 @@
 					}
 				],
 				"concurrency": 1,
+				"folder": {
+					"name": "PL_MAIN"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:55:14Z"
 			},
@@ -1993,8 +2001,7 @@
 				"[concat(variables('factoryId'), '/datasets/ds_dwl_file_list')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
 				"[concat(variables('factoryId'), '/dataflows/df_csv_to_stg')]",
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
 			]
 		},
 		{
@@ -2156,6 +2163,9 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "Dev"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:55:14Z"
 			},
@@ -2208,10 +2218,13 @@
 								"referenceName": "integrationRuntime10min",
 								"type": "IntegrationRuntimeReference"
 							},
-							"traceLevel": "Fine"
+							"traceLevel": "Coarse"
 						}
 					}
 				],
+				"folder": {
+					"name": "PL_CUSTOM"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -2443,6 +2456,9 @@
 						"type": "String"
 					}
 				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-25T14:24:57Z"
 			},
@@ -2486,6 +2502,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-25T14:24:46Z"
 			},
@@ -2520,6 +2539,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-25T14:24:53Z"
 			},
@@ -2604,6 +2626,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:54:20Z"
 			},
@@ -2646,6 +2671,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:52:25Z"
 			},
@@ -2728,6 +2756,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:55:22Z"
 			},
@@ -2792,6 +2823,9 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:54:28Z"
 			},
@@ -2834,6 +2868,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:50:39Z"
 			},
@@ -2974,6 +3011,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-26T14:24:08Z"
 			},
@@ -3028,6 +3068,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:54:43Z"
 			},
@@ -3072,6 +3115,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:52:28Z"
 			},
@@ -3120,6 +3166,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "Dev"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:54:47Z"
 			},
@@ -3156,6 +3205,9 @@
 						}
 					}
 				],
+				"folder": {
+					"name": "Dev"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:50:45Z"
 			},
@@ -4515,7 +4567,7 @@
 							"name": "SurrogateKey1"
 						}
 					],
-					"script": "parameters{\n\tfileName as string ('4')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingCsv\nprocessingCsv derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\tTRANSACTION_DATE = {Transaction Date - تاريخ الحركة }) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_COMPANY_STORE_CODE as string,\n\t\tMT_QUANTITY as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_COMMON_REF_CODE as string,\n\t\tID_TRANSFER_CODE as string,\n\t\tID_INVOICE_NUMBER as string,\n\t\tSK_ID as integer,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tsaveOrder: 1,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_YEARMONTHDAY = {Transaction Date - تاريخ الحركة },\n\t\tID_TRANSACTION_TYPE = {Transaction Type Code - كود نوع الحركة},\n\t\tID_ITEM_CODE = {Item Code - كود الصنف},\n\t\tID_ITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tID_ENTITY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tID_CUSTOMER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tID_COMPANY_STORE_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tMT_QUANTITY = {Quantity - الكمية},\n\t\tMT_DISCOUNT_AMOUNT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tID_COMMON_REF_CODE = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tID_TRANSFER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tID_INVOICE_NUMBER = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tSK_ID = SK_ID_SUR,\n\t\tSTG_FILENAME,\n\t\tSTG_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
+					"script": "parameters{\n\tfileName as string ('4')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingCsv\nprocessingCsv derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\tTRANSACTION_DATE = {Transaction Date - تاريخ الحركة }) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_COMPANY_STORE_CODE as string,\n\t\tMT_QUANTITY as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_COMMON_REF_CODE as string,\n\t\tID_TRANSFER_CODE as string,\n\t\tID_INVOICE_NUMBER as string,\n\t\tSK_ID as integer,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tsaveOrder: 1,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_YEARMONTHDAY = {Transaction Date - تاريخ الحركة },\n\t\tID_TRANSACTION_TYPE = {Transaction Type Code - كود نوع الحركة},\n\t\tID_ITEM_CODE = {Item Code - كود الصنف},\n\t\tID_ITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tID_ENTITY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tID_CUSTOMER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tID_COMPANY_STORE_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tMT_QUANTITY = {Quantity - الكمية},\n\t\tMT_DISCOUNT_AMOUNT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tID_COMMON_REF_CODE = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tID_TRANSFER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tID_INVOICE_NUMBER = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tSK_ID = SK_ID_SUR,\n\t\tSTG_FILENAME,\n\t\tSTG_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
 				}
 			},
 			"dependsOn": [

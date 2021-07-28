@@ -1,0 +1,1991 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfpsmsiidt001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_ACT_PAUSE_SQLPOOL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Pauses SQL pool",
+				"activities": [
+					{
+						"name": "Until SQL POOL is Paused or Online",
+						"type": "Until",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@or(bool(startswith(activity('Check for changed SQLPool Status').Output.Properties.status,'Paused')),Bool(startswith(activity('Check for changed SQLPool Status').Output.Properties.status,'Online')))",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Check for changed SQLPool Status",
+									"type": "WebActivity",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "https://management.azure.com/subscriptions/@{pipeline().parameters.SubscriptionID}/resourceGroups/@{pipeline().parameters.Synapse_ResourceGroupName}/providers/Microsoft.Synapse/workspaces/@{pipeline().parameters.SynapseWorkspace}/sqlPools/@{pipeline().parameters.SynapseDedicatedSQLPool}/?api-version=2019-06-01-preview",
+											"type": "Expression"
+										},
+										"method": "GET",
+										"authentication": {
+											"type": "MSI",
+											"resource": "https://management.azure.com/"
+										}
+									}
+								},
+								{
+									"name": "Wait before checking again",
+									"type": "Wait",
+									"dependsOn": [
+										{
+											"activity": "Check for changed SQLPool Status",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": {
+											"value": "@pipeline().parameters.WaitTimeUntil",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"timeout": "0.00:20:00"
+						}
+					},
+					{
+						"name": "Check if SQL POOL is Paused",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Until SQL POOL is Paused or Online",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@bool(startswith(activity('Check for changed SQLPool Status').Output.Properties.status,'Paused'))",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Pause SQL POOL",
+									"type": "WebActivity",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "https://management.azure.com/subscriptions/@{pipeline().parameters.SubscriptionID}/resourceGroups/@{pipeline().parameters.Synapse_ResourceGroupName}/providers/Microsoft.Synapse/workspaces/@{pipeline().parameters.SynapseWorkspace}/sqlPools/@{pipeline().parameters.SynapseDedicatedSQLPool}/@{pipeline().parameters.Action}?api-version=2019-06-01-preview",
+											"type": "Expression"
+										},
+										"method": "POST",
+										"headers": {
+											"Nothing": "Nothing"
+										},
+										"body": {
+											"value": "@concat('{','}')",
+											"type": "Expression"
+										},
+										"authentication": {
+											"type": "MSI",
+											"resource": "https://management.azure.com/"
+										}
+									}
+								},
+								{
+									"name": "Wait before Continue",
+									"type": "Wait",
+									"dependsOn": [
+										{
+											"activity": "Pause SQL POOL",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": {
+											"value": "@pipeline().parameters.WaitTime",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"Action": {
+						"type": "string",
+						"defaultValue": "Pause"
+					},
+					"WaitTime": {
+						"type": "int",
+						"defaultValue": 10
+					},
+					"WaitTimeUntil": {
+						"type": "int",
+						"defaultValue": 30
+					},
+					"Synapse_ResourceGroupName": {
+						"type": "string",
+						"defaultValue": "rg-psmsii-dt-001"
+					},
+					"SynapseWorkspace": {
+						"type": "string",
+						"defaultValue": "synpsmsiidt001ws1"
+					},
+					"SynapseDedicatedSQLPool": {
+						"type": "string",
+						"defaultValue": "dsqlppsmsiidt01"
+					},
+					"SubscriptionId": {
+						"type": "string",
+						"defaultValue": "047cf264-f2a3-43e7-b2e5-1ab1fc225ba1"
+					}
+				},
+				"folder": {
+					"name": "PL_TOOL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-04-21T14:08:07Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_ACT_RESUME_SQLPOOL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Pauses SQL pool",
+				"activities": [
+					{
+						"name": "Until SQL POOL is Paused or Online",
+						"type": "Until",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@or(bool(startswith(activity('Check for changed SQLPool Status').Output.Properties.status,'Paused')),Bool(startswith(activity('Check for changed SQLPool Status').Output.Properties.status,'Online')))",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Check for changed SQLPool Status",
+									"type": "WebActivity",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "https://management.azure.com/subscriptions/@{pipeline().parameters.SubscriptionID}/resourceGroups/@{pipeline().parameters.Synapse_ResourceGroupName}/providers/Microsoft.Synapse/workspaces/@{pipeline().parameters.SynapseWorkspace}/sqlPools/@{pipeline().parameters.SynapseDedicatedSQLPool}/?api-version=2019-06-01-preview",
+											"type": "Expression"
+										},
+										"method": "GET",
+										"authentication": {
+											"type": "MSI",
+											"resource": "https://management.azure.com/"
+										}
+									}
+								},
+								{
+									"name": "Wait before checking again",
+									"type": "Wait",
+									"dependsOn": [
+										{
+											"activity": "Check for changed SQLPool Status",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": {
+											"value": "@pipeline().parameters.WaitTimeUntil",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"timeout": "00.20:00:00"
+						}
+					},
+					{
+						"name": "Check if SQL POOL is Paused",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Until SQL POOL is Paused or Online",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@bool(startswith(activity('Check for changed SQLPool Status').Output.Properties.status,'Paused'))",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "Resume SQL POOL",
+									"type": "WebActivity",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "https://management.azure.com/subscriptions/@{pipeline().parameters.SubscriptionID}/resourceGroups/@{pipeline().parameters.Synapse_ResourceGroupName}/providers/Microsoft.Synapse/workspaces/@{pipeline().parameters.SynapseWorkspace}/sqlPools/@{pipeline().parameters.SynapseDedicatedSQLPool}/@{pipeline().parameters.Action}?api-version=2019-06-01-preview",
+											"type": "Expression"
+										},
+										"method": "POST",
+										"headers": {
+											"Nothing": "\"Nothing\""
+										},
+										"body": {
+											"value": "@concat('{','}')",
+											"type": "Expression"
+										},
+										"authentication": {
+											"type": "MSI",
+											"resource": "https://management.azure.com/"
+										}
+									}
+								},
+								{
+									"name": "Wait before Continue",
+									"type": "Wait",
+									"dependsOn": [
+										{
+											"activity": "Resume SQL POOL",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": {
+											"value": "@pipeline().parameters.WaitTime",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"Action": {
+						"type": "string",
+						"defaultValue": "Resume"
+					},
+					"WaitTime": {
+						"type": "int",
+						"defaultValue": 10
+					},
+					"WaitTimeUntil": {
+						"type": "int",
+						"defaultValue": 30
+					},
+					"Synapse_ResourceGroupName": {
+						"type": "string",
+						"defaultValue": "rg-psmsii-dt-001"
+					},
+					"SynapseWorkspace": {
+						"type": "string",
+						"defaultValue": "synpsmsiidt001ws1"
+					},
+					"SynapseDedicatedSQLPool": {
+						"type": "string",
+						"defaultValue": "dsqlppsmsiidt01"
+					},
+					"SubscriptionId": {
+						"type": "string",
+						"defaultValue": "047cf264-f2a3-43e7-b2e5-1ab1fc225ba1"
+					}
+				},
+				"folder": {
+					"name": "PL_TOOL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-04-21T14:10:28Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_COPY_UI_TABLE')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "To create the tables on DWH database based on dwl_copy_table_list table ",
+				"activities": [
+					{
+						"name": "ForEach Table in List",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Lookup1",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderQuery": {
+												"value": "@{concat('select 1 as flag from information_schema.tables where table_schema= ''',item().target_schema_name,''' and table_name=''',item().table_name,'''')}",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "dwh",
+												"tableName": "DWL_COPY_TABLE_LIST"
+											}
+										},
+										"firstRowOnly": false
+									}
+								},
+								{
+									"name": "If Condition1",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "Lookup1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@equals(if(\nempty(activity('Lookup1').output.value)\n,0,1),1)",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "Create Table",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "AzureSqlSource",
+														"queryTimeout": "02:00:00",
+														"partitionOption": "None"
+													},
+													"sink": {
+														"type": "SqlDWSink",
+														"tableOption": "autoCreate",
+														"disableMetricsCollection": false
+													},
+													"enableStaging": false,
+													"translator": {
+														"type": "TabularTranslator",
+														"typeConversion": true,
+														"typeConversionSettings": {
+															"allowDataTruncation": true,
+															"treatBooleanAsNumber": false
+														}
+													}
+												},
+												"inputs": [
+													{
+														"referenceName": "qtrsqldb",
+														"type": "DatasetReference",
+														"parameters": {
+															"tableName": {
+																"value": "@item().table_name",
+																"type": "Expression"
+															},
+															"schemaName": {
+																"value": "@item().schema_name",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "dsqlp_parametric",
+														"type": "DatasetReference",
+														"parameters": {
+															"schemaName": "@item().target_schema_name",
+															"tableName": "@item().table_name"
+														}
+													}
+												]
+											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "Drop and Create Table",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "AzureSqlSource",
+														"queryTimeout": "02:00:00",
+														"partitionOption": "None"
+													},
+													"sink": {
+														"type": "SqlDWSink",
+														"preCopyScript": {
+															"value": "@{concat('drop table ',item().target_schema_name,'.',item().table_name)}",
+															"type": "Expression"
+														},
+														"tableOption": "autoCreate",
+														"disableMetricsCollection": false
+													},
+													"enableStaging": false,
+													"translator": {
+														"type": "TabularTranslator",
+														"typeConversion": true,
+														"typeConversionSettings": {
+															"allowDataTruncation": true,
+															"treatBooleanAsNumber": false
+														}
+													}
+												},
+												"inputs": [
+													{
+														"referenceName": "qtrsqldb",
+														"type": "DatasetReference",
+														"parameters": {
+															"tableName": {
+																"value": "@item().table_name",
+																"type": "Expression"
+															},
+															"schemaName": {
+																"value": "@item().schema_name",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "dsqlp_parametric",
+														"type": "DatasetReference",
+														"parameters": {
+															"schemaName": "@item().target_schema_name",
+															"tableName": "@item().table_name"
+														}
+													}
+												]
+											}
+										]
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup Table List",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select schema_name,table_name, target_schema_name from dwh.DWL_COPY_TABLE_LIST",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_TOOL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-25T14:24:40Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_CSV_TO_STG')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_csv_folder",
+								"type": "DatasetReference"
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "truncateStgTransactions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "IsFileNameCorrect",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "lookupFileName",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@equals(if(\nempty(activity('lookupFileName').output.value)\n,0,1),1)\n",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "Send E_Mail",
+												"type": "WebActivity",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
+													"connectVia": {
+														"referenceName": "integrationRuntime10min",
+														"type": "IntegrationRuntimeReference"
+													},
+													"method": "POST",
+													"body": {
+														"value": "{\"EmailType\":\"NotExpectedFile\"}",
+														"type": "Expression"
+													},
+													"disableCertValidation": false
+												}
+											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "FilestoSTG",
+												"type": "ExecuteDataFlow",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"dataflow": {
+														"referenceName": "df_csv_to_stg",
+														"type": "DataFlowReference",
+														"parameters": {
+															"fileName": {
+																"value": "'@{item().name}'",
+																"type": "Expression"
+															}
+														},
+														"datasetParameters": {
+															"processingCsv": {
+																"FileName": {
+																	"value": "@item().name\n",
+																	"type": "Expression"
+																}
+															}
+														}
+													},
+													"staging": {
+														"folderPath": "processing"
+													},
+													"integrationRuntime": {
+														"referenceName": "integrationRuntime10min",
+														"type": "IntegrationRuntimeReference"
+													},
+													"traceLevel": "Coarse",
+													"runConcurrently": false
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "lookupFileName",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderQuery": {
+												"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[DWL_FILE_LIST] where DS_FILENAME= ','''',item().name,'''') ",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "ds_dwl_file_list",
+											"type": "DatasetReference"
+										},
+										"firstRowOnly": false
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "truncateStgTransactions",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_TRANSACTIONS];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_transactions",
+								"type": "DatasetReference"
+							}
+						}
+					}
+				],
+				"concurrency": 1,
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:55:14Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_csv_to_stg')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_CSV_TO_STG_ALLTRANSACTIONS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "RationDate",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "RationDate",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Group Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Group Code",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "OperationType",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "OperationType",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Supply/Distribution",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Supply/Distribution",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "FromAccountCR",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "FromAccountCR",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ToAccountCR",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ToAccountCR",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Amount",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CustomDeclarationNo",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "CustomDeclarationNo",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dls_processing_csv_copy1",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_stg_transactions_copy1",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:55:14Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_CUSTOM_XML_TO_DB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_custom_xml_to_db",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"DECLARATION": {
+										"schemaName": "dwh",
+										"tableName": "STG_CUSTOMS_DEC"
+									},
+									"ITEM": {
+										"schemaName": "dwh",
+										"tableName": "STG_CUSTOMS_ITEM"
+									},
+									"SUPERVISOR": {
+										"schemaName": "dwh",
+										"tableName": "STG_CUSTOMS_SUPV"
+									}
+								}
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Coarse"
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_CUSTOM"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_DAILY_MAIN')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "PL_STG_FILE_LIST_INS",
+						"description": "deneme2",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_FILE_TRANSFER",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_STG_FILE_LIST_INS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_FILE_TRANSFER",
+						"description": "deneme2",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_FILE_TRANSFER",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_DWL_FILE_LIST_UPD",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_STG_FILE_LIST_INS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_DWL_FILE_LIST_UPD",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_STG_FILE_LIST_UPD",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_STG_FILE_LIST_INS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_STG_FILE_LIST_UPD",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_MAIL_TO_NOTEXISTS",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_DWL_FILE_LIST_UPD",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_MAIL_TO_NOTEXISTS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_CSV_TO_STG",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_STG_FILE_LIST_UPD",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_CSV_TO_STG",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_EXEC_P_DQ_MAIN",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_EXEC_P_DQ_MAIN",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_CSV_TO_STG",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_EXEC_P_DQ_MAIN",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_STG_TRANS_TO_TRANSACTION",
+						"description": "deneme2",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_EXPORT_AND_EMAIL_ERRLOG",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_STG_TRANS_TO_TRANSACTION",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_DWL_FILE_LIST_ARC",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_STG_TRANS_TO_TRANSACTION",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_DWL_FILE_LIST_ARC",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					}
+				],
+				"variables": {
+					"deneme": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-25T14:24:57Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_STG_FILE_LIST_INS')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_FILE_TRANSFER')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_DWL_FILE_LIST_UPD')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_STG_FILE_LIST_UPD')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_MAIL_TO_NOTEXISTS')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_CSV_TO_STG')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_ERRLOG')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_EXEC_P_DQ_MAIN')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_STG_TRANS_TO_TRANSACTION')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_DWL_FILE_LIST_ARC')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_DWL_FILE_LIST_ARC')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "P_DWL_FILE_LIST_UPD",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_DWL_FILE_LIST_UPD]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_psmsii_syntodsqlp",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-25T14:24:46Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_DWL_FILE_LIST_INS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "P_DWL_FILE_LIST_INS",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_DWL_FILE_LIST_INS]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_psmsii_syntodsqlp",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-25T14:24:53Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_DWL_FILE_LIST_UPD')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Update dwl file list table is expected column",
+				"activities": [
+					{
+						"name": "df_dwl_file_list_upd_notexist",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_dwl_file_list_upd_notexist",
+								"type": "DataFlowReference"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_dwl_file_list_upd_exist",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_dwl_file_list_upd_notexist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_dwl_file_list_upd_exist",
+								"type": "DataFlowReference"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:54:20Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_EXEC_P_DQ_MAIN')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "P_DQ_MAIN",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderStoredProcedureName": "[[dwh].[P_DQ_MAIN]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_transactions",
+								"type": "DatasetReference"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:52:25Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_EXPORT_AND_EMAIL_ERRLOG')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "df_transerrlog_to_errlogcontainer",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_transerrlog_to_errlogcontainer",
+								"type": "DataFlowReference",
+								"parameters": {
+									"p_stg_filename": "STG_FILENAME"
+								}
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "None",
+							"cacheSinks": {
+								"firstRowOnly": true
+							}
+						}
+					},
+					{
+						"name": "lapp-qtr-errorlogs-to-entities",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "df_transerrlog_to_errlogcontainer",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
+							"connectVia": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "POST",
+							"body": {
+								"value": "{\"EmailType\":\"TransactionFileErrors\"}",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:55:22Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_FILE_TRANSFER')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "from upload to processing folder",
+				"activities": [
+					{
+						"name": "fileTransfer",
+						"description": "file transfering from upload container to processing container on data lake.",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"deleteFilesAfterCompletion": false
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "dls_upload_binary",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dls_processing_binary",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:54:28Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_MAIL_TO_NOTEXISTS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Beklediğimiz ama gelmeyen dosyalar için mail gönderimi",
+				"activities": [
+					{
+						"name": "Send E_Mail",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
+							"connectVia": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "POST",
+							"body": {
+								"value": "{\"EmailType\":\"NotUploadedFile\"}",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:50:39Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_STG_FILE_LIST_INS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Insert file names to stg file list table from processing container ",
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_csv_folder",
+								"type": "DatasetReference"
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "truncateStgTransactions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "df_stg_file_list",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "df_stg_file_list_ins",
+											"type": "DataFlowReference",
+											"parameters": {
+												"itemname": {
+													"value": "'@{item().name}'",
+													"type": "Expression"
+												}
+											}
+										},
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime10min",
+											"type": "IntegrationRuntimeReference"
+										},
+										"traceLevel": "None",
+										"cacheSinks": {
+											"firstRowOnly": true
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "truncateStgTransactions",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_FILE_LIST];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_transactions",
+								"type": "DatasetReference"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-26T14:24:08Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_STG_FILE_LIST_UPD')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Stg file list tablosunu update eden pipeline",
+				"activities": [
+					{
+						"name": "df_stg_file_list_upd",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_stg_file_list_upd",
+								"type": "DataFlowReference",
+								"parameters": {
+									"itemname": "toString('CRFR_20210321.csv')"
+								}
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "None",
+							"cacheSinks": {
+								"firstRowOnly": true
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:54:43Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_STG_TRANS_TO_TRANSACTION')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "STG_TO_TRANSACTIONS",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderStoredProcedureName": "DWH.P_TRANSACTION_UPD",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "DWB_transactions"
+								}
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:52:28Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_STG_TRANS_TO_TRANSACTION_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "df_transfer_stg_Trans_to_Trans",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_transfer_stg_Trans_to_Trans",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"sink1": {
+										"schemaName": "dwh",
+										"tableName": "DWB_TRANSACTIONS"
+									}
+								}
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:54:47Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Run Email Sender LogicApp')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Run Logic App",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-95.eastus.logic.azure.com:443/workflows/86257f463fb04ebb9c8476a37346b2e2/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kTjRzjrynRIoJcc_DRhdAMfCiRXjjhfXIzGhEDYt-bM",
+							"method": "POST",
+							"body": {
+								"value": "@concat('{','}')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:50:45Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_csv_to_stg')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dls_processing_csv",
+								"type": "DatasetReference"
+							},
+							"name": "processingCsv"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_stg_transactions",
+								"type": "DatasetReference"
+							},
+							"name": "stgTransactions"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddColumn"
+						},
+						{
+							"name": "SurrogateKey1"
+						}
+					],
+					"script": "parameters{\n\tfileName as string ('4')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingCsv\nprocessingCsv derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\tTRANSACTION_DATE = {Transaction Date - تاريخ الحركة }) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_COMPANY_STORE_CODE as string,\n\t\tMT_QUANTITY as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_COMMON_REF_CODE as string,\n\t\tID_TRANSFER_CODE as string,\n\t\tID_INVOICE_NUMBER as string,\n\t\tSK_ID as integer,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tsaveOrder: 1,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_YEARMONTHDAY = {Transaction Date - تاريخ الحركة },\n\t\tID_TRANSACTION_TYPE = {Transaction Type Code - كود نوع الحركة},\n\t\tID_ITEM_CODE = {Item Code - كود الصنف},\n\t\tID_ITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tID_ENTITY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tID_CUSTOMER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tID_COMPANY_STORE_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tMT_QUANTITY = {Quantity - الكمية},\n\t\tMT_DISCOUNT_AMOUNT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tID_COMMON_REF_CODE = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tID_TRANSFER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tID_INVOICE_NUMBER = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tSK_ID = SK_ID_SUR,\n\t\tSTG_FILENAME,\n\t\tSTG_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
