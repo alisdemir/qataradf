@@ -93,6 +93,12 @@
 					"ls_dsqlpqtr_connectionString": {
 						"value": "[parameters('ls_dsqlpqtr_connectionString')]"
 					},
+					"ls_qtrsqldb_connectionString": {
+						"value": "[parameters('ls_qtrsqldb_connectionString')]"
+					},
+					"ls_psmsii_syntodls_accountKey": {
+						"value": "[parameters('ls_psmsii_syntodls_accountKey')]"
+					},
 					"ls_psmsii_syntodsqlp_connectionString": {
 						"value": "[parameters('ls_psmsii_syntodsqlp_connectionString')]"
 					},
@@ -101,30 +107,6 @@
 					},
 					"ls_psmsii_syntosql_connectionString": {
 						"value": "[parameters('ls_psmsii_syntosql_connectionString')]"
-					},
-					"ls_qtrsqldb_connectionString": {
-						"value": "[parameters('ls_qtrsqldb_connectionString')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "dfpsmsiidt001_ArmTemplate_1",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
-					},
-					"ls_psmsii_syntodls_accountKey": {
-						"value": "[parameters('ls_psmsii_syntodls_accountKey')]"
 					},
 					"pendp_psmsii_adftodls_properties_privateLinkResourceId": {
 						"value": "[parameters('pendp_psmsii_adftodls_properties_privateLinkResourceId')]"
@@ -146,6 +128,24 @@
 					},
 					"ls_psmsii_syntodls_properties_typeProperties_url": {
 						"value": "[parameters('ls_psmsii_syntodls_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "dfpsmsiidt001_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					}
 				}
 			},
