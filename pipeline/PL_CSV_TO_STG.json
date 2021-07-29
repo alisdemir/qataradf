@@ -130,14 +130,17 @@
 												}
 											},
 											"staging": {
+												"linkedService": {
+													"referenceName": "ls_psmsii_syntodls",
+													"type": "LinkedServiceReference"
+												},
 												"folderPath": "processing"
 											},
 											"integrationRuntime": {
 												"referenceName": "integrationRuntime10min",
 												"type": "IntegrationRuntimeReference"
 											},
-											"traceLevel": "Coarse",
-											"runConcurrently": false
+											"traceLevel": "Coarse"
 										}
 									}
 								]
