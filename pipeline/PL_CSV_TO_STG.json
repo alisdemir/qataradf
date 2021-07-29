@@ -130,10 +130,6 @@
 												}
 											},
 											"staging": {
-												"linkedService": {
-													"referenceName": "ls_psmsii_syntodls",
-													"type": "LinkedServiceReference"
-												},
 												"folderPath": "processing"
 											},
 											"integrationRuntime": {
