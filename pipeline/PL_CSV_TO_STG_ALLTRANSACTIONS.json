@@ -100,14 +100,7 @@
 									"type": "SqlDWSink",
 									"disableMetricsCollection": false
 								},
-								"enableStaging": true,
-								"stagingSettings": {
-									"linkedServiceName": {
-										"referenceName": "ls_psmsii_syntodls",
-										"type": "LinkedServiceReference"
-									},
-									"path": "processing"
-								},
+								"enableStaging": false,
 								"translator": {
 									"type": "TabularTranslator",
 									"mappings": [
