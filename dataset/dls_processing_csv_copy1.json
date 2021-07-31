@@ -20,10 +20,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "All Transactions_copy.csv",
-					"type": "Expression"
-				},
 				"fileSystem": "processing"
 			},
 			"columnDelimiter": "|",
@@ -33,23 +29,51 @@
 		},
 		"schema": [
 			{
-				"name": "FromAccountID",
+				"name": "Transaction Date - تاريخ الحركة ",
 				"type": "String"
 			},
 			{
-				"name": "FromAccountEn",
+				"name": "Transaction Type Code - كود نوع الحركة",
 				"type": "String"
 			},
 			{
-				"name": "FromAccountAr",
+				"name": "Item Code - كود الصنف",
 				"type": "String"
 			},
 			{
-				"name": "FromAccountType",
+				"name": "Item Barcode - باركود الصنف",
 				"type": "String"
 			},
 			{
-				"name": "FromAccountCR",
+				"name": "Your Company CR# - رقم السجل التجارى للشركة",
+				"type": "String"
+			},
+			{
+				"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
+				"type": "String"
+			},
+			{
+				"name": "Company Store/Inventory Code - رقم المخزن ",
+				"type": "String"
+			},
+			{
+				"name": "Quantity - الكمية",
+				"type": "String"
+			},
+			{
+				"name": "Selling Price per unit - سعر البيع للوحدة  -",
+				"type": "String"
+			},
+			{
+				"name": "Comon Referance No. -  رقم المرجع المشترك",
+				"type": "String"
+			},
+			{
+				"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
+				"type": "String"
+			},
+			{
+				"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
 				"type": "String"
 			}
 		]
