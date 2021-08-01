@@ -45,7 +45,7 @@
 					"columnDelimiter": "|",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
-					"quoteChar": "\""
+					"quoteChar": ""
 				},
 				"schema": [
 					{
@@ -125,7 +125,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "All Transactions_copy.csv",
+							"value": "@dataset().FileName",
 							"type": "Expression"
 						},
 						"fileSystem": "processing"
@@ -133,27 +133,55 @@
 					"columnDelimiter": "|",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
-					"quoteChar": "\""
+					"quoteChar": ""
 				},
 				"schema": [
 					{
-						"name": "FromAccountID",
+						"name": "Transaction Date - تاريخ الحركة ",
 						"type": "String"
 					},
 					{
-						"name": "FromAccountEn",
+						"name": "Transaction Type Code - كود نوع الحركة",
 						"type": "String"
 					},
 					{
-						"name": "FromAccountAr",
+						"name": "Item Code - كود الصنف",
 						"type": "String"
 					},
 					{
-						"name": "FromAccountType",
+						"name": "Item Barcode - باركود الصنف",
 						"type": "String"
 					},
 					{
-						"name": "FromAccountCR",
+						"name": "Your Company CR# - رقم السجل التجارى للشركة",
+						"type": "String"
+					},
+					{
+						"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
+						"type": "String"
+					},
+					{
+						"name": "Company Store/Inventory Code - رقم المخزن ",
+						"type": "String"
+					},
+					{
+						"name": "Quantity - الكمية",
+						"type": "String"
+					},
+					{
+						"name": "Selling Price per unit - سعر البيع للوحدة  -",
+						"type": "String"
+					},
+					{
+						"name": "Comon Referance No. -  رقم المرجع المشترك",
+						"type": "String"
+					},
+					{
+						"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
+						"type": "String"
+					},
+					{
+						"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
 						"type": "String"
 					}
 				]
@@ -939,10 +967,72 @@
 				},
 				"annotations": [],
 				"type": "AzureSqlDWTable",
-				"schema": [],
+				"schema": [
+					{
+						"name": "ID_YEARMONTHDAY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_TRANSACTION_TYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_ITEM_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_ITEM_BARCODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_ENTITY_CR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_CUSTOMER_ENTITY_CR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_COMPANY_STORE_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MT_QUANTITY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MT_DISCOUNT_AMOUNT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_COMMON_REF_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_TRANSFER_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_INVOICE_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SK_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "STG_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STG_FILETIME",
+						"type": "nvarchar"
+					}
+				],
 				"typeProperties": {
 					"schema": "dwh",
-					"table": "ALL_TRANSACTIONS"
+					"table": "STG_TRANSACTIONS_SIL"
 				}
 			},
 			"dependsOn": []

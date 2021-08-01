@@ -2007,8 +2007,9 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy data1",
-						"type": "Copy",
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -2019,146 +2020,240 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlDWSink",
-								"tableOption": "autoCreate",
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "RationDate",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "RationDate",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Group Code",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Group Code",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "OperationType",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "OperationType",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Supply/Distribution",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Supply/Distribution",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "FromAccountCR",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "FromAccountCR",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ToAccountCR",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ToAccountCR",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Amount",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Amount",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CustomDeclarationNo",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "CustomDeclarationNo",
-											"type": "String",
-											"physicalType": "String"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dls_processing_csv_copy1",
+							"dataset": {
+								"referenceName": "dls_processing_csv_folder",
 								"type": "DatasetReference",
 								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEach11",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
 							}
 						],
-						"outputs": [
-							{
-								"referenceName": "ds_stg_transactions_copy1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": false,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"allowPolyBase": true,
+											"polyBaseSettings": {
+												"rejectValue": 0,
+												"rejectType": "value",
+												"useTypeDefault": true
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": true,
+										"stagingSettings": {
+											"linkedServiceName": {
+												"referenceName": "ls_psmsii_syntodls",
+												"type": "LinkedServiceReference"
+											},
+											"path": "stagingarea"
+										},
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"name": "Transaction Date - تاريخ الحركة ",
+														"type": "String"
+													},
+													"sink": {
+														"name": "ID_YEARMONTHDAY",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "Transaction Type Code - كود نوع الحركة",
+														"type": "String"
+													},
+													"sink": {
+														"name": "ID_TRANSACTION_TYPE",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "Item Code - كود الصنف",
+														"type": "String"
+													},
+													"sink": {
+														"name": "ID_ITEM_CODE",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "Item Barcode - باركود الصنف",
+														"type": "String"
+													},
+													"sink": {
+														"name": "ID_ITEM_BARCODE",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "Your Company CR# - رقم السجل التجارى للشركة",
+														"type": "String"
+													},
+													"sink": {
+														"name": "ID_ENTITY_CR",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
+														"type": "String"
+													},
+													"sink": {
+														"name": "ID_CUSTOMER_ENTITY_CR",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "Company Store/Inventory Code - رقم المخزن ",
+														"type": "String"
+													},
+													"sink": {
+														"name": "ID_COMPANY_STORE_CODE",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "Quantity - الكمية",
+														"type": "String"
+													},
+													"sink": {
+														"name": "MT_QUANTITY",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "Selling Price per unit - سعر البيع للوحدة  -",
+														"type": "String"
+													},
+													"sink": {
+														"name": "MT_DISCOUNT_AMOUNT",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "Comon Referance No. -  رقم المرجع المشترك",
+														"type": "String"
+													},
+													"sink": {
+														"name": "ID_COMMON_REF_CODE",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
+														"type": "String"
+													},
+													"sink": {
+														"name": "ID_TRANSFER_CODE",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
+														"type": "String"
+													},
+													"sink": {
+														"name": "ID_INVOICE_NUMBER",
+														"type": "String"
+													}
+												}
+											]
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "dls_processing_csv_copy1",
+											"type": "DatasetReference",
+											"parameters": {
+												"FileName": {
+													"value": "@item().name\n",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_stg_transactions_copy1",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
+						}
 					}
 				],
+				"parameters": {
+					"filename": {
+						"type": "string"
+					}
+				},
 				"folder": {
 					"name": "Dev"
 				},
@@ -2166,8 +2261,10 @@
 				"lastPublishTime": "2021-05-20T12:55:14Z"
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dls_processing_csv_folder')]",
 				"[concat(variables('factoryId'), '/datasets/dls_processing_csv_copy1')]",
-				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions_copy1')]"
+				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions_copy1')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
 			]
 		},
 		{
@@ -3384,7 +3481,7 @@
 					"columnDelimiter": "|",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
-					"quoteChar": "\""
+					"quoteChar": ""
 				},
 				"schema": [
 					{
@@ -3466,7 +3563,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "All Transactions_copy.csv",
+							"value": "@dataset().FileName",
 							"type": "Expression"
 						},
 						"fileSystem": "processing"
@@ -3474,27 +3571,55 @@
 					"columnDelimiter": "|",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
-					"quoteChar": "\""
+					"quoteChar": ""
 				},
 				"schema": [
 					{
-						"name": "FromAccountID",
+						"name": "Transaction Date - تاريخ الحركة ",
 						"type": "String"
 					},
 					{
-						"name": "FromAccountEn",
+						"name": "Transaction Type Code - كود نوع الحركة",
 						"type": "String"
 					},
 					{
-						"name": "FromAccountAr",
+						"name": "Item Code - كود الصنف",
 						"type": "String"
 					},
 					{
-						"name": "FromAccountType",
+						"name": "Item Barcode - باركود الصنف",
 						"type": "String"
 					},
 					{
-						"name": "FromAccountCR",
+						"name": "Your Company CR# - رقم السجل التجارى للشركة",
+						"type": "String"
+					},
+					{
+						"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
+						"type": "String"
+					},
+					{
+						"name": "Company Store/Inventory Code - رقم المخزن ",
+						"type": "String"
+					},
+					{
+						"name": "Quantity - الكمية",
+						"type": "String"
+					},
+					{
+						"name": "Selling Price per unit - سعر البيع للوحدة  -",
+						"type": "String"
+					},
+					{
+						"name": "Comon Referance No. -  رقم المرجع المشترك",
+						"type": "String"
+					},
+					{
+						"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
+						"type": "String"
+					},
+					{
+						"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
 						"type": "String"
 					}
 				]
@@ -4304,10 +4429,72 @@
 				},
 				"annotations": [],
 				"type": "AzureSqlDWTable",
-				"schema": [],
+				"schema": [
+					{
+						"name": "ID_YEARMONTHDAY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_TRANSACTION_TYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_ITEM_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_ITEM_BARCODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_ENTITY_CR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_CUSTOMER_ENTITY_CR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_COMPANY_STORE_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MT_QUANTITY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MT_DISCOUNT_AMOUNT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_COMMON_REF_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_TRANSFER_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_INVOICE_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SK_ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "STG_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STG_FILETIME",
+						"type": "nvarchar"
+					}
+				],
 				"typeProperties": {
 					"schema": "dwh",
-					"table": "ALL_TRANSACTIONS"
+					"table": "STG_TRANSACTIONS_SIL"
 				}
 			},
 			"dependsOn": [
@@ -5070,6 +5257,213 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/copycommand')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": false,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings",
+									"skipLineCount": 1
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"allowPolyBase": true,
+								"polyBaseSettings": {
+									"rejectValue": 0,
+									"rejectType": "value",
+									"useTypeDefault": true
+								},
+								"disableMetricsCollection": false
+							},
+							"enableStaging": true,
+							"stagingSettings": {
+								"linkedServiceName": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"path": "stagingarea"
+							},
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Transaction Date - تاريخ الحركة ",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID_YEARMONTHDAY",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Transaction Type Code - كود نوع الحركة",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID_TRANSACTION_TYPE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Item Code - كود الصنف",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID_ITEM_CODE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Item Barcode - باركود الصنف",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID_ITEM_BARCODE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Your Company CR# - رقم السجل التجارى للشركة",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID_ENTITY_CR",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID_CUSTOMER_ENTITY_CR",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Company Store/Inventory Code - رقم المخزن ",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID_COMPANY_STORE_CODE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Quantity - الكمية",
+											"type": "String"
+										},
+										"sink": {
+											"name": "MT_QUANTITY",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Selling Price per unit - سعر البيع للوحدة  -",
+											"type": "String"
+										},
+										"sink": {
+											"name": "MT_DISCOUNT_AMOUNT",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Comon Referance No. -  رقم المرجع المشترك",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID_COMMON_REF_CODE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID_TRANSFER_CODE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ID_INVOICE_NUMBER",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dls_processing_csv_copy1",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": {
+										"value": "32922.csv",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_stg_transactions_copy1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dls_processing_csv_copy1')]",
+				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions_copy1')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
 			]
 		}
 	]
