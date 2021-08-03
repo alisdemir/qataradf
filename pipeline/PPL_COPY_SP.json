@@ -34,8 +34,7 @@
 		],
 		"parameters": {
 			"FILENAME": {
-				"type": "string",
-				"defaultValue": "@item().name"
+				"type": "string"
 			}
 		},
 		"folder": {
