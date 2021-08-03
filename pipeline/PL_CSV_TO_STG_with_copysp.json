@@ -108,7 +108,10 @@
 												"referenceName": "PPL_COPY_SP",
 												"type": "PipelineReference"
 											},
-											"waitOnCompletion": true
+											"waitOnCompletion": true,
+											"parameters": {
+												"FILENAME": "@item().name"
+											}
 										}
 									}
 								]
