@@ -99,41 +99,16 @@
 								],
 								"ifTrueActivities": [
 									{
-										"name": "FilestoSTG",
-										"type": "ExecuteDataFlow",
+										"name": "PPL_COPY_SP",
+										"type": "ExecutePipeline",
 										"dependsOn": [],
-										"policy": {
-											"timeout": "7.00:00:00",
-											"retry": 0,
-											"retryIntervalInSeconds": 30,
-											"secureOutput": false,
-											"secureInput": false
-										},
 										"userProperties": [],
 										"typeProperties": {
-											"dataflow": {
-												"referenceName": "df_csv_to_stg",
-												"type": "DataFlowReference",
-												"parameters": {
-													"fileName": {
-														"value": "'@{item().name}'",
-														"type": "Expression"
-													}
-												},
-												"datasetParameters": {
-													"processingCsv": {
-														"FileName": {
-															"value": "@item().name\n",
-															"type": "Expression"
-														}
-													}
-												}
+											"pipeline": {
+												"referenceName": "PPL_COPY_SP",
+												"type": "PipelineReference"
 											},
-											"integrationRuntime": {
-												"referenceName": "integrationRuntime10min",
-												"type": "IntegrationRuntimeReference"
-											},
-											"traceLevel": "Coarse"
+											"waitOnCompletion": true
 										}
 									}
 								]
