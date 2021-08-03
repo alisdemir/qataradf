@@ -32,6 +32,12 @@
 				}
 			}
 		],
+		"parameters": {
+			"FILENAME": {
+				"type": "string",
+				"defaultValue": "@item().name"
+			}
+		},
 		"folder": {
 			"name": "Dev"
 		},
