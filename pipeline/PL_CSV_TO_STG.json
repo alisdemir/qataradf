@@ -99,8 +99,8 @@
 								],
 								"ifTrueActivities": [
 									{
-										"name": "FilestoSTG",
-										"type": "ExecuteDataFlow",
+										"name": "SP_COPY_FILE_DATA",
+										"type": "SqlServerStoredProcedure",
 										"dependsOn": [],
 										"policy": {
 											"timeout": "7.00:00:00",
@@ -111,32 +111,20 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"dataflow": {
-												"referenceName": "df_csv_to_stg",
-												"type": "DataFlowReference",
-												"parameters": {
-													"fileName": {
-														"value": "'@{item().name}'",
+											"storedProcedureName": "[dwh].[SP_COPY_FILE_DATA]",
+											"storedProcedureParameters": {
+												"FILENAME": {
+													"value": {
+														"value": "$fileName",
 														"type": "Expression"
-													}
-												},
-												"datasetParameters": {
-													"processingCsv": {
-														"FileName": {
-															"value": "@item().name\n",
-															"type": "Expression"
-														}
-													}
+													},
+													"type": "String"
 												}
-											},
-											"staging": {
-												"folderPath": "processing"
-											},
-											"integrationRuntime": {
-												"referenceName": "integrationRuntime10min",
-												"type": "IntegrationRuntimeReference"
-											},
-											"traceLevel": "Coarse"
+											}
+										},
+										"linkedServiceName": {
+											"referenceName": "ls_dsqlpqtr",
+											"type": "LinkedServiceReference"
 										}
 									}
 								]
