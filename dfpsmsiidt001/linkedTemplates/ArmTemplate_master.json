@@ -90,11 +90,11 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"ls_dsqlpqtr_connectionString": {
-						"value": "[parameters('ls_dsqlpqtr_connectionString')]"
-					},
 					"ls_qtrsqldb_connectionString": {
 						"value": "[parameters('ls_qtrsqldb_connectionString')]"
+					},
+					"ls_dsqlpqtr_connectionString": {
+						"value": "[parameters('ls_dsqlpqtr_connectionString')]"
 					},
 					"ls_psmsii_syntodls_accountKey": {
 						"value": "[parameters('ls_psmsii_syntodls_accountKey')]"
