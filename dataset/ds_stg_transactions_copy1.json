@@ -75,7 +75,7 @@
 		],
 		"typeProperties": {
 			"schema": "dwh",
-			"table": "STG_TRANSACTIONS_SIL"
+			"table": "ALL_TRANSACTIONS"
 		}
 	},
 	"type": "Microsoft.Synapse/workspaces/datasets"
