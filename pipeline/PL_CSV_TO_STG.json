@@ -109,6 +109,7 @@
 											"secureOutput": false,
 											"secureInput": false
 										},
+										"userProperties": [],
 										"typeProperties": {
 											"storedProcedureName": "[dwh].[P_COPY_FILE_DATA]",
 											"storedProcedureParameters": {
