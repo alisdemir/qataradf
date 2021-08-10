@@ -110,7 +110,10 @@
 											},
 											"waitOnCompletion": true,
 											"parameters": {
-												"FILENAME": "@item().name"
+												"FILENAME": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
 											}
 										}
 									}
