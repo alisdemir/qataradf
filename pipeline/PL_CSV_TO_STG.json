@@ -63,6 +63,7 @@
 									]
 								}
 							],
+							"userProperties": [],
 							"typeProperties": {
 								"expression": {
 									"value": "@equals(if(\nempty(activity('lookupFileName').output.value)\n,0,1),1)\n",
