@@ -99,7 +99,7 @@
 								],
 								"ifTrueActivities": [
 									{
-										"name": "SP_COPY_FILE_DATA",
+										"name": "P_COPY_FILE_DATA",
 										"type": "SqlServerStoredProcedure",
 										"dependsOn": [],
 										"policy": {
@@ -111,7 +111,7 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"storedProcedureName": "[dwh].[SP_COPY_FILE_DATA]",
+											"storedProcedureName": "[dwh].[P_COPY_FILE_DATA]",
 											"storedProcedureParameters": {
 												"FILENAME": {
 													"value": {
