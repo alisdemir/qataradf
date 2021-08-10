@@ -18,7 +18,10 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "dls_processing_csv_folder",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "32922.csv"
+						}
 					},
 					"fieldList": [
 						"childItems"
