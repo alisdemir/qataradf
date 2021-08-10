@@ -18,10 +18,7 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "dls_processing_csv_folder",
-						"type": "DatasetReference",
-						"parameters": {
-							"filename": "32922.csv"
-						}
+						"type": "DatasetReference"
 					},
 					"fieldList": [
 						"childItems"
@@ -117,7 +114,10 @@
 											"storedProcedureName": "[dwh].[P_COPY_FILE_DATA]",
 											"storedProcedureParameters": {
 												"FILENAME": {
-													"value": "$fileName",
+													"value": {
+														"value": "@activity('GetFileList').output",
+														"type": "Expression"
+													},
 													"type": "String"
 												}
 											}
