@@ -120,7 +120,7 @@
 											"storedProcedureParameters": {
 												"FILENAME": {
 													"value": {
-														"value": "@activity('GetFileList').output",
+														"value": "$fileName",
 														"type": "Expression"
 													},
 													"type": "String"
