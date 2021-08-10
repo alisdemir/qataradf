@@ -120,7 +120,7 @@
 											"storedProcedureParameters": {
 												"FILENAME": {
 													"value": {
-														"value": "$fileName",
+														"value": "item().name",
 														"type": "Expression"
 													},
 													"type": "String"
