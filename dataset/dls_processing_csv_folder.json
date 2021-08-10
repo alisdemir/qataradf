@@ -6,12 +6,6 @@
 			"referenceName": "ls_psmsii_syntodls",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"filename": {
-				"type": "string",
-				"defaultValue": "$fileName"
-			}
-		},
 		"folder": {
 			"name": "Storage_DL_QTR"
 		},
@@ -20,10 +14,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@dataset().filename",
-					"type": "Expression"
-				},
 				"fileSystem": "processing"
 			},
 			"columnDelimiter": "|",
