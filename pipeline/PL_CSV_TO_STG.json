@@ -115,7 +115,7 @@
 											"storedProcedureParameters": {
 												"FILENAME": {
 													"value": {
-														"value": "item().name",
+														"value": "@item().name",
 														"type": "Expression"
 													},
 													"type": "String"
