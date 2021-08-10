@@ -21,8 +21,7 @@
 						"type": "DatasetReference"
 					},
 					"fieldList": [
-						"childItems",
-						"itemName"
+						"childItems"
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
@@ -45,12 +44,7 @@
 						]
 					}
 				],
-				"userProperties": [
-					{
-						"name": "filename",
-						"value": "$fileName"
-					}
-				],
+				"userProperties": [],
 				"typeProperties": {
 					"items": {
 						"value": "@activity('GetFileList').output.childItems",
@@ -115,7 +109,6 @@
 											"secureOutput": false,
 											"secureInput": false
 										},
-										"userProperties": [],
 										"typeProperties": {
 											"storedProcedureName": "[dwh].[P_COPY_FILE_DATA]",
 											"storedProcedureParameters": {
