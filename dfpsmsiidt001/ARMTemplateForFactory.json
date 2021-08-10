@@ -1892,7 +1892,7 @@
 													"storedProcedureParameters": {
 														"FILENAME": {
 															"value": {
-																"value": "$fileName",
+																"value": "@item().name",
 																"type": "Expression"
 															},
 															"type": "String"
@@ -3986,9 +3986,9 @@
 						"fileSystem": "processing"
 					},
 					"columnDelimiter": "|",
-					"escapeChar": "\\",
+					"escapeChar": "",
 					"firstRowAsHeader": true,
-					"quoteChar": "\""
+					"quoteChar": ""
 				},
 				"schema": [
 					{
