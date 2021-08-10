@@ -63,7 +63,6 @@
 									]
 								}
 							],
-							"userProperties": [],
 							"typeProperties": {
 								"expression": {
 									"value": "@equals(if(\nempty(activity('lookupFileName').output.value)\n,0,1),1)\n",
@@ -114,10 +113,7 @@
 											"storedProcedureName": "[dwh].[P_COPY_FILE_DATA]",
 											"storedProcedureParameters": {
 												"FILENAME": {
-													"value": {
-														"value": "@activity('lookupFileName').output",
-														"type": "Expression"
-													},
+													"value": "$fileName",
 													"type": "String"
 												}
 											}
