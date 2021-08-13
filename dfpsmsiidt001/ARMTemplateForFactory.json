@@ -2463,7 +2463,7 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "PL_FILE_TRANSFER",
+								"activity": "PL_DWL_FILE_LIST_INS",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2668,6 +2668,27 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "PL_DWL_FILE_LIST_INS",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_FILE_TRANSFER",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_DWL_FILE_LIST_INS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"variables": {
@@ -2691,7 +2712,8 @@
 				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_ERRLOG')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_EXEC_P_DQ_MAIN')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_STG_TRANS_TO_TRANSACTION')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_DWL_FILE_LIST_ARC')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_DWL_FILE_LIST_ARC')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_DWL_FILE_LIST_INS')]"
 			]
 		},
 		{
