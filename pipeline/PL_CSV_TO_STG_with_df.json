@@ -119,7 +119,7 @@
 												},
 												"datasetParameters": {
 													"processingCsv": {
-														"FileName": "6-RAYAN NATURAL WATER 9097_PSMS II - Inventory Transactions - Data Collection Sheet.csv"
+														"FileName": "@item().name"
 													}
 												}
 											},
