@@ -119,7 +119,7 @@
 												},
 												"datasetParameters": {
 													"processingCsv": {
-														"FileName": "'24975.csv'"
+														"FileName": "@item().name"
 													}
 												}
 											},
