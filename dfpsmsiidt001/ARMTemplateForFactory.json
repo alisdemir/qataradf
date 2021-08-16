@@ -2156,7 +2156,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_CSV_TO_STG_with_copysp')]",
+			"name": "[concat(parameters('factoryName'), '/PL_CSV_TO_STG_with_df')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2260,22 +2260,37 @@
 										],
 										"ifTrueActivities": [
 											{
-												"name": "PPL_COPY_SP",
-												"type": "ExecutePipeline",
+												"name": "df_csv_to_stg",
+												"type": "ExecuteDataFlow",
 												"dependsOn": [],
+												"policy": {
+													"timeout": "1.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
 												"userProperties": [],
 												"typeProperties": {
-													"pipeline": {
-														"referenceName": "PPL_COPY_SP",
-														"type": "PipelineReference"
-													},
-													"waitOnCompletion": true,
-													"parameters": {
-														"FILENAME": {
-															"value": "@item().name",
-															"type": "Expression"
+													"dataflow": {
+														"referenceName": "df_csv_to_stg",
+														"type": "DataFlowReference",
+														"parameters": {
+															"fileName": "'4'"
+														},
+														"datasetParameters": {
+															"processingCsv": {
+																"FileName": "@item().name"
+															},
+															"stgTransactions": {}
 														}
-													}
+													},
+													"staging": {},
+													"compute": {
+														"coreCount": 8,
+														"computeType": "General"
+													},
+													"traceLevel": "Fine"
 												}
 											}
 										]
@@ -2360,7 +2375,7 @@
 				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions')]",
 				"[concat(variables('factoryId'), '/datasets/ds_dwl_file_list')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
-				"[concat(variables('factoryId'), '/pipelines/PPL_COPY_SP')]"
+				"[concat(variables('factoryId'), '/dataflows/df_csv_to_stg')]"
 			]
 		},
 		{
