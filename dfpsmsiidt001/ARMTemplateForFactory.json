@@ -2280,7 +2280,7 @@
 														},
 														"datasetParameters": {
 															"processingCsv": {
-																"FileName": "@item().name"
+																"FileName": "'24975.csv'"
 															},
 															"stgTransactions": {}
 														}
@@ -3863,7 +3863,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "24975.csv",
+							"value": "@dataset().FileName",
 							"type": "Expression"
 						},
 						"fileSystem": "processing"
