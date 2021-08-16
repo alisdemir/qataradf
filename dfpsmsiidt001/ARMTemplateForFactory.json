@@ -2286,11 +2286,11 @@
 														}
 													},
 													"staging": {},
-													"compute": {
-														"coreCount": 8,
-														"computeType": "General"
+													"integrationRuntime": {
+														"referenceName": "integrationRuntime10min",
+														"type": "IntegrationRuntimeReference"
 													},
-													"traceLevel": "Fine"
+													"traceLevel": "Coarse"
 												}
 											}
 										]
@@ -3863,7 +3863,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "@dataset().FileName",
+							"value": "24975.csv",
 							"type": "Expression"
 						},
 						"fileSystem": "processing"

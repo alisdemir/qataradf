@@ -1579,11 +1579,11 @@
 														}
 													},
 													"staging": {},
-													"compute": {
-														"coreCount": 8,
-														"computeType": "General"
+													"integrationRuntime": {
+														"referenceName": "integrationRuntime10min",
+														"type": "IntegrationRuntimeReference"
 													},
-													"traceLevel": "Fine"
+													"traceLevel": "Coarse"
 												}
 											}
 										]
