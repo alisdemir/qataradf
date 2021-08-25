@@ -1,0 +1,45 @@
+{
+	"name": "dls_processing_xlsx_folder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls_xlsx",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Storage_DL_QTR"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "ALL TRANSACTION TYPES.xlsx",
+				"fileSystem": "processing"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Company CR #",
+				"type": "String"
+			},
+			{
+				"name": "Company Transaction Type Arabic ",
+				"type": "String"
+			},
+			{
+				"name": "Company Transaction Type English ",
+				"type": "String"
+			},
+			{
+				"name": "Company Transaction type",
+				"type": "String"
+			},
+			{
+				"name": "PSMS - MoCI Transaction Types",
+				"type": "String"
+			}
+		]
+	}
+}
