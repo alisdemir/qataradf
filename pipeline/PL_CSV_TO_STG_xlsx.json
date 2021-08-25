@@ -17,19 +17,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_processing_csv_folder",
+						"referenceName": "dls_processing_xlsx_folder",
 						"type": "DatasetReference"
 					},
-					"fieldList": [
-						"childItems"
-					],
+					"fieldList": [],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"recursive": true,
 						"enablePartitionDiscovery": false
-					},
-					"formatSettings": {
-						"type": "DelimitedTextReadSettings"
 					}
 				}
 			},
@@ -99,11 +94,11 @@
 								],
 								"ifTrueActivities": [
 									{
-										"name": "P_COPY_FILE_DATA",
-										"type": "SqlServerStoredProcedure",
+										"name": "df_csv_to_stg_xlsx",
+										"type": "ExecuteDataFlow",
 										"dependsOn": [],
 										"policy": {
-											"timeout": "7.00:00:00",
+											"timeout": "1.00:00:00",
 											"retry": 0,
 											"retryIntervalInSeconds": 30,
 											"secureOutput": false,
@@ -111,20 +106,18 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"storedProcedureName": "[dwh].[P_COPY_FILE_DATA]",
-											"storedProcedureParameters": {
-												"FILENAME": {
-													"value": {
-														"value": "@item().name",
-														"type": "Expression"
-													},
-													"type": "String"
+											"dataflow": {
+												"referenceName": "df_csv_to_stg_xlsx",
+												"type": "DataFlowReference",
+												"parameters": {
+													"fileName": "'4'"
 												}
-											}
-										},
-										"linkedServiceName": {
-											"referenceName": "ls_dsqlpqtr",
-											"type": "LinkedServiceReference"
+											},
+											"compute": {
+												"coreCount": 8,
+												"computeType": "General"
+											},
+											"traceLevel": "Coarse"
 										}
 									}
 								]
