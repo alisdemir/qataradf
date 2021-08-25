@@ -20,7 +20,9 @@
 						"referenceName": "dls_processing_xlsx_folder",
 						"type": "DatasetReference"
 					},
-					"fieldList": [],
+					"fieldList": [
+						"itemName"
+					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"recursive": true,
@@ -112,6 +114,13 @@
 												"parameters": {
 													"fileName": "'4'"
 												}
+											},
+											"staging": {
+												"linkedService": {
+													"referenceName": "ls_psmsii_syntodls_xlsx",
+													"type": "LinkedServiceReference"
+												},
+												"folderPath": "staging"
 											},
 											"compute": {
 												"coreCount": 8,
