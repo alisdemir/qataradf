@@ -21,7 +21,7 @@
 						"type": "DatasetReference"
 					},
 					"fieldList": [
-						"exists"
+						"itemName"
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
@@ -44,7 +44,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('GetFileList').output.itemName",
+						"value": "@activity('GetFileList').output.value",
 						"type": "Expression"
 					},
 					"isSequential": true,
