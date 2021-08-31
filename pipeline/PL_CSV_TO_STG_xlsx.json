@@ -17,7 +17,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_processing_xlsx_folder",
+						"referenceName": "dls_processing_xlsx",
 						"type": "DatasetReference"
 					},
 					"fieldList": [
@@ -115,6 +115,11 @@
 													"fileName": {
 														"value": "'@{item().name}'",
 														"type": "Expression"
+													}
+												},
+												"datasetParameters": {
+													"processingxlsx": {
+														"FileName": "@item().name"
 													}
 												}
 											},
