@@ -19,7 +19,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "104897.xlsx",
+					"value": "'104897.xlsx'",
 					"type": "Expression"
 				},
 				"fileSystem": "processing"
