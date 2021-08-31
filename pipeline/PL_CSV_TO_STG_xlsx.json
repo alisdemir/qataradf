@@ -116,11 +116,7 @@
 												}
 											},
 											"staging": {
-												"linkedService": {
-													"referenceName": "ls_psmsii_syntodls_xlsx",
-													"type": "LinkedServiceReference"
-												},
-												"folderPath": "staging"
+												"folderPath": ""
 											},
 											"compute": {
 												"coreCount": 8,
