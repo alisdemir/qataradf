@@ -14,7 +14,6 @@
 			"sheetName": "New Template - النموذج الجديد",
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "104897.xlsx",
 				"fileSystem": "processing"
 			},
 			"firstRowAsHeader": true
