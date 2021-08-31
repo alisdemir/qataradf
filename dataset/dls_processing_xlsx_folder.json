@@ -2,7 +2,7 @@
 	"name": "dls_processing_xlsx_folder",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_psmsii_syntodls_xlsx",
+			"referenceName": "ls_psmsii_syntodls",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -18,10 +18,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "@dataset().FileName",
 				"fileSystem": "processing"
 			},
-			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
 		"schema": [
