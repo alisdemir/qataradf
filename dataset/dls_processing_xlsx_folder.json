@@ -11,11 +11,12 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "New Template - النموذج الجديد",
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": "*.xlsx",
 				"fileSystem": "processing"
 			},
+			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
 		"schema": [
