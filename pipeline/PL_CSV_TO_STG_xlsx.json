@@ -110,14 +110,20 @@
 										"typeProperties": {
 											"dataflow": {
 												"referenceName": "df_csv_to_stg_xlsx",
-												"type": "DataFlowReference"
+												"type": "DataFlowReference",
+												"parameters": {
+													"fileName": {
+														"value": "'@{item().name}'",
+														"type": "Expression"
+													}
+												}
 											},
 											"staging": {
 												"folderPath": ""
 											},
-											"compute": {
-												"coreCount": 8,
-												"computeType": "General"
+											"integrationRuntime": {
+												"referenceName": "integrationRuntime10min",
+												"type": "IntegrationRuntimeReference"
 											},
 											"traceLevel": "Coarse"
 										}
