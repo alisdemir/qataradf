@@ -124,7 +124,11 @@
 												}
 											},
 											"staging": {
-												"folderPath": ""
+												"linkedService": {
+													"referenceName": "ls_psmsii_syntodls",
+													"type": "LinkedServiceReference"
+												},
+												"folderPath": "stagingarea"
 											},
 											"integrationRuntime": {
 												"referenceName": "integrationRuntime10min",
