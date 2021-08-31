@@ -106,7 +106,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "PL_STG_FILE_LIST_UPD",
+						"activity": "truncateStgTransactions",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -222,6 +222,38 @@
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "truncateStgTransactions",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "PL_STG_FILE_LIST_UPD",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "truncate table [dwh].[STG_TRANSACTIONS];\nselect 1;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_stg_transactions",
+						"type": "DatasetReference"
+					}
 				}
 			}
 		],
