@@ -110,10 +110,7 @@
 										"typeProperties": {
 											"dataflow": {
 												"referenceName": "df_csv_to_stg_xlsx",
-												"type": "DataFlowReference",
-												"parameters": {
-													"fileName": "'4'"
-												}
+												"type": "DataFlowReference"
 											},
 											"staging": {
 												"folderPath": ""
