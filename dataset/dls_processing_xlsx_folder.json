@@ -5,15 +5,23 @@
 			"referenceName": "ls_psmsii_syntodls_xlsx",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"filename": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "Storage_DL_QTR"
 		},
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "New Template - النموذج الجديد",
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().FileName",
+					"type": "Expression"
+				},
 				"fileSystem": "processing"
 			},
 			"firstRowAsHeader": true
