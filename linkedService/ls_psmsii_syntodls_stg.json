@@ -1,0 +1,14 @@
+{
+	"name": "ls_psmsii_syntodls_stg",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://dlsapsmsiidt001.dfs.core.windows.net"
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime10min",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
