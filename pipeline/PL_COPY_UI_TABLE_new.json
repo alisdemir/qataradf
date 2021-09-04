@@ -128,7 +128,7 @@
 												"type": "DatasetReference",
 												"parameters": {
 													"schemaName": "@item().target_schema_name",
-													"tableName": "@item().table_name"
+													"tableName": "@item().target_table_name"
 												}
 											}
 										]
