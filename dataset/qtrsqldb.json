@@ -2,7 +2,7 @@
 	"name": "qtrsqldb",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_qtrsqldb",
+			"referenceName": "ls_psmsii_syntoobasesql",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
