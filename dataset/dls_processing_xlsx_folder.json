@@ -13,9 +13,12 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "endswith(@activity(‘GetFileList’).output,'xlsx')\n\n\n",
+					"type": "Expression"
+				},
 				"fileSystem": "processing"
 			},
-			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
 		"schema": [
