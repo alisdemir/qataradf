@@ -11,10 +11,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_dsqlpqtr'"
 		},
-		"ls_psmsii_syntodls_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'ls_psmsii_syntodls'"
-		},
 		"ls_psmsii_syntodsqlp_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_psmsii_syntodsqlp'"
@@ -32,6 +28,10 @@
 			"metadata": "Secure string for 'connectionString' of 'ls_qtrsqldb'"
 		},
 		"ls_psmsii_syntodls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dlsapsmsiidt001.dfs.core.windows.net"
+		},
+		"ls_psmsii_syntodls_stg_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dlsapsmsiidt001.dfs.core.windows.net"
 		},
@@ -2515,7 +2515,13 @@
 															"stgTransactions": {}
 														}
 													},
-													"staging": {},
+													"staging": {
+														"linkedService": {
+															"referenceName": "ls_psmsii_syntodls_stg",
+															"type": "LinkedServiceReference"
+														},
+														"folderPath": "stagingarea"
+													},
 													"integrationRuntime": {
 														"referenceName": "integrationRuntime10min",
 														"type": "IntegrationRuntimeReference"
@@ -2571,7 +2577,8 @@
 				"[concat(variables('factoryId'), '/datasets/dls_processing_xlsx_folder')]",
 				"[concat(variables('factoryId'), '/datasets/ds_dwl_file_list')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
-				"[concat(variables('factoryId'), '/dataflows/df_csv_to_stg_xlsx')]"
+				"[concat(variables('factoryId'), '/dataflows/df_csv_to_stg_xlsx')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls_stg')]"
 			]
 		},
 		{
@@ -4662,6 +4669,10 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "endswith(@activity(‘GetFileList’).output,'xlsx')\n\n\n",
+							"type": "Expression"
+						},
 						"fileSystem": "processing"
 					},
 					"sheetIndex": 0,
@@ -5439,11 +5450,26 @@
 				"annotations": [],
 				"type": "AzureBlobFS",
 				"typeProperties": {
-					"url": "[parameters('ls_psmsii_syntodls_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('ls_psmsii_syntodls_accountKey')]"
-					}
+					"url": "[parameters('ls_psmsii_syntodls_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime10min",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_psmsii_syntodls_stg')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ls_psmsii_syntodls_stg_properties_typeProperties_url')]"
 				},
 				"connectVia": {
 					"referenceName": "integrationRuntime10min",
@@ -5521,9 +5547,15 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('ls_qtrsqldb_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime10min",
+					"type": "IntegrationRuntimeReference"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/integrationRuntime10min')]",
@@ -5707,7 +5739,7 @@
 							"name": "SurrogateKey1"
 						}
 					],
-					"script": "parameters{\n\tfileName as string ('104897.xlsx')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingxlsx\nprocessingxlsx derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\tTRANSACTION_DATE = regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+','')) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_COMPANY_STORE_CODE as string,\n\t\tMT_QUANTITY as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_COMMON_REF_CODE as string,\n\t\tID_TRANSFER_CODE as string,\n\t\tID_INVOICE_NUMBER as string,\n\t\tSK_ID as integer,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_YEARMONTHDAY = TRANSACTION_DATE,\n\t\tID_TRANSACTION_TYPE = {Transaction Type Code - كود نوع الحركة},\n\t\tID_ITEM_CODE = {Item Code - كود الصنف},\n\t\tID_ITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tID_ENTITY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tID_CUSTOMER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tID_COMPANY_STORE_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tMT_QUANTITY = {Quantity - الكمية},\n\t\tMT_DISCOUNT_AMOUNT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tID_COMMON_REF_CODE = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tID_TRANSFER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tID_INVOICE_NUMBER = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tSK_ID = SK_ID_SUR,\n\t\tSTG_FILENAME,\n\t\tSTG_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
+					"script": "parameters{\n\tfileName as string ('104897.xlsx')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingxlsx\nprocessingxlsx derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\tTRANSACTION_DATE = regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+','')) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_COMPANY_STORE_CODE as string,\n\t\tMT_QUANTITY as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_COMMON_REF_CODE as string,\n\t\tID_TRANSFER_CODE as string,\n\t\tID_INVOICE_NUMBER as string,\n\t\tSK_ID as integer,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_YEARMONTHDAY = TRANSACTION_DATE,\n\t\tID_TRANSACTION_TYPE = {Transaction Type Code - كود نوع الحركة},\n\t\tID_ITEM_CODE = {Item Code - كود الصنف},\n\t\tID_ITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tID_ENTITY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tID_CUSTOMER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tID_COMPANY_STORE_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tMT_QUANTITY = {Quantity - الكمية},\n\t\tMT_DISCOUNT_AMOUNT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tID_COMMON_REF_CODE = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tID_TRANSFER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tID_INVOICE_NUMBER = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tSK_ID = SK_ID_SUR,\n\t\tSTG_FILENAME,\n\t\tSTG_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
 				}
 			},
 			"dependsOn": [

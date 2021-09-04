@@ -8,9 +8,6 @@
 		"ls_dsqlpqtr_connectionString": {
 			"value": ""
 		},
-		"ls_psmsii_syntodls_accountKey": {
-			"value": ""
-		},
 		"ls_psmsii_syntodsqlp_connectionString": {
 			"value": ""
 		},
@@ -24,6 +21,9 @@
 			"value": ""
 		},
 		"ls_psmsii_syntodls_properties_typeProperties_url": {
+			"value": "https://dlsapsmsiidt001.dfs.core.windows.net"
+		},
+		"ls_psmsii_syntodls_stg_properties_typeProperties_url": {
 			"value": "https://dlsapsmsiidt001.dfs.core.windows.net"
 		},
 		"pendp_psmsii_adftodls_properties_privateLinkResourceId": {
