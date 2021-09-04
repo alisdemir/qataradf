@@ -38,7 +38,7 @@
 								"source": {
 									"type": "SqlDWSource",
 									"sqlReaderQuery": {
-										"value": "@{concat('select 1 as flag from information_schema.tables where table_schema= ''',item().target_schema_name,''' and table_name=''',item().table_name,'''')}",
+										"value": "@{concat('select 1 as flag from information_schema.tables where table_schema= ''',item().target_schema_name,''' and table_name=''',item().target_table_name,'''')}",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -156,7 +156,7 @@
 											"sink": {
 												"type": "SqlDWSink",
 												"preCopyScript": {
-													"value": "@{concat('drop table ',item().target_schema_name,'.',item().table_name)}",
+													"value": "@{concat('drop table ',item().target_schema_name,'.',item().target_table_name)}",
 													"type": "Expression"
 												},
 												"tableOption": "autoCreate",
@@ -194,7 +194,7 @@
 												"type": "DatasetReference",
 												"parameters": {
 													"schemaName": "@item().target_schema_name",
-													"tableName": "@item().table_name"
+													"tableName": "@item().target_table_name"
 												}
 											}
 										]
