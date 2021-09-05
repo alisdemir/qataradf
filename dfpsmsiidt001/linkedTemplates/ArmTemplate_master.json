@@ -27,6 +27,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_qtrsqldb'"
 		},
+		"ls_bss_rest_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
+		},
+		"ls_bss_soap_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
+		},
 		"ls_psmsii_syntodls_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dlsapsmsiidt001.dfs.core.windows.net"
@@ -122,6 +130,12 @@
 					},
 					"pendp_psmsii_adftodsqlp_properties_fqdns": {
 						"value": "[parameters('pendp_psmsii_adftodsqlp_properties_fqdns')]"
+					},
+					"ls_bss_rest_properties_typeProperties_url": {
+						"value": "[parameters('ls_bss_rest_properties_typeProperties_url')]"
+					},
+					"ls_bss_soap_properties_typeProperties_url": {
+						"value": "[parameters('ls_bss_soap_properties_typeProperties_url')]"
 					},
 					"ls_psmsii_syntodls_properties_typeProperties_url": {
 						"value": "[parameters('ls_psmsii_syntodls_properties_typeProperties_url')]"
