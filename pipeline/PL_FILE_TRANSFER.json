@@ -22,6 +22,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
+							"wildcardFileName": ".xlsx",
 							"deleteFilesAfterCompletion": false
 						},
 						"formatSettings": {
