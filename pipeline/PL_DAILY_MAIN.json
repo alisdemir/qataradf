@@ -213,6 +213,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "PL_FILE_TRANSFER_xlsx",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"userProperties": [],
@@ -254,6 +260,19 @@
 						"referenceName": "ds_stg_transactions",
 						"type": "DatasetReference"
 					}
+				}
+			},
+			{
+				"name": "PL_FILE_TRANSFER_xlsx",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_FILE_TRANSFER_xlsx",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
 				}
 			}
 		],
