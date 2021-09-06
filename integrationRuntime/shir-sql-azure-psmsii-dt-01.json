@@ -1,0 +1,6 @@
+{
+	"name": "shir-sql-azure-psmsii-dt-01",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
