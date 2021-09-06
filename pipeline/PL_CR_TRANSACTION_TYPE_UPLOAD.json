@@ -1,0 +1,9 @@
+{
+	"name": "PL_CR_TRANSACTION_TYPE_UPLOAD",
+	"properties": {
+		"folder": {
+			"name": "Dev"
+		},
+		"annotations": []
+	}
+}
