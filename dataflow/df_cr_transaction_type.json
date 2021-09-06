@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "dls_processing_xlsx",
+						"referenceName": "dls_processing_xlsx_folder",
 						"type": "DatasetReference"
 					},
 					"name": "crtrtypexlsx"
@@ -20,8 +20,12 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
-			"script": "source(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['*.xlsx']) ~> crtrtypexlsx\nsource(output(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_COMPANY_STORE_CODE as string,\n\t\tMT_QUANTITY as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_COMMON_REF_CODE as string,\n\t\tID_TRANSFER_CODE as string,\n\t\tID_INVOICE_NUMBER as string,\n\t\tSK_ID as integer,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string,\n\t\tID_STARTDATE as integer,\n\t\tID_ENDDATE as integer,\n\t\tID_ISCURRENT as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: '\\nSELECT id_transaction_type,ds_transaction_type FROM DWH.DWL_TRANSACTION_TYPE where id_transaction_type>18 ORDER BY 1',\n\tformat: 'query',\n\tstaged: true) ~> source2"
+			"transformations": [
+				{
+					"name": "Join1"
+				}
+			],
+			"script": "source(output(\n\t\t{Company CR #} as string,\n\t\t{Company Transaction Type Arabic } as string,\n\t\t{Company Transaction Type English } as string,\n\t\t{Company Transaction type} as string,\n\t\t{PSMS - MoCI Transaction Types} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['*.xlsx']) ~> crtrtypexlsx\nsource(output(\n\t\tID_TRANSACTION_TYPE as integer,\n\t\tDS_TRANSACTION_TYPE as string,\n\t\tDS_EFFECT as string,\n\t\tDS_TYPE_CODE as string,\n\t\tDS_TYPE_DESC_ENG as string,\n\t\tDS_TYPE_DESC_ARB as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: '\\nSELECT id_transaction_type,ds_transaction_type FROM DWH.DWL_TRANSACTION_TYPE where id_transaction_type>18 ORDER BY 1',\n\tformat: 'query',\n\tstaged: true) ~> source2\ncrtrtypexlsx join({PSMS - MoCI Transaction Types} == ERROR_FUNCTION(''),\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join1"
 		}
 	}
 }
