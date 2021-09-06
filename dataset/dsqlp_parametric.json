@@ -12,7 +12,7 @@
 			},
 			"tableName": {
 				"type": "string",
-				"defaultValue": "dwb_transactions"
+				"defaultValue": "DWL_TRANSACTION_TYPE"
 			}
 		},
 		"folder": {
@@ -22,80 +22,29 @@
 		"type": "AzureSqlDWTable",
 		"schema": [
 			{
-				"name": "ID_YEARMONTHDAY",
-				"type": "nvarchar"
-			},
-			{
 				"name": "ID_TRANSACTION_TYPE",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "DS_TRANSACTION_TYPE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_ITEM_CODE",
+				"name": "DS_EFFECT",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_ITEM_BARCODE",
+				"name": "DS_TYPE_CODE",
+				"type": "varchar"
+			},
+			{
+				"name": "DS_TYPE_DESC_ENG",
+				"type": "varchar"
+			},
+			{
+				"name": "DS_TYPE_DESC_ARB",
 				"type": "nvarchar"
-			},
-			{
-				"name": "ID_ENTITY_CR",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_CUSTOMER_ENTITY_CR",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_COMPANY_STORE_CODE",
-				"type": "nvarchar"
-			},
-			{
-				"name": "MT_QUANTITY",
-				"type": "nvarchar"
-			},
-			{
-				"name": "MT_DISCOUNT_AMOUNT",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_COMMON_REF_CODE",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_TRANSFER_CODE",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_INVOICE_NUMBER",
-				"type": "nvarchar"
-			},
-			{
-				"name": "SK_ID",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "STG_FILENAME",
-				"type": "nvarchar"
-			},
-			{
-				"name": "STG_FILETIME",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_STARTDATE",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "ID_ENDDATE",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "ID_ISCURRENT",
-				"type": "int",
-				"precision": 10
 			}
 		],
 		"typeProperties": {
