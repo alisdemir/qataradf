@@ -10,7 +10,29 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlDWTable",
-		"schema": [],
+		"schema": [
+			{
+				"name": "ID_TRANSACTION_TYPE",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "ID_CR_TRANSACTION_TYPE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DS_CR_TRANSACTION_TYPE_ENG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DS_CR_TRANSACTION_TYPE_ARB",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_CR_ENTITY",
+				"type": "nvarchar"
+			}
+		],
 		"typeProperties": {
 			"schema": "dwh",
 			"table": "DWL_CR_TRANSACTION_TYPE"
