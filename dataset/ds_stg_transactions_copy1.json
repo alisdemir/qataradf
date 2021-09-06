@@ -10,43 +10,10 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlDWTable",
-		"schema": [
-			{
-				"name": "RationDate",
-				"type": "nvarchar"
-			},
-			{
-				"name": "Group Code",
-				"type": "nvarchar"
-			},
-			{
-				"name": "OperationType",
-				"type": "nvarchar"
-			},
-			{
-				"name": "Supply/Distribution",
-				"type": "nvarchar"
-			},
-			{
-				"name": "FromAccountCR",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ToAccountCR",
-				"type": "nvarchar"
-			},
-			{
-				"name": "Amount",
-				"type": "nvarchar"
-			},
-			{
-				"name": "CustomDeclarationNo",
-				"type": "nvarchar"
-			}
-		],
+		"schema": [],
 		"typeProperties": {
 			"schema": "dwh",
-			"table": "ALL_TRANSACTIONS"
+			"table": "DWL_CR_TRANSACTION_TYPE"
 		}
 	},
 	"type": "Microsoft.Synapse/workspaces/datasets"
