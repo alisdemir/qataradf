@@ -16,14 +16,11 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "DelimitedTextSource",
+						"type": "ExcelSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"recursive": false,
+							"recursive": true,
 							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
 						}
 					},
 					"sink": {
@@ -43,82 +40,52 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "RationDate",
+									"name": "Company CR #",
 									"type": "String"
 								},
 								"sink": {
-									"name": "RationDate",
+									"name": "ID_CR_ENTITY",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "Group Code",
+									"name": "Company Transaction Type Arabic ",
 									"type": "String"
 								},
 								"sink": {
-									"name": "Group Code",
+									"name": "DS_CR_TRANSACTION_TYPE_ARB",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "OperationType",
+									"name": "Company Transaction Type English ",
 									"type": "String"
 								},
 								"sink": {
-									"name": "OperationType",
+									"name": "DS_CR_TRANSACTION_TYPE_ENG",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "Supply/Distribution",
+									"name": "Company Transaction type",
 									"type": "String"
 								},
 								"sink": {
-									"name": "Supply/Distribution",
+									"name": "ID_CR_TRANSACTION_TYPE",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "FromAccountCR",
+									"name": "PSMS - MoCI Transaction Types",
 									"type": "String"
 								},
 								"sink": {
-									"name": "FromAccountCR",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "ToAccountCR",
-									"type": "String"
-								},
-								"sink": {
-									"name": "ToAccountCR",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "Amount",
-									"type": "String"
-								},
-								"sink": {
-									"name": "Amount",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "CustomDeclarationNo",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CustomDeclarationNo",
-									"type": "String"
+									"name": "ID_TRANSACTION_TYPE",
+									"type": "Int16"
 								}
 							}
 						]
@@ -126,13 +93,10 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "dls_processing_csv_copy1",
+						"referenceName": "dls_processing_xlsx",
 						"type": "DatasetReference",
 						"parameters": {
-							"FileName": {
-								"value": "All Transactions_copy.csv",
-								"type": "Expression"
-							}
+							"FileName": "ALL TRANSACTION TYPES.xlsx"
 						}
 					}
 				],
