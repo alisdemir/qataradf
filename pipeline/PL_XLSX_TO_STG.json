@@ -1,5 +1,5 @@
 {
-	"name": "PL_CSV_TO_STG_xlsx",
+	"name": "PL_XLSX_TO_STG",
 	"properties": {
 		"activities": [
 			{
