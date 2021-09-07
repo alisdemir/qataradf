@@ -20,6 +20,13 @@
 						"referenceName": "df_dwl_file_list_upd_notexist",
 						"type": "DataFlowReference"
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_psmsii_syntodls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "stagingarea"
+					},
 					"integrationRuntime": {
 						"referenceName": "integrationRuntime10min",
 						"type": "IntegrationRuntimeReference"
@@ -51,11 +58,18 @@
 						"referenceName": "df_dwl_file_list_upd_exist",
 						"type": "DataFlowReference"
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_psmsii_syntodls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "stagingarea"
+					},
 					"integrationRuntime": {
 						"referenceName": "integrationRuntime10min",
 						"type": "IntegrationRuntimeReference"
 					},
-					"traceLevel": "Fine"
+					"traceLevel": "Coarse"
 				}
 			}
 		],
