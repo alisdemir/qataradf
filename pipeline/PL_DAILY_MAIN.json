@@ -235,7 +235,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "PL_STG_FILE_LIST_UPD",
+						"activity": "PL_STG_FILE_LIST_INS",
 						"dependencyConditions": [
 							"Succeeded"
 						]
