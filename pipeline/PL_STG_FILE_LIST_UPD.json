@@ -23,6 +23,13 @@
 							"itemname": "toString('CRFR_20210321.csv')"
 						}
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_psmsii_syntodls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "stagingarea"
+					},
 					"integrationRuntime": {
 						"referenceName": "integrationRuntime10min",
 						"type": "IntegrationRuntimeReference"
