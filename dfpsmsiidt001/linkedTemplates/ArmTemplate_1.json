@@ -309,6 +309,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"fileName": "*.csv",
 						"fileSystem": "processing"
 					},
 					"columnDelimiter": "|",
@@ -894,11 +895,6 @@
 				"type": "AzureSqlDWTable",
 				"schema": [
 					{
-						"name": "ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
 						"name": "DT_FILE",
 						"type": "date"
 					},
@@ -916,9 +912,13 @@
 						"type": "nvarchar"
 					},
 					{
-						"name": "ID_ISEXPECTED",
-						"type": "int",
-						"precision": 10
+						"name": "ID_ISUPLOADED",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "ID_ISREJECTED",
+						"type": "bit"
 					},
 					{
 						"name": "DS_EMAIL",
