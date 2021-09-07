@@ -21,7 +21,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "*.csv",
+					"value": "@dataset().FileName",
 					"type": "Expression"
 				},
 				"fileSystem": "processing"
