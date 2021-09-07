@@ -152,6 +152,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "PL_XLSX_TO_STG",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"userProperties": [],
@@ -254,6 +260,26 @@
 						"referenceName": "ds_stg_transactions",
 						"type": "DatasetReference"
 					}
+				}
+			},
+			{
+				"name": "PL_XLSX_TO_STG",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "truncateStgTransactions",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_XLSX_TO_STG",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
 				}
 			}
 		],
