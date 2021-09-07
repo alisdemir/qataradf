@@ -17,10 +17,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_processing_csv",
+						"referenceName": "dls_processing_xlsx",
 						"type": "DatasetReference",
 						"parameters": {
-							"FileName": "*.csv"
+							"FileName": "*.xlsx"
 						}
 					},
 					"fieldList": [
@@ -30,9 +30,6 @@
 						"type": "AzureBlobFSReadSettings",
 						"recursive": true,
 						"enablePartitionDiscovery": false
-					},
-					"formatSettings": {
-						"type": "DelimitedTextReadSettings"
 					}
 				}
 			},
