@@ -66,10 +66,6 @@
 		"ls_psmsii_syntodls_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dlsapsmsiidt001.dfs.core.windows.net"
-		},
-		"ls_psmsii_syntodls_stg_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://dlsapsmsiidt001.dfs.core.windows.net"
 		}
 	},
 	"variables": {
@@ -501,6 +497,16 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/shir-sql-azure-psmsii-dt-01')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/default')]",
 			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks",
 			"apiVersion": "2018-06-01",
@@ -673,25 +679,6 @@
 				"type": "AzureBlobFS",
 				"typeProperties": {
 					"url": "[parameters('ls_psmsii_syntodls_properties_typeProperties_url')]"
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime10min",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ls_psmsii_syntodls_stg')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('ls_psmsii_syntodls_stg_properties_typeProperties_url')]"
 				},
 				"connectVia": {
 					"referenceName": "integrationRuntime10min",

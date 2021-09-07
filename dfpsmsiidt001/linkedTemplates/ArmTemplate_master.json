@@ -39,10 +39,6 @@
 			"type": "string",
 			"defaultValue": "https://dlsapsmsiidt001.dfs.core.windows.net"
 		},
-		"ls_psmsii_syntodls_stg_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://dlsapsmsiidt001.dfs.core.windows.net"
-		},
 		"pendp_psmsii_adftodls_properties_privateLinkResourceId": {
 			"type": "string",
 			"defaultValue": "/subscriptions/047cf264-f2a3-43e7-b2e5-1ab1fc225ba1/resourceGroups/rg-psmsii-dt-001/providers/Microsoft.Storage/storageAccounts/dlsapsmsiidt001"
@@ -139,9 +135,6 @@
 					},
 					"ls_psmsii_syntodls_properties_typeProperties_url": {
 						"value": "[parameters('ls_psmsii_syntodls_properties_typeProperties_url')]"
-					},
-					"ls_psmsii_syntodls_stg_properties_typeProperties_url": {
-						"value": "[parameters('ls_psmsii_syntodls_stg_properties_typeProperties_url')]"
 					}
 				}
 			},
