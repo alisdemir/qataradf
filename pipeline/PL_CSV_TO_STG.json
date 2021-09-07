@@ -17,10 +17,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_processing_xlsx",
+						"referenceName": "dls_processing_csv",
 						"type": "DatasetReference",
 						"parameters": {
-							"FileName": "*.xlsx"
+							"FileName": "*.csv"
 						}
 					},
 					"fieldList": [
@@ -30,6 +30,9 @@
 						"type": "AzureBlobFSReadSettings",
 						"recursive": true,
 						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
 					}
 				}
 			},
@@ -38,7 +41,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "truncateStgTransactions",
+						"activity": "GetFileList",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -160,38 +163,6 @@
 							}
 						}
 					]
-				}
-			},
-			{
-				"name": "truncateStgTransactions",
-				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "GetFileList",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "SqlDWSource",
-						"sqlReaderQuery": "truncate table [dwh].[STG_TRANSACTIONS];\nselect 1;",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "ds_stg_transactions",
-						"type": "DatasetReference"
-					}
 				}
 			}
 		],
