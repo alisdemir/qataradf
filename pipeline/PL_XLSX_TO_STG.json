@@ -99,7 +99,7 @@
 								],
 								"ifTrueActivities": [
 									{
-										"name": "df_csv_to_stg_xlsx",
+										"name": "df_xlsx_to_stg",
 										"type": "ExecuteDataFlow",
 										"dependsOn": [],
 										"policy": {
@@ -112,7 +112,7 @@
 										"userProperties": [],
 										"typeProperties": {
 											"dataflow": {
-												"referenceName": "df_csv_to_stg_xlsx",
+												"referenceName": "df_xlsx_to_stg",
 												"type": "DataFlowReference",
 												"parameters": {
 													"fileName": {
