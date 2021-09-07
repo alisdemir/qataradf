@@ -21,6 +21,7 @@
 						"type": "DatasetReference"
 					},
 					"fieldList": [
+						"itemName",
 						"childItems"
 					],
 					"storeSettings": {
@@ -47,7 +48,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('GetFileList').output.childItems",
+						"value": "@activity('GetFileList').output.childItems \nwhere endswith(activity('GetFileList').output.itemname,'.csv')",
 						"type": "Expression"
 					},
 					"isSequential": true,
