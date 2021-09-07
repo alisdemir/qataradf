@@ -17,8 +17,11 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_processing_xlsx_folder",
-						"type": "DatasetReference"
+						"referenceName": "dls_processing_xlsx",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "*.xlsx"
+						}
 					},
 					"fieldList": [
 						"childItems"
@@ -156,7 +159,7 @@
 								"source": {
 									"type": "SqlDWSource",
 									"sqlReaderQuery": {
-										"value": "@concat('SELECT 1 as lkp_id from\n(select DS_FILENAME FROM [dwh].[DWL_FILE_LIST] where DS_FILENAME like ''%.xlsx'' ) a where DS_FILENAME= ','''',item().name,'''') ",
+										"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[DWL_FILE_LIST] where DS_FILENAME= ','''',item().name,'''') ",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
