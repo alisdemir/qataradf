@@ -48,7 +48,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('GetFileList').output.childItems ",
+						"value": "@activity('GetFileList').output.childItems and endswith(item().name,'.csv')=1",
 						"type": "Expression"
 					},
 					"isSequential": true,
