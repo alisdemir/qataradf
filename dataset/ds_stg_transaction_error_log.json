@@ -12,109 +12,67 @@
 		"type": "AzureSqlDWTable",
 		"schema": [
 			{
-				"name": "ID_YEARMONTHDAY",
+				"name": "TRANSACTION_DATE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_TRANSACTION_TYPE",
+				"name": "TRANSACTION_TYPE_CODE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_ITEM_GROUP",
+				"name": "ITEM_CODE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_ITEM_CODE",
+				"name": "ITEM_BARCODE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_ITEM_BARCODE",
+				"name": "YOUR_COMPANY_CR",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_ENTITY_CR",
+				"name": "OTHER_ENTITY_CR",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_CUSTOMER_ENTITY_CR",
+				"name": "COMPANY_STORE_INVENTORY_CODE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_SOURCE_WAREHOUSE",
+				"name": "QUANTITY",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_TARGET_WAREHOUSE",
+				"name": "SELLING_PRICE_PER_UNIT",
 				"type": "nvarchar"
 			},
 			{
-				"name": "MT_QUANTITY",
+				"name": "COMMON_REFERANCE_NO",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_UOM",
+				"name": "INTERNAL_TRANSFER_NUMBER_CODE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "MT_DISCOUNT_AMOUNT",
+				"name": "NUMBER_OF_CONSUMER_INVOICES",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_LPO",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_SALES_ORDER",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_DELIVERY_NOTE",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_GRN",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_INVOICE",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_RETURN_NOTE",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_CUSTOMS_STATEMENT",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_REFERANCE_CODE",
-				"type": "nvarchar"
-			},
-			{
-				"name": "ID_TRANSFER_CODE",
-				"type": "nvarchar"
-			},
-			{
-				"name": "MT_INVOICE_COUNT",
-				"type": "nvarchar"
-			},
-			{
-				"name": "DS_TRANSACTION_REASON",
-				"type": "nvarchar"
-			},
-			{
-				"name": "SK_ID",
+				"name": "ID_SK",
 				"type": "int",
 				"precision": 10
 			},
 			{
-				"name": "STG_FILENAME",
+				"name": "DS_STG_FILENAME",
 				"type": "nvarchar"
 			},
 			{
-				"name": "STG_FILETIME",
-				"type": "nvarchar"
+				"name": "DT_STG_FILETIME",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
 			},
 			{
 				"name": "ID_ERROR_CODE",
