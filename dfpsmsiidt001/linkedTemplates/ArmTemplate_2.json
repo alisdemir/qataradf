@@ -1985,7 +1985,6 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"wildcardFileName": "*.csv",
 									"deleteFilesAfterCompletion": false
 								},
 								"formatSettings": {
@@ -2082,7 +2081,7 @@
 					}
 				],
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "Dev"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:54:28Z"
