@@ -309,7 +309,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "*.csv",
 						"fileSystem": "processing"
 					},
 					"columnDelimiter": "|",
