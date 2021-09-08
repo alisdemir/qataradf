@@ -1,0 +1,459 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfpsmsiidt001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_DAILY_MAIN')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "PL_STG_FILE_LIST_INS",
+						"description": "deneme2",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_DWL_FILE_LIST_INS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_STG_FILE_LIST_INS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_FILE_TRANSFER",
+						"description": "deneme2",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_FILE_TRANSFER",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_DWL_FILE_LIST_UPD",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_STG_FILE_LIST_INS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_DWL_FILE_LIST_UPD",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_STG_FILE_LIST_UPD",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_STG_FILE_LIST_INS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_STG_FILE_LIST_UPD",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_MAIL_TO_NOTEXISTS",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_DWL_FILE_LIST_UPD",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_MAIL_TO_NOTEXISTS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_CSV_TO_STG",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "truncateStgTransactions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_CSV_TO_STG",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_EXEC_P_DQ_MAIN",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_EXEC_P_DQ_MAIN",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_CSV_TO_STG",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_XLSX_TO_STG",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_EXEC_P_DQ_MAIN",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_STG_TRANS_TO_TRANSACTION",
+						"description": "deneme2",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_EXPORT_AND_EMAIL_ERRLOG",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_STG_TRANS_TO_TRANSACTION",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_DWL_FILE_LIST_ARC",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_STG_TRANS_TO_TRANSACTION",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_DWL_FILE_LIST_ARC",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "PL_DWL_FILE_LIST_INS",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_FILE_TRANSFER",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_DWL_FILE_LIST_INS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "truncateStgTransactions",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "PL_STG_FILE_LIST_INS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_TRANSACTIONS];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_transactions",
+								"type": "DatasetReference"
+							}
+						}
+					},
+					{
+						"name": "PL_XLSX_TO_STG",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "truncateStgTransactions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_XLSX_TO_STG",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					}
+				],
+				"variables": {
+					"deneme": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-25T14:24:57Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_STG_FILE_LIST_UPD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_STG_FILE_LIST_UPD')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Stg file list tablosunu update eden pipeline",
+				"activities": [
+					{
+						"name": "df_stg_file_list_upd",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_stg_file_list_upd",
+								"type": "DataFlowReference",
+								"parameters": {
+									"itemname": "toString('CRFR_20210321.csv')"
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "stagingarea"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "None",
+							"cacheSinks": {
+								"firstRowOnly": true
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:54:43Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_stg_file_list_upd')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_stg_file_list_upd')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_dwl_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "dwhfilelist"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_stg_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "stgfilelistsrc"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_stg_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "stgfilelisttrgt"
+						}
+					],
+					"transformations": [
+						{
+							"name": "notExists"
+						},
+						{
+							"name": "idisexpected"
+						},
+						{
+							"name": "AlterRow1"
+						}
+					],
+					"script": "parameters{\n\titemname as string (toString('CRFR_20210321.csv'))\n}\nsource(output(\n\t\tID as integer,\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelistsrc\nstgfilelistsrc, dwhfilelist exists(stgfilelistsrc@DS_FILENAME == dwhfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> notExists\nAlterRow1 derive(ID_ISEXPECTED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nnotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> stgfilelisttrgt"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_xlsx_to_stg')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dls_processing_xlsx",
+								"type": "DatasetReference"
+							},
+							"name": "processingxlsx"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_stg_transactions",
+								"type": "DatasetReference"
+							},
+							"name": "stgTransactions"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddColumn"
+						},
+						{
+							"name": "SurrogateKey1"
+						}
+					],
+					"script": "parameters{\n\tfileName as string ('104897.xlsx')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingxlsx\nprocessingxlsx derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\tTRANSACTION_DATE = coalesce(toString(toDate(regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+',''),'yyyyMMdd')),\r\nreplace(toString(toDate(regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+',''),'MMddyyyy')),'-',''),\r\nreplace(toString(toDate(regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+',''),'ddMMyyyy')),'-',''),{Transaction Date - تاريخ الحركة })) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_COMPANY_STORE_CODE as string,\n\t\tMT_QUANTITY as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_COMMON_REF_CODE as string,\n\t\tID_TRANSFER_CODE as string,\n\t\tID_INVOICE_NUMBER as string,\n\t\tSK_ID as integer,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_YEARMONTHDAY = TRANSACTION_DATE,\n\t\tID_TRANSACTION_TYPE = {Transaction Type Code - كود نوع الحركة},\n\t\tID_ITEM_CODE = {Item Code - كود الصنف},\n\t\tID_ITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tID_ENTITY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tID_CUSTOMER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tID_COMPANY_STORE_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tMT_QUANTITY = {Quantity - الكمية},\n\t\tMT_DISCOUNT_AMOUNT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tID_COMMON_REF_CODE = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tID_TRANSFER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tID_INVOICE_NUMBER = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tSK_ID = SK_ID_SUR,\n\t\tSTG_FILENAME,\n\t\tSTG_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
