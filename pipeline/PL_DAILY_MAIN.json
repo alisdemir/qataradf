@@ -8,7 +8,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "PL_FILE_TRANSFER",
+						"activity": "PL_DWL_FILE_LIST_INS",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -43,7 +43,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Wait1",
+						"activity": "PL_STG_FILE_LIST_INS",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -64,7 +64,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Wait1",
+						"activity": "PL_STG_FILE_LIST_INS",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -235,7 +235,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Wait1",
+						"activity": "PL_STG_FILE_LIST_INS",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -280,28 +280,6 @@
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
-				}
-			},
-			{
-				"name": "Wait1",
-				"type": "Wait",
-				"dependsOn": [
-					{
-						"activity": "PL_DWL_FILE_LIST_INS",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "PL_STG_FILE_LIST_INS",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"waitTimeInSeconds": 1
 				}
 			}
 		],
