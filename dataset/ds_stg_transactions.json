@@ -36,7 +36,7 @@
 				"type": "nvarchar"
 			},
 			{
-				"name": "COMPANY_STORE_INV_CODE",
+				"name": "COMPANY_STORE_INVENTORY_CODE",
 				"type": "nvarchar"
 			},
 			{
