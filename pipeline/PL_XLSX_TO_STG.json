@@ -159,7 +159,7 @@
 								"source": {
 									"type": "SqlDWSource",
 									"sqlReaderQuery": {
-										"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[DWL_FILE_LIST] where DS_FILENAME= ','''',item().name,'''') ",
+										"value": "@concat('SELECT 1 as lkp_id\n  FROM [etl].[DWL_FILE_LIST] where DS_FILENAME= ','''',item().name,'''') ",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
