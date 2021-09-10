@@ -20,7 +20,64 @@
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": []
+		"schema": [
+			{
+				"name": "TRANSACTION_DATE",
+				"type": "String"
+			},
+			{
+				"name": "TRANSACTION_TYPE_CODE",
+				"type": "String"
+			},
+			{
+				"name": "ITEM_CODE",
+				"type": "String"
+			},
+			{
+				"name": "ITEM_BARCODE3",
+				"type": "String"
+			},
+			{
+				"name": "ITEM_BARCODE4",
+				"type": "String"
+			},
+			{
+				"name": "YOUR_COMPANY_CR",
+				"type": "String"
+			},
+			{
+				"name": "OTHER_ENTITY_CR",
+				"type": "String"
+			},
+			{
+				"name": "COMPANY_STORE_INVENTORY_CODE",
+				"type": "String"
+			},
+			{
+				"name": "QUANTITY",
+				"type": "String"
+			},
+			{
+				"name": "SELLING_PRICE_PER_UNIT",
+				"type": "String"
+			},
+			{
+				"name": "COMMON_REFERANCE_NO",
+				"type": "String"
+			},
+			{
+				"name": "INTERNAL_TRANSFER_NUMBER_CODE",
+				"type": "String"
+			},
+			{
+				"name": "NUMBER_OF_CONSUMER_INVOICES",
+				"type": "String"
+			},
+			{
+				"name": "DS_ERROR_CODE",
+				"type": "String"
+			}
+		]
 	},
 	"type": "Microsoft.Synapse/workspaces/datasets"
 }
