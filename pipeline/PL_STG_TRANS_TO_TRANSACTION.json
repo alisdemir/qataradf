@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "STG_TO_TRANSACTIONS",
+				"name": "PL_LOAD_DWB_TRANSACTION",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
