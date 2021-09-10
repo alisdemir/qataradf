@@ -48,7 +48,7 @@
 									"referenceName": "dsqlp_parametric",
 									"type": "DatasetReference",
 									"parameters": {
-										"schemaName": "dwh",
+										"schemaName": "etl",
 										"tableName": "DWL_COPY_TABLE_LIST"
 									}
 								},
@@ -220,7 +220,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "select schema_name,table_name, target_schema_name from dwh.DWL_COPY_TABLE_LIST",
+						"sqlReaderQuery": "select schema_name,table_name, target_schema_name from etl.DWL_COPY_TABLE_LIST",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -228,7 +228,7 @@
 						"referenceName": "dsqlp_parametric",
 						"type": "DatasetReference",
 						"parameters": {
-							"schemaName": "dwh",
+							"schemaName": "etl",
 							"tableName": "DWL_COPY_TABLE_LIST"
 						}
 					},
