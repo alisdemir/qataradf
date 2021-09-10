@@ -34,11 +34,7 @@
 				"type": "String"
 			},
 			{
-				"name": "ITEM_BARCODE3",
-				"type": "String"
-			},
-			{
-				"name": "ITEM_BARCODE4",
+				"name": "ITEM_BARCODE",
 				"type": "String"
 			},
 			{
