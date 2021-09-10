@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderStoredProcedureName": "DWH.P_TRANSACTION_UPD",
+						"sqlReaderStoredProcedureName": "[dwh].[P_DWB_TRANSACTION_LOAD]",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
