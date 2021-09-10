@@ -55,7 +55,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": []
@@ -91,7 +91,7 @@
 							"name": "itemname"
 						}
 					],
-					"script": "parameters{\n\titemname as string (toString('CRFR_20210321.csv'))\n}\nsource(output(\n\t\tdummy as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'select 1 as dummy',\n\tformat: 'query',\n\tstaged: false) ~> dummy\ndummy derive(itemname = $itemname) ~> itemname\nitemname sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tDS_FILENAME = itemname\n\t),\n\tpartitionBy('hash', 4,\n\t\tDS_FILENAME\n\t)) ~> stgfilelist"
+					"script": "parameters{\n\titemname as string (toString('CRFR_20210321.csv'))\n}\nsource(output(\n\t\tdummy as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'select 1 as dummy',\n\tformat: 'query',\n\tstaged: false) ~> dummy\ndummy derive(itemname = $itemname) ~> itemname\nitemname sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tDS_FILENAME = itemname\n\t)) ~> stgfilelist"
 				}
 			},
 			"dependsOn": []
@@ -210,7 +210,7 @@
 							"name": "stgfilename"
 						}
 					],
-					"script": "parameters{\n\tp_stg_filename as string (STG_FILENAME)\n}\nsource(output(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_GROUP as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_SOURCE_WAREHOUSE as string,\n\t\tID_TARGET_WAREHOUSE as string,\n\t\tMT_QUANTITY as string,\n\t\tID_UOM as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_LPO as string,\n\t\tID_SALES_ORDER as string,\n\t\tID_DELIVERY_NOTE as string,\n\t\tID_GRN as string,\n\t\tID_INVOICE as string,\n\t\tID_RETURN_NOTE as string,\n\t\tID_CUSTOMS_STATEMENT as string,\n\t\tID_REFERANCE_CODE as string,\n\t\tID_TRANSFER_CODE as string,\n\t\tMT_INVOICE_COUNT as string,\n\t\tDS_TRANSACTION_REASON as string,\n\t\tSK_ID as integer,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> transactionerrorlog\ntransactionerrorlog derive(STG_FILENAME = replace(STG_FILENAME,'.','_err.')) ~> stgfilename\nstgfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'STG_FILENAME',\n\tumask: 0777,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tID_YEARMONTHDAY,\n\t\tID_TRANSACTION_TYPE,\n\t\tID_ITEM_GROUP,\n\t\tID_ITEM_CODE,\n\t\tID_ITEM_BARCODE,\n\t\tID_ENTITY_CR,\n\t\tID_CUSTOMER_ENTITY_CR,\n\t\tID_SOURCE_WAREHOUSE,\n\t\tID_TARGET_WAREHOUSE,\n\t\tMT_QUANTITY,\n\t\tID_UOM,\n\t\tMT_DISCOUNT_AMOUNT,\n\t\tID_LPO,\n\t\tID_SALES_ORDER,\n\t\tID_DELIVERY_NOTE,\n\t\tID_GRN,\n\t\tID_INVOICE,\n\t\tID_RETURN_NOTE,\n\t\tID_CUSTOMS_STATEMENT,\n\t\tID_REFERANCE_CODE,\n\t\tID_TRANSFER_CODE,\n\t\tMT_INVOICE_COUNT,\n\t\tDS_TRANSACTION_REASON,\n\t\tID_ERROR_CODE,\n\t\tDS_ERROR_CODE\n\t)) ~> errorlogcsv"
+					"script": "parameters{\n\tp_stg_filename as string (STG_FILENAME)\n}\nsource(output(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> transactionerrorlog\ntransactionerrorlog derive(STG_FILENAME = replace(DS_FILENAME,'.','_err.')) ~> stgfilename\nstgfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tDS_ERROR_CODE as string\n\t),\n\trowUrlColumn:'STG_FILENAME',\n\tumask: 0777,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tTRANSACTION_DATE,\n\t\tTRANSACTION_TYPE_CODE,\n\t\tITEM_CODE,\n\t\tITEM_BARCODE,\n\t\tYOUR_COMPANY_CR,\n\t\tOTHER_ENTITY_CR,\n\t\tCOMPANY_STORE_INVENTORY_CODE,\n\t\tQUANTITY,\n\t\tSELLING_PRICE_PER_UNIT,\n\t\tCOMMON_REFERANCE_NO,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE,\n\t\tNUMBER_OF_CONSUMER_INVOICES,\n\t\tDS_ERROR_CODE\n\t)) ~> errorlogcsv"
 				}
 			},
 			"dependsOn": []
@@ -293,7 +293,7 @@
 							"name": "SurrogateKey1"
 						}
 					],
-					"script": "parameters{\n\tfileName as string ('104897.xlsx')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingxlsx\nprocessingxlsx derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\tTRANSACTION_DATE = coalesce(toString(toDate(regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+',''),'yyyyMMdd')),\r\nreplace(toString(toDate(regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+',''),'MMddyyyy')),'-',''),\r\nreplace(toString(toDate(regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+',''),'ddMMyyyy')),'-',''),{Transaction Date - تاريخ الحركة })) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_COMPANY_STORE_CODE as string,\n\t\tMT_QUANTITY as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_COMMON_REF_CODE as string,\n\t\tID_TRANSFER_CODE as string,\n\t\tID_INVOICE_NUMBER as string,\n\t\tSK_ID as integer,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_YEARMONTHDAY = TRANSACTION_DATE,\n\t\tID_TRANSACTION_TYPE = {Transaction Type Code - كود نوع الحركة},\n\t\tID_ITEM_CODE = {Item Code - كود الصنف},\n\t\tID_ITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tID_ENTITY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tID_CUSTOMER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tID_COMPANY_STORE_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tMT_QUANTITY = {Quantity - الكمية},\n\t\tMT_DISCOUNT_AMOUNT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tID_COMMON_REF_CODE = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tID_TRANSFER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tID_INVOICE_NUMBER = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tSK_ID = SK_ID_SUR,\n\t\tSTG_FILENAME,\n\t\tSTG_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
+					"script": "parameters{\n\tfileName as string ('104897.xlsx')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingxlsx\nprocessingxlsx derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\tTRANSACTION_DATE = coalesce(toString(toDate(regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+',''),'yyyyMMdd')),\r\nreplace(toString(toDate(regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+',''),'MMddyyyy')),'-',''),\r\nreplace(toString(toDate(regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+',''),'ddMMyyyy')),'-',''),{Transaction Date - تاريخ الحركة })) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tID_SK as integer,\n\t\tDS_STG_FILENAME as string,\n\t\tDT_STG_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tTRANSACTION_DATE,\n\t\tTRANSACTION_TYPE_CODE = {Transaction Type Code - كود نوع الحركة},\n\t\tITEM_CODE = {Item Code - كود الصنف},\n\t\tITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tYOUR_COMPANY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tOTHER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tCOMPANY_STORE_INVENTORY_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tQUANTITY = {Quantity - الكمية},\n\t\tSELLING_PRICE_PER_UNIT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tCOMMON_REFERANCE_NO = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tINTERNAL_TRANSFER_NUMBER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tNUMBER_OF_CONSUMER_INVOICES = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tID_SK = SK_ID_SUR,\n\t\tDS_STG_FILENAME = STG_FILENAME,\n\t\tDT_STG_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
 				}
 			},
 			"dependsOn": []
@@ -617,7 +617,13 @@
 									}
 								}
 							},
-							"staging": {},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "stagingarea"
+							},
 							"integrationRuntime": {
 								"referenceName": "integrationRuntime10min",
 								"type": "IntegrationRuntimeReference"
@@ -674,7 +680,7 @@
 								"referenceName": "integrationRuntime10min",
 								"type": "IntegrationRuntimeReference"
 							},
-							"traceLevel": "Fine"
+							"traceLevel": "Coarse"
 						}
 					},
 					{
@@ -1236,7 +1242,7 @@
 										"source": {
 											"type": "SqlDWSource",
 											"sqlReaderQuery": {
-												"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[DWL_FILE_LIST] where DS_FILENAME= ','''',item().name,'''') ",
+												"value": "@concat('SELECT 1 as lkp_id\n  FROM [etl].[DWL_FILE_LIST] where DS_FILENAME= ','''',item().name,'''') ",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -1307,7 +1313,7 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "PL_DWL_FILE_LIST_INS",
+								"activity": "PL_FILE_TRANSFER",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1344,7 +1350,7 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "PL_STG_FILE_LIST_INS",
+								"activity": "Wait1",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1366,7 +1372,7 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "PL_STG_FILE_LIST_INS",
+								"activity": "Wait1",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1477,8 +1483,8 @@
 						}
 					},
 					{
-						"name": "PL_STG_TRANS_TO_TRANSACTION",
-						"description": "deneme2",
+						"name": "PL_LOAD_DWB_TRANSACTION",
+						"description": "",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
@@ -1503,7 +1509,13 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "PL_STG_TRANS_TO_TRANSACTION",
+								"activity": "PL_LOAD_DWB_TRANSACTION",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_MAIL_TO_NOTEXISTS",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1545,7 +1557,7 @@
 						"type": "Lookup",
 						"dependsOn": [
 							{
-								"activity": "PL_STG_FILE_LIST_INS",
+								"activity": "Wait1",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1592,6 +1604,28 @@
 							},
 							"waitOnCompletion": true,
 							"parameters": {}
+						}
+					},
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [
+							{
+								"activity": "PL_DWL_FILE_LIST_INS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_STG_FILE_LIST_INS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
 						}
 					}
 				],
