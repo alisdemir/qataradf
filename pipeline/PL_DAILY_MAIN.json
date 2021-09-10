@@ -8,7 +8,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "PL_DWL_FILE_LIST_INS",
+						"activity": "PL_FILE_TRANSFER",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -43,7 +43,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "PL_STG_FILE_LIST_INS",
+						"activity": "Wait1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -64,7 +64,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "PL_STG_FILE_LIST_INS",
+						"activity": "Wait1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -170,8 +170,8 @@
 				}
 			},
 			{
-				"name": "PL_STG_TRANS_TO_TRANSACTION",
-				"description": "deneme2",
+				"name": "PL_LOAD_DWB_TRANSACTION",
+				"description": "",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
@@ -195,7 +195,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "PL_STG_TRANS_TO_TRANSACTION",
+						"activity": "PL_LOAD_DWB_TRANSACTION",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -241,7 +241,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "PL_STG_FILE_LIST_INS",
+						"activity": "Wait1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -286,6 +286,28 @@
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "PL_DWL_FILE_LIST_INS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "PL_STG_FILE_LIST_INS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
 				}
 			}
 		],
