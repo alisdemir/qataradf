@@ -111,7 +111,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "truncate table [dwh].[STG_FILE_LIST];\nselect 1;",
+						"sqlReaderQuery": "truncate table [etl].[STG_FILE_LIST];\nselect 1;",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
