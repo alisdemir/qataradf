@@ -1,0 +1,9 @@
+{
+	"name": "PL_STOCK_CALCULATE",
+	"properties": {
+		"folder": {
+			"name": "PL_MAIN"
+		},
+		"annotations": []
+	}
+}
