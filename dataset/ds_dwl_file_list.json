@@ -43,7 +43,7 @@
 			}
 		],
 		"typeProperties": {
-			"schema": "dwh",
+			"schema": "etl",
 			"table": "DWL_FILE_LIST"
 		}
 	},
