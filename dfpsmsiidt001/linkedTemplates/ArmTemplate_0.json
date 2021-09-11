@@ -27,6 +27,18 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_qtrsqldb'"
 		},
+		"ls_bss_rest_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
+		},
+		"ls_bss_soap_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
+		},
+		"ls_psmsii_syntodls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dlsapsmsiidt001.dfs.core.windows.net"
+		},
 		"pendp_psmsii_adftodls_properties_privateLinkResourceId": {
 			"type": "string",
 			"defaultValue": "/subscriptions/047cf264-f2a3-43e7-b2e5-1ab1fc225ba1/resourceGroups/rg-psmsii-dt-001/providers/Microsoft.Storage/storageAccounts/dlsapsmsiidt001"
@@ -54,18 +66,6 @@
 			"defaultValue": [
 				"synpsmsiidt001ws1.sql.azuresynapse.net"
 			]
-		},
-		"ls_bss_rest_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
-		},
-		"ls_bss_soap_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
-		},
-		"ls_psmsii_syntodls_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://dlsapsmsiidt001.dfs.core.windows.net"
 		}
 	},
 	"variables": {
@@ -497,23 +497,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/shir-sql-azure-psmsii-dt-01')]",
-			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "SelfHosted",
-				"typeProperties": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/default')]",
-			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks",
-			"apiVersion": "2018-06-01",
-			"properties": {},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/integrationRuntime10min')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -540,30 +523,21 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/default/pendp_psmsii_adftodls')]",
-			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"name": "[concat(parameters('factoryName'), '/shir-sql-azure-psmsii-dt-01')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"privateLinkResourceId": "[parameters('pendp_psmsii_adftodls_properties_privateLinkResourceId')]",
-				"groupId": "[parameters('pendp_psmsii_adftodls_properties_groupId')]",
-				"fqdns": "[parameters('pendp_psmsii_adftodls_properties_fqdns')]"
+				"type": "SelfHosted",
+				"typeProperties": {}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
+			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/default/pendp_psmsii_adftodsqlp')]",
-			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"name": "[concat(parameters('factoryName'), '/default')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks",
 			"apiVersion": "2018-06-01",
-			"properties": {
-				"privateLinkResourceId": "[parameters('pendp_psmsii_adftodsqlp_properties_privateLinkResourceId')]",
-				"groupId": "[parameters('pendp_psmsii_adftodsqlp_properties_groupId')]",
-				"fqdns": "[parameters('pendp_psmsii_adftodsqlp_properties_fqdns')]"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
+			"properties": {},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_MAIL_TO_NOTEXISTS')]",
@@ -764,6 +738,32 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default/pendp_psmsii_adftodls')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"privateLinkResourceId": "[parameters('pendp_psmsii_adftodls_properties_privateLinkResourceId')]",
+				"groupId": "[parameters('pendp_psmsii_adftodls_properties_groupId')]",
+				"fqdns": "[parameters('pendp_psmsii_adftodls_properties_fqdns')]"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default/pendp_psmsii_adftodsqlp')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"privateLinkResourceId": "[parameters('pendp_psmsii_adftodsqlp_properties_privateLinkResourceId')]",
+				"groupId": "[parameters('pendp_psmsii_adftodsqlp_properties_groupId')]",
+				"fqdns": "[parameters('pendp_psmsii_adftodsqlp_properties_fqdns')]"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
 			]
 		},
 		{
