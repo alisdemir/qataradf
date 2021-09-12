@@ -184,7 +184,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "PL_STG_TRANS_TO_TRANSACTION",
+						"referenceName": "PL_LOAD_DWB_TRANSACTION",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
