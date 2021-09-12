@@ -3824,46 +3824,6 @@
 							"referenceName": "ls_dsqlpqtr",
 							"type": "LinkedServiceReference"
 						}
-					},
-					{
-						"name": "P_STOCK_BRANCH",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dwh].[P_DWA_STOCK_BRANCH_INITIAL_LOAD]"
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_dsqlpqtr",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "P_STOCK_BRANCH_BARCODE",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dwh].[P_DWA_STOCK_BRANCH_BARCODE_INITIAL_LOAD]"
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_dsqlpqtr",
-							"type": "LinkedServiceReference"
-						}
 					}
 				],
 				"folder": {
