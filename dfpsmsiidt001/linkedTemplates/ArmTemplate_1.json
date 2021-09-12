@@ -1238,11 +1238,11 @@
 						"precision": 10
 					},
 					{
-						"name": "DS_STG_FILENAME",
+						"name": "DS_FILENAME",
 						"type": "nvarchar"
 					},
 					{
-						"name": "DT_STG_FILETIME",
+						"name": "DT_FILETIME",
 						"type": "datetime",
 						"precision": 23,
 						"scale": 3
