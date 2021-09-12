@@ -1,5 +1,5 @@
 {
-	"name": "PL_STG_TRANS_TO_TRANSACTION",
+	"name": "PL_LOAD_DWB_TRANSACTION",
 	"properties": {
 		"activities": [
 			{
