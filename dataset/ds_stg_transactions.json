@@ -70,9 +70,7 @@
 			},
 			{
 				"name": "DT_FILETIME",
-				"type": "datetime",
-				"precision": 23,
-				"scale": 3
+				"type": "nvarchar"
 			}
 		],
 		"typeProperties": {
