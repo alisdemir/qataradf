@@ -20,33 +20,7 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlDWTable",
-		"schema": [
-			{
-				"name": "ID_TRANSACTION_TYPE",
-				"type": "smallint",
-				"precision": 5
-			},
-			{
-				"name": "DS_TRANSACTION_TYPE",
-				"type": "nvarchar"
-			},
-			{
-				"name": "DS_EFFECT",
-				"type": "nvarchar"
-			},
-			{
-				"name": "DS_TYPE_CODE",
-				"type": "varchar"
-			},
-			{
-				"name": "DS_TYPE_DESC_ENG",
-				"type": "varchar"
-			},
-			{
-				"name": "DS_TYPE_DESC_ARB",
-				"type": "nvarchar"
-			}
-		],
+		"schema": [],
 		"typeProperties": {
 			"schema": {
 				"value": "@dataset().schemaName",
