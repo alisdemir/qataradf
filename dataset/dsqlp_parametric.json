@@ -12,7 +12,7 @@
 			},
 			"tableName": {
 				"type": "string",
-				"defaultValue": "DWL_TRANSACTION_TYPE"
+				"defaultValue": "STG_COMPANY"
 			}
 		},
 		"folder": {
