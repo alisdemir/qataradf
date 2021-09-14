@@ -1,0 +1,44 @@
+{
+	"name": "PL_INSERT_COMPANY",
+	"properties": {
+		"activities": [
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_insert_company",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"sink1": {
+								"schemaName": "dwh",
+								"tableName": "STG_COMPANY"
+							}
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "integrationRuntime10min",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "None",
+					"cacheSinks": {
+						"firstRowOnly": true
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Dev"
+		},
+		"annotations": []
+	}
+}
