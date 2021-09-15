@@ -277,7 +277,7 @@
 								"referenceName": "dls_processing_xlsx_product",
 								"type": "DatasetReference",
 								"parameters": {
-									"FileName": ".*"
+									"FileName": "*."
 								}
 							},
 							"fieldList": [
