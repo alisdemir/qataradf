@@ -9,116 +9,131 @@
 		"type": "AzureSqlDWTable",
 		"schema": [
 			{
-				"name": "Item_Code",
+				"name": "ITEM_CODE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Barcode",
+				"name": "BARCODE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Product_Name_Arabic",
+				"name": "PRODUCT_NAME_ARABIC",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Description_Arabic",
+				"name": "DESCRIPTION_ARABIC",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Product_Name_English",
+				"name": "PRODUCT_NAME_ENGLISH",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Description_English",
+				"name": "DESCRIPTION_ENGLISH",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Unit_Item_Barcode",
+				"name": "UNIT_ITEM_BARCODE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "No_Of_Unit_Items",
+				"name": "NO_OF_UNIT_ITEMS",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Unit_Weight_size",
+				"name": "UNIT_WEIGHT_SIZE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Unit_UOM",
+				"name": "UNIT_UOM",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Package_UOM",
+				"name": "PACKAGE_UOM",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Cost_Price",
+				"name": "COST_PRICE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Selling_Price",
+				"name": "SELLING_PRICE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Brand_Trade_Mark_English",
+				"name": "BRAND_TRADE_MARK_ENGLISH",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Brand_Trade_Mark_Arabic",
+				"name": "BRAND_TRADE_MARK_ARABIC",
 				"type": "nvarchar"
 			},
 			{
-				"name": "MoCI_Product_Group",
+				"name": "MOCI_PRODUCT_GROUP",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Country_of_Oragen_Name",
+				"name": "COUNTRY_OF_ORAGEN_NAME",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Country_of_Oragen_ISO",
+				"name": "COUNTRY_OF_ORAGEN_ISO",
 				"type": "nvarchar"
 			},
 			{
-				"name": "HS_Code",
+				"name": "HS_CODE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Supplier_CR",
+				"name": "SUPPLIER_CR",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Supplier_Name",
+				"name": "SUPPLIER_NAME",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Category_Level_1_1",
+				"name": "CATEGORY_LEVEL_1_1",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Category_Level_1_2",
+				"name": "CATEGORY_LEVEL_1_2",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Category_Level_1_3",
+				"name": "CATEGORY_LEVEL_1_3",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Category_Level_1_4",
+				"name": "CATEGORY_LEVEL_1_4",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Width",
+				"name": "WIDTH",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Height",
+				"name": "HEIGHT",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Depth",
+				"name": "DEPTH",
 				"type": "nvarchar"
+			},
+			{
+				"name": "ID_SK",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DS_FILENAME",
+				"type": "varchar"
+			},
+			{
+				"name": "DT_FILEDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
 			}
 		],
 		"typeProperties": {
