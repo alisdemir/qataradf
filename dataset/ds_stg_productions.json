@@ -1,0 +1,129 @@
+{
+	"name": "ds_stg_productions",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodsqlp",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "Item_Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Barcode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Product_Name_Arabic",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Description_Arabic",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Product_Name_English",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Description_English",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Unit_Item_Barcode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "No_Of_Unit_Items",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Unit_Weight_size",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Unit_UOM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Package_UOM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Cost_Price",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Selling_Price",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Brand_Trade_Mark_English",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Brand_Trade_Mark_Arabic",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MoCI_Product_Group",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Country_of_Oragen_Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Country_of_Oragen_ISO",
+				"type": "nvarchar"
+			},
+			{
+				"name": "HS_Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Supplier_CR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Supplier_Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Category_Level_1_1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Category_Level_1_2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Category_Level_1_3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Category_Level_1_4",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Width",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Height",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Depth",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dwh",
+			"table": "STG_PRODUCTS"
+		}
+	}
+}
