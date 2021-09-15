@@ -65,6 +65,12 @@
 								"dataflow": {
 									"referenceName": "df_xlsx_to_stg_products",
 									"type": "DataFlowReference",
+									"parameters": {
+										"fileName": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									},
 									"datasetParameters": {
 										"InputProductsxlsx": {
 											"FileName": "@item().name"
