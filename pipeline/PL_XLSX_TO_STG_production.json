@@ -64,7 +64,12 @@
 							"typeProperties": {
 								"dataflow": {
 									"referenceName": "df_xlsx_to_stg_products",
-									"type": "DataFlowReference"
+									"type": "DataFlowReference",
+									"datasetParameters": {
+										"InputProductsxlsx": {
+											"FileName": "@item().name"
+										}
+									}
 								},
 								"staging": {
 									"linkedService": {
