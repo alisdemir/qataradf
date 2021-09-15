@@ -13,6 +13,101 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_transaction_error_log')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodsqlp",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dedicated_SQL"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "TRANSACTION_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_TYPE_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ITEM_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ITEM_BARCODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "YOUR_COMPANY_CR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "OTHER_ENTITY_CR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPANY_STORE_INVENTORY_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QUANTITY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SELLING_PRICE_PER_UNIT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMMON_REFERANCE_NO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "INTERNAL_TRANSFER_NUMBER_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NUMBER_OF_CONSUMER_INVOICES",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_FILETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ID_ERROR_CODE",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "DS_ERROR_CODE",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "stg_transaction_error_log"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_transactions')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -2568,46 +2663,6 @@
 						}
 					],
 					"script": "parameters{\n\tfileName as string ('4')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingCsv\nprocessingCsv derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\tTRANSACTION_DATE = regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+','')) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tsaveOrder: 1,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_YEARMONTHDAY = TRANSACTION_DATE,\n\t\tID_TRANSACTION_TYPE = {Transaction Type Code - كود نوع الحركة},\n\t\tID_ITEM_CODE = {Item Code - كود الصنف},\n\t\tID_ITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tID_ENTITY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tID_CUSTOMER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tID_COMPANY_STORE_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tMT_QUANTITY = {Quantity - الكمية},\n\t\tMT_DISCOUNT_AMOUNT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tID_COMMON_REF_CODE = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tID_TRANSFER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tID_INVOICE_NUMBER = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tSK_ID = SK_ID_SUR,\n\t\tSTG_FILENAME,\n\t\tSTG_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_csv_to_stg_copy1')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "dls_processing_csv_copy1",
-								"type": "DatasetReference"
-							},
-							"name": "processingCsv"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_stg_transactions",
-								"type": "DatasetReference"
-							},
-							"name": "AllTransactions"
-						}
-					],
-					"transformations": [
-						{
-							"name": "AddColumn"
-						},
-						{
-							"name": "SurrogateKey1"
-						}
-					],
-					"script": "parameters{\n\tfileName as string ('4')\n}\nsource(output(\n\t\tRationDate as string,\n\t\t{Group Code} as string,\n\t\tOperationType as string,\n\t\t{Supply/Distribution} as string,\n\t\tAccountCR as string,\n\t\tAmount as string,\n\t\t{Spoiled Quantity} as string,\n\t\tCustomDeclarationNo as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingCsv\nprocessingCsv derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> AllTransactions"
 				}
 			},
 			"dependsOn": [

@@ -13,6 +13,55 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_STG_TRANS_TO_TRANSACTION_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "df_transfer_stg_Trans_to_Trans",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_transfer_stg_Trans_to_Trans",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source2": {},
+									"sink1": {
+										"schemaName": "dwh",
+										"tableName": "DWB_TRANSACTIONS"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:54:47Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_XLSX_TO_STG')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -138,7 +187,9 @@
 															}
 														},
 														"datasetParameters": {
-															"processingxlsx": {},
+															"processingxlsx": {
+																"FileName": "@item().name"
+															},
 															"stgTransactions": {}
 														}
 													},
@@ -223,9 +274,11 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "dls_processing_xlsx_folder",
+								"referenceName": "dls_processing_xlsx_product",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"FileName": ".*"
+								}
 							},
 							"fieldList": [
 								"childItems"
@@ -274,12 +327,14 @@
 											"type": "DataFlowReference",
 											"parameters": {
 												"fileName": {
-													"value": "'@{item.name()}'",
+													"value": "@item().name",
 													"type": "Expression"
 												}
 											},
 											"datasetParameters": {
-												"InputProductsxlsx": {},
+												"InputProductsxlsx": {
+													"FileName": "@item().name"
+												},
 												"stgProducts": {}
 											}
 										},
