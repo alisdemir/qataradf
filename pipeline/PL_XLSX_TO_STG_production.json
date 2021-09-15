@@ -64,13 +64,7 @@
 							"typeProperties": {
 								"dataflow": {
 									"referenceName": "df_xlsx_to_stg_products",
-									"type": "DataFlowReference",
-									"parameters": {
-										"fileName": {
-											"value": "'@{item.name()}'",
-											"type": "Expression"
-										}
-									}
+									"type": "DataFlowReference"
 								},
 								"staging": {
 									"linkedService": {
