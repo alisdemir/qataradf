@@ -3431,6 +3431,66 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_INSERT_COMPANY')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_insert_company",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {
+										"schemaName": "dwh",
+										"tableName": "STG_COMPANY"
+									}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "stagingarea"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "None",
+							"cacheSinks": {
+								"firstRowOnly": true
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_insert_company')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_LOAD_DWB_TRANSACTION')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3961,9 +4021,7 @@
 															}
 														},
 														"datasetParameters": {
-															"processingxlsx": {
-																"FileName": "@item().name"
-															},
+															"processingxlsx": {},
 															"stgTransactions": {}
 														}
 													},
@@ -4030,6 +4088,116 @@
 				"[concat(variables('factoryId'), '/datasets/ds_dwl_file_list')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
 				"[concat(variables('factoryId'), '/dataflows/df_xlsx_to_stg')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_XLSX_TO_STG_production')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_xlsx_folder",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "df_xlsx_to_stg_products",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "1.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "df_xlsx_to_stg_products",
+											"type": "DataFlowReference",
+											"parameters": {
+												"fileName": "'4'"
+											},
+											"datasetParameters": {
+												"processingxlsx": {},
+												"stgProducts": {}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "ls_psmsii_syntodls",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": "stagingarea"
+										},
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime10min",
+											"type": "IntegrationRuntimeReference"
+										},
+										"traceLevel": "Coarse"
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:55:14Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dls_processing_xlsx_folder')]",
+				"[concat(variables('factoryId'), '/dataflows/df_xlsx_to_stg_products')]",
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
 			]
 		},
@@ -5086,34 +5254,123 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "ALL TRANSACTION TYPES.xlsx",
-							"type": "Expression"
-						},
-						"fileSystem": "processing"
+						"folderPath": "Products",
+						"fileSystem": "input"
 					},
 					"sheetIndex": 0,
 					"firstRowAsHeader": true
 				},
 				"schema": [
 					{
-						"name": "Company CR #",
+						"name": "Item Code\nرقم الصنف",
 						"type": "String"
 					},
 					{
-						"name": "Company Transaction Type Arabic ",
+						"name": "Barcode\nالباركود",
 						"type": "String"
 					},
 					{
-						"name": "Company Transaction Type English ",
+						"name": "Product Name Arabic\nاسم الصنف عربى",
 						"type": "String"
 					},
 					{
-						"name": "Company Transaction type",
+						"name": "Description Arabic\nوصف الصنف عربى",
 						"type": "String"
 					},
 					{
-						"name": "PSMS - MoCI Transaction Types",
+						"name": "Product Name Arabic\nاسم الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Description Arabic\nوصف الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Unit Item Barcode\nالباركود للوحدة ",
+						"type": "String"
+					},
+					{
+						"name": "No Of Unit Items\nعدد الوحدات",
+						"type": "String"
+					},
+					{
+						"name": "Unit Weight/size\nوزن/سعة الوحدة",
+						"type": "String"
+					},
+					{
+						"name": "Unit UOM\nوحدة القياس",
+						"type": "String"
+					},
+					{
+						"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
+						"type": "String"
+					},
+					{
+						"name": "Cost Price\nسعر التكلفة",
+						"type": "String"
+					},
+					{
+						"name": "Selling Price\nسعر البيع",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
+						"type": "String"
+					},
+					{
+						"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen Name\nاسم بلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "HS Code\nرمز المنسق الجمركي",
+						"type": "String"
+					},
+					{
+						"name": "Supplier CR\nرقم السجل التجارى للمورد",
+						"type": "String"
+					},
+					{
+						"name": "Supplier Name\nاسم المورد",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 1",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 2",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 3",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 4",
+						"type": "String"
+					},
+					{
+						"name": "Width\nالعرض",
+						"type": "String"
+					},
+					{
+						"name": "Height\nالطول",
+						"type": "String"
+					},
+					{
+						"name": "Depth\nالارتفاع",
 						"type": "String"
 					}
 				]
@@ -5348,6 +5605,155 @@
 				"typeProperties": {
 					"schema": "etl",
 					"table": "STG_FILE_LIST"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodsqlp')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_productions')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodsqlp",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "ITEM_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BARCODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PRODUCT_NAME_ARABIC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DESCRIPTION_ARABIC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PRODUCT_NAME_ENGLISH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DESCRIPTION_ENGLISH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNIT_ITEM_BARCODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NO_OF_UNIT_ITEMS",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNIT_WEIGHT_SIZE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNIT_UOM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PACKAGE_UOM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COST_PRICE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SELLING_PRICE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BRAND_TRADE_MARK_ENGLISH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BRAND_TRADE_MARK_ARABIC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MOCI_PRODUCT_GROUP",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COUNTRY_OF_ORAGEN_NAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COUNTRY_OF_ORAGEN_ISO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "HS_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIER_CR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIER_NAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CATEGORY_LEVEL_1_1",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CATEGORY_LEVEL_1_2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CATEGORY_LEVEL_1_3",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CATEGORY_LEVEL_1_4",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WIDTH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "HEIGHT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DEPTH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "varchar"
+					},
+					{
+						"name": "DT_FILEDATE",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_PRODUCTS"
 				}
 			},
 			"dependsOn": [
@@ -5601,7 +6007,7 @@
 					},
 					"tableName": {
 						"type": "string",
-						"defaultValue": "DWL_TRANSACTION_TYPE"
+						"defaultValue": "STG_COMPANY"
 					}
 				},
 				"folder": {
@@ -5609,33 +6015,7 @@
 				},
 				"annotations": [],
 				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "ID_TRANSACTION_TYPE",
-						"type": "smallint",
-						"precision": 5
-					},
-					{
-						"name": "DS_TRANSACTION_TYPE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DS_EFFECT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DS_TYPE_CODE",
-						"type": "varchar"
-					},
-					{
-						"name": "DS_TYPE_DESC_ENG",
-						"type": "varchar"
-					},
-					{
-						"name": "DS_TYPE_DESC_ARB",
-						"type": "nvarchar"
-					}
-				],
+				"schema": [],
 				"typeProperties": {
 					"schema": {
 						"value": "@dataset().schemaName",
@@ -5743,12 +6123,12 @@
 					"authenticationType": "Anonymous"
 				},
 				"connectVia": {
-					"referenceName": "integrationRuntime10min",
+					"referenceName": "shir-sql-azure-psmsii-dt-01",
 					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
+				"[concat(variables('factoryId'), '/integrationRuntimes/shir-sql-azure-psmsii-dt-01')]"
 			]
 		},
 		{
@@ -5935,7 +6315,7 @@
 							"name": "Flatten1"
 						}
 					],
-					"script": "source(output(\n\t\tReleaseNotification as (Declaration as (ItemDetails as (Item as (countryOfOrigin as string, declaredValue as short, declaredValueQAR as short, foreignCurrency as string, hscode as integer, itemQuantity as boolean, itemQuantityUOM as string, netWeight as short, netWeightUOM as string)), SupervisorDetails as (Supervisor as (mobileNumber as string, name as string)[]), accountType as string, address as string, bolNumber as string, cargoManifestNumber as string, carrierName as string, clearingAgencyCR as short, clearingAgencyNameAR as string, clearingAgencyNameEng as string, companyName as string, companyNameAr as string, countryOfLoading as string, declarationNo as string, declarationStatus as string, declarationType as string, email as string, entryOrExitPortName as string, establishmentId as integer, exporterName as string, firstCountryOfLoading as string, importerName as string, masterBolOrAWBNumber as string, portOfLoading as string, portType as string, releaseOrderNumber as long, releasedDate as string, supplierCR as short, supplierCustomsCode as short, voyageOrFlightNumber as string), NotificationDate as string, NotificationRef as string, NotificationSender as string)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'xml',\n\tfileSystem: 'input',\n\tfileName: 'dene.xml',\n\tnullValue: 'null',\n\tvalidationMode: 'xsd',\n\tnamespaces: true,\n\tnamespacePrefixes: ['https://dlsapsmsiidt001.blob.core.windows.net/input/dene.xsd'->'dene.xsd']) ~> source1\nsource1 foldDown(unroll(ReleaseNotification.Declaration.SupervisorDetails.Supervisor),\n\tmapColumn(\n\t\tNotificationSender = ReleaseNotification.NotificationSender,\n\t\tNotificationRef = ReleaseNotification.NotificationRef,\n\t\tNotificationDate = ReleaseNotification.NotificationDate,\n\t\taccountType = ReleaseNotification.Declaration.accountType,\n\t\taddress = ReleaseNotification.Declaration.address,\n\t\tbolNumber = ReleaseNotification.Declaration.bolNumber,\n\t\tcargoManifestNumber = ReleaseNotification.Declaration.cargoManifestNumber,\n\t\tcarrierName = ReleaseNotification.Declaration.carrierName,\n\t\tclearingAgencyCR = ReleaseNotification.Declaration.clearingAgencyCR,\n\t\tclearingAgencyNameAR = ReleaseNotification.Declaration.clearingAgencyNameAR,\n\t\tclearingAgencyNameEng = ReleaseNotification.Declaration.clearingAgencyNameEng,\n\t\tcompanyName = ReleaseNotification.Declaration.companyName,\n\t\tcompanyNameAr = ReleaseNotification.Declaration.companyNameAr,\n\t\tcountryOfLoading = ReleaseNotification.Declaration.countryOfLoading,\n\t\tdeclarationNo = ReleaseNotification.Declaration.declarationNo,\n\t\tdeclarationStatus = ReleaseNotification.Declaration.declarationStatus,\n\t\tdeclarationType = ReleaseNotification.Declaration.declarationType,\n\t\temail = ReleaseNotification.Declaration.email,\n\t\tentryOrExitPortName = ReleaseNotification.Declaration.entryOrExitPortName,\n\t\testablishmentId = ReleaseNotification.Declaration.establishmentId,\n\t\texporterName = ReleaseNotification.Declaration.exporterName,\n\t\tfirstCountryOfLoading = ReleaseNotification.Declaration.firstCountryOfLoading,\n\t\timporterName = ReleaseNotification.Declaration.importerName,\n\t\tmasterBolOrAWBNumber = ReleaseNotification.Declaration.masterBolOrAWBNumber,\n\t\tportOfLoading = ReleaseNotification.Declaration.portOfLoading,\n\t\tportType = ReleaseNotification.Declaration.portType,\n\t\treleaseOrderNumber = ReleaseNotification.Declaration.releaseOrderNumber,\n\t\treleasedDate = ReleaseNotification.Declaration.releasedDate,\n\t\tsupplierCR = ReleaseNotification.Declaration.supplierCR,\n\t\tsupplierCustomsCode = ReleaseNotification.Declaration.supplierCustomsCode,\n\t\tvoyageOrFlightNumber = ReleaseNotification.Declaration.voyageOrFlightNumber,\n\t\tmobileNumber = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.mobileNumber,\n\t\tname = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.name,\n\t\tcountryOfOrigin = ReleaseNotification.Declaration.ItemDetails.Item.countryOfOrigin,\n\t\tdeclaredValue = ReleaseNotification.Declaration.ItemDetails.Item.declaredValue,\n\t\tdeclaredValueQAR = ReleaseNotification.Declaration.ItemDetails.Item.declaredValueQAR,\n\t\tforeignCurrency = ReleaseNotification.Declaration.ItemDetails.Item.foreignCurrency,\n\t\thscode = ReleaseNotification.Declaration.ItemDetails.Item.hscode,\n\t\titemQuantity = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantity,\n\t\titemQuantityUOM = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantityUOM,\n\t\tnetWeight = ReleaseNotification.Declaration.ItemDetails.Item.netWeight,\n\t\tnetWeightUOM = ReleaseNotification.Declaration.ItemDetails.Item.netWeightUOM\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Flatten1\nFlatten1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tID_TRANSACTION_TYPE as integer,\n\t\tDS_TRANSACTION_TYPE as string,\n\t\tDS_EFFECT as string,\n\t\tDS_TYPE_CODE as string,\n\t\tDS_TYPE_DESC_ENG as string,\n\t\tDS_TYPE_DESC_ARB as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink4"
+					"script": "source(output(\n\t\tReleaseNotification as (Declaration as (ItemDetails as (Item as (countryOfOrigin as string, declaredValue as short, declaredValueQAR as short, foreignCurrency as string, hscode as integer, itemQuantity as boolean, itemQuantityUOM as string, netWeight as short, netWeightUOM as string)), SupervisorDetails as (Supervisor as (mobileNumber as string, name as string)[]), accountType as string, address as string, bolNumber as string, cargoManifestNumber as string, carrierName as string, clearingAgencyCR as short, clearingAgencyNameAR as string, clearingAgencyNameEng as string, companyName as string, companyNameAr as string, countryOfLoading as string, declarationNo as string, declarationStatus as string, declarationType as string, email as string, entryOrExitPortName as string, establishmentId as integer, exporterName as string, firstCountryOfLoading as string, importerName as string, masterBolOrAWBNumber as string, portOfLoading as string, portType as string, releaseOrderNumber as long, releasedDate as string, supplierCR as short, supplierCustomsCode as short, voyageOrFlightNumber as string), NotificationDate as string, NotificationRef as string, NotificationSender as string)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'xml',\n\tfileSystem: 'input',\n\tfileName: 'dene.xml',\n\tnullValue: 'null',\n\tvalidationMode: 'xsd',\n\tnamespaces: true,\n\tnamespacePrefixes: ['https://dlsapsmsiidt001.blob.core.windows.net/input/dene.xsd'->'dene.xsd']) ~> source1\nsource1 foldDown(unroll(ReleaseNotification.Declaration.SupervisorDetails.Supervisor),\n\tmapColumn(\n\t\tNotificationSender = ReleaseNotification.NotificationSender,\n\t\tNotificationRef = ReleaseNotification.NotificationRef,\n\t\tNotificationDate = ReleaseNotification.NotificationDate,\n\t\taccountType = ReleaseNotification.Declaration.accountType,\n\t\taddress = ReleaseNotification.Declaration.address,\n\t\tbolNumber = ReleaseNotification.Declaration.bolNumber,\n\t\tcargoManifestNumber = ReleaseNotification.Declaration.cargoManifestNumber,\n\t\tcarrierName = ReleaseNotification.Declaration.carrierName,\n\t\tclearingAgencyCR = ReleaseNotification.Declaration.clearingAgencyCR,\n\t\tclearingAgencyNameAR = ReleaseNotification.Declaration.clearingAgencyNameAR,\n\t\tclearingAgencyNameEng = ReleaseNotification.Declaration.clearingAgencyNameEng,\n\t\tcompanyName = ReleaseNotification.Declaration.companyName,\n\t\tcompanyNameAr = ReleaseNotification.Declaration.companyNameAr,\n\t\tcountryOfLoading = ReleaseNotification.Declaration.countryOfLoading,\n\t\tdeclarationNo = ReleaseNotification.Declaration.declarationNo,\n\t\tdeclarationStatus = ReleaseNotification.Declaration.declarationStatus,\n\t\tdeclarationType = ReleaseNotification.Declaration.declarationType,\n\t\temail = ReleaseNotification.Declaration.email,\n\t\tentryOrExitPortName = ReleaseNotification.Declaration.entryOrExitPortName,\n\t\testablishmentId = ReleaseNotification.Declaration.establishmentId,\n\t\texporterName = ReleaseNotification.Declaration.exporterName,\n\t\tfirstCountryOfLoading = ReleaseNotification.Declaration.firstCountryOfLoading,\n\t\timporterName = ReleaseNotification.Declaration.importerName,\n\t\tmasterBolOrAWBNumber = ReleaseNotification.Declaration.masterBolOrAWBNumber,\n\t\tportOfLoading = ReleaseNotification.Declaration.portOfLoading,\n\t\tportType = ReleaseNotification.Declaration.portType,\n\t\treleaseOrderNumber = ReleaseNotification.Declaration.releaseOrderNumber,\n\t\treleasedDate = ReleaseNotification.Declaration.releasedDate,\n\t\tsupplierCR = ReleaseNotification.Declaration.supplierCR,\n\t\tsupplierCustomsCode = ReleaseNotification.Declaration.supplierCustomsCode,\n\t\tvoyageOrFlightNumber = ReleaseNotification.Declaration.voyageOrFlightNumber,\n\t\tmobileNumber = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.mobileNumber,\n\t\tname = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.name,\n\t\tcountryOfOrigin = ReleaseNotification.Declaration.ItemDetails.Item.countryOfOrigin,\n\t\tdeclaredValue = ReleaseNotification.Declaration.ItemDetails.Item.declaredValue,\n\t\tdeclaredValueQAR = ReleaseNotification.Declaration.ItemDetails.Item.declaredValueQAR,\n\t\tforeignCurrency = ReleaseNotification.Declaration.ItemDetails.Item.foreignCurrency,\n\t\thscode = ReleaseNotification.Declaration.ItemDetails.Item.hscode,\n\t\titemQuantity = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantity,\n\t\titemQuantityUOM = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantityUOM,\n\t\tnetWeight = ReleaseNotification.Declaration.ItemDetails.Item.netWeight,\n\t\tnetWeightUOM = ReleaseNotification.Declaration.ItemDetails.Item.netWeightUOM\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Flatten1\nFlatten1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink4"
 				}
 			},
 			"dependsOn": [
@@ -6118,7 +6498,7 @@
 							"name": "FlattenItem"
 						}
 					],
-					"script": "source(output(\n\t\tReleaseNotification as (Declaration as (ItemDetails as (Item as (countryOfOrigin as string, declaredValue as short, declaredValueQAR as short, foreignCurrency as string, hscode as integer, itemQuantity as boolean, itemQuantityUOM as string, netWeight as short, netWeightUOM as string)[]), SupervisorDetails as (Supervisor as (mobileNumber as string, name as string)[]), accountType as string, address as string, bolNumber as string, cargoManifestNumber as string, carrierName as string, clearingAgencyCR as short, clearingAgencyNameAR as string, clearingAgencyNameEng as string, companyName as string, companyNameAr as string, countryOfLoading as string, declarationNo as string, declarationStatus as string, declarationType as string, email as string, entryOrExitPortName as string, establishmentId as integer, exporterName as string, firstCountryOfLoading as string, importerName as string, masterBolOrAWBNumber as string, portOfLoading as string, portType as string, releaseOrderNumber as long, releasedDate as string, supplierCR as short, supplierCustomsCode as short, voyageOrFlightNumber as string), NotificationDate as string, NotificationRef as string, NotificationSender as string)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'xml',\n\tfileSystem: 'input',\n\tfileName: 'Declaration_5AI51018045193_20210715002105581.xml',\n\tnullValue: 'null',\n\tvalidationMode: 'xsd',\n\tnamespaces: true,\n\tnamespacePrefixes: ['https://dlsapsmsiidt001.blob.core.windows.net/input/dene.xsd'->'dene.xsd']) ~> source1\nsource1 foldDown(unroll(ReleaseNotification.Declaration.SupervisorDetails.Supervisor),\n\tmapColumn(\n\t\tReleaseNotification = ReleaseNotification.NotificationDate,\n\t\tNotificationRef = ReleaseNotification.NotificationRef,\n\t\tNotificationSender = ReleaseNotification.NotificationSender,\n\t\tmobileNumber = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.mobileNumber,\n\t\tname = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.name\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> FlattenSupervisor\nsource1 foldDown(unroll(ReleaseNotification.Declaration.ItemDetails.Item),\n\tmapColumn(\n\t\tNotificationSender = ReleaseNotification.NotificationSender,\n\t\tNotificationDate = ReleaseNotification.NotificationDate,\n\t\tNotificationRef = ReleaseNotification.NotificationRef,\n\t\tcountryOfOrigin = ReleaseNotification.Declaration.ItemDetails.Item.countryOfOrigin,\n\t\tdeclaredValue = ReleaseNotification.Declaration.ItemDetails.Item.declaredValue,\n\t\tdeclaredValueQAR = ReleaseNotification.Declaration.ItemDetails.Item.declaredValueQAR,\n\t\tforeignCurrency = ReleaseNotification.Declaration.ItemDetails.Item.foreignCurrency,\n\t\thscode = ReleaseNotification.Declaration.ItemDetails.Item.hscode,\n\t\titemQuantity = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantity,\n\t\titemQuantityUOM = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantityUOM,\n\t\tnetWeight = ReleaseNotification.Declaration.ItemDetails.Item.netWeight,\n\t\tnetWeightUOM = ReleaseNotification.Declaration.ItemDetails.Item.netWeightUOM\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> FlattenItem\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tID_TRANSACTION_TYPE as integer,\n\t\tDS_TRANSACTION_TYPE as string,\n\t\tDS_EFFECT as string,\n\t\tDS_TYPE_CODE as string,\n\t\tDS_TYPE_DESC_ENG as string,\n\t\tDS_TYPE_DESC_ARB as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tNotificationSender = ReleaseNotification.NotificationSender,\n\t\tNotificationDate = ReleaseNotification.NotificationDate,\n\t\tNotificationRef = ReleaseNotification.NotificationRef,\n\t\tReleaseNotification = ReleaseNotification.Declaration.accountType,\n\t\taddress = ReleaseNotification.Declaration.address,\n\t\tbolNumber = ReleaseNotification.Declaration.bolNumber,\n\t\tcargoManifestNumber = ReleaseNotification.Declaration.cargoManifestNumber,\n\t\tcarrierName = ReleaseNotification.Declaration.carrierName,\n\t\tclearingAgencyCR = ReleaseNotification.Declaration.clearingAgencyCR,\n\t\tclearingAgencyNameAR = ReleaseNotification.Declaration.clearingAgencyNameAR,\n\t\tclearingAgencyNameEng = ReleaseNotification.Declaration.clearingAgencyNameEng,\n\t\tcompanyName = ReleaseNotification.Declaration.companyName,\n\t\tcompanyNameAr = ReleaseNotification.Declaration.companyNameAr,\n\t\tcountryOfLoading = ReleaseNotification.Declaration.countryOfLoading,\n\t\tdeclarationNo = ReleaseNotification.Declaration.declarationNo,\n\t\tdeclarationStatus = ReleaseNotification.Declaration.declarationStatus,\n\t\tdeclarationType = ReleaseNotification.Declaration.declarationType,\n\t\temail = ReleaseNotification.Declaration.email,\n\t\tentryOrExitPortName = ReleaseNotification.Declaration.entryOrExitPortName,\n\t\testablishmentId = ReleaseNotification.Declaration.establishmentId,\n\t\texporterName = ReleaseNotification.Declaration.exporterName,\n\t\tfirstCountryOfLoading = ReleaseNotification.Declaration.firstCountryOfLoading,\n\t\timporterName = ReleaseNotification.Declaration.importerName,\n\t\tmasterBolOrAWBNumber = ReleaseNotification.Declaration.masterBolOrAWBNumber,\n\t\tportOfLoading = ReleaseNotification.Declaration.portOfLoading,\n\t\tportType = ReleaseNotification.Declaration.portType,\n\t\treleaseOrderNumber = ReleaseNotification.Declaration.releaseOrderNumber,\n\t\treleasedDate = ReleaseNotification.Declaration.releasedDate,\n\t\tsupplierCR = ReleaseNotification.Declaration.supplierCR,\n\t\tsupplierCustomsCode = ReleaseNotification.Declaration.supplierCustomsCode,\n\t\tvoyageOrFlightNumber = ReleaseNotification.Declaration.voyageOrFlightNumber\n\t)) ~> DECLARATION\nFlattenItem sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tID_TRANSACTION_TYPE as integer,\n\t\tDS_TRANSACTION_TYPE as string,\n\t\tDS_EFFECT as string,\n\t\tDS_TYPE_CODE as string,\n\t\tDS_TYPE_DESC_ENG as string,\n\t\tDS_TYPE_DESC_ARB as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> ITEM\nFlattenSupervisor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tID_TRANSACTION_TYPE as integer,\n\t\tDS_TRANSACTION_TYPE as string,\n\t\tDS_EFFECT as string,\n\t\tDS_TYPE_CODE as string,\n\t\tDS_TYPE_DESC_ENG as string,\n\t\tDS_TYPE_DESC_ARB as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> SUPERVISOR"
+					"script": "source(output(\n\t\tReleaseNotification as (Declaration as (ItemDetails as (Item as (countryOfOrigin as string, declaredValue as short, declaredValueQAR as short, foreignCurrency as string, hscode as integer, itemQuantity as boolean, itemQuantityUOM as string, netWeight as short, netWeightUOM as string)[]), SupervisorDetails as (Supervisor as (mobileNumber as string, name as string)[]), accountType as string, address as string, bolNumber as string, cargoManifestNumber as string, carrierName as string, clearingAgencyCR as short, clearingAgencyNameAR as string, clearingAgencyNameEng as string, companyName as string, companyNameAr as string, countryOfLoading as string, declarationNo as string, declarationStatus as string, declarationType as string, email as string, entryOrExitPortName as string, establishmentId as integer, exporterName as string, firstCountryOfLoading as string, importerName as string, masterBolOrAWBNumber as string, portOfLoading as string, portType as string, releaseOrderNumber as long, releasedDate as string, supplierCR as short, supplierCustomsCode as short, voyageOrFlightNumber as string), NotificationDate as string, NotificationRef as string, NotificationSender as string)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'xml',\n\tfileSystem: 'input',\n\tfileName: 'pendinginspection.xml',\n\tnullValue: 'null',\n\tvalidationMode: 'xsd',\n\tnamespaces: true,\n\tnamespacePrefixes: ['https://dlsapsmsiidt001.blob.core.windows.net/input/dene.xsd'->'dene.xsd']) ~> source1\nsource1 foldDown(unroll(ReleaseNotification.Declaration.SupervisorDetails.Supervisor),\n\tmapColumn(\n\t\tReleaseNotification = ReleaseNotification.NotificationDate,\n\t\tNotificationRef = ReleaseNotification.NotificationRef,\n\t\tNotificationSender = ReleaseNotification.NotificationSender,\n\t\tmobileNumber = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.mobileNumber,\n\t\tname = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.name\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> FlattenSupervisor\nsource1 foldDown(unroll(ReleaseNotification.Declaration.ItemDetails.Item),\n\tmapColumn(\n\t\tNotificationSender = ReleaseNotification.NotificationSender,\n\t\tNotificationDate = ReleaseNotification.NotificationDate,\n\t\tNotificationRef = ReleaseNotification.NotificationRef,\n\t\tcountryOfOrigin = ReleaseNotification.Declaration.ItemDetails.Item.countryOfOrigin,\n\t\tdeclaredValue = ReleaseNotification.Declaration.ItemDetails.Item.declaredValue,\n\t\tdeclaredValueQAR = ReleaseNotification.Declaration.ItemDetails.Item.declaredValueQAR,\n\t\tforeignCurrency = ReleaseNotification.Declaration.ItemDetails.Item.foreignCurrency,\n\t\thscode = ReleaseNotification.Declaration.ItemDetails.Item.hscode,\n\t\titemQuantity = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantity,\n\t\titemQuantityUOM = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantityUOM,\n\t\tnetWeight = ReleaseNotification.Declaration.ItemDetails.Item.netWeight,\n\t\tnetWeightUOM = ReleaseNotification.Declaration.ItemDetails.Item.netWeightUOM\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> FlattenItem\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tNotificationSender = ReleaseNotification.NotificationSender,\n\t\tNotificationDate = ReleaseNotification.NotificationDate,\n\t\tNotificationRef = ReleaseNotification.NotificationRef,\n\t\tReleaseNotification = ReleaseNotification.Declaration.accountType,\n\t\taddress = ReleaseNotification.Declaration.address,\n\t\tbolNumber = ReleaseNotification.Declaration.bolNumber,\n\t\tcargoManifestNumber = ReleaseNotification.Declaration.cargoManifestNumber,\n\t\tcarrierName = ReleaseNotification.Declaration.carrierName,\n\t\tclearingAgencyCR = ReleaseNotification.Declaration.clearingAgencyCR,\n\t\tclearingAgencyNameAR = ReleaseNotification.Declaration.clearingAgencyNameAR,\n\t\tclearingAgencyNameEng = ReleaseNotification.Declaration.clearingAgencyNameEng,\n\t\tcompanyName = ReleaseNotification.Declaration.companyName,\n\t\tcompanyNameAr = ReleaseNotification.Declaration.companyNameAr,\n\t\tcountryOfLoading = ReleaseNotification.Declaration.countryOfLoading,\n\t\tdeclarationNo = ReleaseNotification.Declaration.declarationNo,\n\t\tdeclarationStatus = ReleaseNotification.Declaration.declarationStatus,\n\t\tdeclarationType = ReleaseNotification.Declaration.declarationType,\n\t\temail = ReleaseNotification.Declaration.email,\n\t\tentryOrExitPortName = ReleaseNotification.Declaration.entryOrExitPortName,\n\t\testablishmentId = ReleaseNotification.Declaration.establishmentId,\n\t\texporterName = ReleaseNotification.Declaration.exporterName,\n\t\tfirstCountryOfLoading = ReleaseNotification.Declaration.firstCountryOfLoading,\n\t\timporterName = ReleaseNotification.Declaration.importerName,\n\t\tmasterBolOrAWBNumber = ReleaseNotification.Declaration.masterBolOrAWBNumber,\n\t\tportOfLoading = ReleaseNotification.Declaration.portOfLoading,\n\t\tportType = ReleaseNotification.Declaration.portType,\n\t\treleaseOrderNumber = ReleaseNotification.Declaration.releaseOrderNumber,\n\t\treleasedDate = ReleaseNotification.Declaration.releasedDate,\n\t\tsupplierCR = ReleaseNotification.Declaration.supplierCR,\n\t\tsupplierCustomsCode = ReleaseNotification.Declaration.supplierCustomsCode,\n\t\tvoyageOrFlightNumber = ReleaseNotification.Declaration.voyageOrFlightNumber\n\t)) ~> DECLARATION\nFlattenItem sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> ITEM\nFlattenSupervisor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> SUPERVISOR"
 				}
 			},
 			"dependsOn": [
@@ -6226,6 +6606,40 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_dwl_file_list')]",
 				"[concat(variables('factoryId'), '/datasets/ds_stg_file_list')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_insert_company')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "ls_psmsii_syntodls",
+								"type": "LinkedServiceReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: false,\n\tformat: 'excel',\n\tfileSystem: 'input',\n\tfileName: 'Company Profile and warehouse - store  Template.xlsx',\n\tsheetName: 'بيانات الشركة',\n\trange: 'A7:Q17',\n\tfirstRowAsHeader: true) ~> source1\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
 			]
 		},
 		{
@@ -6433,13 +6847,46 @@
 							"name": "DerivedColumn1"
 						}
 					],
-					"script": "source(output(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_GROUP as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_SOURCE_WAREHOUSE as string,\n\t\tID_TARGET_WAREHOUSE as string,\n\t\tMT_QUANTITY as string,\n\t\tID_UOM as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_LPO as string,\n\t\tID_SALES_ORDER as string,\n\t\tID_DELIVERY_NOTE as string,\n\t\tID_GRN as string,\n\t\tID_INVOICE as string,\n\t\tID_RETURN_NOTE as string,\n\t\tID_CUSTOMS_STATEMENT as string,\n\t\tID_REFERANCE_CODE as string,\n\t\tMT_INVOICE_COUNT as string,\n\t\tDS_TRANSACTION_REASON as string,\n\t\tSK_ID as string,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> source1\nsource(output(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_GROUP as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_SOURCE_WAREHOUSE as string,\n\t\tID_TARGET_WAREHOUSE as string,\n\t\tMT_QUANTITY as string,\n\t\tID_UOM as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_LPO as string,\n\t\tID_SALES_ORDER as string,\n\t\tID_DELIVERY_NOTE as string,\n\t\tID_GRN as string,\n\t\tID_INVOICE as string,\n\t\tID_RETURN_NOTE as string,\n\t\tID_CUSTOMS_STATEMENT as string,\n\t\tID_REFERANCE_CODE as string,\n\t\tMT_INVOICE_COUNT as string,\n\t\tDS_TRANSACTION_REASON as string,\n\t\tSK_ID as string,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> source2\nsource1, source2 exists(source1@SK_ID == source2@SK_ID\n\t&& source1@STG_FILENAME == source2@STG_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists1\nNotExists1 derive(NewDate = coalesce(toDate(ID_YEARMONTHDAY,'MM/dd/yyyy'),toDate(ID_YEARMONTHDAY,'yyyy/MM/dd'),toDate(ID_YEARMONTHDAY,'dd/MM/yyyy'),toDate(ID_YEARMONTHDAY,'MMddyyyy'),toDate(ID_YEARMONTHDAY,'yyyyddMM'),toDate(ID_YEARMONTHDAY,'MMddyyyy'),toDate(ID_YEARMONTHDAY,'yyyyMMdd'),toDate(ID_YEARMONTHDAY,'yyyy.MM.dd'),toDate(ID_YEARMONTHDAY,'dd.MM.yyyy'),toDate(ID_YEARMONTHDAY,'MM.dd.yyyy')),\n\t\tNewMTQuantitiy = replace(MT_QUANTITY,',','')) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tID_TRANSACTION_TYPE as integer,\n\t\tDS_TRANSACTION_TYPE as string,\n\t\tDS_EFFECT as string,\n\t\tDS_TYPE_CODE as string,\n\t\tDS_TYPE_DESC_ENG as string,\n\t\tDS_TYPE_DESC_ARB as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_YEARMONTHDAY = NewDate,\n\t\tID_TRANSACTION_TYPE,\n\t\tID_ITEM_GROUP,\n\t\tID_ITEM_CODE,\n\t\tID_ITEM_BARCODE,\n\t\tID_ENTITY_CR,\n\t\tID_CUSTOMER_ENTITY_CR,\n\t\tID_SOURCE_WAREHOUSE,\n\t\tID_TARGET_WAREHOUSE,\n\t\tMT_QUANTITY = NewMTQuantitiy,\n\t\tID_UOM,\n\t\tMT_DISCOUNT_AMOUNT,\n\t\tID_LPO,\n\t\tID_SALES_ORDER,\n\t\tID_DELIVERY_NOTE,\n\t\tID_GRN,\n\t\tID_INVOICE,\n\t\tID_RETURN_NOTE,\n\t\tID_CUSTOMS_STATEMENT,\n\t\tID_REFERANCE_CODE,\n\t\tMT_INVOICE_COUNT,\n\t\tDS_TRANSACTION_REASON,\n\t\tSK_ID,\n\t\tSTG_FILENAME,\n\t\tSTG_FILETIME\n\t)) ~> sink1"
+					"script": "source(output(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_GROUP as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_SOURCE_WAREHOUSE as string,\n\t\tID_TARGET_WAREHOUSE as string,\n\t\tMT_QUANTITY as string,\n\t\tID_UOM as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_LPO as string,\n\t\tID_SALES_ORDER as string,\n\t\tID_DELIVERY_NOTE as string,\n\t\tID_GRN as string,\n\t\tID_INVOICE as string,\n\t\tID_RETURN_NOTE as string,\n\t\tID_CUSTOMS_STATEMENT as string,\n\t\tID_REFERANCE_CODE as string,\n\t\tMT_INVOICE_COUNT as string,\n\t\tDS_TRANSACTION_REASON as string,\n\t\tSK_ID as string,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> source1\nsource(output(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_GROUP as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_SOURCE_WAREHOUSE as string,\n\t\tID_TARGET_WAREHOUSE as string,\n\t\tMT_QUANTITY as string,\n\t\tID_UOM as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_LPO as string,\n\t\tID_SALES_ORDER as string,\n\t\tID_DELIVERY_NOTE as string,\n\t\tID_GRN as string,\n\t\tID_INVOICE as string,\n\t\tID_RETURN_NOTE as string,\n\t\tID_CUSTOMS_STATEMENT as string,\n\t\tID_REFERANCE_CODE as string,\n\t\tMT_INVOICE_COUNT as string,\n\t\tDS_TRANSACTION_REASON as string,\n\t\tSK_ID as string,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> source2\nsource1, source2 exists(source1@SK_ID == source2@SK_ID\n\t&& source1@STG_FILENAME == source2@STG_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists1\nNotExists1 derive(NewDate = coalesce(toDate(ID_YEARMONTHDAY,'MM/dd/yyyy'),toDate(ID_YEARMONTHDAY,'yyyy/MM/dd'),toDate(ID_YEARMONTHDAY,'dd/MM/yyyy'),toDate(ID_YEARMONTHDAY,'MMddyyyy'),toDate(ID_YEARMONTHDAY,'yyyyddMM'),toDate(ID_YEARMONTHDAY,'MMddyyyy'),toDate(ID_YEARMONTHDAY,'yyyyMMdd'),toDate(ID_YEARMONTHDAY,'yyyy.MM.dd'),toDate(ID_YEARMONTHDAY,'dd.MM.yyyy'),toDate(ID_YEARMONTHDAY,'MM.dd.yyyy')),\n\t\tNewMTQuantitiy = replace(MT_QUANTITY,',','')) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_YEARMONTHDAY = NewDate,\n\t\tID_TRANSACTION_TYPE,\n\t\tID_ITEM_GROUP,\n\t\tID_ITEM_CODE,\n\t\tID_ITEM_BARCODE,\n\t\tID_ENTITY_CR,\n\t\tID_CUSTOMER_ENTITY_CR,\n\t\tID_SOURCE_WAREHOUSE,\n\t\tID_TARGET_WAREHOUSE,\n\t\tMT_QUANTITY = NewMTQuantitiy,\n\t\tID_UOM,\n\t\tMT_DISCOUNT_AMOUNT,\n\t\tID_LPO,\n\t\tID_SALES_ORDER,\n\t\tID_DELIVERY_NOTE,\n\t\tID_GRN,\n\t\tID_INVOICE,\n\t\tID_RETURN_NOTE,\n\t\tID_CUSTOMS_STATEMENT,\n\t\tID_REFERANCE_CODE,\n\t\tMT_INVOICE_COUNT,\n\t\tDS_TRANSACTION_REASON,\n\t\tSK_ID,\n\t\tSTG_FILENAME,\n\t\tSTG_FILETIME\n\t)) ~> sink1"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions')]",
 				"[concat(variables('factoryId'), '/datasets/ds_stg_transaction_error_log')]",
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks",
+			"apiVersion": "2018-06-01",
+			"properties": {},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default/pendp_psmsii_adftodls')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"privateLinkResourceId": "[parameters('pendp_psmsii_adftodls_properties_privateLinkResourceId')]",
+				"groupId": "[parameters('pendp_psmsii_adftodls_properties_groupId')]",
+				"fqdns": "[parameters('pendp_psmsii_adftodls_properties_fqdns')]"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default/pendp_psmsii_adftodsqlp')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"privateLinkResourceId": "[parameters('pendp_psmsii_adftodsqlp_properties_privateLinkResourceId')]",
+				"groupId": "[parameters('pendp_psmsii_adftodsqlp_properties_groupId')]",
+				"fqdns": "[parameters('pendp_psmsii_adftodsqlp_properties_fqdns')]"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
 			]
 		},
 		{
@@ -6475,7 +6922,7 @@
 							"name": "SurrogateKey1"
 						}
 					],
-					"script": "parameters{\n\tfileName as string ('104897.xlsx')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingxlsx\nprocessingxlsx derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),15),\n\t\tTRANSACTION_DATE = coalesce(toString(toDate(regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+',''),'yyyyMMdd')),\r\nreplace(toString(toDate(regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+',''),'MMddyyyy')),'-',''),\r\nreplace(toString(toDate(regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+',''),'ddMMyyyy')),'-',''),{Transaction Date - تاريخ الحركة })) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tTRANSACTION_DATE,\n\t\tTRANSACTION_TYPE_CODE = {Transaction Type Code - كود نوع الحركة},\n\t\tITEM_CODE = {Item Code - كود الصنف},\n\t\tITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tYOUR_COMPANY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tOTHER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tCOMPANY_STORE_INVENTORY_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tQUANTITY = {Quantity - الكمية},\n\t\tSELLING_PRICE_PER_UNIT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tCOMMON_REFERANCE_NO = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tINTERNAL_TRANSFER_NUMBER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tNUMBER_OF_CONSUMER_INVOICES = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tID_SK = SK_ID_SUR,\n\t\tDS_FILENAME = STG_FILENAME,\n\t\tDT_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
+					"script": "parameters{\n\tfileName as string ('4')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingxlsx\nprocessingxlsx derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\tTRANSACTION_DATE = regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+','')) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tsaveOrder: 1,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tTRANSACTION_DATE,\n\t\tTRANSACTION_TYPE_CODE = {Transaction Type Code - كود نوع الحركة},\n\t\tITEM_CODE = {Item Code - كود الصنف},\n\t\tITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tYOUR_COMPANY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tOTHER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tCOMPANY_STORE_INVENTORY_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tQUANTITY = {Quantity - الكمية},\n\t\tSELLING_PRICE_PER_UNIT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tCOMMON_REFERANCE_NO = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tINTERNAL_TRANSFER_NUMBER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tNUMBER_OF_CONSUMER_INVOICES = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tID_SK = SK_ID_SUR,\n\t\tDS_FILENAME = STG_FILENAME,\n\t\tDT_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
 				}
 			},
 			"dependsOn": [
@@ -6484,36 +6931,44 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/default')]",
-			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks",
-			"apiVersion": "2018-06-01",
-			"properties": {},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/default/pendp_psmsii_adftodls')]",
-			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
+			"name": "[concat(parameters('factoryName'), '/df_xlsx_to_stg_products')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"privateLinkResourceId": "[parameters('pendp_psmsii_adftodls_properties_privateLinkResourceId')]",
-				"groupId": "[parameters('pendp_psmsii_adftodls_properties_groupId')]",
-				"fqdns": "[parameters('pendp_psmsii_adftodls_properties_fqdns')]"
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dls_processing_xlsx_folder",
+								"type": "DatasetReference"
+							},
+							"name": "processingxlsx"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_stg_productions",
+								"type": "DatasetReference"
+							},
+							"name": "stgProducts"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddColumn"
+						},
+						{
+							"name": "SurrogateKey1"
+						}
+					],
+					"script": "parameters{\n\tfileName as string ('4')\n}\nsource(output(\n\t\t{Item Code\\nرقم الصنف} as string,\n\t\t{Barcode\\nالباركود} as string,\n\t\t{Product Name Arabic\\nاسم الصنف عربى} as string,\n\t\t{Description Arabic\\nوصف الصنف عربى} as string,\n\t\t{Product Name Arabic\\nاسم الصنف انجليزى} as string,\n\t\t{Description Arabic\\nوصف الصنف انجليزى} as string,\n\t\t{Unit Item Barcode\\nالباركود للوحدة } as string,\n\t\t{No Of Unit Items\\nعدد الوحدات} as string,\n\t\t{Unit Weight/size\\nوزن/سعة الوحدة} as string,\n\t\t{Unit UOM\\nوحدة القياس} as string,\n\t\t{Package UOM\\nوحدة قياس الحزمة-التغليف} as string,\n\t\t{Cost Price\\nسعر التكلفة} as string,\n\t\t{Selling Price\\nسعر البيع} as string,\n\t\t{Brand-Trade Mark English\\nاسم العلامة التجارية انجليزى} as string,\n\t\t{Brand-Trade Mark Arabic\\nاسم العلامة التجارية عربى} as string,\n\t\t{MoCI Product Group\\nالمجموعة السلعية - بالوزارة} as string,\n\t\t{Country of Oragen Name\\nاسم بلد المنشأ} as string,\n\t\t{Country of Oragen ISO\\nكود 3 لبلد المنشأ} as string,\n\t\t{HS Code\\nرمز المنسق الجمركي} as string,\n\t\t{Supplier CR\\nرقم السجل التجارى للمورد} as string,\n\t\t{Supplier Name\\nاسم المورد} as string,\n\t\t{Category Level 1\\nتصنيف السلعة 1} as string,\n\t\t{Category Level 1\\nتصنيف السلعة 2} as string,\n\t\t{Category Level 1\\nتصنيف السلعة 3} as string,\n\t\t{Category Level 1\\nتصنيف السلعة 4} as string,\n\t\t{Width\\nالعرض} as string,\n\t\t{Height\\nالطول} as string,\n\t\t{Depth\\nالارتفاع} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingxlsx\nprocessingxlsx derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tITEM_CODE as string,\n\t\tBARCODE as string,\n\t\tPRODUCT_NAME_ARABIC as string,\n\t\tDESCRIPTION_ARABIC as string,\n\t\tPRODUCT_NAME_ENGLISH as string,\n\t\tDESCRIPTION_ENGLISH as string,\n\t\tUNIT_ITEM_BARCODE as string,\n\t\tNO_OF_UNIT_ITEMS as string,\n\t\tUNIT_WEIGHT_SIZE as string,\n\t\tUNIT_UOM as string,\n\t\tPACKAGE_UOM as string,\n\t\tCOST_PRICE as string,\n\t\tSELLING_PRICE as string,\n\t\tBRAND_TRADE_MARK_ENGLISH as string,\n\t\tBRAND_TRADE_MARK_ARABIC as string,\n\t\tMOCI_PRODUCT_GROUP as string,\n\t\tCOUNTRY_OF_ORAGEN_NAME as string,\n\t\tCOUNTRY_OF_ORAGEN_ISO as string,\n\t\tHS_CODE as string,\n\t\tSUPPLIER_CR as string,\n\t\tSUPPLIER_NAME as string,\n\t\tCATEGORY_LEVEL_1_1 as string,\n\t\tCATEGORY_LEVEL_1_2 as string,\n\t\tCATEGORY_LEVEL_1_3 as string,\n\t\tCATEGORY_LEVEL_1_4 as string,\n\t\tWIDTH as string,\n\t\tHEIGHT as string,\n\t\tDEPTH as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILEDATE as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tsaveOrder: 1,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tITEM_CODE = {Item Code\\nرقم الصنف},\n\t\tBARCODE = {Barcode\\nالباركود},\n\t\tPRODUCT_NAME_ARABIC = {Product Name Arabic\\nاسم الصنف عربى},\n\t\tDESCRIPTION_ARABIC = {Description Arabic\\nوصف الصنف عربى},\n\t\tPRODUCT_NAME_ENGLISH = {Product Name Arabic\\nاسم الصنف انجليزى},\n\t\tDESCRIPTION_ENGLISH = {Description Arabic\\nوصف الصنف انجليزى},\n\t\tUNIT_ITEM_BARCODE = {Unit Item Barcode\\nالباركود للوحدة },\n\t\tNO_OF_UNIT_ITEMS = {No Of Unit Items\\nعدد الوحدات},\n\t\tUNIT_WEIGHT_SIZE = {Unit Weight/size\\nوزن/سعة الوحدة},\n\t\tUNIT_UOM = {Unit UOM\\nوحدة القياس},\n\t\tPACKAGE_UOM = {Package UOM\\nوحدة قياس الحزمة-التغليف},\n\t\tCOST_PRICE = {Cost Price\\nسعر التكلفة},\n\t\tSELLING_PRICE = {Selling Price\\nسعر البيع},\n\t\tBRAND_TRADE_MARK_ENGLISH = {Brand-Trade Mark English\\nاسم العلامة التجارية انجليزى},\n\t\tBRAND_TRADE_MARK_ARABIC = {Brand-Trade Mark Arabic\\nاسم العلامة التجارية عربى},\n\t\tMOCI_PRODUCT_GROUP = {MoCI Product Group\\nالمجموعة السلعية - بالوزارة},\n\t\tCOUNTRY_OF_ORAGEN_NAME = {Country of Oragen Name\\nاسم بلد المنشأ},\n\t\tCOUNTRY_OF_ORAGEN_ISO = {Country of Oragen ISO\\nكود 3 لبلد المنشأ},\n\t\tHS_CODE = {HS Code\\nرمز المنسق الجمركي},\n\t\tSUPPLIER_CR = {Supplier CR\\nرقم السجل التجارى للمورد},\n\t\tSUPPLIER_NAME = {Supplier Name\\nاسم المورد},\n\t\tCATEGORY_LEVEL_1_1 = {Category Level 1\\nتصنيف السلعة 1},\n\t\tCATEGORY_LEVEL_1_2 = {Category Level 1\\nتصنيف السلعة 2},\n\t\tCATEGORY_LEVEL_1_3 = {Category Level 1\\nتصنيف السلعة 3},\n\t\tCATEGORY_LEVEL_1_4 = {Category Level 1\\nتصنيف السلعة 4},\n\t\tWIDTH = {Width\\nالعرض},\n\t\tHEIGHT = {Height\\nالطول},\n\t\tDEPTH = {Depth\\nالارتفاع},\n\t\tID_SK = SK_ID_SUR,\n\t\tDS_FILENAME = STG_FILENAME,\n\t\tDT_FILEDATE = STG_FILEDATE\n\t)) ~> stgProducts"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/default/pendp_psmsii_adftodsqlp')]",
-			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks/managedPrivateEndpoints",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"privateLinkResourceId": "[parameters('pendp_psmsii_adftodsqlp_properties_privateLinkResourceId')]",
-				"groupId": "[parameters('pendp_psmsii_adftodsqlp_properties_groupId')]",
-				"fqdns": "[parameters('pendp_psmsii_adftodsqlp_properties_fqdns')]"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+				"[concat(variables('factoryId'), '/datasets/dls_processing_xlsx_folder')]",
+				"[concat(variables('factoryId'), '/datasets/ds_stg_productions')]"
 			]
 		}
 	]

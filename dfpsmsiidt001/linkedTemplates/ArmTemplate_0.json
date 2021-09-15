@@ -27,6 +27,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_qtrsqldb'"
 		},
+		"ls_bss_soap_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
+		},
 		"pendp_psmsii_adftodls_properties_privateLinkResourceId": {
 			"type": "string",
 			"defaultValue": "/subscriptions/047cf264-f2a3-43e7-b2e5-1ab1fc225ba1/resourceGroups/rg-psmsii-dt-001/providers/Microsoft.Storage/storageAccounts/dlsapsmsiidt001"
@@ -56,10 +60,6 @@
 			]
 		},
 		"ls_bss_rest_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
-		},
-		"ls_bss_soap_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
 		},
@@ -514,6 +514,27 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ls_bss_soap')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('ls_bss_soap_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				},
+				"connectVia": {
+					"referenceName": "shir-sql-azure-psmsii-dt-01",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/shir-sql-azure-psmsii-dt-01')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/integrationRuntime10min')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -618,27 +639,6 @@
 				"type": "RestService",
 				"typeProperties": {
 					"url": "[parameters('ls_bss_rest_properties_typeProperties_url')]",
-					"enableServerCertificateValidation": true,
-					"authenticationType": "Anonymous"
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime10min",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ls_bss_soap')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "HttpServer",
-				"typeProperties": {
-					"url": "[parameters('ls_bss_soap_properties_typeProperties_url')]",
 					"enableServerCertificateValidation": true,
 					"authenticationType": "Anonymous"
 				},
