@@ -1,5 +1,5 @@
 {
-	"name": "df_csv_to_stg_copy2",
+	"name": "df_xlsx_to_stg_2",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
