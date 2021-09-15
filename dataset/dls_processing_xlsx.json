@@ -19,6 +19,7 @@
 				"fileName": "*.xlsx",
 				"fileSystem": "processing"
 			},
+			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
 		"schema": [
