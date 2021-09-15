@@ -73,7 +73,7 @@
 									},
 									"datasetParameters": {
 										"InputProductsxlsx": {
-											"FileName": "@item().name"
+											"FileName": "'a'"
 										}
 									}
 								},
