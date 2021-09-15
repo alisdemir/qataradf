@@ -17,11 +17,8 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_processing_xlsx_product",
-						"type": "DatasetReference",
-						"parameters": {
-							"FileName": "*."
-						}
+						"referenceName": "dls_processing_xlsx_product_folder",
+						"type": "DatasetReference"
 					},
 					"fieldList": [
 						"childItems"
@@ -72,11 +69,6 @@
 										"fileName": {
 											"value": "@item().name",
 											"type": "Expression"
-										}
-									},
-									"datasetParameters": {
-										"InputProductsxlsx": {
-											"FileName": "@item().name"
 										}
 									}
 								},
