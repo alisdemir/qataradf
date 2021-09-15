@@ -1,0 +1,136 @@
+{
+	"name": "dls_processing_xlsx_product_folder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Storage_DL_QTR"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Products",
+				"fileSystem": "input"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Item Code\nرقم الصنف",
+				"type": "String"
+			},
+			{
+				"name": "Barcode\nالباركود",
+				"type": "String"
+			},
+			{
+				"name": "Product Name Arabic\nاسم الصنف عربى",
+				"type": "String"
+			},
+			{
+				"name": "Description Arabic\nوصف الصنف عربى",
+				"type": "String"
+			},
+			{
+				"name": "Product Name Arabic\nاسم الصنف انجليزى",
+				"type": "String"
+			},
+			{
+				"name": "Description Arabic\nوصف الصنف انجليزى",
+				"type": "String"
+			},
+			{
+				"name": "Unit Item Barcode\nالباركود للوحدة ",
+				"type": "String"
+			},
+			{
+				"name": "No Of Unit Items\nعدد الوحدات",
+				"type": "String"
+			},
+			{
+				"name": "Unit Weight/size\nوزن/سعة الوحدة",
+				"type": "String"
+			},
+			{
+				"name": "Unit UOM\nوحدة القياس",
+				"type": "String"
+			},
+			{
+				"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
+				"type": "String"
+			},
+			{
+				"name": "Cost Price\nسعر التكلفة",
+				"type": "String"
+			},
+			{
+				"name": "Selling Price\nسعر البيع",
+				"type": "String"
+			},
+			{
+				"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
+				"type": "String"
+			},
+			{
+				"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
+				"type": "String"
+			},
+			{
+				"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
+				"type": "String"
+			},
+			{
+				"name": "Country of Oragen Name\nاسم بلد المنشأ",
+				"type": "String"
+			},
+			{
+				"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
+				"type": "String"
+			},
+			{
+				"name": "HS Code\nرمز المنسق الجمركي",
+				"type": "String"
+			},
+			{
+				"name": "Supplier CR\nرقم السجل التجارى للمورد",
+				"type": "String"
+			},
+			{
+				"name": "Supplier Name\nاسم المورد",
+				"type": "String"
+			},
+			{
+				"name": "Category Level 1\nتصنيف السلعة 1",
+				"type": "String"
+			},
+			{
+				"name": "Category Level 1\nتصنيف السلعة 2",
+				"type": "String"
+			},
+			{
+				"name": "Category Level 1\nتصنيف السلعة 3",
+				"type": "String"
+			},
+			{
+				"name": "Category Level 1\nتصنيف السلعة 4",
+				"type": "String"
+			},
+			{
+				"name": "Width\nالعرض",
+				"type": "String"
+			},
+			{
+				"name": "Height\nالطول",
+				"type": "String"
+			},
+			{
+				"name": "Depth\nالارتفاع",
+				"type": "String"
+			}
+		]
+	}
+}
