@@ -115,11 +115,14 @@
 												"referenceName": "df_xlsx_to_stg_2",
 												"type": "DataFlowReference",
 												"parameters": {
-													"fileName": "'4'"
+													"fileName": {
+														"value": "'@{item().name}'",
+														"type": "Expression"
+													}
 												},
 												"datasetParameters": {
 													"processingCsv": {
-														"FileName": "104897.xlsx"
+														"FileName": "@item().name"
 													}
 												}
 											},
