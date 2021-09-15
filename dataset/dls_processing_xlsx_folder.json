@@ -13,36 +13,12 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "ALL TRANSACTION TYPES.xlsx",
-					"type": "Expression"
-				},
-				"fileSystem": "processing"
+				"folderPath": "Products",
+				"fileSystem": "input"
 			},
 			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
-		"schema": [
-			{
-				"name": "Company CR #",
-				"type": "String"
-			},
-			{
-				"name": "Company Transaction Type Arabic ",
-				"type": "String"
-			},
-			{
-				"name": "Company Transaction Type English ",
-				"type": "String"
-			},
-			{
-				"name": "Company Transaction type",
-				"type": "String"
-			},
-			{
-				"name": "PSMS - MoCI Transaction Types",
-				"type": "String"
-			}
-		]
+		"schema": []
 	}
 }
