@@ -5,25 +5,14 @@
 			"referenceName": "ls_psmsii_syntodls",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"FileName": {
-				"type": "string",
-				"defaultValue": "'a'"
-			}
-		},
 		"folder": {
 			"name": "Storage_DL_QTR"
 		},
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "0",
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@dataset().FileName",
-					"type": "Expression"
-				},
 				"folderPath": "Products",
 				"fileSystem": "input"
 			},
