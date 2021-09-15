@@ -17,11 +17,8 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_processing_xlsx",
-						"type": "DatasetReference",
-						"parameters": {
-							"FileName": "*.xlsx"
-						}
+						"referenceName": "dls_processing_xlsx_folder",
+						"type": "DatasetReference"
 					},
 					"fieldList": [
 						"childItems"
@@ -55,14 +52,7 @@
 						{
 							"name": "IsFileNameCorrect",
 							"type": "IfCondition",
-							"dependsOn": [
-								{
-									"activity": "lookupFileName",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
@@ -119,11 +109,6 @@
 														"value": "'@{item().name}'",
 														"type": "Expression"
 													}
-												},
-												"datasetParameters": {
-													"processingxlsx": {
-														"FileName": "@item().name"
-													}
 												}
 											},
 											"staging": {
@@ -141,35 +126,6 @@
 										}
 									}
 								]
-							}
-						},
-						{
-							"name": "lookupFileName",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "SqlDWSource",
-									"sqlReaderQuery": {
-										"value": "@concat('SELECT 1 as lkp_id\n  FROM [etl].[DWL_FILE_LIST] where DS_FILENAME= ','''',item().name,'''') ",
-										"type": "Expression"
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "ds_dwl_file_list",
-									"type": "DatasetReference"
-								},
-								"firstRowOnly": false
 							}
 						}
 					]
