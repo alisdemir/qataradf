@@ -23,7 +23,9 @@
 							"FileName": ".*"
 						}
 					},
-					"fieldList": [],
+					"fieldList": [
+						"childItems"
+					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"recursive": true,
@@ -74,7 +76,7 @@
 									},
 									"datasetParameters": {
 										"InputProductsxlsx": {
-											"FileName": "'a'"
+											"FileName": "@item().name"
 										}
 									}
 								},
