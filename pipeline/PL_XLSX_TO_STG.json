@@ -99,7 +99,7 @@
 								],
 								"ifTrueActivities": [
 									{
-										"name": "df_xlsx_to_stg_2",
+										"name": "df_xlsx_to_stg",
 										"type": "ExecuteDataFlow",
 										"dependsOn": [],
 										"policy": {
@@ -112,7 +112,7 @@
 										"userProperties": [],
 										"typeProperties": {
 											"dataflow": {
-												"referenceName": "df_xlsx_to_stg_2",
+												"referenceName": "df_xlsx_to_stg",
 												"type": "DataFlowReference",
 												"parameters": {
 													"fileName": {
