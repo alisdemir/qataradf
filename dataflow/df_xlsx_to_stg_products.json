@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "dls_processing_xlsx_folder",
+						"referenceName": "dls_processing_xlsx_product",
 						"type": "DatasetReference"
 					},
 					"name": "InputProductsxlsx"
