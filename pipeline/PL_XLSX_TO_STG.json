@@ -121,7 +121,7 @@
 													}
 												},
 												"datasetParameters": {
-													"processingCsv": {
+													"processingxlsx": {
 														"FileName": "@item().name"
 													}
 												}
