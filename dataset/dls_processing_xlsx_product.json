@@ -20,7 +20,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "102077.xlsx",
+					"value": "@dataset().FileName",
 					"type": "Expression"
 				},
 				"folderPath": "Products",
