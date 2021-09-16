@@ -119,21 +119,6 @@
 			{
 				"name": "DEPTH",
 				"type": "nvarchar"
-			},
-			{
-				"name": "ID_SK",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "DS_FILENAME",
-				"type": "varchar"
-			},
-			{
-				"name": "DT_FILEDATE",
-				"type": "datetime",
-				"precision": 23,
-				"scale": 3
 			}
 		],
 		"typeProperties": {
