@@ -39,107 +39,107 @@
 				"type": "String"
 			},
 			{
-				"name": "Product Name Arabic\nاسم الصنف عربى",
+				"name": "Product Name Arabic",
 				"type": "String"
 			},
 			{
-				"name": "Description Arabic\nوصف الصنف عربى",
+				"name": "Description Arabic",
 				"type": "String"
 			},
 			{
-				"name": "Product Name Arabic\nاسم الصنف انجليزى",
+				"name": "Product Name English",
 				"type": "String"
 			},
 			{
-				"name": "Description Arabic\nوصف الصنف انجليزى",
+				"name": "Description English",
 				"type": "String"
 			},
 			{
-				"name": "Unit Item Barcode\nالباركود للوحدة ",
+				"name": "Unit Item Barcode ",
 				"type": "String"
 			},
 			{
-				"name": "No Of Unit Items\nعدد الوحدات",
+				"name": "No Of Unit Items",
 				"type": "String"
 			},
 			{
-				"name": "Unit Weight/size\nوزن/سعة الوحدة",
+				"name": "Unit Weight/size",
 				"type": "String"
 			},
 			{
-				"name": "Unit UOM\nوحدة القياس",
+				"name": "Unit UOM",
 				"type": "String"
 			},
 			{
-				"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
+				"name": "Package UOM",
 				"type": "String"
 			},
 			{
-				"name": "Cost Price\nسعر التكلفة",
+				"name": "Cost Price",
 				"type": "String"
 			},
 			{
-				"name": "Selling Price\nسعر البيع",
+				"name": "Selling Price",
 				"type": "String"
 			},
 			{
-				"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
+				"name": "Brand-Trade Mark English",
 				"type": "String"
 			},
 			{
-				"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
+				"name": "Brand-Trade Mark Arabic",
 				"type": "String"
 			},
 			{
-				"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
+				"name": "MoCI Product Group",
 				"type": "String"
 			},
 			{
-				"name": "Country of Oragen Name\nاسم بلد المنشأ",
+				"name": "Country of Oragen Name",
 				"type": "String"
 			},
 			{
-				"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
+				"name": "Country of Oragen ISO",
 				"type": "String"
 			},
 			{
-				"name": "HS Code\nرمز المنسق الجمركي",
+				"name": "HS Code",
 				"type": "String"
 			},
 			{
-				"name": "Supplier CR\nرقم السجل التجارى للمورد",
+				"name": "Supplier CR",
 				"type": "String"
 			},
 			{
-				"name": "Supplier Name\nاسم المورد",
+				"name": "Supplier Name",
 				"type": "String"
 			},
 			{
-				"name": "Category Level 1\nتصنيف السلعة 1",
+				"name": "Category Level 1",
 				"type": "String"
 			},
 			{
-				"name": "Category Level 1\nتصنيف السلعة 2",
+				"name": "Category Level 1_2",
 				"type": "String"
 			},
 			{
-				"name": "Category Level 1\nتصنيف السلعة 3",
+				"name": "Category Level 1_3",
 				"type": "String"
 			},
 			{
-				"name": "Category Level 1\nتصنيف السلعة 4",
+				"name": "Category Level 1_4",
 				"type": "String"
 			},
 			{
-				"name": "Width\nالعرض",
+				"name": "Width",
 				"type": "String"
 			},
 			{
-				"name": "Height\nالطول",
+				"name": "Height",
 				"type": "String"
 			},
 			{
-				"name": "Depth\nالارتفاع",
+				"name": "Depth",
 				"type": "String"
 			}
 		]
