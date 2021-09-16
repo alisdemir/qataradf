@@ -73,7 +73,10 @@
 									},
 									"datasetParameters": {
 										"InputProductsxlsx": {
-											"FileName": "102077.xlsx"
+											"FileName": {
+												"value": "@item().name",
+												"type": "Expression"
+											}
 										}
 									}
 								},
