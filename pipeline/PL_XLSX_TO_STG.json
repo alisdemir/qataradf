@@ -18,7 +18,10 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "dls_processing_xlsx",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "@dataset().FileName"
+						}
 					},
 					"fieldList": [],
 					"storeSettings": {
