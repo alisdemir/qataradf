@@ -11,6 +11,7 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
+			"sheetName": "0",
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "'102077.xlsx'",
