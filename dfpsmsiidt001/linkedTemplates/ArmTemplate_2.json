@@ -330,6 +330,146 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/dls_processing_xlsx_product_folder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "0",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Products",
+						"fileSystem": "input"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Item Code\nرقم الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Barcode\nالباركود",
+						"type": "String"
+					},
+					{
+						"name": "Product Name Arabic\nاسم الصنف عربى",
+						"type": "String"
+					},
+					{
+						"name": "Description Arabic\nوصف الصنف عربى",
+						"type": "String"
+					},
+					{
+						"name": "Product Name Arabic\nاسم الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Description Arabic\nوصف الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Unit Item Barcode\nالباركود للوحدة ",
+						"type": "String"
+					},
+					{
+						"name": "No Of Unit Items\nعدد الوحدات",
+						"type": "String"
+					},
+					{
+						"name": "Unit Weight/size\nوزن/سعة الوحدة",
+						"type": "String"
+					},
+					{
+						"name": "Unit UOM\nوحدة القياس",
+						"type": "String"
+					},
+					{
+						"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
+						"type": "String"
+					},
+					{
+						"name": "Cost Price\nسعر التكلفة",
+						"type": "String"
+					},
+					{
+						"name": "Selling Price\nسعر البيع",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
+						"type": "String"
+					},
+					{
+						"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen Name\nاسم بلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "HS Code\nرمز المنسق الجمركي",
+						"type": "String"
+					},
+					{
+						"name": "Supplier CR\nرقم السجل التجارى للمورد",
+						"type": "String"
+					},
+					{
+						"name": "Supplier Name\nاسم المورد",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 1",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 2",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 3",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 4",
+						"type": "String"
+					},
+					{
+						"name": "Width\nالعرض",
+						"type": "String"
+					},
+					{
+						"name": "Height\nالطول",
+						"type": "String"
+					},
+					{
+						"name": "Depth\nالارتفاع",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DENEME_XML_XSDLI')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2627,46 +2767,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
 				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions_copy1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_csv_to_stg')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "dls_processing_csv",
-								"type": "DatasetReference"
-							},
-							"name": "processingCsv"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_stg_transactions",
-								"type": "DatasetReference"
-							},
-							"name": "stgTransactions"
-						}
-					],
-					"transformations": [
-						{
-							"name": "AddColumn"
-						},
-						{
-							"name": "SurrogateKey1"
-						}
-					],
-					"script": "parameters{\n\tfileName as string ('4')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> processingCsv\nprocessingCsv derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\tTRANSACTION_DATE = regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+','')) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tsaveOrder: 1,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_YEARMONTHDAY = TRANSACTION_DATE,\n\t\tID_TRANSACTION_TYPE = {Transaction Type Code - كود نوع الحركة},\n\t\tID_ITEM_CODE = {Item Code - كود الصنف},\n\t\tID_ITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tID_ENTITY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tID_CUSTOMER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tID_COMPANY_STORE_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tMT_QUANTITY = {Quantity - الكمية},\n\t\tMT_DISCOUNT_AMOUNT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tID_COMMON_REF_CODE = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tID_TRANSFER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tID_INVOICE_NUMBER = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tSK_ID = SK_ID_SUR,\n\t\tSTG_FILENAME,\n\t\tSTG_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions')]"
 			]
 		}
 	]

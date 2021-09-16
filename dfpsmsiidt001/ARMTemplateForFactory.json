@@ -4114,11 +4114,9 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "dls_processing_xlsx_product",
+								"referenceName": "dls_processing_xlsx_product_folder",
 								"type": "DatasetReference",
-								"parameters": {
-									"FileName": "*."
-								}
+								"parameters": {}
 							},
 							"fieldList": [
 								"childItems"
@@ -4173,7 +4171,7 @@
 											},
 											"datasetParameters": {
 												"InputProductsxlsx": {
-													"FileName": "@item().name"
+													"FileName": "'102077.xlsx'"
 												},
 												"stgProducts": {}
 											}
@@ -4204,7 +4202,7 @@
 				"lastPublishTime": "2021-05-20T12:55:14Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dls_processing_xlsx_product')]",
+				"[concat(variables('factoryId'), '/datasets/dls_processing_xlsx_product_folder')]",
 				"[concat(variables('factoryId'), '/dataflows/df_xlsx_to_stg_products')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
@@ -5409,10 +5407,7 @@
 					"sheetName": "0",
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().FileName",
-							"type": "Expression"
-						},
+						"fileName": "@dataset().FileName",
 						"folderPath": "Products",
 						"fileSystem": "input"
 					},
@@ -7127,6 +7122,148 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_processing_xlsx_product_folder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "0",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Products",
+						"fileSystem": "input"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Item Code\nرقم الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Barcode\nالباركود",
+						"type": "String"
+					},
+					{
+						"name": "Product Name Arabic\nاسم الصنف عربى",
+						"type": "String"
+					},
+					{
+						"name": "Description Arabic\nوصف الصنف عربى",
+						"type": "String"
+					},
+					{
+						"name": "Product Name Arabic\nاسم الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Description Arabic\nوصف الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Unit Item Barcode\nالباركود للوحدة ",
+						"type": "String"
+					},
+					{
+						"name": "No Of Unit Items\nعدد الوحدات",
+						"type": "String"
+					},
+					{
+						"name": "Unit Weight/size\nوزن/سعة الوحدة",
+						"type": "String"
+					},
+					{
+						"name": "Unit UOM\nوحدة القياس",
+						"type": "String"
+					},
+					{
+						"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
+						"type": "String"
+					},
+					{
+						"name": "Cost Price\nسعر التكلفة",
+						"type": "String"
+					},
+					{
+						"name": "Selling Price\nسعر البيع",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
+						"type": "String"
+					},
+					{
+						"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen Name\nاسم بلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "HS Code\nرمز المنسق الجمركي",
+						"type": "String"
+					},
+					{
+						"name": "Supplier CR\nرقم السجل التجارى للمورد",
+						"type": "String"
+					},
+					{
+						"name": "Supplier Name\nاسم المورد",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 1",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 2",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 3",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 4",
+						"type": "String"
+					},
+					{
+						"name": "Width\nالعرض",
+						"type": "String"
+					},
+					{
+						"name": "Height\nالطول",
+						"type": "String"
+					},
+					{
+						"name": "Depth\nالارتفاع",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
 			]
 		}
 	]

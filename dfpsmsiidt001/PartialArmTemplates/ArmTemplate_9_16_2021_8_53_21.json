@@ -1,0 +1,413 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfpsmsiidt001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_XLSX_TO_STG_production')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_xlsx_product_folder",
+								"type": "DatasetReference"
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "df_xlsx_to_stg_products",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "1.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "df_xlsx_to_stg_products",
+											"type": "DataFlowReference",
+											"parameters": {
+												"fileName": {
+													"value": "@item().name",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"InputProductsxlsx": {
+													"FileName": "'102077.xlsx'"
+												}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "ls_psmsii_syntodls",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": "stagingarea"
+										},
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime10min",
+											"type": "IntegrationRuntimeReference"
+										},
+										"traceLevel": "Coarse"
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:55:14Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dls_processing_xlsx_product_folder')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_processing_xlsx_product')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "'a'"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "0",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "@dataset().FileName",
+						"folderPath": "Products",
+						"fileSystem": "input"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Item Code\nرقم الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Barcode\nالباركود",
+						"type": "String"
+					},
+					{
+						"name": "Product Name Arabic\nاسم الصنف عربى",
+						"type": "String"
+					},
+					{
+						"name": "Description Arabic\nوصف الصنف عربى",
+						"type": "String"
+					},
+					{
+						"name": "Product Name Arabic\nاسم الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Description Arabic\nوصف الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Unit Item Barcode\nالباركود للوحدة ",
+						"type": "String"
+					},
+					{
+						"name": "No Of Unit Items\nعدد الوحدات",
+						"type": "String"
+					},
+					{
+						"name": "Unit Weight/size\nوزن/سعة الوحدة",
+						"type": "String"
+					},
+					{
+						"name": "Unit UOM\nوحدة القياس",
+						"type": "String"
+					},
+					{
+						"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
+						"type": "String"
+					},
+					{
+						"name": "Cost Price\nسعر التكلفة",
+						"type": "String"
+					},
+					{
+						"name": "Selling Price\nسعر البيع",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
+						"type": "String"
+					},
+					{
+						"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen Name\nاسم بلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "HS Code\nرمز المنسق الجمركي",
+						"type": "String"
+					},
+					{
+						"name": "Supplier CR\nرقم السجل التجارى للمورد",
+						"type": "String"
+					},
+					{
+						"name": "Supplier Name\nاسم المورد",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 1",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 2",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 3",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 4",
+						"type": "String"
+					},
+					{
+						"name": "Width\nالعرض",
+						"type": "String"
+					},
+					{
+						"name": "Height\nالطول",
+						"type": "String"
+					},
+					{
+						"name": "Depth\nالارتفاع",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_processing_xlsx_product_folder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "0",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Products",
+						"fileSystem": "input"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Item Code\nرقم الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Barcode\nالباركود",
+						"type": "String"
+					},
+					{
+						"name": "Product Name Arabic\nاسم الصنف عربى",
+						"type": "String"
+					},
+					{
+						"name": "Description Arabic\nوصف الصنف عربى",
+						"type": "String"
+					},
+					{
+						"name": "Product Name Arabic\nاسم الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Description Arabic\nوصف الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Unit Item Barcode\nالباركود للوحدة ",
+						"type": "String"
+					},
+					{
+						"name": "No Of Unit Items\nعدد الوحدات",
+						"type": "String"
+					},
+					{
+						"name": "Unit Weight/size\nوزن/سعة الوحدة",
+						"type": "String"
+					},
+					{
+						"name": "Unit UOM\nوحدة القياس",
+						"type": "String"
+					},
+					{
+						"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
+						"type": "String"
+					},
+					{
+						"name": "Cost Price\nسعر التكلفة",
+						"type": "String"
+					},
+					{
+						"name": "Selling Price\nسعر البيع",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
+						"type": "String"
+					},
+					{
+						"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen Name\nاسم بلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "HS Code\nرمز المنسق الجمركي",
+						"type": "String"
+					},
+					{
+						"name": "Supplier CR\nرقم السجل التجارى للمورد",
+						"type": "String"
+					},
+					{
+						"name": "Supplier Name\nاسم المورد",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 1",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 2",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 3",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 4",
+						"type": "String"
+					},
+					{
+						"name": "Width\nالعرض",
+						"type": "String"
+					},
+					{
+						"name": "Height\nالطول",
+						"type": "String"
+					},
+					{
+						"name": "Depth\nالارتفاع",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		}
+	]
+}
