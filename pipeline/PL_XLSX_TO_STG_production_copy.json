@@ -81,7 +81,7 @@
 								},
 								"sink": {
 									"type": "SqlDWSink",
-									"allowCopyCommand": true
+									"sqlWriterUseTableLock": false
 								},
 								"enableStaging": false,
 								"translator": {
@@ -90,281 +90,337 @@
 										{
 											"source": {
 												"name": "Item Code\nرقم الصنف",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "ITEM_CODE",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Barcode\nالباركود",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "BARCODE",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Product Name Arabic\nاسم الصنف عربى",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "PRODUCT_NAME_ARABIC",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Description Arabic\nوصف الصنف عربى",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "DESCRIPTION_ARABIC",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Product Name Arabic\nاسم الصنف انجليزى",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "PRODUCT_NAME_ENGLISH",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Description Arabic\nوصف الصنف انجليزى",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "DESCRIPTION_ENGLISH",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Unit Item Barcode\nالباركود للوحدة ",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "UNIT_ITEM_BARCODE",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "No Of Unit Items\nعدد الوحدات",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "NO_OF_UNIT_ITEMS",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Unit Weight/size\nوزن/سعة الوحدة",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "UNIT_WEIGHT_SIZE",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Unit UOM\nوحدة القياس",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "UNIT_UOM",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "PACKAGE_UOM",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Cost Price\nسعر التكلفة",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "COST_PRICE",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Selling Price\nسعر البيع",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "SELLING_PRICE",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "BRAND_TRADE_MARK_ENGLISH",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "BRAND_TRADE_MARK_ARABIC",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "MOCI_PRODUCT_GROUP",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Country of Oragen Name\nاسم بلد المنشأ",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "COUNTRY_OF_ORAGEN_NAME",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "COUNTRY_OF_ORAGEN_ISO",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "HS Code\nرمز المنسق الجمركي",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "HS_CODE",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Supplier CR\nرقم السجل التجارى للمورد",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "SUPPLIER_CR",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Supplier Name\nاسم المورد",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "SUPPLIER_NAME",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Category Level 1\nتصنيف السلعة 1",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "CATEGORY_LEVEL_1_1",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Category Level 1\nتصنيف السلعة 2",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "CATEGORY_LEVEL_1_2",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Category Level 1\nتصنيف السلعة 3",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "CATEGORY_LEVEL_1_3",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Category Level 1\nتصنيف السلعة 4",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "CATEGORY_LEVEL_1_4",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Width\nالعرض",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "WIDTH",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Height\nالطول",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "HEIGHT",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
 											"source": {
 												"name": "Depth\nالارتفاع",
-												"type": "String"
+												"type": "String",
+												"physicalType": "String"
 											},
 											"sink": {
 												"name": "DEPTH",
-												"type": "String"
+												"type": "String",
+												"physicalType": "nvarchar"
 											}
 										},
 										{
@@ -374,10 +430,16 @@
 											},
 											"sink": {
 												"name": "DS_FILENAME",
-												"type": "String"
+												"type": "String",
+												"physicalType": "varchar"
 											}
 										}
-									]
+									],
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
 								}
 							},
 							"inputs": [
