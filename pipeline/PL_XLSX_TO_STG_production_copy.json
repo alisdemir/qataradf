@@ -71,8 +71,7 @@
 									}
 								},
 								"sink": {
-									"type": "SqlDWSink",
-									"sqlWriterUseTableLock": false
+									"type": "SqlDWSink"
 								},
 								"enableStaging": false,
 								"translator": {
@@ -444,7 +443,7 @@
 		],
 		"concurrency": 1,
 		"folder": {
-			"name": "Dev"
+			"name": "PL_INITIAL_LOAD"
 		},
 		"annotations": [],
 		"lastPublishTime": "2021-05-20T12:55:14Z"
