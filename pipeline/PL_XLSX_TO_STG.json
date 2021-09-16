@@ -18,14 +18,9 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "dls_processing_xlsx",
-						"type": "DatasetReference",
-						"parameters": {
-							"FileName": "*.xlsx"
-						}
+						"type": "DatasetReference"
 					},
-					"fieldList": [
-						"childItems"
-					],
+					"fieldList": [],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"recursive": true,
