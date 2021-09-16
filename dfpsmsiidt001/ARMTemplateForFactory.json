@@ -4171,7 +4171,7 @@
 											},
 											"datasetParameters": {
 												"InputProductsxlsx": {
-													"FileName": "'102077.xlsx'"
+													"FileName": "@item().name"
 												},
 												"stgProducts": {}
 											}
@@ -5404,13 +5404,13 @@
 				"annotations": [],
 				"type": "Excel",
 				"typeProperties": {
-					"sheetName": "0",
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "@dataset().FileName",
 						"folderPath": "Products",
 						"fileSystem": "input"
 					},
+					"sheetIndex": 0,
 					"firstRowAsHeader": true
 				},
 				"schema": [

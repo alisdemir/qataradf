@@ -389,7 +389,7 @@
 											},
 											"datasetParameters": {
 												"InputProductsxlsx": {
-													"FileName": "'102077.xlsx'"
+													"FileName": "@item().name"
 												},
 												"stgProducts": {}
 											}
