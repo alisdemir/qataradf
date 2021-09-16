@@ -64,15 +64,6 @@
 							"typeProperties": {
 								"source": {
 									"type": "ExcelSource",
-									"additionalColumns": [
-										{
-											"name": "FileName",
-											"value": {
-												"value": "@item().name",
-												"type": "Expression"
-											}
-										}
-									],
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
 										"recursive": true,
@@ -421,17 +412,6 @@
 												"name": "DEPTH",
 												"type": "String",
 												"physicalType": "nvarchar"
-											}
-										},
-										{
-											"source": {
-												"name": "FileName",
-												"type": "String"
-											},
-											"sink": {
-												"name": "DS_FILENAME",
-												"type": "String",
-												"physicalType": "varchar"
 											}
 										}
 									],
