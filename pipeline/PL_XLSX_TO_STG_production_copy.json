@@ -19,6 +19,9 @@
 						"type": "ExcelSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "Products",
+							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						}
 					},
