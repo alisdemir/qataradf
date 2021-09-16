@@ -67,7 +67,7 @@
 									"type": "DataFlowReference",
 									"parameters": {
 										"fileName": {
-											"value": "102077.xlsx",
+											"value": "'@{item().name}'",
 											"type": "Expression"
 										}
 									},
