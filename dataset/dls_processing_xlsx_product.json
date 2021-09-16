@@ -8,7 +8,7 @@
 		"parameters": {
 			"FileName": {
 				"type": "string",
-				"defaultValue": "'a'"
+				"defaultValue": "102077.xlsx"
 			}
 		},
 		"folder": {
@@ -19,7 +19,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "102077.xlsx",
+				"fileName": "@dataset().FileName",
 				"fileSystem": "input"
 			},
 			"sheetIndex": 0,
