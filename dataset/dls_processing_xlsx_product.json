@@ -20,7 +20,6 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "102077.xlsx",
-				"folderPath": "Products",
 				"fileSystem": "input"
 			},
 			"sheetIndex": 0,
