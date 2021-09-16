@@ -20,13 +20,12 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@dataset().FileName",
+					"value": "102077.xlsx",
 					"type": "Expression"
 				},
 				"folderPath": "Products",
 				"fileSystem": "input"
 			},
-			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
 		"schema": [
