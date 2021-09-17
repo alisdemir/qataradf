@@ -477,7 +477,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "dls_processing_xlsx",
+								"referenceName": "dls_processing_xls",
 								"type": "DatasetReference"
 							},
 							"name": "processingxlsx"

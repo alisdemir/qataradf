@@ -3890,7 +3890,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "dls_processing_xlsx",
+								"referenceName": "dls_processing_xls",
 								"type": "DatasetReference",
 								"parameters": {
 									"FileName": "*.xlsx"
@@ -4064,7 +4064,7 @@
 				"lastPublishTime": "2021-05-20T12:55:14Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dls_processing_xlsx')]",
+				"[concat(variables('factoryId'), '/datasets/dls_processing_xls')]",
 				"[concat(variables('factoryId'), '/datasets/ds_dwl_file_list')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
 				"[concat(variables('factoryId'), '/dataflows/df_xlsx_to_stg')]",
@@ -5604,126 +5604,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_processing_csv_folder_copy1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "csv files under processing container",
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "processing"
-					},
-					"columnDelimiter": "|",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "TRANSACTION_DATE",
-						"type": "String"
-					},
-					{
-						"name": "TRANSACTION_TYPE_CODE",
-						"type": "String"
-					},
-					{
-						"name": "ITEM_GROUP",
-						"type": "String"
-					},
-					{
-						"name": "ITEM_CODE",
-						"type": "String"
-					},
-					{
-						"name": "ITEM_BARCODE",
-						"type": "String"
-					},
-					{
-						"name": "COMPANY_CR",
-						"type": "String"
-					},
-					{
-						"name": "OTHER_ENTITY_CR",
-						"type": "String"
-					},
-					{
-						"name": "STORE_CODE",
-						"type": "String"
-					},
-					{
-						"name": "TARGET_STORE_CODE",
-						"type": "String"
-					},
-					{
-						"name": "QUANTITY",
-						"type": "String"
-					},
-					{
-						"name": "UOM",
-						"type": "String"
-					},
-					{
-						"name": "SELLING_PRICE",
-						"type": "String"
-					},
-					{
-						"name": "LOCAL_PURCHASE_ORDER",
-						"type": "String"
-					},
-					{
-						"name": "SALES_ORDER",
-						"type": "String"
-					},
-					{
-						"name": "DELIVER_NOTE_NUMBER",
-						"type": "String"
-					},
-					{
-						"name": "GOOD_RECEIVED_NOTE",
-						"type": "String"
-					},
-					{
-						"name": "INVOICE_NUMBER",
-						"type": "String"
-					},
-					{
-						"name": "RETURN_NOTE_NUMBER",
-						"type": "String"
-					},
-					{
-						"name": "CUSTOMER_STATEMENT_NUMBER",
-						"type": "String"
-					},
-					{
-						"name": "Internal_Transfer_Number_code",
-						"type": "String"
-					},
-					{
-						"name": "NUMBER_OF_INVOICES",
-						"type": "String"
-					},
-					{
-						"name": "NOTES",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dls_processing_files')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -5866,6 +5746,9 @@
 						"type": "string",
 						"defaultValue": "'4'"
 					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
 				},
 				"annotations": [],
 				"type": "Excel",
@@ -7482,7 +7365,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "dls_processing_xlsx",
+								"referenceName": "dls_processing_xls",
 								"type": "DatasetReference"
 							},
 							"name": "processingxlsx"
@@ -7509,7 +7392,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dls_processing_xlsx')]",
+				"[concat(variables('factoryId'), '/datasets/dls_processing_xls')]",
 				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions')]"
 			]
 		},
@@ -7588,6 +7471,89 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_processing_xls')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "a"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "processing"
+					},
+					"sheetIndex": 0,
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Transaction Date - تاريخ الحركة ",
+						"type": "String"
+					},
+					{
+						"name": "Transaction Type Code - كود نوع الحركة",
+						"type": "String"
+					},
+					{
+						"name": "Item Code - كود الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Item Barcode - باركود الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Your Company CR# - رقم السجل التجارى للشركة",
+						"type": "String"
+					},
+					{
+						"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
+						"type": "String"
+					},
+					{
+						"name": "Company Store/Inventory Code - رقم المخزن ",
+						"type": "String"
+					},
+					{
+						"name": "Quantity - الكمية",
+						"type": "String"
+					},
+					{
+						"name": "Selling Price per unit - سعر البيع للوحدة  -",
+						"type": "String"
+					},
+					{
+						"name": "Comon Referance No. -  رقم المرجع المشترك",
+						"type": "String"
+					},
+					{
+						"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
+						"type": "String"
+					},
+					{
+						"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
 			]
 		}
 	]
