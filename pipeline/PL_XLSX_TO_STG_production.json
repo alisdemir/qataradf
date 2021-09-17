@@ -70,14 +70,6 @@
 											"value": "'@{item().name}'",
 											"type": "Expression"
 										}
-									},
-									"datasetParameters": {
-										"InputProductsxlsx": {
-											"FileName": {
-												"value": "@item().name",
-												"type": "Expression"
-											}
-										}
 									}
 								},
 								"staging": {
