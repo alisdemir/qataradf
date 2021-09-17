@@ -13,10 +13,9 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "21719.xlsx",
+				"fileName": "*.xlsx",
 				"fileSystem": "processing"
 			},
-			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
 		"schema": [
