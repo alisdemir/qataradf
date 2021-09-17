@@ -17,11 +17,8 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_processing_xlsx",
-						"type": "DatasetReference",
-						"parameters": {
-							"FileName": "*.xlsx"
-						}
+						"referenceName": "dls_processing_xlsx_folder",
+						"type": "DatasetReference"
 					},
 					"fieldList": [
 						"childItems"
