@@ -17,10 +17,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_processing_xlsx_folder",
+						"referenceName": "dls_processing_xls",
 						"type": "DatasetReference",
 						"parameters": {
-							"FileName": "*.xlsx"
+							"fileName": "a"
 						}
 					},
 					"fieldList": [
