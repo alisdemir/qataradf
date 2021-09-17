@@ -25,6 +25,7 @@
 					},
 					"sink": {
 						"type": "SqlDWSink",
+						"allowCopyCommand": true,
 						"disableMetricsCollection": false
 					},
 					"enableStaging": true,
