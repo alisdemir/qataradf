@@ -19,6 +19,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": "*.xlsx",
 				"fileSystem": "processing"
 			},
 			"sheetIndex": 0,
