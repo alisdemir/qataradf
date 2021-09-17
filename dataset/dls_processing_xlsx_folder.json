@@ -13,8 +13,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "Products",
-				"fileSystem": "input"
+				"fileName": "*.xlsx",
+				"fileSystem": "Processing"
 			},
 			"sheetIndex": 0,
 			"firstRowAsHeader": true
