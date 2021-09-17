@@ -20,7 +20,7 @@
 						"referenceName": "dls_processing_xls",
 						"type": "DatasetReference",
 						"parameters": {
-							"fileName": "a"
+							"fileName": "*.xlsx"
 						}
 					},
 					"fieldList": [
