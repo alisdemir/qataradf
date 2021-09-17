@@ -115,7 +115,7 @@
 												"referenceName": "df_xlsx_to_stg",
 												"type": "DataFlowReference",
 												"parameters": {
-													"FileName": {
+													"fileName": {
 														"value": "'@{item().name}'",
 														"type": "Expression"
 													}
