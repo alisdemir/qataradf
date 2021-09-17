@@ -18,6 +18,7 @@
 				"type": "AzureBlobFSLocation",
 				"fileSystem": "processing"
 			},
+			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
 		"schema": [
