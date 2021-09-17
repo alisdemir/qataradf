@@ -5,6 +5,12 @@
 			"referenceName": "ls_psmsii_syntodls",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"FileName": {
+				"type": "string",
+				"defaultValue": "a"
+			}
+		},
 		"folder": {
 			"name": "Storage_DL_QTR"
 		},
