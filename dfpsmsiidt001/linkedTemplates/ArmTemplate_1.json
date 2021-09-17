@@ -59,6 +59,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "PL_MAIN"
 				},
@@ -102,6 +106,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"parameters": {
 					"FILENAME": {
 						"type": "string"
@@ -189,6 +197,286 @@
 					},
 					{
 						"name": "DS_ERROR_CODE",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_xlsx_product')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Products",
+						"fileSystem": "input"
+					},
+					"sheetIndex": 0,
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Item Code\nرقم الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Barcode\nالباركود",
+						"type": "String"
+					},
+					{
+						"name": "Product Name Arabic\nاسم الصنف عربى",
+						"type": "String"
+					},
+					{
+						"name": "Description Arabic\nوصف الصنف عربى",
+						"type": "String"
+					},
+					{
+						"name": "Product Name Arabic\nاسم الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Description Arabic\nوصف الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Unit Item Barcode\nالباركود للوحدة ",
+						"type": "String"
+					},
+					{
+						"name": "No Of Unit Items\nعدد الوحدات",
+						"type": "String"
+					},
+					{
+						"name": "Unit Weight/size\nوزن/سعة الوحدة",
+						"type": "String"
+					},
+					{
+						"name": "Unit UOM\nوحدة القياس",
+						"type": "String"
+					},
+					{
+						"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
+						"type": "String"
+					},
+					{
+						"name": "Cost Price\nسعر التكلفة",
+						"type": "String"
+					},
+					{
+						"name": "Selling Price\nسعر البيع",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
+						"type": "String"
+					},
+					{
+						"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen Name\nاسم بلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "HS Code\nرمز المنسق الجمركي",
+						"type": "String"
+					},
+					{
+						"name": "Supplier CR\nرقم السجل التجارى للمورد",
+						"type": "String"
+					},
+					{
+						"name": "Supplier Name\nاسم المورد",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 1",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 2",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 3",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 4",
+						"type": "String"
+					},
+					{
+						"name": "Width\nالعرض",
+						"type": "String"
+					},
+					{
+						"name": "Height\nالطول",
+						"type": "String"
+					},
+					{
+						"name": "Depth\nالارتفاع",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_xlsx_product_folder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "0",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Products",
+						"fileSystem": "input"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Item Code\nرقم الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Barcode\nالباركود",
+						"type": "String"
+					},
+					{
+						"name": "Product Name Arabic\nاسم الصنف عربى",
+						"type": "String"
+					},
+					{
+						"name": "Description Arabic\nوصف الصنف عربى",
+						"type": "String"
+					},
+					{
+						"name": "Product Name Arabic\nاسم الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Description Arabic\nوصف الصنف انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Unit Item Barcode\nالباركود للوحدة ",
+						"type": "String"
+					},
+					{
+						"name": "No Of Unit Items\nعدد الوحدات",
+						"type": "String"
+					},
+					{
+						"name": "Unit Weight/size\nوزن/سعة الوحدة",
+						"type": "String"
+					},
+					{
+						"name": "Unit UOM\nوحدة القياس",
+						"type": "String"
+					},
+					{
+						"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
+						"type": "String"
+					},
+					{
+						"name": "Cost Price\nسعر التكلفة",
+						"type": "String"
+					},
+					{
+						"name": "Selling Price\nسعر البيع",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
+						"type": "String"
+					},
+					{
+						"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen Name\nاسم بلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "HS Code\nرمز المنسق الجمركي",
+						"type": "String"
+					},
+					{
+						"name": "Supplier CR\nرقم السجل التجارى للمورد",
+						"type": "String"
+					},
+					{
+						"name": "Supplier Name\nاسم المورد",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 1",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 2",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 3",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1\nتصنيف السلعة 4",
+						"type": "String"
+					},
+					{
+						"name": "Width\nالعرض",
+						"type": "String"
+					},
+					{
+						"name": "Height\nالطول",
+						"type": "String"
+					},
+					{
+						"name": "Depth\nالارتفاع",
 						"type": "String"
 					}
 				]
@@ -733,7 +1021,7 @@
 				"parameters": {
 					"FileName": {
 						"type": "string",
-						"defaultValue": "104897.xlsx"
+						"defaultValue": "'4'"
 					}
 				},
 				"annotations": [],
@@ -741,7 +1029,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "*.xlsx",
 						"fileSystem": "processing"
 					},
 					"sheetIndex": 0,
@@ -815,272 +1102,61 @@
 				"annotations": [],
 				"type": "Excel",
 				"typeProperties": {
+					"sheetName": "0",
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "Products",
-						"fileSystem": "input"
+						"fileName": "*.xlsx",
+						"fileSystem": "processing"
 					},
-					"sheetIndex": 0,
 					"firstRowAsHeader": true
 				},
 				"schema": [
 					{
-						"name": "Item Code\nرقم الصنف",
+						"name": "Transaction Date - تاريخ الحركة ",
 						"type": "String"
 					},
 					{
-						"name": "Barcode\nالباركود",
+						"name": "Transaction Type Code - كود نوع الحركة",
 						"type": "String"
 					},
 					{
-						"name": "Product Name Arabic\nاسم الصنف عربى",
+						"name": "Item Code - كود الصنف",
 						"type": "String"
 					},
 					{
-						"name": "Description Arabic\nوصف الصنف عربى",
+						"name": "Item Barcode - باركود الصنف",
 						"type": "String"
 					},
 					{
-						"name": "Product Name Arabic\nاسم الصنف انجليزى",
+						"name": "Your Company CR# - رقم السجل التجارى للشركة",
 						"type": "String"
 					},
 					{
-						"name": "Description Arabic\nوصف الصنف انجليزى",
+						"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
 						"type": "String"
 					},
 					{
-						"name": "Unit Item Barcode\nالباركود للوحدة ",
+						"name": "Company Store/Inventory Code - رقم المخزن ",
 						"type": "String"
 					},
 					{
-						"name": "No Of Unit Items\nعدد الوحدات",
+						"name": "Quantity - الكمية",
 						"type": "String"
 					},
 					{
-						"name": "Unit Weight/size\nوزن/سعة الوحدة",
+						"name": "Selling Price per unit - سعر البيع للوحدة  -",
 						"type": "String"
 					},
 					{
-						"name": "Unit UOM\nوحدة القياس",
+						"name": "Comon Referance No. -  رقم المرجع المشترك",
 						"type": "String"
 					},
 					{
-						"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
+						"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
 						"type": "String"
 					},
 					{
-						"name": "Cost Price\nسعر التكلفة",
-						"type": "String"
-					},
-					{
-						"name": "Selling Price\nسعر البيع",
-						"type": "String"
-					},
-					{
-						"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
-						"type": "String"
-					},
-					{
-						"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
-						"type": "String"
-					},
-					{
-						"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
-						"type": "String"
-					},
-					{
-						"name": "Country of Oragen Name\nاسم بلد المنشأ",
-						"type": "String"
-					},
-					{
-						"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
-						"type": "String"
-					},
-					{
-						"name": "HS Code\nرمز المنسق الجمركي",
-						"type": "String"
-					},
-					{
-						"name": "Supplier CR\nرقم السجل التجارى للمورد",
-						"type": "String"
-					},
-					{
-						"name": "Supplier Name\nاسم المورد",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 1\nتصنيف السلعة 1",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 1\nتصنيف السلعة 2",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 1\nتصنيف السلعة 3",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 1\nتصنيف السلعة 4",
-						"type": "String"
-					},
-					{
-						"name": "Width\nالعرض",
-						"type": "String"
-					},
-					{
-						"name": "Height\nالطول",
-						"type": "String"
-					},
-					{
-						"name": "Depth\nالارتفاع",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dls_processing_xlsx_product')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string",
-						"defaultValue": "'a'"
-					}
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "@dataset().FileName",
-						"folderPath": "Products",
-						"fileSystem": "input"
-					},
-					"sheetIndex": 0,
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Item Code\nرقم الصنف",
-						"type": "String"
-					},
-					{
-						"name": "Barcode\nالباركود",
-						"type": "String"
-					},
-					{
-						"name": "Product Name Arabic\nاسم الصنف عربى",
-						"type": "String"
-					},
-					{
-						"name": "Description Arabic\nوصف الصنف عربى",
-						"type": "String"
-					},
-					{
-						"name": "Product Name Arabic\nاسم الصنف انجليزى",
-						"type": "String"
-					},
-					{
-						"name": "Description Arabic\nوصف الصنف انجليزى",
-						"type": "String"
-					},
-					{
-						"name": "Unit Item Barcode\nالباركود للوحدة ",
-						"type": "String"
-					},
-					{
-						"name": "No Of Unit Items\nعدد الوحدات",
-						"type": "String"
-					},
-					{
-						"name": "Unit Weight/size\nوزن/سعة الوحدة",
-						"type": "String"
-					},
-					{
-						"name": "Unit UOM\nوحدة القياس",
-						"type": "String"
-					},
-					{
-						"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
-						"type": "String"
-					},
-					{
-						"name": "Cost Price\nسعر التكلفة",
-						"type": "String"
-					},
-					{
-						"name": "Selling Price\nسعر البيع",
-						"type": "String"
-					},
-					{
-						"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
-						"type": "String"
-					},
-					{
-						"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
-						"type": "String"
-					},
-					{
-						"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
-						"type": "String"
-					},
-					{
-						"name": "Country of Oragen Name\nاسم بلد المنشأ",
-						"type": "String"
-					},
-					{
-						"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
-						"type": "String"
-					},
-					{
-						"name": "HS Code\nرمز المنسق الجمركي",
-						"type": "String"
-					},
-					{
-						"name": "Supplier CR\nرقم السجل التجارى للمورد",
-						"type": "String"
-					},
-					{
-						"name": "Supplier Name\nاسم المورد",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 1\nتصنيف السلعة 1",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 1\nتصنيف السلعة 2",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 1\nتصنيف السلعة 3",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 1\nتصنيف السلعة 4",
-						"type": "String"
-					},
-					{
-						"name": "Width\nالعرض",
-						"type": "String"
-					},
-					{
-						"name": "Height\nالطول",
-						"type": "String"
-					},
-					{
-						"name": "Depth\nالارتفاع",
+						"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
 						"type": "String"
 					}
 				]
@@ -1303,153 +1379,6 @@
 				"typeProperties": {
 					"schema": "etl",
 					"table": "STG_FILE_LIST"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_productions')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "ITEM_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BARCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PRODUCT_NAME_ARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DESCRIPTION_ARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PRODUCT_NAME_ENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DESCRIPTION_ENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNIT_ITEM_BARCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NO_OF_UNIT_ITEMS",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNIT_WEIGHT_SIZE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNIT_UOM",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PACKAGE_UOM",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COST_PRICE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SELLING_PRICE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BRAND_TRADE_MARK_ENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BRAND_TRADE_MARK_ARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MOCI_PRODUCT_GROUP",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COUNTRY_OF_ORAGEN_NAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COUNTRY_OF_ORAGEN_ISO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "HS_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIER_CR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIER_NAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORY_LEVEL_1_1",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORY_LEVEL_1_2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORY_LEVEL_1_3",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORY_LEVEL_1_4",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WIDTH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "HEIGHT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DEPTH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "varchar"
-					},
-					{
-						"name": "DT_FILEDATE",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_PRODUCTS"
 				}
 			},
 			"dependsOn": []

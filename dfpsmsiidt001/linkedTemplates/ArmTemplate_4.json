@@ -62,6 +62,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "PL_MAIN"
 				},
@@ -111,6 +115,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Dev"
 				},
@@ -303,6 +311,10 @@
 					}
 				],
 				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "PL_MAIN"
 				},
@@ -332,7 +344,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "dls_processing_xlsx_product_folder",
+								"referenceName": "dls_input_xlsx_product",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
@@ -383,14 +395,12 @@
 											"type": "DataFlowReference",
 											"parameters": {
 												"fileName": {
-													"value": "@item().name",
+													"value": "'@{item().name}'",
 													"type": "Expression"
 												}
 											},
 											"datasetParameters": {
-												"InputProductsxlsx": {
-													"FileName": "@item().name"
-												},
+												"InputProductsxlsx": {},
 												"stgProducts": {}
 											}
 										},
@@ -413,6 +423,10 @@
 					}
 				],
 				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Dev"
 				},
@@ -442,6 +456,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "PL_CUSTOM"
 				},
@@ -798,6 +816,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"variables": {
 					"deneme": {
 						"type": "String"
