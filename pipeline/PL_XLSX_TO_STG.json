@@ -119,11 +119,6 @@
 														"value": "'@{item().name}'",
 														"type": "Expression"
 													}
-												},
-												"datasetParameters": {
-													"processingxlsx": {
-														"FileName": "@item().name"
-													}
 												}
 											},
 											"staging": {
