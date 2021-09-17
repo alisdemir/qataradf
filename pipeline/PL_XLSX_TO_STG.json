@@ -121,7 +121,7 @@
 													}
 												},
 												"datasetParameters": {
-													"processingxlsx": {
+													"source1": {
 														"FileName": "@item().name"
 													}
 												}
