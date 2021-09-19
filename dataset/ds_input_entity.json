@@ -1,0 +1,86 @@
+{
+	"name": "ds_input_entity",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Company Data",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "MoCI Entity Template.xlsx",
+				"fileSystem": "input"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Main or Branch",
+				"type": "String"
+			},
+			{
+				"name": "Company Name Arabic",
+				"type": "String"
+			},
+			{
+				"name": "Company Name English",
+				"type": "String"
+			},
+			{
+				"name": "Commercial Registration No",
+				"type": "String"
+			},
+			{
+				"name": "Commercial License number",
+				"type": "String"
+			},
+			{
+				"name": "Area",
+				"type": "String"
+			},
+			{
+				"name": "Street Name",
+				"type": "String"
+			},
+			{
+				"name": "Area Number",
+				"type": "String"
+			},
+			{
+				"name": "Street Number2",
+				"type": "String"
+			},
+			{
+				"name": "Building Number",
+				"type": "String"
+			},
+			{
+				"name": " Phone Number",
+				"type": "String"
+			},
+			{
+				"name": "Fax",
+				"type": "String"
+			},
+			{
+				"name": "P.O. Box",
+				"type": "String"
+			},
+			{
+				"name": "Email",
+				"type": "String"
+			},
+			{
+				"name": "Website",
+				"type": "String"
+			},
+			{
+				"name": "Map Location Url",
+				"type": "String"
+			}
+		]
+	}
+}
