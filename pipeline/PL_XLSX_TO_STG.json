@@ -17,10 +17,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_processing_xls",
+						"referenceName": "dls_processing_xlsx_folder",
 						"type": "DatasetReference"
 					},
-					"fieldList": [],
+					"fieldList": [
+						"childItems"
+					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"recursive": true,
