@@ -2,7 +2,7 @@
 	"name": "ds_stg_transactions_copy1",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_psmsii_syntodsqlp",
+			"referenceName": "ls_dsqlpqtr",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
