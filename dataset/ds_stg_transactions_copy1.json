@@ -32,11 +32,7 @@
 				"name": "ID_CR_ENTITY",
 				"type": "nvarchar"
 			}
-		],
-		"typeProperties": {
-			"schema": "dwh",
-			"table": "DWL_CR_TRANSACTION_TYPE"
-		}
+		]
 	},
 	"type": "Microsoft.Synapse/workspaces/datasets"
 }
