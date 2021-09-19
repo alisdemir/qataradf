@@ -5,6 +5,12 @@
 			"referenceName": "ls_psmsii_syntodls",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"fileName": {
+				"type": "string",
+				"defaultValue": "'a'"
+			}
+		},
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
