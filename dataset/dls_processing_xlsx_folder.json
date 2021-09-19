@@ -11,9 +11,9 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "0",
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": "*.xlsx",
 				"fileSystem": "processing"
 			},
 			"firstRowAsHeader": true
