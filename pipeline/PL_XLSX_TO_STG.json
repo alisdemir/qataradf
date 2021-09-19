@@ -18,10 +18,7 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "dls_processing_xls",
-						"type": "DatasetReference",
-						"parameters": {
-							"fileName": "*.xlsx"
-						}
+						"type": "DatasetReference"
 					},
 					"fieldList": [
 						"childItems"
@@ -118,6 +115,11 @@
 													"fileName": {
 														"value": "'@{item().name}'",
 														"type": "Expression"
+													}
+												},
+												"datasetParameters": {
+													"source1": {
+														"FileName": "@item().name"
 													}
 												}
 											},
