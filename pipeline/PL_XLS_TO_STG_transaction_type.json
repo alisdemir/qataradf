@@ -70,8 +70,13 @@
 									"type": "DataFlowReference",
 									"parameters": {
 										"fileName": {
-											"value": "'@{activity('GetFileList').output}'",
+											"value": "'@{item().name}'",
 											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"srcTransactionType": {
+											"fileName": "@item().name"
 										}
 									}
 								},
