@@ -39,7 +39,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_input_entity",
+						"referenceName": "dls_input_xls_company",
 						"type": "DatasetReference"
 					}
 				],
