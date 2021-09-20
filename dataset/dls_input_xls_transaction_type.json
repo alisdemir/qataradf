@@ -1,0 +1,99 @@
+{
+	"name": "dls_input_xls_transaction_type",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"fileName": {
+				"type": "string",
+				"defaultValue": "'a'"
+			}
+		},
+		"folder": {
+			"name": "Storage_DL_QTR"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().FileName",
+					"type": "Expression"
+				},
+				"folderPath": "Company",
+				"fileSystem": "input"
+			},
+			"sheetIndex": 0,
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Main or Branch-رئيسى ام فرع",
+				"type": "String"
+			},
+			{
+				"name": "Company Name Arabic-اسم الشركة عربى",
+				"type": "String"
+			},
+			{
+				"name": "Company Name English-اسم الشركة انجليزى",
+				"type": "String"
+			},
+			{
+				"name": "Commercial Registration No-رقم السجل التجارى",
+				"type": "String"
+			},
+			{
+				"name": "Commercial License number-رقم االرخصة التجارية",
+				"type": "String"
+			},
+			{
+				"name": "Area-اسم المنطقة",
+				"type": "String"
+			},
+			{
+				"name": "Street Name-اسم الشارع",
+				"type": "String"
+			},
+			{
+				"name": "Area Number-رقم المنطقة",
+				"type": "String"
+			},
+			{
+				"name": "Street Number2-رقم الشارع",
+				"type": "String"
+			},
+			{
+				"name": "Building Number-رقم البناية",
+				"type": "String"
+			},
+			{
+				"name": " Phone Number-رقم الهاتف الارضى",
+				"type": "String"
+			},
+			{
+				"name": "Fax-الفاكس",
+				"type": "String"
+			},
+			{
+				"name": "P.O. Box-صندوق البريد",
+				"type": "String"
+			},
+			{
+				"name": "Email-ايميل الشركة",
+				"type": "String"
+			},
+			{
+				"name": "Website-الموقع الالكترون",
+				"type": "String"
+			},
+			{
+				"name": "Map Location Url-الموقع على الخريطة ",
+				"type": "String"
+			}
+		]
+	}
+}
