@@ -112,7 +112,10 @@
 												"referenceName": "df_xls_to_stg_products",
 												"type": "DataFlowReference",
 												"parameters": {
-													"fileName": "'58556'"
+													"fileName": {
+														"value": "'@{item().name}'",
+														"type": "Expression"
+													}
 												}
 											},
 											"staging": {
