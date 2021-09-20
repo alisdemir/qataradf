@@ -5,6 +5,9 @@
 			"referenceName": "ls_psmsii_syntodls",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Storage_DL_QTR"
+		},
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
