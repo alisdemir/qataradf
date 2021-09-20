@@ -5,6 +5,9 @@
 			"referenceName": "ls_psmsii_syntodsqlp",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Dedicated_SQL"
+		},
 		"annotations": [],
 		"type": "AzureSqlDWTable",
 		"schema": [
