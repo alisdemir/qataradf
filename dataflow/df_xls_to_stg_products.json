@@ -1,5 +1,5 @@
 {
-	"name": "df_xlsx_to_stg_products",
+	"name": "df_xls_to_stg_products",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
