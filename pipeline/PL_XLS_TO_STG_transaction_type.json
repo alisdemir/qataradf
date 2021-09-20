@@ -20,7 +20,7 @@
 						"referenceName": "dls_input_xls_transaction_type",
 						"type": "DatasetReference",
 						"parameters": {
-							"fileName": "*.xlsx"
+							"fileName": "*"
 						}
 					},
 					"fieldList": [
