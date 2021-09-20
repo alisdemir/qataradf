@@ -17,7 +17,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_input_xlsx_product",
+						"referenceName": "dls_input_xls_products",
 						"type": "DatasetReference"
 					},
 					"fieldList": [
@@ -62,16 +62,6 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"dataflow": {
-									"referenceName": "df_xlsx_to_stg_products",
-									"type": "DataFlowReference",
-									"parameters": {
-										"fileName": {
-											"value": "'@{item().name}'",
-											"type": "Expression"
-										}
-									}
-								},
 								"staging": {
 									"linkedService": {
 										"referenceName": "ls_psmsii_syntodls",
