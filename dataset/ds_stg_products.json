@@ -1,5 +1,5 @@
 {
-	"name": "ds_stg_productions",
+	"name": "ds_stg_products",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_psmsii_syntodsqlp",
@@ -119,6 +119,21 @@
 			{
 				"name": "DEPTH",
 				"type": "nvarchar"
+			},
+			{
+				"name": "ID_SK",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DS_FILENAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DT_FILETIME",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
 			}
 		],
 		"typeProperties": {
