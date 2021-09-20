@@ -1,0 +1,35 @@
+{
+	"name": "df_xlsx_to_stg_production",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dls_input_xlsx_product",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_stg_productions",
+						"type": "DatasetReference"
+					},
+					"name": "stgTransactions"
+				}
+			],
+			"transformations": [
+				{
+					"name": "AddColumn"
+				},
+				{
+					"name": "SurrogateKey1"
+				}
+			],
+			"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Item Code-رقم الصنف} as string,\n\t\t{Barcode-الباركود} as string,\n\t\t{Product Name Arabic-اسم الصنف عربى} as string,\n\t\t{Description Arabic-وصف الصنف عربى} as string,\n\t\t{Product Name English-اسم الصنف انجليزى} as string,\n\t\t{Description English-وصف الصنف انجليزى} as string,\n\t\t{Unit Item Barcode-الباركود للوحدة } as string,\n\t\t{No Of Unit Items-عدد الوحدات} as string,\n\t\t{Unit Weight/size-وزن/سعة الوحدة} as string,\n\t\t{Unit UOM-وحدة القياس} as string,\n\t\t{Package UOM-وحدة قياس الحزمة-التغليف} as string,\n\t\t{Cost Price-سعر التكلفة} as string,\n\t\t{Selling Price-سعر البيع} as string,\n\t\t{Brand-Trade Mark English-اسم العلامة التجارية انجليزى} as string,\n\t\t{Brand-Trade Mark Arabic-اسم العلامة التجارية عربى} as string,\n\t\t{MoCI Product Group-المجموعة السلعية - بالوزارة} as string,\n\t\t{Country of Oragen Name-اسم بلد المنشأ} as string,\n\t\t{Country of Oragen ISO3-كود 3 لبلد المنشأ} as string,\n\t\t{HS Code-رمز المنسق الجمركي} as string,\n\t\t{Supplier CR-رقم السجل التجارى للمورد} as string,\n\t\t{Supplier Name-اسم المورد} as string,\n\t\t{Category Level 1-\\nتصنيف السلعة 1} as string,\n\t\t{Category Level 2-تصنيف السلعة 2} as string,\n\t\t{Category Level 3-تصنيف السلعة 3} as string,\n\t\t{Category Level 4-تصنيف السلعة 4} as string,\n\t\t{Width-العرض} as string,\n\t\t{Height-الطول} as string,\n\t\t{Depth-الارتفاع} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tITEM_CODE as string,\n\t\tBARCODE as string,\n\t\tPRODUCT_NAME_ARABIC as string,\n\t\tDESCRIPTION_ARABIC as string,\n\t\tPRODUCT_NAME_ENGLISH as string,\n\t\tDESCRIPTION_ENGLISH as string,\n\t\tUNIT_ITEM_BARCODE as string,\n\t\tNO_OF_UNIT_ITEMS as string,\n\t\tUNIT_WEIGHT_SIZE as string,\n\t\tUNIT_UOM as string,\n\t\tPACKAGE_UOM as string,\n\t\tCOST_PRICE as string,\n\t\tSELLING_PRICE as string,\n\t\tBRAND_TRADE_MARK_ENGLISH as string,\n\t\tBRAND_TRADE_MARK_ARABIC as string,\n\t\tMOCI_PRODUCT_GROUP as string,\n\t\tCOUNTRY_OF_ORAGEN_NAME as string,\n\t\tCOUNTRY_OF_ORAGEN_ISO as string,\n\t\tHS_CODE as string,\n\t\tSUPPLIER_CR as string,\n\t\tSUPPLIER_NAME as string,\n\t\tCATEGORY_LEVEL_1_1 as string,\n\t\tCATEGORY_LEVEL_1_2 as string,\n\t\tCATEGORY_LEVEL_1_3 as string,\n\t\tCATEGORY_LEVEL_1_4 as string,\n\t\tWIDTH as string,\n\t\tHEIGHT as string,\n\t\tDEPTH as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tITEM_CODE = {Item Code-رقم الصنف},\n\t\tBARCODE = {Barcode-الباركود},\n\t\tPRODUCT_NAME_ARABIC = {Product Name Arabic-اسم الصنف عربى},\n\t\tDESCRIPTION_ARABIC = {Description Arabic-وصف الصنف عربى},\n\t\tPRODUCT_NAME_ENGLISH = {Product Name English-اسم الصنف انجليزى},\n\t\tDESCRIPTION_ENGLISH = {Description English-وصف الصنف انجليزى},\n\t\tUNIT_ITEM_BARCODE = {Unit Item Barcode-الباركود للوحدة },\n\t\tNO_OF_UNIT_ITEMS = {No Of Unit Items-عدد الوحدات},\n\t\tUNIT_WEIGHT_SIZE = {Unit Weight/size-وزن/سعة الوحدة},\n\t\tUNIT_UOM = {Unit UOM-وحدة القياس},\n\t\tPACKAGE_UOM = {Package UOM-وحدة قياس الحزمة-التغليف},\n\t\tCOST_PRICE = {Cost Price-سعر التكلفة},\n\t\tSELLING_PRICE = {Selling Price-سعر البيع},\n\t\tBRAND_TRADE_MARK_ENGLISH = {Brand-Trade Mark English-اسم العلامة التجارية انجليزى},\n\t\tBRAND_TRADE_MARK_ARABIC = {Brand-Trade Mark Arabic-اسم العلامة التجارية عربى},\n\t\tMOCI_PRODUCT_GROUP = {MoCI Product Group-المجموعة السلعية - بالوزارة},\n\t\tCOUNTRY_OF_ORAGEN_NAME = {Country of Oragen Name-اسم بلد المنشأ},\n\t\tCOUNTRY_OF_ORAGEN_ISO = {Country of Oragen ISO3-كود 3 لبلد المنشأ},\n\t\tHS_CODE = {HS Code-رمز المنسق الجمركي},\n\t\tSUPPLIER_CR = {Supplier CR-رقم السجل التجارى للمورد},\n\t\tSUPPLIER_NAME = {Supplier Name-اسم المورد},\n\t\tCATEGORY_LEVEL_1_1 = {Category Level 1-\nتصنيف السلعة 1},\n\t\tCATEGORY_LEVEL_1_2 = {Category Level 2-تصنيف السلعة 2},\n\t\tCATEGORY_LEVEL_1_3 = {Category Level 3-تصنيف السلعة 3},\n\t\tCATEGORY_LEVEL_1_4 = {Category Level 4-تصنيف السلعة 4},\n\t\tWIDTH = {Width-العرض},\n\t\tHEIGHT = {Height-الطول},\n\t\tDEPTH = {Depth-الارتفاع}\n\t)) ~> stgTransactions"
+		}
+	}
+}
