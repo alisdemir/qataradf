@@ -23,7 +23,7 @@
 					"value": "@dataset().FileName",
 					"type": "Expression"
 				},
-				"folderPath": "Company",
+				"folderPath": "TransactionType",
 				"fileSystem": "input"
 			},
 			"sheetIndex": 0,
@@ -31,67 +31,23 @@
 		},
 		"schema": [
 			{
-				"name": "Main or Branch-رئيسى ام فرع",
+				"name": "Company CR #",
 				"type": "String"
 			},
 			{
-				"name": "Company Name Arabic-اسم الشركة عربى",
+				"name": "Company Transaction Type Arabic ",
 				"type": "String"
 			},
 			{
-				"name": "Company Name English-اسم الشركة انجليزى",
+				"name": "Company Transaction Type English ",
 				"type": "String"
 			},
 			{
-				"name": "Commercial Registration No-رقم السجل التجارى",
+				"name": "Company Transaction type",
 				"type": "String"
 			},
 			{
-				"name": "Commercial License number-رقم االرخصة التجارية",
-				"type": "String"
-			},
-			{
-				"name": "Area-اسم المنطقة",
-				"type": "String"
-			},
-			{
-				"name": "Street Name-اسم الشارع",
-				"type": "String"
-			},
-			{
-				"name": "Area Number-رقم المنطقة",
-				"type": "String"
-			},
-			{
-				"name": "Street Number2-رقم الشارع",
-				"type": "String"
-			},
-			{
-				"name": "Building Number-رقم البناية",
-				"type": "String"
-			},
-			{
-				"name": " Phone Number-رقم الهاتف الارضى",
-				"type": "String"
-			},
-			{
-				"name": "Fax-الفاكس",
-				"type": "String"
-			},
-			{
-				"name": "P.O. Box-صندوق البريد",
-				"type": "String"
-			},
-			{
-				"name": "Email-ايميل الشركة",
-				"type": "String"
-			},
-			{
-				"name": "Website-الموقع الالكترون",
-				"type": "String"
-			},
-			{
-				"name": "Map Location Url-الموقع على الخريطة ",
+				"name": "PSMS - MoCI Transaction Types",
 				"type": "String"
 			}
 		]
