@@ -1,0 +1,53 @@
+{
+	"name": "dls_input_warehouse",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Storage_DL_QTR"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Company",
+				"fileSystem": "input"
+			},
+			"sheetIndex": 2,
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Seq-مسلسل",
+				"type": "String"
+			},
+			{
+				"name": "Name-الاسم",
+				"type": "String"
+			},
+			{
+				"name": "eMail- البريد الالكترونى",
+				"type": "String"
+			},
+			{
+				"name": "Phone-الهاتف",
+				"type": "String"
+			},
+			{
+				"name": "Extension-التحويلة",
+				"type": "String"
+			},
+			{
+				"name": "Mobile-الموبايل\n",
+				"type": "String"
+			},
+			{
+				"name": "Entity CR-رقم السجل التجارى",
+				"type": "String"
+			}
+		]
+	}
+}
