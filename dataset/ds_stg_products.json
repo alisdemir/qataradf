@@ -9,7 +9,7 @@
 		"type": "AzureSqlDWTable",
 		"schema": [
 			{
-				"name": "ITEM_CODE",
+				"name": "ITEMCODE",
 				"type": "nvarchar"
 			},
 			{
@@ -17,95 +17,95 @@
 				"type": "nvarchar"
 			},
 			{
-				"name": "PRODUCT_NAME_ARABIC",
+				"name": "PRODUCTNAMEARABIC",
 				"type": "nvarchar"
 			},
 			{
-				"name": "DESCRIPTION_ARABIC",
+				"name": "DESCRIPTIONARABIC",
 				"type": "nvarchar"
 			},
 			{
-				"name": "PRODUCT_NAME_ENGLISH",
+				"name": "PRODUCTNAMEENGLISH",
 				"type": "nvarchar"
 			},
 			{
-				"name": "DESCRIPTION_ENGLISH",
+				"name": "DESCRIPTIONENGLISH",
 				"type": "nvarchar"
 			},
 			{
-				"name": "UNIT_ITEM_BARCODE",
+				"name": "UNITITEMBARCODE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "NO_OF_UNIT_ITEMS",
+				"name": "NOOFUNITITEMS",
 				"type": "nvarchar"
 			},
 			{
-				"name": "UNIT_WEIGHT_SIZE",
+				"name": "UNITWEIGHTSIZE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "UNIT_UOM",
+				"name": "UNITUOM",
 				"type": "nvarchar"
 			},
 			{
-				"name": "PACKAGE_UOM",
+				"name": "PACKAGEUOM",
 				"type": "nvarchar"
 			},
 			{
-				"name": "COST_PRICE",
+				"name": "COSTPRICE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "SELLING_PRICE",
+				"name": "SELLINGPRICE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "BRAND_TRADE_MARK_ENGLISH",
+				"name": "BRANDTRADEMARKENGLISH",
 				"type": "nvarchar"
 			},
 			{
-				"name": "BRAND_TRADE_MARK_ARABIC",
+				"name": "BRANDTRADEMARKARABIC",
 				"type": "nvarchar"
 			},
 			{
-				"name": "MOCI_PRODUCT_GROUP",
+				"name": "MOCIPRODUCTGROUP",
 				"type": "nvarchar"
 			},
 			{
-				"name": "COUNTRY_OF_ORAGEN_NAME",
+				"name": "COUNTRYOFORAGENNAME",
 				"type": "nvarchar"
 			},
 			{
-				"name": "COUNTRY_OF_ORAGEN_ISO",
+				"name": "COUNTRYOFORAGENISO",
 				"type": "nvarchar"
 			},
 			{
-				"name": "HS_CODE",
+				"name": "HSCODE",
 				"type": "nvarchar"
 			},
 			{
-				"name": "SUPPLIER_CR",
+				"name": "SUPPLIERCR",
 				"type": "nvarchar"
 			},
 			{
-				"name": "SUPPLIER_NAME",
+				"name": "SUPPLIERNAME",
 				"type": "nvarchar"
 			},
 			{
-				"name": "CATEGORY_LEVEL_1_1",
+				"name": "CATEGORYLEVEL11",
 				"type": "nvarchar"
 			},
 			{
-				"name": "CATEGORY_LEVEL_1_2",
+				"name": "CATEGORYLEVEL12",
 				"type": "nvarchar"
 			},
 			{
-				"name": "CATEGORY_LEVEL_1_3",
+				"name": "CATEGORYLEVEL13",
 				"type": "nvarchar"
 			},
 			{
-				"name": "CATEGORY_LEVEL_1_4",
+				"name": "CATEGORYLEVEL14",
 				"type": "nvarchar"
 			},
 			{
