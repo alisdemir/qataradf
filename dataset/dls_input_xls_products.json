@@ -1,5 +1,5 @@
 {
-	"name": "dls_input_xls",
+	"name": "dls_input_xls_products",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_psmsii_syntodls",
