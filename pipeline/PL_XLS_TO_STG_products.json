@@ -17,7 +17,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_input_xls",
+						"referenceName": "dls_input_xls_products",
 						"type": "DatasetReference"
 					},
 					"fieldList": [
