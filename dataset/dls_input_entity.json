@@ -1,5 +1,5 @@
 {
-	"name": "ds_input_entity",
+	"name": "dls_input_entity",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_psmsii_syntodls",
@@ -8,77 +8,77 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "Company Data",
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "MoCI Entity Template.xlsx",
+				"folderPath": "Company",
 				"fileSystem": "input"
 			},
+			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
 		"schema": [
 			{
-				"name": "Main or Branch",
+				"name": "Main or Branch-رئيسى ام فرع",
 				"type": "String"
 			},
 			{
-				"name": "Company Name Arabic",
+				"name": "Company Name Arabic-اسم الشركة عربى",
 				"type": "String"
 			},
 			{
-				"name": "Company Name English",
+				"name": "Company Name English-اسم الشركة انجليزى",
 				"type": "String"
 			},
 			{
-				"name": "Commercial Registration No",
+				"name": "Commercial Registration No-رقم السجل التجارى",
 				"type": "String"
 			},
 			{
-				"name": "Commercial License number",
+				"name": "Commercial License number-رقم االرخصة التجارية",
 				"type": "String"
 			},
 			{
-				"name": "Area",
+				"name": "Area-اسم المنطقة",
 				"type": "String"
 			},
 			{
-				"name": "Street Name",
+				"name": "Street Name-اسم الشارع",
 				"type": "String"
 			},
 			{
-				"name": "Area Number",
+				"name": "Area Number-رقم المنطقة",
 				"type": "String"
 			},
 			{
-				"name": "Street Number2",
+				"name": "Street Number2-رقم الشارع",
 				"type": "String"
 			},
 			{
-				"name": "Building Number",
+				"name": "Building Number-رقم البناية",
 				"type": "String"
 			},
 			{
-				"name": " Phone Number",
+				"name": " Phone Number-رقم الهاتف الارضى",
 				"type": "String"
 			},
 			{
-				"name": "Fax",
+				"name": "Fax-الفاكس",
 				"type": "String"
 			},
 			{
-				"name": "P.O. Box",
+				"name": "P.O. Box-صندوق البريد",
 				"type": "String"
 			},
 			{
-				"name": "Email",
+				"name": "Email-ايميل الشركة",
 				"type": "String"
 			},
 			{
-				"name": "Website",
+				"name": "Website-الموقع الالكترون",
 				"type": "String"
 			},
 			{
-				"name": "Map Location Url",
+				"name": "Map Location Url-الموقع على الخريطة ",
 				"type": "String"
 			}
 		]
