@@ -23,10 +23,8 @@
 					"value": "@dataset().FileName",
 					"type": "Expression"
 				},
-				"folderPath": "TransactionType",
 				"fileSystem": "input"
 			},
-			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
 		"schema": [
