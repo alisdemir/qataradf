@@ -70,14 +70,6 @@
 											"value": "'@{activity('GetFileList').output}'",
 											"type": "Expression"
 										}
-									},
-									"datasetParameters": {
-										"srcTransactionType": {
-											"fileName": {
-												"value": "@activity('GetFileList').output",
-												"type": "Expression"
-											}
-										}
 									}
 								},
 								"staging": {
