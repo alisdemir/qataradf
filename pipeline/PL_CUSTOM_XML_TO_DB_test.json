@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "df_custom_xml_to_db_test",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,35 +16,28 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_custom_xml_to_db",
+						"referenceName": "df_custom_xml_to_db_test",
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"DECLARATION": {
 								"schemaName": "dwh",
-								"tableName": "STG_CUSTOMS_DEC"
+								"tableName": "STG_COMPANY"
 							},
 							"ITEM": {
 								"schemaName": "dwh",
-								"tableName": "STG_CUSTOMS_ITEM"
+								"tableName": "STG_COMPANY"
 							},
 							"SUPERVISOR": {
 								"schemaName": "dwh",
-								"tableName": "STG_CUSTOMS_SUPV"
+								"tableName": "STG_COMPANY"
 							}
 						}
 					},
-					"staging": {
-						"linkedService": {
-							"referenceName": "ls_psmsii_syntodls",
-							"type": "LinkedServiceReference"
-						},
-						"folderPath": "stagingarea"
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
 					},
-					"integrationRuntime": {
-						"referenceName": "integrationRuntime10min",
-						"type": "IntegrationRuntimeReference"
-					},
-					"traceLevel": "Coarse"
+					"traceLevel": "Fine"
 				}
 			}
 		],
