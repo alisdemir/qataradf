@@ -21,23 +21,30 @@
 						"datasetParameters": {
 							"DECLARATION": {
 								"schemaName": "dwh",
-								"tableName": "STG_COMPANY"
+								"tableName": "STG_CUSTOMS_DEC"
 							},
 							"ITEM": {
 								"schemaName": "dwh",
-								"tableName": "STG_COMPANY"
+								"tableName": "STG_CUSTOMS_ITEM"
 							},
 							"SUPERVISOR": {
 								"schemaName": "dwh",
-								"tableName": "STG_COMPANY"
+								"tableName": "STG_CUSTOMS_SUPV"
 							}
 						}
 					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_psmsii_syntodls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "stagingarea"
 					},
-					"traceLevel": "Fine"
+					"integrationRuntime": {
+						"referenceName": "integrationRuntime10min",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "Coarse"
 				}
 			}
 		],
