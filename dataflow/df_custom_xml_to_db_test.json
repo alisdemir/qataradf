@@ -1,6 +1,9 @@
 {
 	"name": "df_custom_xml_to_db_test",
 	"properties": {
+		"folder": {
+			"name": "Dev"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
