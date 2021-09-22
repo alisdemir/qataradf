@@ -29,12 +29,28 @@
 							"namespaces": true
 						}
 					},
+					"sink": {
+						"type": "SqlDWSink",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
 						"referenceName": "ds_soap",
 						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "dsqlp_parametric",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "dwh",
+							"tableName": "STG_SOAP"
+						}
 					}
 				]
 			}
