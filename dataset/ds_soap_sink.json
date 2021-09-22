@@ -1,0 +1,16 @@
+{
+	"name": "ds_soap_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dsqlpqtr",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dwh",
+			"table": "stg_soap"
+		}
+	}
+}
