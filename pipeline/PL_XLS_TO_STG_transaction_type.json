@@ -4,7 +4,7 @@
 		"activities": [
 			{
 				"name": "GetFileList",
-				"description": "Get file list from processing container",
+				"description": "Get file list from  container",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
