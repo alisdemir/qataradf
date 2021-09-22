@@ -29,23 +29,11 @@
 							"namespaces": true
 						}
 					},
-					"sink": {
-						"type": "SqlDWSink",
-						"allowCopyCommand": true,
-						"tableOption": "autoCreate",
-						"disableMetricsCollection": false
-					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
 						"referenceName": "ds_soap",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "ds_soap_sink",
 						"type": "DatasetReference"
 					}
 				]
