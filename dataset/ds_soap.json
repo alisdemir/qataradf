@@ -1,0 +1,16 @@
+{
+	"name": "ds_soap",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_bss_soap",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Xml",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		}
+	}
+}
