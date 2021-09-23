@@ -18,7 +18,10 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "dls_input_xls_items",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": ".*"
+						}
 					},
 					"fieldList": [
 						"childItems"
