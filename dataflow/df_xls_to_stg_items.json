@@ -1,12 +1,12 @@
 {
-	"name": "df_xls_to_stg_products",
+	"name": "df_xls_to_stg_items",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "dls_input_xls_products",
+						"referenceName": "dls_input_xls_items",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
