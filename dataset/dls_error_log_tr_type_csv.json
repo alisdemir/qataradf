@@ -1,0 +1,23 @@
+{
+	"name": "dls_error_log_tr_type_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Transaction Type",
+				"fileSystem": "errorlog"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
