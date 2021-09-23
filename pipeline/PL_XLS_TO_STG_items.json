@@ -73,6 +73,11 @@
 											"value": "'@{item().name}'",
 											"type": "Expression"
 										}
+									},
+									"datasetParameters": {
+										"source1": {
+											"filename": "@item().name"
+										}
 									}
 								},
 								"staging": {
