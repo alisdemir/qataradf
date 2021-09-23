@@ -56,7 +56,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "PL_EXPORT_AND_EMAIL",
+						"referenceName": "PL_EXPORT_AND_EMAIL_tr_type",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
