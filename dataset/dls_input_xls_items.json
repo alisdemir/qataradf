@@ -31,115 +31,119 @@
 		},
 		"schema": [
 			{
-				"name": "Item Code-رقم الصنف",
+				"name": "Item Code - رقم الصنف",
 				"type": "String"
 			},
 			{
-				"name": "Barcode-الباركود",
+				"name": "Barcode - الباركود",
 				"type": "String"
 			},
 			{
-				"name": "Product Name Arabic-اسم الصنف عربى",
+				"name": "Product Name Arabic - اسم الصنف عربى",
 				"type": "String"
 			},
 			{
-				"name": "Description Arabic-وصف الصنف عربى",
+				"name": "Description Arabic - وصف الصنف عربى",
 				"type": "String"
 			},
 			{
-				"name": "Product Name English-اسم الصنف انجليزى",
+				"name": "Product Name English - اسم الصنف انجليزى",
 				"type": "String"
 			},
 			{
-				"name": "Description English-وصف الصنف انجليزى",
+				"name": "Description English - وصف الصنف انجليزى",
 				"type": "String"
 			},
 			{
-				"name": "Unit Item Barcode-الباركود للوحدة ",
+				"name": "Unit Item Barcode - الباركود للوحدة ",
 				"type": "String"
 			},
 			{
-				"name": "No Of Unit Items-عدد الوحدات",
+				"name": "No Of Unit Items - عدد الوحدات",
 				"type": "String"
 			},
 			{
-				"name": "Unit Weight/size-وزن/سعة الوحدة",
+				"name": "Unit Weight/size - وزن/سعة الوحدة",
 				"type": "String"
 			},
 			{
-				"name": "Unit UOM-وحدة القياس",
+				"name": "Unit UOM - وحدة القياس",
 				"type": "String"
 			},
 			{
-				"name": "Package UOM-وحدة قياس الحزمة-التغليف",
+				"name": "Package UOM - وحدة قياس الحزمة-التغليف",
 				"type": "String"
 			},
 			{
-				"name": "Cost Price-سعر التكلفة",
+				"name": "Cost Price - سعر التكلفة",
 				"type": "String"
 			},
 			{
-				"name": "Selling Price-سعر البيع",
+				"name": "Selling Price - سعر البيع",
 				"type": "String"
 			},
 			{
-				"name": "Brand-Trade Mark English-اسم العلامة التجارية انجليزى",
+				"name": "Brand-Trade Mark English - سم العلامة التجارية انجليزى",
 				"type": "String"
 			},
 			{
-				"name": "Brand-Trade Mark Arabic-اسم العلامة التجارية عربى",
+				"name": "Brand-Trade Mark Arabic - اسم العلامة التجارية عربى",
 				"type": "String"
 			},
 			{
-				"name": "MoCI Product Group-المجموعة السلعية - بالوزارة",
+				"name": "MoCI Product Group - المجموعة السلعية - بالوزارة",
 				"type": "String"
 			},
 			{
-				"name": "Country of Oragen Name-اسم بلد المنشأ",
+				"name": "Country of Oragen Name - اسم بلد المنشأ",
 				"type": "String"
 			},
 			{
-				"name": "Country of Oragen ISO3-كود 3 لبلد المنشأ",
+				"name": "Country of Oragen ISO - كود 3 لبلد المنشأ",
 				"type": "String"
 			},
 			{
-				"name": "HS Code-رمز المنسق الجمركي",
+				"name": "HS Code - رمز المنسق الجمركي",
 				"type": "String"
 			},
 			{
-				"name": "Supplier CR-رقم السجل التجارى للمورد",
+				"name": "Supplier CR - رقم السجل التجارى للمورد",
 				"type": "String"
 			},
 			{
-				"name": "Supplier Name-اسم المورد",
+				"name": "Supplier Name - اسم المورد",
 				"type": "String"
 			},
 			{
-				"name": "Category Level 1-تصنيف السلعة 1",
+				"name": "Category Level 1 - تصنيف السلعة 1",
 				"type": "String"
 			},
 			{
-				"name": "Category Level 2-تصنيف السلعة 2",
+				"name": "Category Level 2 - تصنيف السلعة 2",
 				"type": "String"
 			},
 			{
-				"name": "Category Level 3-تصنيف السلعة 3",
+				"name": "Category Level 3 - تصنيف السلعة 3",
 				"type": "String"
 			},
 			{
-				"name": "Category Level 4-تصنيف السلعة 4",
+				"name": "Category Level 4 - تصنيف السلعة 4",
 				"type": "String"
 			},
 			{
-				"name": "Width-العرض",
+				"name": "Width - العرض",
 				"type": "String"
 			},
 			{
-				"name": "Height-الطول",
+				"name": "Height - الطول",
 				"type": "String"
 			},
 			{
-				"name": "Depth-الارتفاع",
+				"name": "Depth - الارتفاع",
+				"type": "String"
+			},
+			{
+				"name": "Column1",
 				"type": "String"
 			}
 		]
