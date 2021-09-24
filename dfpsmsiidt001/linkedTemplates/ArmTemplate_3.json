@@ -669,7 +669,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "ds_stg_ransaction_type_error_log",
+								"referenceName": "ds_stg_cr_transaction_type_error_log",
 								"type": "DatasetReference"
 							},
 							"name": "transactionerrorlog"

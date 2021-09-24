@@ -1,0 +1,129 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfpsmsiidt001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_cr_transaction_type_error_log')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "COMPANYCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPANYTRANSACTIONTYPEARABIC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPANYTRANSACTIONTYPEENGLISH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPANYTRANSACTIONTYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PSMSMOCITRANSACTIONTYPES",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_FILETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ID_ERROR_CODE",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "DS_ERROR_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_CREATE",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DT_UPDATE",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_CR_TRANSACTION_TYPE_ERROR_LOG"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_errlogcontainer_transaction_type')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_stg_cr_transaction_type_error_log",
+								"type": "DatasetReference"
+							},
+							"name": "transactionerrorlog"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dls_error_log_tr_type_csv",
+								"type": "DatasetReference"
+							},
+							"name": "errorlogcsv"
+						}
+					],
+					"transformations": [
+						{
+							"name": "stgfilename"
+						}
+					],
+					"script": "parameters{\n\tp_stg_filename as string (STG_FILENAME)\n}\nsource(output(\n\t\tCOMPANYCR as string,\n\t\tCOMPANYTRANSACTIONTYPEARABIC as string,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH as string,\n\t\tCOMPANYTRANSACTIONTYPE as string,\n\t\tPSMSMOCITRANSACTIONTYPES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string,\n\t\tDT_CREATE as timestamp,\n\t\tDT_UPDATE as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> transactionerrorlog\ntransactionerrorlog derive(STG_FILENAME = replace(DS_FILENAME,'.','_err.')) ~> stgfilename\nstgfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'STG_FILENAME',\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tsaveOrder: 1,\n\tmapColumn(\n\t\tCOMPANYCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH,\n\t\tCOMPANYTRANSACTIONTYPE,\n\t\tPSMSMOCITRANSACTIONTYPES,\n\t\tDS_ERROR_CODE\n\t)) ~> errorlogcsv"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_stg_cr_transaction_type_error_log')]"
+			]
+		}
+	]
+}
