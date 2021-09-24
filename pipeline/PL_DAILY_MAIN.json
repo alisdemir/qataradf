@@ -282,7 +282,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "PL_XLSX_TO_STG",
+						"referenceName": "PL_XLS_TO_STG",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
