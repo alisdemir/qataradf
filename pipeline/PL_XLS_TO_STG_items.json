@@ -38,7 +38,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "GetFileList",
+						"activity": "truncateStgProducts",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -100,7 +100,14 @@
 			{
 				"name": "truncateStgProducts",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "GetFileList",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
