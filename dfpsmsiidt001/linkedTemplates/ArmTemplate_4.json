@@ -676,9 +676,9 @@
 								},
 								"folderPath": "staingarea"
 							},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
 							},
 							"traceLevel": "Coarse"
 						}
@@ -1662,7 +1662,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "GetFileList",
+								"activity": "truncatestgCRTransactionType",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1720,6 +1720,39 @@
 									}
 								}
 							]
+						}
+					},
+					{
+						"name": "truncatestgCRTransactionType",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_CR_TRANSACTION_TYPE];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_transaction_type",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
 						}
 					}
 				],
