@@ -13,6 +13,84 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_DWL_FILE_LIST_ARC')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "P_DWL_FILE_LIST_UPD",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_DWL_FILE_LIST_UPD]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_psmsii_syntodsqlp",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-25T14:24:46Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_DWL_FILE_LIST_INS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "P_DWL_FILE_LIST_INS",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_DWL_FILE_LIST_INS]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_psmsii_syntodsqlp",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-25T14:24:53Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_STOCK_CALCULATE')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -123,6 +201,32 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/dls_error_log_tr_type_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Transaction Type",
+						"fileSystem": "errorlog"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dls_errorlog_csv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -204,7 +308,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_input_xlsx_product')]",
+			"name": "[concat(parameters('factoryName'), '/dls_input_contact')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -220,7 +324,161 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "Products",
+						"folderPath": "Company",
+						"fileSystem": "input"
+					},
+					"sheetIndex": 2,
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Seq-مسلسل",
+						"type": "String"
+					},
+					{
+						"name": "Name-الاسم",
+						"type": "String"
+					},
+					{
+						"name": "eMail- البريد الالكترونى",
+						"type": "String"
+					},
+					{
+						"name": "Phone-الهاتف",
+						"type": "String"
+					},
+					{
+						"name": "Extension-التحويلة",
+						"type": "String"
+					},
+					{
+						"name": "Mobile-الموبايل\n",
+						"type": "String"
+					},
+					{
+						"name": "Entity CR-رقم السجل التجارى",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_warehouse')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Company",
+						"fileSystem": "input"
+					},
+					"sheetIndex": 1,
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Store Code-رقم المخزن",
+						"type": "String"
+					},
+					{
+						"name": "Entity Commercial Registration No-رقم السجل التجارى للشركة",
+						"type": "String"
+					},
+					{
+						"name": "Entity Commercial License No-رقم الرخصة التجارىة للشركة",
+						"type": "String"
+					},
+					{
+						"name": "Warehouse/Store Commercial Registration No-رقم السجل التجارى للمخزن",
+						"type": "String"
+					},
+					{
+						"name": "Warehouse/Store Commercial License No-رقم الرخصة التجارىة للمخزن",
+						"type": "String"
+					},
+					{
+						"name": "Warehouse/Store Code-رقم المخزن",
+						"type": "String"
+					},
+					{
+						"name": "Area Name-اسم المنطقة",
+						"type": "String"
+					},
+					{
+						"name": "St. Name-اسم الشارع ",
+						"type": "String"
+					},
+					{
+						"name": "Area Code-رقم المنطقة",
+						"type": "String"
+					},
+					{
+						"name": "St. No-رقم الشارع",
+						"type": "String"
+					},
+					{
+						"name": "Building ID-رقم البناية ",
+						"type": "String"
+					},
+					{
+						"name": "Map Location URL-الخريطه",
+						"type": "String"
+					},
+					{
+						"name": "Total Store Area M2-اجمالى المساحة متر مربع",
+						"type": "String"
+					},
+					{
+						"name": "Storage Capacity in TON-السعة التخزينية بالطن",
+						"type": "String"
+					},
+					{
+						"name": "Storage Type-نوع التخزين",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_xls_company')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"fileName": {
+						"type": "string",
+						"defaultValue": "'a'"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"folderPath": "Company",
 						"fileSystem": "input"
 					},
 					"sheetIndex": 0,
@@ -228,115 +486,275 @@
 				},
 				"schema": [
 					{
-						"name": "Item Code\nرقم الصنف",
+						"name": "Main or Branch-رئيسى ام فرع",
 						"type": "String"
 					},
 					{
-						"name": "Barcode\nالباركود",
+						"name": "Company Name Arabic-اسم الشركة عربى",
 						"type": "String"
 					},
 					{
-						"name": "Product Name Arabic\nاسم الصنف عربى",
+						"name": "Company Name English-اسم الشركة انجليزى",
 						"type": "String"
 					},
 					{
-						"name": "Description Arabic\nوصف الصنف عربى",
+						"name": "Commercial Registration No-رقم السجل التجارى",
 						"type": "String"
 					},
 					{
-						"name": "Product Name Arabic\nاسم الصنف انجليزى",
+						"name": "Commercial License number-رقم االرخصة التجارية",
 						"type": "String"
 					},
 					{
-						"name": "Description Arabic\nوصف الصنف انجليزى",
+						"name": "Area-اسم المنطقة",
 						"type": "String"
 					},
 					{
-						"name": "Unit Item Barcode\nالباركود للوحدة ",
+						"name": "Street Name-اسم الشارع",
 						"type": "String"
 					},
 					{
-						"name": "No Of Unit Items\nعدد الوحدات",
+						"name": "Area Number-رقم المنطقة",
 						"type": "String"
 					},
 					{
-						"name": "Unit Weight/size\nوزن/سعة الوحدة",
+						"name": "Street Number2-رقم الشارع",
 						"type": "String"
 					},
 					{
-						"name": "Unit UOM\nوحدة القياس",
+						"name": "Building Number-رقم البناية",
 						"type": "String"
 					},
 					{
-						"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
+						"name": " Phone Number-رقم الهاتف الارضى",
 						"type": "String"
 					},
 					{
-						"name": "Cost Price\nسعر التكلفة",
+						"name": "Fax-الفاكس",
 						"type": "String"
 					},
 					{
-						"name": "Selling Price\nسعر البيع",
+						"name": "P.O. Box-صندوق البريد",
 						"type": "String"
 					},
 					{
-						"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
+						"name": "Email-ايميل الشركة",
 						"type": "String"
 					},
 					{
-						"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
+						"name": "Website-الموقع الالكترون",
 						"type": "String"
 					},
 					{
-						"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
+						"name": "Map Location Url-الموقع على الخريطة ",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_xls_items')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string",
+						"defaultValue": "'a'"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"folderPath": "Items",
+						"fileSystem": "input"
+					},
+					"sheetIndex": 0,
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Item Code - رقم الصنف",
 						"type": "String"
 					},
 					{
-						"name": "Country of Oragen Name\nاسم بلد المنشأ",
+						"name": "Barcode - الباركود",
 						"type": "String"
 					},
 					{
-						"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
+						"name": "Product Name Arabic - اسم الصنف عربى",
 						"type": "String"
 					},
 					{
-						"name": "HS Code\nرمز المنسق الجمركي",
+						"name": "Description Arabic - وصف الصنف عربى",
 						"type": "String"
 					},
 					{
-						"name": "Supplier CR\nرقم السجل التجارى للمورد",
+						"name": "Product Name English - اسم الصنف انجليزى",
 						"type": "String"
 					},
 					{
-						"name": "Supplier Name\nاسم المورد",
+						"name": "Description English - وصف الصنف انجليزى",
 						"type": "String"
 					},
 					{
-						"name": "Category Level 1\nتصنيف السلعة 1",
+						"name": "Unit Item Barcode - الباركود للوحدة ",
 						"type": "String"
 					},
 					{
-						"name": "Category Level 1\nتصنيف السلعة 2",
+						"name": "No Of Unit Items - عدد الوحدات",
 						"type": "String"
 					},
 					{
-						"name": "Category Level 1\nتصنيف السلعة 3",
+						"name": "Unit Weight/size - وزن/سعة الوحدة",
 						"type": "String"
 					},
 					{
-						"name": "Category Level 1\nتصنيف السلعة 4",
+						"name": "Unit UOM - وحدة القياس",
 						"type": "String"
 					},
 					{
-						"name": "Width\nالعرض",
+						"name": "Package UOM - وحدة قياس الحزمة-التغليف",
 						"type": "String"
 					},
 					{
-						"name": "Height\nالطول",
+						"name": "Cost Price - سعر التكلفة",
 						"type": "String"
 					},
 					{
-						"name": "Depth\nالارتفاع",
+						"name": "Selling Price - سعر البيع",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark English - سم العلامة التجارية انجليزى",
+						"type": "String"
+					},
+					{
+						"name": "Brand-Trade Mark Arabic - اسم العلامة التجارية عربى",
+						"type": "String"
+					},
+					{
+						"name": "MoCI Product Group - المجموعة السلعية - بالوزارة",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen Name - اسم بلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "Country of Oragen ISO - كود 3 لبلد المنشأ",
+						"type": "String"
+					},
+					{
+						"name": "HS Code - رمز المنسق الجمركي",
+						"type": "String"
+					},
+					{
+						"name": "Supplier CR - رقم السجل التجارى للمورد",
+						"type": "String"
+					},
+					{
+						"name": "Supplier Name - اسم المورد",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 1 - تصنيف السلعة 1",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 2 - تصنيف السلعة 2",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 3 - تصنيف السلعة 3",
+						"type": "String"
+					},
+					{
+						"name": "Category Level 4 - تصنيف السلعة 4",
+						"type": "String"
+					},
+					{
+						"name": "Width - العرض",
+						"type": "String"
+					},
+					{
+						"name": "Height - الطول",
+						"type": "String"
+					},
+					{
+						"name": "Depth - الارتفاع",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_xls_transaction_type')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"fileName": {
+						"type": "string",
+						"defaultValue": "'a'"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"folderPath": "TransactionType",
+						"fileSystem": "input"
+					},
+					"sheetIndex": 0,
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Company CR #",
+						"type": "String"
+					},
+					{
+						"name": "Company Transaction Type Arabic ",
+						"type": "String"
+					},
+					{
+						"name": "Company Transaction Type English ",
+						"type": "String"
+					},
+					{
+						"name": "Company Transaction type",
+						"type": "String"
+					},
+					{
+						"name": "PSMS - MoCI Transaction Types",
 						"type": "String"
 					}
 				]
@@ -492,6 +910,9 @@
 					"referenceName": "ls_psmsii_syntodls",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
@@ -608,78 +1029,6 @@
 					},
 					{
 						"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dls_processing_csv_copy1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "csv files under processing container",
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string",
-						"defaultValue": "6-RAYAN NATURAL WATER 9097_PSMS II - Inventory Transactions - Data Collection Sheet.csv"
-					}
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "All Transactions_copy.csv",
-							"type": "Expression"
-						},
-						"fileSystem": "processing"
-					},
-					"columnDelimiter": "|",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": ""
-				},
-				"schema": [
-					{
-						"name": "RationDate",
-						"type": "String"
-					},
-					{
-						"name": "Group Code",
-						"type": "String"
-					},
-					{
-						"name": "OperationType",
-						"type": "String"
-					},
-					{
-						"name": "Supply/Distribution",
-						"type": "String"
-					},
-					{
-						"name": "FromAccountCR",
-						"type": "String"
-					},
-					{
-						"name": "ToAccountCR",
-						"type": "String"
-					},
-					{
-						"name": "Amount",
-						"type": "String"
-					},
-					{
-						"name": "CustomDeclarationNo",
 						"type": "String"
 					}
 				]
@@ -892,7 +1241,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_processing_xlsx')]",
+			"name": "[concat(parameters('factoryName'), '/dls_processing_xls')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -903,8 +1252,87 @@
 				"parameters": {
 					"FileName": {
 						"type": "string",
-						"defaultValue": "'4'"
+						"defaultValue": "a"
 					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"fileSystem": "processing"
+					},
+					"sheetIndex": 0,
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Transaction Date - تاريخ الحركة ",
+						"type": "String"
+					},
+					{
+						"name": "Transaction Type Code - كود نوع الحركة",
+						"type": "String"
+					},
+					{
+						"name": "Item Code - كود الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Item Barcode - باركود الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Your Company CR# - رقم السجل التجارى للشركة",
+						"type": "String"
+					},
+					{
+						"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
+						"type": "String"
+					},
+					{
+						"name": "Company Store/Inventory Code - رقم المخزن ",
+						"type": "String"
+					},
+					{
+						"name": "Quantity - الكمية",
+						"type": "String"
+					},
+					{
+						"name": "Selling Price per unit - سعر البيع للوحدة  -",
+						"type": "String"
+					},
+					{
+						"name": "Comon Referance No. -  رقم المرجع المشترك",
+						"type": "String"
+					},
+					{
+						"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
+						"type": "String"
+					},
+					{
+						"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_processing_xls_folder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
 				},
 				"folder": {
 					"name": "Storage_DL_QTR"
@@ -973,82 +1401,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_processing_xlsx_folder')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "0",
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "*.xlsx",
-						"fileSystem": "processing"
-					},
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Transaction Date - تاريخ الحركة ",
-						"type": "String"
-					},
-					{
-						"name": "Transaction Type Code - كود نوع الحركة",
-						"type": "String"
-					},
-					{
-						"name": "Item Code - كود الصنف",
-						"type": "String"
-					},
-					{
-						"name": "Item Barcode - باركود الصنف",
-						"type": "String"
-					},
-					{
-						"name": "Your Company CR# - رقم السجل التجارى للشركة",
-						"type": "String"
-					},
-					{
-						"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
-						"type": "String"
-					},
-					{
-						"name": "Company Store/Inventory Code - رقم المخزن ",
-						"type": "String"
-					},
-					{
-						"name": "Quantity - الكمية",
-						"type": "String"
-					},
-					{
-						"name": "Selling Price per unit - سعر البيع للوحدة  -",
-						"type": "String"
-					},
-					{
-						"name": "Comon Referance No. -  رقم المرجع المشترك",
-						"type": "String"
-					},
-					{
-						"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
-						"type": "String"
-					},
-					{
-						"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dls_upload_bin')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1057,27 +1409,6 @@
 					"referenceName": "ls_psmsii_syntodls",
 					"type": "LinkedServiceReference"
 				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "upload"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dls_upload_binary')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "deneme",
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
 				"folder": {
 					"name": "Storage_DL_QTR"
 				},
@@ -1088,314 +1419,6 @@
 						"type": "AzureBlobFSLocation",
 						"fileSystem": "upload"
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_custom_xml')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"fileName": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Xml",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "dene.xml",
-							"type": "Expression"
-						},
-						"fileSystem": "input"
-					},
-					"nullValue": "null"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_dwh_file_list')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DT_FILE",
-						"type": "date"
-					},
-					{
-						"name": "DS_ENTITY_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_ENTITY",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_ISEXPECTED",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_EMAIL",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "DWH_FILE_LIST"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_dwl_file_list')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "DT_FILE",
-						"type": "date"
-					},
-					{
-						"name": "DS_ENTITY_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_ENTITY",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_ISUPLOADED",
-						"type": "smallint",
-						"precision": 5
-					},
-					{
-						"name": "ID_ISREJECTED",
-						"type": "bit"
-					},
-					{
-						"name": "DS_EMAIL",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "etl",
-					"table": "DWL_FILE_LIST"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_file_list')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_ISEXPECTED",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_EMAIL",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "etl",
-					"table": "STG_FILE_LIST"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_productions')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "ITEM_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BARCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PRODUCT_NAME_ARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DESCRIPTION_ARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PRODUCT_NAME_ENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DESCRIPTION_ENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNIT_ITEM_BARCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NO_OF_UNIT_ITEMS",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNIT_WEIGHT_SIZE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNIT_UOM",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PACKAGE_UOM",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COST_PRICE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SELLING_PRICE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BRAND_TRADE_MARK_ENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BRAND_TRADE_MARK_ARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MOCI_PRODUCT_GROUP",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COUNTRY_OF_ORAGEN_NAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COUNTRY_OF_ORAGEN_ISO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "HS_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIER_CR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIER_NAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORY_LEVEL_1_1",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORY_LEVEL_1_2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORY_LEVEL_1_3",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORY_LEVEL_1_4",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WIDTH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "HEIGHT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DEPTH",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_PRODUCTS"
 				}
 			},
 			"dependsOn": []

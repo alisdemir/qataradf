@@ -13,6 +13,531 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/dls_upload_binary')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "deneme",
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "upload"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_custom_xml')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"fileName": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Xml",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "dene.xml",
+							"type": "Expression"
+						},
+						"fileSystem": "input"
+					},
+					"nullValue": "null"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_dwh_file_list')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodsqlp",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dedicated_SQL"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DT_FILE",
+						"type": "date"
+					},
+					{
+						"name": "DS_ENTITY_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_ENTITY",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_ISEXPECTED",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_EMAIL",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "DWH_FILE_LIST"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_dwl_file_list')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodsqlp",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dedicated_SQL"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "DT_FILE",
+						"type": "date"
+					},
+					{
+						"name": "DS_ENTITY_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_ENTITY",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_ISUPLOADED",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "ID_ISREJECTED",
+						"type": "bit"
+					},
+					{
+						"name": "DS_EMAIL",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "etl",
+					"table": "DWL_FILE_LIST"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_company')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodsqlp",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "MainorBranch",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CompanyNameArabic",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CompanyNameEnglish",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CommercialRegistrationNo",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CommercialLicensenumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Area",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StreetName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AreaNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StreetNumber2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BuildingNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PhoneNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Fax",
+						"type": "nvarchar"
+					},
+					{
+						"name": "P.O.Box",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Website",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MapLocationUrl",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_FILETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_COMPANY"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_file_list')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodsqlp",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dedicated_SQL"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_ISEXPECTED",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_EMAIL",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "etl",
+					"table": "STG_FILE_LIST"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_products')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodsqlp",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dedicated_SQL"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "ITEMCODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BARCODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PRODUCTNAMEARABIC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DESCRIPTIONARABIC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PRODUCTNAMEENGLISH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DESCRIPTIONENGLISH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNITITEMBARCODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NOOFUNITITEMS",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNITWEIGHTSIZE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNITUOM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PACKAGEUOM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COSTPRICE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SELLINGPRICE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BRANDTRADEMARKENGLISH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BRANDTRADEMARKARABIC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MOCIPRODUCTGROUP",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COUNTRYOFORAGENNAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COUNTRYOFORAGENISO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "HSCODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIERCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIERNAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CATEGORYLEVEL11",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CATEGORYLEVEL12",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CATEGORYLEVEL13",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CATEGORYLEVEL14",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WIDTH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "HEIGHT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DEPTH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_FILETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_PRODUCTS"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_ransaction_type_error_log')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "COMPANYCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPANYTRANSACTIONTYPEARABIC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPANYTRANSACTIONTYPEENGLISH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPANYTRANSACTIONTYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PSMSMOCITRANSACTIONTYPES",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_FILETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ID_ERROR_CODE",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "DS_ERROR_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_CREATE",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DT_UPDATE",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_TRANSACTION_TYPE_ERROR_LOG"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_transaction_error_log')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -103,6 +628,61 @@
 				"typeProperties": {
 					"schema": "dwh",
 					"table": "stg_transaction_error_log"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_transaction_type')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodsqlp",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "COMPANYCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPANYTRANSACTIONTYPEARABIC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPANYTRANSACTIONTYPEENGLISH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPANYTRANSACTIONTYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PSMSMOCITRANSACTIONTYPES",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_FILETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_CR_TRANSACTION_TYPE"
 				}
 			},
 			"dependsOn": []
@@ -199,7 +779,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
+					"referenceName": "ls_dsqlpqtr",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
@@ -207,32 +787,10 @@
 				},
 				"annotations": [],
 				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "ID_TRANSACTION_TYPE",
-						"type": "smallint",
-						"precision": 5
-					},
-					{
-						"name": "ID_CR_TRANSACTION_TYPE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DS_CR_TRANSACTION_TYPE_ENG",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DS_CR_TRANSACTION_TYPE_ARB",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_CR_ENTITY",
-						"type": "nvarchar"
-					}
-				],
+				"schema": [],
 				"typeProperties": {
 					"schema": "dwh",
-					"table": "DWL_CR_TRANSACTION_TYPE"
+					"table": "STG_COMPANY"
 				}
 			},
 			"dependsOn": []
@@ -326,87 +884,6 @@
 				"type": "SqlServerTable",
 				"schema": [],
 				"typeProperties": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dls_processing_xls')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string",
-						"defaultValue": "a"
-					}
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "processing"
-					},
-					"sheetIndex": 0,
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Transaction Date - تاريخ الحركة ",
-						"type": "String"
-					},
-					{
-						"name": "Transaction Type Code - كود نوع الحركة",
-						"type": "String"
-					},
-					{
-						"name": "Item Code - كود الصنف",
-						"type": "String"
-					},
-					{
-						"name": "Item Barcode - باركود الصنف",
-						"type": "String"
-					},
-					{
-						"name": "Your Company CR# - رقم السجل التجارى للشركة",
-						"type": "String"
-					},
-					{
-						"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
-						"type": "String"
-					},
-					{
-						"name": "Company Store/Inventory Code - رقم المخزن ",
-						"type": "String"
-					},
-					{
-						"name": "Quantity - الكمية",
-						"type": "String"
-					},
-					{
-						"name": "Selling Price per unit - سعر البيع للوحدة  -",
-						"type": "String"
-					},
-					{
-						"name": "Comon Referance No. -  رقم المرجع المشترك",
-						"type": "String"
-					},
-					{
-						"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
-						"type": "String"
-					},
-					{
-						"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
-						"type": "String"
-					}
-				]
 			},
 			"dependsOn": []
 		},
@@ -965,6 +1442,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_custom_xml')]",
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
 			]
 		},
@@ -1513,6 +1991,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_custom_xml')]",
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
 			]
 		},
@@ -1954,7 +2433,9 @@
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:55:14Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_dwl_file_list')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_CSV_TO_STG_bulk_load')]",
@@ -2092,943 +2573,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_EXEC_P_DQ_MAIN')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "P_DQ_MAIN",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlDWSource",
-								"sqlReaderStoredProcedureName": "[[dwh].[P_DQ_MAIN]",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "ds_stg_transactions",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_MAIN"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:52:25Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_FILE_TRANSFER')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "from upload to processing folder",
-				"activities": [
-					{
-						"name": "fileTransfer",
-						"description": "file transfering from upload container to processing container on data lake.",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"deleteFilesAfterCompletion": false
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "dls_upload_binary",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dls_processing_binary",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_MAIN"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:54:28Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_FILE_TRANSFER_xlsx')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "from upload to processing folder",
-				"activities": [
-					{
-						"name": "fileTransfer",
-						"description": "file transfering from upload container to processing container on data lake.",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*.xlsx",
-									"deleteFilesAfterCompletion": false
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "dls_upload_binary",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dls_processing_binary",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Dev"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:54:28Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_LOAD_DWB_TRANSACTION')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "PL_LOAD_DWB_TRANSACTION",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlDWSource",
-								"sqlReaderStoredProcedureName": "[[dwh].[P_DWB_TRANSACTION_LOAD]",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference",
-								"parameters": {
-									"schemaName": "dwh",
-									"tableName": "DWB_transactions"
-								}
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_MAIN"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:52:28Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_XLSX_TO_STG_production_copy')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": false,
-									"wildcardFolderPath": "Products",
-									"wildcardFileName": "*",
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlDWSink"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Item Code\nرقم الصنف",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ITEM_CODE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Barcode\nالباركود",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BARCODE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Product Name Arabic\nاسم الصنف عربى",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "PRODUCT_NAME_ARABIC",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Description Arabic\nوصف الصنف عربى",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DESCRIPTION_ARABIC",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Product Name Arabic\nاسم الصنف انجليزى",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "PRODUCT_NAME_ENGLISH",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Description Arabic\nوصف الصنف انجليزى",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DESCRIPTION_ENGLISH",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Unit Item Barcode\nالباركود للوحدة ",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "UNIT_ITEM_BARCODE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "No Of Unit Items\nعدد الوحدات",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "NO_OF_UNIT_ITEMS",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Unit Weight/size\nوزن/سعة الوحدة",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "UNIT_WEIGHT_SIZE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Unit UOM\nوحدة القياس",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "UNIT_UOM",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "PACKAGE_UOM",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Cost Price\nسعر التكلفة",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "COST_PRICE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Selling Price\nسعر البيع",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "SELLING_PRICE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BRAND_TRADE_MARK_ENGLISH",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BRAND_TRADE_MARK_ARABIC",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "MOCI_PRODUCT_GROUP",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Country of Oragen Name\nاسم بلد المنشأ",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "COUNTRY_OF_ORAGEN_NAME",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "COUNTRY_OF_ORAGEN_ISO",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "HS Code\nرمز المنسق الجمركي",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "HS_CODE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Supplier CR\nرقم السجل التجارى للمورد",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "SUPPLIER_CR",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Supplier Name\nاسم المورد",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "SUPPLIER_NAME",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Category Level 1\nتصنيف السلعة 1",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "CATEGORY_LEVEL_1_1",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Category Level 1\nتصنيف السلعة 2",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "CATEGORY_LEVEL_1_2",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Category Level 1\nتصنيف السلعة 3",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "CATEGORY_LEVEL_1_3",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Category Level 1\nتصنيف السلعة 4",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "CATEGORY_LEVEL_1_4",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Width\nالعرض",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "WIDTH",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Height\nالطول",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "HEIGHT",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Depth\nالارتفاع",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DEPTH",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dls_input_xlsx_product",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ds_stg_productions",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"concurrency": 1,
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_INITIAL_LOAD"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:55:14Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/copycommand')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": false,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings",
-									"skipLineCount": 1
-								}
-							},
-							"sink": {
-								"type": "SqlDWSink",
-								"allowPolyBase": true,
-								"polyBaseSettings": {
-									"rejectValue": 0,
-									"rejectType": "value",
-									"useTypeDefault": true
-								},
-								"disableMetricsCollection": false
-							},
-							"enableStaging": true,
-							"stagingSettings": {
-								"linkedServiceName": {
-									"referenceName": "ls_psmsii_syntodls",
-									"type": "LinkedServiceReference"
-								},
-								"path": "stagingarea"
-							},
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Transaction Date - تاريخ الحركة ",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ID_YEARMONTHDAY",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Transaction Type Code - كود نوع الحركة",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ID_TRANSACTION_TYPE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Item Code - كود الصنف",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ID_ITEM_CODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Item Barcode - باركود الصنف",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ID_ITEM_BARCODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Your Company CR# - رقم السجل التجارى للشركة",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ID_ENTITY_CR",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ID_CUSTOMER_ENTITY_CR",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Company Store/Inventory Code - رقم المخزن ",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ID_COMPANY_STORE_CODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Quantity - الكمية",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MT_QUANTITY",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Selling Price per unit - سعر البيع للوحدة  -",
-											"type": "String"
-										},
-										"sink": {
-											"name": "MT_DISCOUNT_AMOUNT",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Comon Referance No. -  رقم المرجع المشترك",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ID_COMMON_REF_CODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ID_TRANSFER_CODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ID_INVOICE_NUMBER",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dls_processing_csv_copy1",
-								"type": "DatasetReference",
-								"parameters": {
-									"FileName": {
-										"value": "24975.csv",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ds_stg_transactions_copy1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Dev"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions_copy1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/deneme_custom_xml_copy1')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "Dev"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"linkedService": {
-								"referenceName": "ls_psmsii_syntodls",
-								"type": "LinkedServiceReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "sink4"
-						}
-					],
-					"transformations": [
-						{
-							"name": "Flatten1"
-						}
-					],
-					"script": "source(output(\n\t\tReleaseNotification as (Declaration as (ItemDetails as (Item as (countryOfOrigin as string, declaredValue as short, declaredValueQAR as short, foreignCurrency as string, hscode as integer, itemQuantity as boolean, itemQuantityUOM as string, netWeight as short, netWeightUOM as string)), SupervisorDetails as (Supervisor as (mobileNumber as string, name as string)[]), accountType as string, address as string, bolNumber as string, cargoManifestNumber as string, carrierName as string, clearingAgencyCR as short, clearingAgencyNameAR as string, clearingAgencyNameEng as string, companyName as string, companyNameAr as string, countryOfLoading as string, declarationNo as string, declarationStatus as string, declarationType as string, email as string, entryOrExitPortName as string, establishmentId as integer, exporterName as string, firstCountryOfLoading as string, importerName as string, masterBolOrAWBNumber as string, portOfLoading as string, portType as string, releaseOrderNumber as long, releasedDate as string, supplierCR as short, supplierCustomsCode as short, voyageOrFlightNumber as string), NotificationDate as string, NotificationRef as string, NotificationSender as string)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'xml',\n\tfileSystem: 'input',\n\tfileName: 'dene.xml',\n\tnullValue: 'null',\n\tvalidationMode: 'xsd',\n\tnamespaces: true,\n\tnamespacePrefixes: ['https://dlsapsmsiidt001.blob.core.windows.net/input/dene.xsd'->'dene.xsd']) ~> source1\nsource1 foldDown(unroll(ReleaseNotification.Declaration.SupervisorDetails.Supervisor),\n\tmapColumn(\n\t\tNotificationSender = ReleaseNotification.NotificationSender,\n\t\tNotificationRef = ReleaseNotification.NotificationRef,\n\t\tNotificationDate = ReleaseNotification.NotificationDate,\n\t\taccountType = ReleaseNotification.Declaration.accountType,\n\t\taddress = ReleaseNotification.Declaration.address,\n\t\tbolNumber = ReleaseNotification.Declaration.bolNumber,\n\t\tcargoManifestNumber = ReleaseNotification.Declaration.cargoManifestNumber,\n\t\tcarrierName = ReleaseNotification.Declaration.carrierName,\n\t\tclearingAgencyCR = ReleaseNotification.Declaration.clearingAgencyCR,\n\t\tclearingAgencyNameAR = ReleaseNotification.Declaration.clearingAgencyNameAR,\n\t\tclearingAgencyNameEng = ReleaseNotification.Declaration.clearingAgencyNameEng,\n\t\tcompanyName = ReleaseNotification.Declaration.companyName,\n\t\tcompanyNameAr = ReleaseNotification.Declaration.companyNameAr,\n\t\tcountryOfLoading = ReleaseNotification.Declaration.countryOfLoading,\n\t\tdeclarationNo = ReleaseNotification.Declaration.declarationNo,\n\t\tdeclarationStatus = ReleaseNotification.Declaration.declarationStatus,\n\t\tdeclarationType = ReleaseNotification.Declaration.declarationType,\n\t\temail = ReleaseNotification.Declaration.email,\n\t\tentryOrExitPortName = ReleaseNotification.Declaration.entryOrExitPortName,\n\t\testablishmentId = ReleaseNotification.Declaration.establishmentId,\n\t\texporterName = ReleaseNotification.Declaration.exporterName,\n\t\tfirstCountryOfLoading = ReleaseNotification.Declaration.firstCountryOfLoading,\n\t\timporterName = ReleaseNotification.Declaration.importerName,\n\t\tmasterBolOrAWBNumber = ReleaseNotification.Declaration.masterBolOrAWBNumber,\n\t\tportOfLoading = ReleaseNotification.Declaration.portOfLoading,\n\t\tportType = ReleaseNotification.Declaration.portType,\n\t\treleaseOrderNumber = ReleaseNotification.Declaration.releaseOrderNumber,\n\t\treleasedDate = ReleaseNotification.Declaration.releasedDate,\n\t\tsupplierCR = ReleaseNotification.Declaration.supplierCR,\n\t\tsupplierCustomsCode = ReleaseNotification.Declaration.supplierCustomsCode,\n\t\tvoyageOrFlightNumber = ReleaseNotification.Declaration.voyageOrFlightNumber,\n\t\tmobileNumber = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.mobileNumber,\n\t\tname = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.name,\n\t\tcountryOfOrigin = ReleaseNotification.Declaration.ItemDetails.Item.countryOfOrigin,\n\t\tdeclaredValue = ReleaseNotification.Declaration.ItemDetails.Item.declaredValue,\n\t\tdeclaredValueQAR = ReleaseNotification.Declaration.ItemDetails.Item.declaredValueQAR,\n\t\tforeignCurrency = ReleaseNotification.Declaration.ItemDetails.Item.foreignCurrency,\n\t\thscode = ReleaseNotification.Declaration.ItemDetails.Item.hscode,\n\t\titemQuantity = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantity,\n\t\titemQuantityUOM = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantityUOM,\n\t\tnetWeight = ReleaseNotification.Declaration.ItemDetails.Item.netWeight,\n\t\tnetWeightUOM = ReleaseNotification.Declaration.ItemDetails.Item.netWeightUOM\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> Flatten1\nFlatten1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink4"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_cr_transaction_type')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "dls_processing_xlsx_folder",
-								"type": "DatasetReference"
-							},
-							"name": "crtrtypexlsx"
-						},
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "source2"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_stg_transactions_copy1",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "Join1"
-						}
-					],
-					"script": "source(output(\n\t\t{Company CR #} as string,\n\t\t{Company Transaction Type Arabic } as string,\n\t\t{Company Transaction Type English } as string,\n\t\t{Company Transaction type} as string,\n\t\t{PSMS - MoCI Transaction Types} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['ALL TRANSACTION TYPES.xlsx']) ~> crtrtypexlsx\nsource(output(\n\t\tid_transaction_type as short,\n\t\tds_transaction_type as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'SELECT id_transaction_type,ds_transaction_type FROM DWH.DWL_TRANSACTION_TYPE where id_transaction_type>18 ',\n\tformat: 'query',\n\tstaged: true) ~> source2\ncrtrtypexlsx, source2 join({PSMS - MoCI Transaction Types} == ds_transaction_type,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join1\nJoin1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tID_TRANSACTION_TYPE as integer,\n\t\tID_CR_TRANSACTION_TYPE as string,\n\t\tDS_CR_TRANSACTION_TYPE_ENG as string,\n\t\tDS_CR_TRANSACTION_TYPE_ARB as string,\n\t\tID_CR_ENTITY as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_TRANSACTION_TYPE = id_transaction_type,\n\t\tID_CR_TRANSACTION_TYPE = {Company Transaction type},\n\t\tDS_CR_TRANSACTION_TYPE_ENG = {Company Transaction Type English },\n\t\tDS_CR_TRANSACTION_TYPE_ARB = {Company Transaction Type Arabic },\n\t\tID_CR_ENTITY = {Company CR #}\n\t)) ~> sink1"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
-				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions_copy1')]"
 			]
 		}
 	]
