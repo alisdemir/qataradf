@@ -141,10 +141,6 @@
 			{
 				"name": "Depth - الارتفاع",
 				"type": "String"
-			},
-			{
-				"name": "Column1",
-				"type": "String"
 			}
 		]
 	}
