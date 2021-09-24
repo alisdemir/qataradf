@@ -27,7 +27,7 @@
 							"referenceName": "ls_psmsii_syntodls",
 							"type": "LinkedServiceReference"
 						},
-						"folderPath": "staingarea"
+						"folderPath": ""
 					},
 					"integrationRuntime": {
 						"referenceName": "integrationRuntime10min",
