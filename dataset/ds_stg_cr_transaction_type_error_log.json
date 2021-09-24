@@ -1,5 +1,5 @@
 {
-	"name": "ds_stg_ransaction_type_error_log",
+	"name": "ds_stg_cr_transaction_type_error_log",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_dsqlpqtr",
@@ -67,7 +67,7 @@
 		],
 		"typeProperties": {
 			"schema": "dwh",
-			"table": "STG_TRANSACTION_TYPE_ERROR_LOG"
+			"table": "STG_CR_TRANSACTION_TYPE_ERROR_LOG"
 		}
 	}
 }
