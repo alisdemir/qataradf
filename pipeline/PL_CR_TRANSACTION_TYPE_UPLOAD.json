@@ -15,16 +15,6 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataflow": {
-						"referenceName": "df_cr_transaction_type",
-						"type": "DataFlowReference",
-						"datasetParameters": {
-							"source2": {
-								"schemaName": "dwh",
-								"tableName": "DWL_TRANSACTION_TYPE"
-							}
-						}
-					},
 					"staging": {
 						"linkedService": {
 							"referenceName": "ls_psmsii_syntodls",
