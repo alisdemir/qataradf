@@ -1515,7 +1515,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "GetFileList",
+								"activity": "truncateStgProducts",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1573,6 +1573,39 @@
 									}
 								}
 							]
+						}
+					},
+					{
+						"name": "truncateStgProducts",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_PRODUCTS];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_products",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
 						}
 					}
 				],
