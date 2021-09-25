@@ -17,10 +17,7 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "df_errlogcontainer_transaction_type",
-						"type": "DataFlowReference",
-						"parameters": {
-							"p_stg_filename": "STG_FILENAME"
-						}
+						"type": "DataFlowReference"
 					},
 					"staging": {
 						"linkedService": {
