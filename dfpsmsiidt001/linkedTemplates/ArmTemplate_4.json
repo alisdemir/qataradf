@@ -661,20 +661,14 @@
 							"dataflow": {
 								"referenceName": "df_errlogcontainer_transaction_type",
 								"type": "DataFlowReference",
-								"parameters": {
-									"p_stg_filename": "STG_FILENAME"
-								},
+								"parameters": {},
 								"datasetParameters": {
 									"transactionerrorlog": {},
 									"errorlogcsv": {}
 								}
 							},
 							"staging": {
-								"linkedService": {
-									"referenceName": "ls_psmsii_syntodls",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "stagingarea"
+								"folderPath": ""
 							},
 							"integrationRuntime": {
 								"referenceName": "integrationRuntime10min",
