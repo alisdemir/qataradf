@@ -18,6 +18,31 @@
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": []
+		"schema": [
+			{
+				"name": "COMPANYCR",
+				"type": "String"
+			},
+			{
+				"name": "COMPANYTRANSACTIONTYPEARABIC",
+				"type": "String"
+			},
+			{
+				"name": "COMPANYTRANSACTIONTYPEENGLISH",
+				"type": "String"
+			},
+			{
+				"name": "COMPANYTRANSACTIONTYPE",
+				"type": "String"
+			},
+			{
+				"name": "PSMSMOCITRANSACTIONTYPES",
+				"type": "String"
+			},
+			{
+				"name": "ERRORCODE",
+				"type": "String"
+			}
+		]
 	}
 }
