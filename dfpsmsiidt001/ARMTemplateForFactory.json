@@ -3340,9 +3340,9 @@
 								"type": "DelimitedTextSource",
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
+									"recursive": false,
 									"wildcardFileName": {
-										"value": "*_TransactionTypes.xlsx",
+										"value": "*_TransactionTypes_err.*",
 										"type": "Expression"
 									},
 									"enablePartitionDiscovery": false
