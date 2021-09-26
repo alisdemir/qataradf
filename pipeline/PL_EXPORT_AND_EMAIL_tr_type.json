@@ -96,7 +96,7 @@
 							"type": "AzureBlobFSReadSettings",
 							"recursive": false,
 							"wildcardFileName": {
-								"value": "*_TransactionTypes.xls",
+								"value": "*_TransactionTypes_err.xls*",
 								"type": "Expression"
 							},
 							"enablePartitionDiscovery": false
