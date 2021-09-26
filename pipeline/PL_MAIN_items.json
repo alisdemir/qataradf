@@ -1,0 +1,24 @@
+{
+	"name": "PL_MAIN_items",
+	"properties": {
+		"activities": [
+			{
+				"name": "PL_XLS_TO_STG_items",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_XLS_TO_STG_items",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "PL_INITIAL_LOAD"
+		},
+		"annotations": []
+	}
+}
