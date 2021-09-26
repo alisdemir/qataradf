@@ -95,7 +95,10 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFileName": "@endswith(activity('df_errlogcontainer_transaction_type').output.values,'_TransactionTypes.xlsx')",
+							"wildcardFileName": {
+								"value": "*_TransactionTypes.xlsx",
+								"type": "Expression"
+							},
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
