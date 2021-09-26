@@ -20,7 +20,6 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "TransactionType",
 							"wildcardFileName": "*_TransactionTypes.*",
 							"deleteFilesAfterCompletion": false
 						},
@@ -44,7 +43,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "dls_errorlog_binary",
+						"referenceName": "dls_processing_binary",
 						"type": "DatasetReference"
 					}
 				]
