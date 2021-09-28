@@ -19,7 +19,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "dene.xsd",
+					"value": "dene.xml",
 					"type": "Expression"
 				},
 				"fileSystem": "input"
