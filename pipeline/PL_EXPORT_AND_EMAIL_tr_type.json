@@ -18,9 +18,6 @@
 					"dataflow": {
 						"referenceName": "df_errlog_container_tr_type",
 						"type": "DataFlowReference",
-						"parameters": {
-							"p_stg_filename": "$p_stg_filename"
-						},
 						"datasetParameters": {
 							"stgtransationtypeerrlog": {
 								"schemaName": "dwh",
