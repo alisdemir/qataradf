@@ -130,7 +130,10 @@
 						"referenceName": "integrationRuntime10min",
 						"type": "IntegrationRuntimeReference"
 					},
-					"method": "POST"
+					"method": "POST",
+					"body": {
+						"EmailType": "ItemFileFileErrors"
+					}
 				}
 			}
 		],
