@@ -20,6 +20,12 @@
 						"type": "DataFlowReference",
 						"parameters": {
 							"p_stg_filename": "$p_stg_filename"
+						},
+						"datasetParameters": {
+							"stgtransationtypeerrlog": {
+								"schemaName": "dwh",
+								"tableName": "[dwh].[STG_CR_TRANSACTION_TYPE_ERROR_LOG]"
+							}
 						}
 					},
 					"staging": {
@@ -33,10 +39,7 @@
 						"referenceName": "integrationRuntime10min",
 						"type": "IntegrationRuntimeReference"
 					},
-					"traceLevel": "None",
-					"cacheSinks": {
-						"firstRowOnly": true
-					}
+					"traceLevel": "Coarse"
 				}
 			},
 			{
