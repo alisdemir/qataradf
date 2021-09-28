@@ -1,12 +1,24 @@
 {
-	"name": "df_errlog_con_items",
+	"name": "df_errlog_container_items",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [],
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dsqlp_parametric",
+						"type": "DatasetReference"
+					},
+					"name": "stgproductserrlog"
+				}
+			],
 			"sinks": [],
-			"transformations": [],
-			"script": ""
+			"transformations": [
+				{
+					"name": "DerivedColumn1"
+				}
+			],
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> stgproductserrlog\nstgproductserrlog derive(stg = ERROR_FUNCTION('')) ~> DerivedColumn1"
 		}
 	}
 }
