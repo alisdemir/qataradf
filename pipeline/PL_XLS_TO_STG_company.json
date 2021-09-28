@@ -76,7 +76,7 @@
 									},
 									"datasetParameters": {
 										"source1": {
-											"filename": "135104_Entity.xlsx",
+											"filename": "@item().name",
 											"folderName": "Company"
 										},
 										"stgCompany": {
