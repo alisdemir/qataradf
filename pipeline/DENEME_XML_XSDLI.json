@@ -246,7 +246,7 @@
 						"referenceName": "ds_custom_xml",
 						"type": "DatasetReference",
 						"parameters": {
-							"fileName": "dene.xml"
+							"xmlfileName": "dene.xml"
 						}
 					}
 				],
@@ -360,7 +360,7 @@
 						"referenceName": "ds_custom_xml",
 						"type": "DatasetReference",
 						"parameters": {
-							"fileName": "dene.xml"
+							"xmlfileName": "dene.xml"
 						}
 					}
 				],
@@ -525,7 +525,7 @@
 						"referenceName": "ds_custom_xml",
 						"type": "DatasetReference",
 						"parameters": {
-							"fileName": "dene.xml"
+							"xmlfileName": "dene.xml"
 						}
 					}
 				],
