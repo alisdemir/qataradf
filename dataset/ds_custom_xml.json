@@ -19,9 +19,10 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "dene.xml",
+					"value": "@dataset().xmlfileName",
 					"type": "Expression"
 				},
+				"folderPath": "Customs",
 				"fileSystem": "input"
 			},
 			"nullValue": "null"
