@@ -1,0 +1,9 @@
+{
+	"name": "PL_EXPORT_AND_EMAIL_items",
+	"properties": {
+		"folder": {
+			"name": "PL_INITIAL_LOAD"
+		},
+		"annotations": []
+	}
+}
