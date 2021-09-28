@@ -19,6 +19,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"folderPath": "@dataset().folderName",
 				"fileSystem": "errorlog"
 			},
 			"columnDelimiter": "|",
