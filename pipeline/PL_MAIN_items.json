@@ -41,6 +41,26 @@
 					"referenceName": "ls_dsqlpqtr",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "PL_EXPORT_AND_EMAIL_items",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_EXEC_P_DQ_ITEMS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_EXPORT_AND_EMAIL_items",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"folder": {
