@@ -4209,7 +4209,9 @@
 										"schemaName": "dwh",
 										"tableName": "STG_PRODUCTS_ERROR_LOG"
 									},
-									"sink1": {}
+									"errorlogitems": {
+										"folderName": "Items"
+									}
 								}
 							},
 							"staging": {
@@ -4281,16 +4283,18 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "dls_errorlog_item_csv",
+								"referenceName": "dls_errorlog_parametric",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "dls_errorlog_item_csv",
+								"referenceName": "dls_errorlog_parametric",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"folderName": "Items"
+								}
 							}
 						]
 					},
@@ -4340,7 +4344,7 @@
 				"[concat(variables('factoryId'), '/dataflows/df_errlog_container_items')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
-				"[concat(variables('factoryId'), '/datasets/dls_errorlog_item_csv')]"
+				"[concat(variables('factoryId'), '/datasets/dls_errorlog_parametric')]"
 			]
 		},
 		{
@@ -6006,10 +6010,11 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "dls_input_xls_items",
+								"referenceName": "dls_input_xls_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"filename": "*"
+									"filename": "*.xlsx",
+									"folderName": "Input"
 								}
 							},
 							"fieldList": [
@@ -6064,10 +6069,14 @@
 												}
 											},
 											"datasetParameters": {
-												"source1": {
-													"filename": "@item().name"
+												"inputitemscontainer": {
+													"filename": "@item().name",
+													"folderName": "Items"
 												},
-												"stgProducts": {}
+												"stgProducts": {
+													"schemaName": "dwh",
+													"tableName": "STG_PRODUCTS"
+												}
 											}
 										},
 										"staging": {
@@ -6114,9 +6123,12 @@
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "ds_stg_products",
+								"referenceName": "dsqlp_parametric",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "STG_PRODUCTS"
+								}
 							}
 						}
 					}
@@ -6131,8 +6143,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dls_input_xls_items')]",
-				"[concat(variables('factoryId'), '/datasets/ds_stg_products')]",
+				"[concat(variables('factoryId'), '/datasets/dls_input_xls_parametric')]",
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
 				"[concat(variables('factoryId'), '/dataflows/df_xls_to_stg_items')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
@@ -6679,33 +6691,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_errorlog_item_csv')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "Items",
-						"fileSystem": "errorlog"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dls_errorlog_parametric')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -7161,11 +7146,11 @@
 				"parameters": {
 					"filename": {
 						"type": "string",
-						"defaultValue": "135104_Entity.xlsx"
+						"defaultValue": "135104_ItemMasterFile.xlsx"
 					},
 					"folderName": {
 						"type": "string",
-						"defaultValue": "Company"
+						"defaultValue": "Items"
 					}
 				},
 				"folder": {
@@ -7247,148 +7232,6 @@
 					},
 					{
 						"name": "PSMS - MoCI Transaction Types",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dls_input_xlsx_product_folder')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "0",
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "Products",
-						"fileSystem": "input"
-					},
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Item Code\nرقم الصنف",
-						"type": "String"
-					},
-					{
-						"name": "Barcode\nالباركود",
-						"type": "String"
-					},
-					{
-						"name": "Product Name Arabic\nاسم الصنف عربى",
-						"type": "String"
-					},
-					{
-						"name": "Description Arabic\nوصف الصنف عربى",
-						"type": "String"
-					},
-					{
-						"name": "Product Name Arabic\nاسم الصنف انجليزى",
-						"type": "String"
-					},
-					{
-						"name": "Description Arabic\nوصف الصنف انجليزى",
-						"type": "String"
-					},
-					{
-						"name": "Unit Item Barcode\nالباركود للوحدة ",
-						"type": "String"
-					},
-					{
-						"name": "No Of Unit Items\nعدد الوحدات",
-						"type": "String"
-					},
-					{
-						"name": "Unit Weight/size\nوزن/سعة الوحدة",
-						"type": "String"
-					},
-					{
-						"name": "Unit UOM\nوحدة القياس",
-						"type": "String"
-					},
-					{
-						"name": "Package UOM\nوحدة قياس الحزمة-التغليف",
-						"type": "String"
-					},
-					{
-						"name": "Cost Price\nسعر التكلفة",
-						"type": "String"
-					},
-					{
-						"name": "Selling Price\nسعر البيع",
-						"type": "String"
-					},
-					{
-						"name": "Brand-Trade Mark English\nاسم العلامة التجارية انجليزى",
-						"type": "String"
-					},
-					{
-						"name": "Brand-Trade Mark Arabic\nاسم العلامة التجارية عربى",
-						"type": "String"
-					},
-					{
-						"name": "MoCI Product Group\nالمجموعة السلعية - بالوزارة",
-						"type": "String"
-					},
-					{
-						"name": "Country of Oragen Name\nاسم بلد المنشأ",
-						"type": "String"
-					},
-					{
-						"name": "Country of Oragen ISO\nكود 3 لبلد المنشأ",
-						"type": "String"
-					},
-					{
-						"name": "HS Code\nرمز المنسق الجمركي",
-						"type": "String"
-					},
-					{
-						"name": "Supplier CR\nرقم السجل التجارى للمورد",
-						"type": "String"
-					},
-					{
-						"name": "Supplier Name\nاسم المورد",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 1\nتصنيف السلعة 1",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 1\nتصنيف السلعة 2",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 1\nتصنيف السلعة 3",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 1\nتصنيف السلعة 4",
-						"type": "String"
-					},
-					{
-						"name": "Width\nالعرض",
-						"type": "String"
-					},
-					{
-						"name": "Height\nالطول",
-						"type": "String"
-					},
-					{
-						"name": "Depth\nالارتفاع",
 						"type": "String"
 					}
 				]
@@ -8353,158 +8196,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_products')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "ITEMCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BARCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PRODUCTNAMEARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DESCRIPTIONARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PRODUCTNAMEENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DESCRIPTIONENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNITITEMBARCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NOOFUNITITEMS",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNITWEIGHTSIZE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNITUOM",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PACKAGEUOM",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COSTPRICE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SELLINGPRICE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BRANDTRADEMARKENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BRANDTRADEMARKARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MOCIPRODUCTGROUP",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COUNTRYOFORAGENNAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COUNTRYOFORAGENISO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "HSCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIERCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIERNAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL11",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL12",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL13",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL14",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WIDTH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "HEIGHT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DEPTH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_PRODUCTS"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodsqlp')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_transaction_error_log')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -9350,7 +9041,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -9415,10 +9106,10 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "dls_errorlog_item_csv",
+								"referenceName": "dls_errorlog_parametric",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "errorlogitems"
 						}
 					],
 					"transformations": [
@@ -9426,12 +9117,12 @@
 							"name": "DerivedColumn1"
 						}
 					],
-					"script": "source(output(\n\t\tITEMCODE as string,\n\t\tBARCODE as string,\n\t\tPRODUCTNAMEARABIC as string,\n\t\tDESCRIPTIONARABIC as string,\n\t\tPRODUCTNAMEENGLISH as string,\n\t\tDESCRIPTIONENGLISH as string,\n\t\tUNITITEMBARCODE as string,\n\t\tNOOFUNITITEMS as string,\n\t\tUNITWEIGHTSIZE as string,\n\t\tUNITUOM as string,\n\t\tPACKAGEUOM as string,\n\t\tCOSTPRICE as string,\n\t\tSELLINGPRICE as string,\n\t\tBRANDTRADEMARKENGLISH as string,\n\t\tBRANDTRADEMARKARABIC as string,\n\t\tMOCIPRODUCTGROUP as string,\n\t\tCOUNTRYOFORAGENNAME as string,\n\t\tCOUNTRYOFORAGENISO as string,\n\t\tHSCODE as string,\n\t\tSUPPLIERCR as string,\n\t\tSUPPLIERNAME as string,\n\t\tCATEGORYLEVEL11 as string,\n\t\tCATEGORYLEVEL12 as string,\n\t\tCATEGORYLEVEL13 as string,\n\t\tCATEGORYLEVEL14 as string,\n\t\tWIDTH as string,\n\t\tHEIGHT as string,\n\t\tDEPTH as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> stgproductserrlog\nstgproductserrlog derive(DS_FILENAME = replace(DS_FILENAME,'.','_err.')) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'DS_FILENAME',\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tITEMCODE,\n\t\tBARCODE,\n\t\tPRODUCTNAMEARABIC,\n\t\tDESCRIPTIONARABIC,\n\t\tPRODUCTNAMEENGLISH,\n\t\tDESCRIPTIONENGLISH,\n\t\tUNITITEMBARCODE,\n\t\tNOOFUNITITEMS,\n\t\tUNITWEIGHTSIZE,\n\t\tUNITUOM,\n\t\tPACKAGEUOM,\n\t\tCOSTPRICE,\n\t\tSELLINGPRICE,\n\t\tBRANDTRADEMARKENGLISH,\n\t\tBRANDTRADEMARKARABIC,\n\t\tMOCIPRODUCTGROUP,\n\t\tCOUNTRYOFORAGENNAME,\n\t\tCOUNTRYOFORAGENISO,\n\t\tHSCODE,\n\t\tSUPPLIERCR,\n\t\tSUPPLIERNAME,\n\t\tCATEGORYLEVEL11,\n\t\tCATEGORYLEVEL12,\n\t\tCATEGORYLEVEL13,\n\t\tCATEGORYLEVEL14,\n\t\tWIDTH,\n\t\tHEIGHT,\n\t\tDEPTH,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME,\n\t\tID_ERROR_CODE,\n\t\tDS_ERROR_CODE\n\t)) ~> sink1"
+					"script": "source(output(\n\t\tITEMCODE as string,\n\t\tBARCODE as string,\n\t\tPRODUCTNAMEARABIC as string,\n\t\tDESCRIPTIONARABIC as string,\n\t\tPRODUCTNAMEENGLISH as string,\n\t\tDESCRIPTIONENGLISH as string,\n\t\tUNITITEMBARCODE as string,\n\t\tNOOFUNITITEMS as string,\n\t\tUNITWEIGHTSIZE as string,\n\t\tUNITUOM as string,\n\t\tPACKAGEUOM as string,\n\t\tCOSTPRICE as string,\n\t\tSELLINGPRICE as string,\n\t\tBRANDTRADEMARKENGLISH as string,\n\t\tBRANDTRADEMARKARABIC as string,\n\t\tMOCIPRODUCTGROUP as string,\n\t\tCOUNTRYOFORAGENNAME as string,\n\t\tCOUNTRYOFORAGENISO as string,\n\t\tHSCODE as string,\n\t\tSUPPLIERCR as string,\n\t\tSUPPLIERNAME as string,\n\t\tCATEGORYLEVEL11 as string,\n\t\tCATEGORYLEVEL12 as string,\n\t\tCATEGORYLEVEL13 as string,\n\t\tCATEGORYLEVEL14 as string,\n\t\tWIDTH as string,\n\t\tHEIGHT as string,\n\t\tDEPTH as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> stgproductserrlog\nstgproductserrlog derive(DS_FILENAME = replace(DS_FILENAME,'.','_err.')) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'DS_FILENAME',\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tITEMCODE,\n\t\tBARCODE,\n\t\tPRODUCTNAMEARABIC,\n\t\tDESCRIPTIONARABIC,\n\t\tPRODUCTNAMEENGLISH,\n\t\tDESCRIPTIONENGLISH,\n\t\tUNITITEMBARCODE,\n\t\tNOOFUNITITEMS,\n\t\tUNITWEIGHTSIZE,\n\t\tUNITUOM,\n\t\tPACKAGEUOM,\n\t\tCOSTPRICE,\n\t\tSELLINGPRICE,\n\t\tBRANDTRADEMARKENGLISH,\n\t\tBRANDTRADEMARKARABIC,\n\t\tMOCIPRODUCTGROUP,\n\t\tCOUNTRYOFORAGENNAME,\n\t\tCOUNTRYOFORAGENISO,\n\t\tHSCODE,\n\t\tSUPPLIERCR,\n\t\tSUPPLIERNAME,\n\t\tCATEGORYLEVEL11,\n\t\tCATEGORYLEVEL12,\n\t\tCATEGORYLEVEL13,\n\t\tCATEGORYLEVEL14,\n\t\tWIDTH,\n\t\tHEIGHT,\n\t\tDEPTH,\n\t\tDS_ERROR_CODE\n\t)) ~> errorlogitems"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
-				"[concat(variables('factoryId'), '/datasets/dls_errorlog_item_csv')]"
+				"[concat(variables('factoryId'), '/datasets/dls_errorlog_parametric')]"
 			]
 		},
 		{
@@ -9739,16 +9430,16 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "dls_input_xls_items",
+								"referenceName": "dls_input_xls_parametric",
 								"type": "DatasetReference"
 							},
-							"name": "source1"
+							"name": "inputitemscontainer"
 						}
 					],
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "ds_stg_products",
+								"referenceName": "dsqlp_parametric",
 								"type": "DatasetReference"
 							},
 							"name": "stgProducts"
@@ -9768,12 +9459,12 @@
 							"name": "Filter1"
 						}
 					],
-					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Item Code - رقم الصنف} as string,\n\t\t{Barcode - الباركود} as string,\n\t\t{Product Name Arabic - اسم الصنف عربى} as string,\n\t\t{Description Arabic - وصف الصنف عربى} as string,\n\t\t{Product Name English - اسم الصنف انجليزى} as string,\n\t\t{Description English - وصف الصنف انجليزى} as string,\n\t\t{Unit Item Barcode - الباركود للوحدة } as string,\n\t\t{No Of Unit Items - عدد الوحدات} as string,\n\t\t{Unit Weight/size - وزن/سعة الوحدة} as string,\n\t\t{Unit UOM - وحدة القياس} as string,\n\t\t{Package UOM - وحدة قياس الحزمة-التغليف} as string,\n\t\t{Cost Price - سعر التكلفة} as string,\n\t\t{Selling Price - سعر البيع} as string,\n\t\t{Brand-Trade Mark English - سم العلامة التجارية انجليزى} as string,\n\t\t{Brand-Trade Mark Arabic - اسم العلامة التجارية عربى} as string,\n\t\t{MoCI Product Group - المجموعة السلعية - بالوزارة} as string,\n\t\t{Country of Oragen Name - اسم بلد المنشأ} as string,\n\t\t{Country of Oragen ISO - كود 3 لبلد المنشأ} as string,\n\t\t{HS Code - رمز المنسق الجمركي} as string,\n\t\t{Supplier CR - رقم السجل التجارى للمورد} as string,\n\t\t{Supplier Name - اسم المورد} as string,\n\t\t{Category Level 1 - تصنيف السلعة 1} as string,\n\t\t{Category Level 2 - تصنيف السلعة 2} as string,\n\t\t{Category Level 3 - تصنيف السلعة 3} as string,\n\t\t{Category Level 4 - تصنيف السلعة 4} as string,\n\t\t{Width - العرض} as string,\n\t\t{Height - الطول} as string,\n\t\t{Depth - الارتفاع} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nFilter1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\nsource1 select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 filter(isNull(iifNull(iifNull(iifNull(ItemCode , Barcode, ProductNameArabic) , iifNull(DescriptionArabic , ProductNameEnglish, DescriptionEnglish), iifNull(UnitItemBarcode , NoOfUnitItems, UnitWeightsize)),\r\niifNull(iifNull(UnitUOM , PackageUOM, CostPrice) , iifNull(SellingPrice , BrandTradeMarkEnglish, BrandTradeMarkArabic), iifNull(MoCIProductGroup , CountryofOragenName, CountryofOragenISO3)),\r\niifNull(iifNull(HSCode , SupplierCR, SupplierName) , iifNull(CategoryLevel11 , CategoryLevel22, CategoryLevel33), iifNull(CategoryLevel44 , Width, Height)))) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tITEMCODE as string,\n\t\tBARCODE as string,\n\t\tPRODUCTNAMEARABIC as string,\n\t\tDESCRIPTIONARABIC as string,\n\t\tPRODUCTNAMEENGLISH as string,\n\t\tDESCRIPTIONENGLISH as string,\n\t\tUNITITEMBARCODE as string,\n\t\tNOOFUNITITEMS as string,\n\t\tUNITWEIGHTSIZE as string,\n\t\tUNITUOM as string,\n\t\tPACKAGEUOM as string,\n\t\tCOSTPRICE as string,\n\t\tSELLINGPRICE as string,\n\t\tBRANDTRADEMARKENGLISH as string,\n\t\tBRANDTRADEMARKARABIC as string,\n\t\tMOCIPRODUCTGROUP as string,\n\t\tCOUNTRYOFORAGENNAME as string,\n\t\tCOUNTRYOFORAGENISO as string,\n\t\tHSCODE as string,\n\t\tSUPPLIERCR as string,\n\t\tSUPPLIERNAME as string,\n\t\tCATEGORYLEVEL11 as string,\n\t\tCATEGORYLEVEL12 as string,\n\t\tCATEGORYLEVEL13 as string,\n\t\tCATEGORYLEVEL14 as string,\n\t\tWIDTH as string,\n\t\tHEIGHT as string,\n\t\tDEPTH as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tITEMCODE = ItemCode,\n\t\tBARCODE = Barcode,\n\t\tPRODUCTNAMEARABIC = ProductNameArabic,\n\t\tDESCRIPTIONARABIC = DescriptionArabic,\n\t\tPRODUCTNAMEENGLISH = ProductNameEnglish,\n\t\tDESCRIPTIONENGLISH = DescriptionEnglish,\n\t\tUNITITEMBARCODE = UnitItemBarcode,\n\t\tNOOFUNITITEMS = NoOfUnitItems,\n\t\tUNITWEIGHTSIZE = UnitWeightsize,\n\t\tUNITUOM = UnitUOM,\n\t\tPACKAGEUOM = PackageUOM,\n\t\tCOSTPRICE = CostPrice,\n\t\tSELLINGPRICE = SellingPrice,\n\t\tBRANDTRADEMARKENGLISH = BrandTradeMarkEnglish,\n\t\tBRANDTRADEMARKARABIC = BrandTradeMarkArabic,\n\t\tMOCIPRODUCTGROUP = MoCIProductGroup,\n\t\tCOUNTRYOFORAGENNAME = CountryofOragenName,\n\t\tCOUNTRYOFORAGENISO = CountryofOragenISO3,\n\t\tHSCODE = HSCode,\n\t\tSUPPLIERCR = SupplierCR,\n\t\tSUPPLIERNAME = SupplierName,\n\t\tCATEGORYLEVEL11 = CategoryLevel11,\n\t\tCATEGORYLEVEL12 = CategoryLevel22,\n\t\tCATEGORYLEVEL13 = CategoryLevel33,\n\t\tCATEGORYLEVEL14 = CategoryLevel44,\n\t\tWIDTH = Width,\n\t\tHEIGHT = Height,\n\t\tDEPTH = Depth,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgProducts"
+					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Item Code - رقم الصنف} as string,\n\t\t{Barcode - الباركود} as string,\n\t\t{Product Name Arabic - اسم الصنف عربى} as string,\n\t\t{Description Arabic - وصف الصنف عربى} as string,\n\t\t{Product Name English - اسم الصنف انجليزى} as string,\n\t\t{Description English - وصف الصنف انجليزى} as string,\n\t\t{Unit Item Barcode - الباركود للوحدة } as string,\n\t\t{No Of Unit Items - عدد الوحدات} as string,\n\t\t{Unit Weight/size - وزن/سعة الوحدة} as string,\n\t\t{Unit UOM - وحدة القياس} as string,\n\t\t{Package UOM - وحدة قياس الحزمة-التغليف} as string,\n\t\t{Cost Price - سعر التكلفة} as string,\n\t\t{Selling Price - سعر البيع} as string,\n\t\t{Brand-Trade Mark English - سم العلامة التجارية انجليزى} as string,\n\t\t{Brand-Trade Mark Arabic - اسم العلامة التجارية عربى} as string,\n\t\t{MoCI Product Group - المجموعة السلعية - بالوزارة} as string,\n\t\t{Country of Oragen Name - اسم بلد المنشأ} as string,\n\t\t{Country of Oragen ISO - كود 3 لبلد المنشأ} as string,\n\t\t{HS Code - رمز المنسق الجمركي} as string,\n\t\t{Supplier CR - رقم السجل التجارى للمورد} as string,\n\t\t{Supplier Name - اسم المورد} as string,\n\t\t{Category Level 1 - تصنيف السلعة 1} as string,\n\t\t{Category Level 2 - تصنيف السلعة 2} as string,\n\t\t{Category Level 3 - تصنيف السلعة 3} as string,\n\t\t{Category Level 4 - تصنيف السلعة 4} as string,\n\t\t{Width - العرض} as string,\n\t\t{Height - الطول} as string,\n\t\t{Depth - الارتفاع} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> inputitemscontainer\nFilter1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\ninputitemscontainer select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 filter(isNull(iifNull(iifNull(iifNull(ItemCode , Barcode, ProductNameArabic) , iifNull(DescriptionArabic , ProductNameEnglish, DescriptionEnglish), iifNull(UnitItemBarcode , NoOfUnitItems, UnitWeightsize)),\r\niifNull(iifNull(UnitUOM , PackageUOM, CostPrice) , iifNull(SellingPrice , BrandTradeMarkEnglish, BrandTradeMarkArabic), iifNull(MoCIProductGroup , CountryofOragenName, CountryofOragenISO3)),\r\niifNull(iifNull(HSCode , SupplierCR, SupplierName) , iifNull(CategoryLevel11 , CategoryLevel22, CategoryLevel33), iifNull(CategoryLevel44 , Width, Height)))) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tITEMCODE = ItemCode,\n\t\tBARCODE = Barcode,\n\t\tPRODUCTNAMEARABIC = ProductNameArabic,\n\t\tDESCRIPTIONARABIC = DescriptionArabic,\n\t\tPRODUCTNAMEENGLISH = ProductNameEnglish,\n\t\tDESCRIPTIONENGLISH = DescriptionEnglish,\n\t\tUNITITEMBARCODE = UnitItemBarcode,\n\t\tNOOFUNITITEMS = NoOfUnitItems,\n\t\tUNITWEIGHTSIZE = UnitWeightsize,\n\t\tUNITUOM = UnitUOM,\n\t\tPACKAGEUOM = PackageUOM,\n\t\tCOSTPRICE = CostPrice,\n\t\tSELLINGPRICE = SellingPrice,\n\t\tBRANDTRADEMARKENGLISH = BrandTradeMarkEnglish,\n\t\tBRANDTRADEMARKARABIC = BrandTradeMarkArabic,\n\t\tMOCIPRODUCTGROUP = MoCIProductGroup,\n\t\tCOUNTRYOFORAGENNAME = CountryofOragenName,\n\t\tCOUNTRYOFORAGENISO = CountryofOragenISO3,\n\t\tHSCODE = HSCode,\n\t\tSUPPLIERCR = SupplierCR,\n\t\tSUPPLIERNAME = SupplierName,\n\t\tCATEGORYLEVEL11 = CategoryLevel11,\n\t\tCATEGORYLEVEL12 = CategoryLevel22,\n\t\tCATEGORYLEVEL13 = CategoryLevel33,\n\t\tCATEGORYLEVEL14 = CategoryLevel44,\n\t\tWIDTH = Width,\n\t\tHEIGHT = Height,\n\t\tDEPTH = Depth,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgProducts"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dls_input_xls_items')]",
-				"[concat(variables('factoryId'), '/datasets/ds_stg_products')]"
+				"[concat(variables('factoryId'), '/datasets/dls_input_xls_parametric')]",
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
 			]
 		},
 		{

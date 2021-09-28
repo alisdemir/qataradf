@@ -13,355 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_EXPORT_AND_EMAIL_tr_type')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "df_errlogcontainer_transaction_type",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_errlog_container_tr_type",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"stgtransationtypeerrlog": {
-										"schemaName": "dwh",
-										"tableName": "STG_CR_TRANSACTION_TYPE_ERROR_LOG"
-									},
-									"errorlogcsv": {}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "ls_psmsii_syntodls",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "stagingarea"
-							},
-							"integrationRuntime": {
-								"referenceName": "integrationRuntime10min",
-								"type": "IntegrationRuntimeReference"
-							},
-							"traceLevel": "Coarse"
-						}
-					},
-					{
-						"name": "lapp_qtr_email_tr_type",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Copy data1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
-							"connectVia": {
-								"referenceName": "integrationRuntime10min",
-								"type": "IntegrationRuntimeReference"
-							},
-							"method": "POST",
-							"headers": {},
-							"body": {
-								"EmailType": "TransactionTypeFileErrors"
-							}
-						}
-					},
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "df_errlogcontainer_transaction_type",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*_TransactionTypes_err.xls*",
-									"deleteFilesAfterCompletion": true
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "dls_errorlog_binary",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dls_errorlog_TransactionType",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_INITIAL_LOAD/TRANSACTION_TYPE"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_INSERT_COMPANY')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_insert_company",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {
-										"schemaName": "dwh",
-										"tableName": "STG_COMPANY"
-									}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "ls_psmsii_syntodls",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "stagingarea"
-							},
-							"integrationRuntime": {
-								"referenceName": "integrationRuntime10min",
-								"type": "IntegrationRuntimeReference"
-							},
-							"traceLevel": "None",
-							"cacheSinks": {
-								"firstRowOnly": true
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Dev"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_STG_FILE_LIST_INS')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Insert file names to stg file list table from processing container ",
-				"activities": [
-					{
-						"name": "GetFileList",
-						"description": "Get file list from processing container",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "dls_processing_csv_folder",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "DelimitedTextReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEachFile",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "truncateStgTransactions",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('GetFileList').output.childItems",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "df_stg_file_list",
-									"type": "ExecuteDataFlow",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataflow": {
-											"referenceName": "df_stg_file_list_ins",
-											"type": "DataFlowReference",
-											"parameters": {
-												"itemname": {
-													"value": "'@{item().name}'",
-													"type": "Expression"
-												}
-											},
-											"datasetParameters": {
-												"dummy": {},
-												"stgfilelist": {}
-											}
-										},
-										"staging": {},
-										"integrationRuntime": {
-											"referenceName": "integrationRuntime10min",
-											"type": "IntegrationRuntimeReference"
-										},
-										"traceLevel": "None",
-										"cacheSinks": {
-											"firstRowOnly": true
-										}
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "truncateStgTransactions",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "GetFileList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlDWSource",
-								"sqlReaderQuery": "truncate table [etl].[STG_FILE_LIST];\nselect 1;",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "ds_stg_transactions",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_MAIN"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-26T14:24:08Z"
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/PL_STG_FILE_LIST_UPD')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -960,10 +611,11 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "dls_input_xls_items",
+								"referenceName": "dls_input_xls_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"filename": "*"
+									"filename": "*.xlsx",
+									"folderName": "Input"
 								}
 							},
 							"fieldList": [
@@ -1018,10 +670,14 @@
 												}
 											},
 											"datasetParameters": {
-												"source1": {
-													"filename": "@item().name"
+												"inputitemscontainer": {
+													"filename": "@item().name",
+													"folderName": "Items"
 												},
-												"stgProducts": {}
+												"stgProducts": {
+													"schemaName": "dwh",
+													"tableName": "STG_PRODUCTS"
+												}
 											}
 										},
 										"staging": {
@@ -1068,9 +724,12 @@
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "ds_stg_products",
+								"referenceName": "dsqlp_parametric",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "STG_PRODUCTS"
+								}
 							}
 						}
 					}
@@ -1631,7 +1290,6 @@
 				"lastPublishTime": "2021-05-25T14:24:57Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_STG_FILE_LIST_INS')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_STG_FILE_LIST_UPD')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_XLS_TO_STG')]"
 			]
@@ -1879,8 +1537,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_XLS_TO_STG_transaction_type')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_tr_type')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_XLS_TO_STG_transaction_type')]"
 			]
 		}
 	]
