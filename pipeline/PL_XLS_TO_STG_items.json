@@ -17,10 +17,11 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_input_xls_items",
+						"referenceName": "dls_input_xls_parametric",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "*"
+							"filename": "*.xlsx",
+							"folderName": "Input"
 						}
 					},
 					"fieldList": [
@@ -75,8 +76,13 @@
 										}
 									},
 									"datasetParameters": {
-										"source1": {
-											"filename": "@item().name"
+										"inputitemscontainer": {
+											"filename": "@item().name",
+											"folderName": "Items"
+										},
+										"stgProducts": {
+											"schemaName": "dwh",
+											"tableName": "STG_PRODUCTS"
 										}
 									}
 								},
@@ -124,8 +130,12 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "ds_stg_products",
-						"type": "DatasetReference"
+						"referenceName": "dsqlp_parametric",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "dwh",
+							"tableName": "STG_PRODUCTS"
+						}
 					}
 				}
 			}
