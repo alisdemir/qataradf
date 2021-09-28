@@ -27,6 +27,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					}
 				}
@@ -51,7 +52,7 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Copy data1",
+							"name": "Copy_Dec",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -387,11 +388,11 @@
 							]
 						},
 						{
-							"name": "Copy data1_copy1",
+							"name": "Copy_Supv",
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "Copy data1",
+									"activity": "Copy_Dec",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -480,11 +481,11 @@
 							]
 						},
 						{
-							"name": "Copy data1_copy1_copy1",
+							"name": "Copy_Item",
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "Copy data1_copy1",
+									"activity": "Copy_Supv",
 									"dependencyConditions": [
 										"Succeeded"
 									]
