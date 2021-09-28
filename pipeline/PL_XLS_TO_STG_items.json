@@ -21,7 +21,8 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"filename": "*.xlsx",
-							"folderName": "Input"
+							"folderName": "Input",
+							"SheetIndex": 3
 						}
 					},
 					"fieldList": [
@@ -78,7 +79,8 @@
 									"datasetParameters": {
 										"inputitemscontainer": {
 											"filename": "@item().name",
-											"folderName": "Items"
+											"folderName": "Items",
+											"SheetIndex": 3
 										},
 										"stgProducts": {
 											"schemaName": "dwh",
