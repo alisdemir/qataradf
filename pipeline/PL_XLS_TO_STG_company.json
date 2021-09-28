@@ -38,7 +38,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "GetFileList",
+						"activity": "truncateStgCompany",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -95,6 +95,38 @@
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "truncateStgCompany",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "GetFileList",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "truncate table [dwh].[STG_COMPANY];\nselect 1;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_stg_company",
+						"type": "DatasetReference"
+					}
 				}
 			}
 		],
