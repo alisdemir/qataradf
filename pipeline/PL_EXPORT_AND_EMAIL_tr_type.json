@@ -24,7 +24,7 @@
 						"datasetParameters": {
 							"stgtransationtypeerrlog": {
 								"schemaName": "dwh",
-								"tableName": "[dwh].[STG_CR_TRANSACTION_TYPE_ERROR_LOG]"
+								"tableName": "STG_CR_TRANSACTION_TYPE_ERROR_LOG"
 							}
 						}
 					},
