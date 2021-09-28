@@ -8,11 +8,11 @@
 		"parameters": {
 			"filename": {
 				"type": "string",
-				"defaultValue": "135104_ItemMasterFile.xlsx"
+				"defaultValue": "135104_Entity.xlsx"
 			},
 			"folderName": {
 				"type": "string",
-				"defaultValue": "Items"
+				"defaultValue": "Entity"
 			},
 			"SheetIndex": {
 				"type": "int",
