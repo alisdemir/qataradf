@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_errlogcontainer_transaction_type",
+						"referenceName": "df_errlog_container_tr_type",
 						"type": "DataFlowReference",
 						"parameters": {
 							"p_stg_filename": "$p_stg_filename"
