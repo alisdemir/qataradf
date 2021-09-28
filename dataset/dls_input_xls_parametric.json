@@ -13,6 +13,10 @@
 			"folderName": {
 				"type": "string",
 				"defaultValue": "Items"
+			},
+			"SheetIndex": {
+				"type": "int",
+				"defaultValue": 3
 			}
 		},
 		"folder": {
@@ -33,7 +37,10 @@
 				},
 				"fileSystem": "input"
 			},
-			"sheetIndex": 0,
+			"sheetIndex": {
+				"value": "@dataset().SheetIndex",
+				"type": "Expression"
+			},
 			"firstRowAsHeader": true
 		},
 		"schema": []
