@@ -6,12 +6,72 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "dfpsmsiidt001"
+		},
+		"ls_qtrsqldb_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_qtrsqldb'"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_qtrsqldb')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('ls_qtrsqldb_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime10min",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_DWL_FILE_LIST_ARC')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "P_DWL_FILE_LIST_UPD",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_DWL_FILE_LIST_UPD]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_psmsii_syntodsqlp",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-25T14:24:46Z"
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_DWL_FILE_LIST_INS')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -48,54 +108,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-25T14:24:53Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_SOAP_deneme_copy1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Web1",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep",
-							"connectVia": {
-								"referenceName": "shir-sql-azure-psmsii-dt-01",
-								"type": "IntegrationRuntimeReference"
-							},
-							"method": "POST",
-							"headers": {},
-							"body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:onep=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <onep:GetCommercialRegistrationInfoRequest_Input>\n         <onep:commercialRegistrationCode>72219</onep:commercialRegistrationCode>\n         <onep:RefNumber>?</onep:RefNumber>\n      </onep:GetCommercialRegistrationInfoRequest_Input>\n   </soapenv:Body>\n</soapenv:Envelope>",
-							"linkedServices": [
-								{
-									"referenceName": "ls_bss_soap",
-									"type": "LinkedServiceReference"
-								}
-							],
-							"disableCertValidation": true
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Dev"
-				},
-				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -1309,91 +1321,6 @@
 					},
 					{
 						"name": "Notes or Description -  ????? ?? ???  \r",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dls_processing_xls')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string",
-						"defaultValue": "a"
-					}
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().FileName",
-							"type": "Expression"
-						},
-						"fileSystem": "processing"
-					},
-					"sheetIndex": 0,
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Transaction Date - تاريخ الحركة ",
-						"type": "String"
-					},
-					{
-						"name": "Transaction Type Code - كود نوع الحركة",
-						"type": "String"
-					},
-					{
-						"name": "Item Code - كود الصنف",
-						"type": "String"
-					},
-					{
-						"name": "Item Barcode - باركود الصنف",
-						"type": "String"
-					},
-					{
-						"name": "Your Company CR# - رقم السجل التجارى للشركة",
-						"type": "String"
-					},
-					{
-						"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
-						"type": "String"
-					},
-					{
-						"name": "Company Store/Inventory Code - رقم المخزن ",
-						"type": "String"
-					},
-					{
-						"name": "Quantity - الكمية",
-						"type": "String"
-					},
-					{
-						"name": "Selling Price per unit - سعر البيع للوحدة  -",
-						"type": "String"
-					},
-					{
-						"name": "Comon Referance No. -  رقم المرجع المشترك",
-						"type": "String"
-					},
-					{
-						"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
-						"type": "String"
-					},
-					{
-						"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
 						"type": "String"
 					}
 				]

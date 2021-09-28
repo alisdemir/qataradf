@@ -2501,6 +2501,7 @@
 							],
 							"storeSettings": {
 								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
 								"enablePartitionDiscovery": false
 							}
 						}
@@ -3125,6 +3126,664 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_DENE_XML')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetXMLFiles",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "ds_custom_xml",
+								"type": "DatasetReference",
+								"parameters": {
+									"xmlfileName": "Declaration*"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetXMLFiles",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetXMLFiles').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Copy_Dec",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "XmlSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "XmlReadSettings",
+												"validationMode": "none",
+												"namespaces": true
+											}
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['NotificationSender']"
+													},
+													"sink": {
+														"name": "NotificationSender",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['NotificationRef']"
+													},
+													"sink": {
+														"name": "NotificationRef",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['NotificationDate']"
+													},
+													"sink": {
+														"name": "NotificationDate",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['declarationNo']"
+													},
+													"sink": {
+														"name": "declarationNo",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['declarationStatus']"
+													},
+													"sink": {
+														"name": "declarationStatus",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['declarationType']"
+													},
+													"sink": {
+														"name": "declarationType",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['releaseOrderNumber']"
+													},
+													"sink": {
+														"name": "releaseOrderNumber",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['releasedDate']"
+													},
+													"sink": {
+														"name": "releasedDate",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['supplierCR']"
+													},
+													"sink": {
+														"name": "supplierCR",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['supplierCustomsCode']"
+													},
+													"sink": {
+														"name": "supplierCustomsCode",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['countryOfLoading']"
+													},
+													"sink": {
+														"name": "countryOfLoading",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['firstCountryOfLoading']"
+													},
+													"sink": {
+														"name": "firstCountryOfLoading",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['accountType']"
+													},
+													"sink": {
+														"name": "accountType",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['companyName']"
+													},
+													"sink": {
+														"name": "companyName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['establishmentId']"
+													},
+													"sink": {
+														"name": "establishmentId",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['companyNameAr']"
+													},
+													"sink": {
+														"name": "companyNameAr",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['email']"
+													},
+													"sink": {
+														"name": "email",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['address']"
+													},
+													"sink": {
+														"name": "address",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['portType']"
+													},
+													"sink": {
+														"name": "portType",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['entryOrExitPortName']"
+													},
+													"sink": {
+														"name": "entryOrExitPortName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['clearingAgencyCR']"
+													},
+													"sink": {
+														"name": "clearingAgencyCR",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['clearingAgencyNameEng']"
+													},
+													"sink": {
+														"name": "clearingAgencyNameEng",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['clearingAgencyNameAR']"
+													},
+													"sink": {
+														"name": "clearingAgencyNameAR",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['portOfLoading']"
+													},
+													"sink": {
+														"name": "portOfLoading",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['importerName']"
+													},
+													"sink": {
+														"name": "importerName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['exporterName']"
+													},
+													"sink": {
+														"name": "exporterName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['bolNumber']"
+													},
+													"sink": {
+														"name": "bolNumber",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['masterBolOrAWBNumber']"
+													},
+													"sink": {
+														"name": "masterBolOrAWBNumber",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['cargoManifestNumber']"
+													},
+													"sink": {
+														"name": "cargoManifestNumber",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['voyageOrFlightNumber']"
+													},
+													"sink": {
+														"name": "voyageOrFlightNumber",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['carrierName']"
+													},
+													"sink": {
+														"name": "carrierName",
+														"type": "String"
+													}
+												}
+											]
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_custom_xml",
+											"type": "DatasetReference",
+											"parameters": {
+												"xmlfileName": "@item().name"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "dwh",
+												"tableName": "STG_CUSTOMS_DEC"
+											}
+										}
+									]
+								},
+								{
+									"name": "Copy_Supv",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "Copy_Dec",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "XmlSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "XmlReadSettings",
+												"validationMode": "none",
+												"detectDataType": true,
+												"namespaces": true
+											}
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['declarationNo']"
+													},
+													"sink": {
+														"name": "declarationNo",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['SupervisorDetails']['Supervisor'][0]['name']"
+													},
+													"sink": {
+														"name": "name",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['SupervisorDetails']['Supervisor'][0]['mobileNumber']"
+													},
+													"sink": {
+														"name": "mobileNumber",
+														"type": "String"
+													}
+												}
+											],
+											"collectionReference": ""
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_custom_xml",
+											"type": "DatasetReference",
+											"parameters": {
+												"xmlfileName": "@item().name"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "dwh",
+												"tableName": "STG_CUSTOMS_SUPV"
+											}
+										}
+									]
+								},
+								{
+									"name": "Copy_Item",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "Copy_Supv",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "XmlSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "XmlReadSettings",
+												"validationMode": "none",
+												"detectDataType": true,
+												"namespaces": true
+											}
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['declarationNo']"
+													},
+													"sink": {
+														"name": "declarationNo",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['hscode']"
+													},
+													"sink": {
+														"name": "hscode",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['itemQuantity']"
+													},
+													"sink": {
+														"name": "itemQuantity",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['itemQuantityUOM']"
+													},
+													"sink": {
+														"name": "itemQuantityUOM",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['netWeight']"
+													},
+													"sink": {
+														"name": "netWeight",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['netWeightUOM']"
+													},
+													"sink": {
+														"name": "netWeightUOM",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['countryOfOrigin']"
+													},
+													"sink": {
+														"name": "countryOfOrigin",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['declaredValue']"
+													},
+													"sink": {
+														"name": "declaredValue",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['foreignCurrency']"
+													},
+													"sink": {
+														"name": "foreignCurrency",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['declaredValueQAR']"
+													},
+													"sink": {
+														"name": "declaredValueQAR",
+														"type": "String"
+													}
+												}
+											],
+											"collectionReference": ""
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_custom_xml",
+											"type": "DatasetReference",
+											"parameters": {
+												"xmlfileName": "@item().name"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "dwh",
+												"tableName": "STG_CUSTOMS_ITEM"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_custom_xml')]",
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
 			]
 		},
 		{
@@ -8203,7 +8862,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -8672,663 +9331,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_DENE_XML')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "GetXMLFiles",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "ds_custom_xml",
-								"type": "DatasetReference",
-								"parameters": {
-									"xmlfileName": "Declaration*"
-								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"enablePartitionDiscovery": false
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "GetXMLFiles",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('GetXMLFiles').output.childItems",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "Copy data1",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "XmlSource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "XmlReadSettings",
-												"validationMode": "none",
-												"namespaces": true
-											}
-										},
-										"sink": {
-											"type": "SqlDWSink",
-											"disableMetricsCollection": false
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"mappings": [
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['NotificationSender']"
-													},
-													"sink": {
-														"name": "NotificationSender",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['NotificationRef']"
-													},
-													"sink": {
-														"name": "NotificationRef",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['NotificationDate']"
-													},
-													"sink": {
-														"name": "NotificationDate",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['declarationNo']"
-													},
-													"sink": {
-														"name": "declarationNo",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['declarationStatus']"
-													},
-													"sink": {
-														"name": "declarationStatus",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['declarationType']"
-													},
-													"sink": {
-														"name": "declarationType",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['releaseOrderNumber']"
-													},
-													"sink": {
-														"name": "releaseOrderNumber",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['releasedDate']"
-													},
-													"sink": {
-														"name": "releasedDate",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['supplierCR']"
-													},
-													"sink": {
-														"name": "supplierCR",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['supplierCustomsCode']"
-													},
-													"sink": {
-														"name": "supplierCustomsCode",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['countryOfLoading']"
-													},
-													"sink": {
-														"name": "countryOfLoading",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['firstCountryOfLoading']"
-													},
-													"sink": {
-														"name": "firstCountryOfLoading",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['accountType']"
-													},
-													"sink": {
-														"name": "accountType",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['companyName']"
-													},
-													"sink": {
-														"name": "companyName",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['establishmentId']"
-													},
-													"sink": {
-														"name": "establishmentId",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['companyNameAr']"
-													},
-													"sink": {
-														"name": "companyNameAr",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['email']"
-													},
-													"sink": {
-														"name": "email",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['address']"
-													},
-													"sink": {
-														"name": "address",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['portType']"
-													},
-													"sink": {
-														"name": "portType",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['entryOrExitPortName']"
-													},
-													"sink": {
-														"name": "entryOrExitPortName",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['clearingAgencyCR']"
-													},
-													"sink": {
-														"name": "clearingAgencyCR",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['clearingAgencyNameEng']"
-													},
-													"sink": {
-														"name": "clearingAgencyNameEng",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['clearingAgencyNameAR']"
-													},
-													"sink": {
-														"name": "clearingAgencyNameAR",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['portOfLoading']"
-													},
-													"sink": {
-														"name": "portOfLoading",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['importerName']"
-													},
-													"sink": {
-														"name": "importerName",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['exporterName']"
-													},
-													"sink": {
-														"name": "exporterName",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['bolNumber']"
-													},
-													"sink": {
-														"name": "bolNumber",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['masterBolOrAWBNumber']"
-													},
-													"sink": {
-														"name": "masterBolOrAWBNumber",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['cargoManifestNumber']"
-													},
-													"sink": {
-														"name": "cargoManifestNumber",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['voyageOrFlightNumber']"
-													},
-													"sink": {
-														"name": "voyageOrFlightNumber",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['carrierName']"
-													},
-													"sink": {
-														"name": "carrierName",
-														"type": "String"
-													}
-												}
-											]
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "ds_custom_xml",
-											"type": "DatasetReference",
-											"parameters": {
-												"xmlfileName": "@item().name"
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "dsqlp_parametric",
-											"type": "DatasetReference",
-											"parameters": {
-												"schemaName": "dwh",
-												"tableName": "STG_CUSTOMS_DEC"
-											}
-										}
-									]
-								},
-								{
-									"name": "Copy data1_copy1",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "Copy data1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "XmlSource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "XmlReadSettings",
-												"validationMode": "none",
-												"detectDataType": true,
-												"namespaces": true
-											}
-										},
-										"sink": {
-											"type": "SqlDWSink",
-											"disableMetricsCollection": false
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"mappings": [
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['declarationNo']"
-													},
-													"sink": {
-														"name": "declarationNo",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['SupervisorDetails']['Supervisor'][0]['name']"
-													},
-													"sink": {
-														"name": "name",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['SupervisorDetails']['Supervisor'][0]['mobileNumber']"
-													},
-													"sink": {
-														"name": "mobileNumber",
-														"type": "String"
-													}
-												}
-											],
-											"collectionReference": ""
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "ds_custom_xml",
-											"type": "DatasetReference",
-											"parameters": {
-												"xmlfileName": "@item().name"
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "dsqlp_parametric",
-											"type": "DatasetReference",
-											"parameters": {
-												"schemaName": "dwh",
-												"tableName": "STG_CUSTOMS_SUPV"
-											}
-										}
-									]
-								},
-								{
-									"name": "Copy data1_copy1_copy1",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "Copy data1_copy1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "XmlSource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "XmlReadSettings",
-												"validationMode": "none",
-												"detectDataType": true,
-												"namespaces": true
-											}
-										},
-										"sink": {
-											"type": "SqlDWSink",
-											"disableMetricsCollection": false
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"mappings": [
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['declarationNo']"
-													},
-													"sink": {
-														"name": "declarationNo",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['hscode']"
-													},
-													"sink": {
-														"name": "hscode",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['itemQuantity']"
-													},
-													"sink": {
-														"name": "itemQuantity",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['itemQuantityUOM']"
-													},
-													"sink": {
-														"name": "itemQuantityUOM",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['netWeight']"
-													},
-													"sink": {
-														"name": "netWeight",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['netWeightUOM']"
-													},
-													"sink": {
-														"name": "netWeightUOM",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['countryOfOrigin']"
-													},
-													"sink": {
-														"name": "countryOfOrigin",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['declaredValue']"
-													},
-													"sink": {
-														"name": "declaredValue",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['foreignCurrency']"
-													},
-													"sink": {
-														"name": "foreignCurrency",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['declaredValueQAR']"
-													},
-													"sink": {
-														"name": "declaredValueQAR",
-														"type": "String"
-													}
-												}
-											],
-											"collectionReference": ""
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "ds_custom_xml",
-											"type": "DatasetReference",
-											"parameters": {
-												"xmlfileName": "@item().name"
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "dsqlp_parametric",
-											"type": "DatasetReference",
-											"parameters": {
-												"schemaName": "dwh",
-												"tableName": "STG_CUSTOMS_ITEM"
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Dev"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_custom_xml')]",
-				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
 			]
 		}
 	]
