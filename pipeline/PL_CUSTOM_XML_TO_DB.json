@@ -3,11 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
-				"type": "ExecuteDataFlow",
+				"name": "GetXMLFiles",
+				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "1.00:00:00",
+					"timeout": "7.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -15,36 +15,93 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataflow": {
-						"referenceName": "df_custom_xml_to_db",
-						"type": "DataFlowReference",
-						"datasetParameters": {
-							"DECLARATION": {
-								"schemaName": "dwh",
-								"tableName": "STG_CUSTOMS_DEC"
-							},
-							"ITEM": {
-								"schemaName": "dwh",
-								"tableName": "STG_CUSTOMS_ITEM"
-							},
-							"SUPERVISOR": {
-								"schemaName": "dwh",
-								"tableName": "STG_CUSTOMS_SUPV"
-							}
+					"dataset": {
+						"referenceName": "ds_custom_xml",
+						"type": "DatasetReference",
+						"parameters": {
+							"fileName": "Declaration*"
 						}
 					},
-					"staging": {
-						"linkedService": {
-							"referenceName": "ls_psmsii_syntodls",
-							"type": "LinkedServiceReference"
-						},
-						"folderPath": "stagingarea"
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "GetXMLFiles",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GetXMLFiles').output.childItems",
+						"type": "Expression"
 					},
-					"integrationRuntime": {
-						"referenceName": "integrationRuntime10min",
-						"type": "IntegrationRuntimeReference"
-					},
-					"traceLevel": "Coarse"
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "df_custom_xml_to_db",
+							"type": "ExecuteDataFlow",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "1.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataflow": {
+									"referenceName": "df_custom_xml_to_db",
+									"type": "DataFlowReference",
+									"parameters": {
+										"xmlfilename": {
+											"value": "'@{item().name}'",
+											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"DECLARATION": {
+											"schemaName": "dwh",
+											"tableName": "STG_CUSTOMS_DEC"
+										},
+										"ITEM": {
+											"schemaName": "dwh",
+											"tableName": "STG_CUSTOMS_ITEM"
+										},
+										"SUPERVISOR": {
+											"schemaName": "dwh",
+											"tableName": "STG_CUSTOMS_SUPV"
+										}
+									}
+								},
+								"staging": {
+									"linkedService": {
+										"referenceName": "ls_psmsii_syntodls",
+										"type": "LinkedServiceReference"
+									},
+									"folderPath": "stagingarea"
+								},
+								"integrationRuntime": {
+									"referenceName": "integrationRuntime10min",
+									"type": "IntegrationRuntimeReference"
+								},
+								"traceLevel": "Coarse"
+							}
+						}
+					]
 				}
 			}
 		],
