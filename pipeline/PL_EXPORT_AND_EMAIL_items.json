@@ -22,6 +22,9 @@
 							"stgproductserrlog": {
 								"schemaName": "dwh",
 								"tableName": "STG_PRODUCTS_ERROR_LOG"
+							},
+							"errorlogitems": {
+								"folderName": "Items"
 							}
 						}
 					},
@@ -94,14 +97,17 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "dls_errorlog_item_csv",
+						"referenceName": "dls_errorlog_parametric",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "dls_errorlog_item_csv",
-						"type": "DatasetReference"
+						"referenceName": "dls_errorlog_parametric",
+						"type": "DatasetReference",
+						"parameters": {
+							"folderName": "Items"
+						}
 					}
 				]
 			},
