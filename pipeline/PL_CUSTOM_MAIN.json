@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "PL_DENE_XML",
+						"referenceName": "PL_CUSTOM_TO_STG",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
