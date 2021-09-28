@@ -17,10 +17,11 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_input_xls_company",
+						"referenceName": "dls_input_xls_parametric",
 						"type": "DatasetReference",
 						"parameters": {
-							"fileName": "*.xlsx"
+							"filename": "*.xlsx",
+							"folderName": "Company"
 						}
 					},
 					"fieldList": [
@@ -75,7 +76,7 @@
 										}
 									},
 									"datasetParameters": {
-										"source1": {
+										"inputcompanycontainer": {
 											"filename": "@item().name",
 											"folderName": "Company"
 										},
@@ -129,8 +130,12 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "ds_stg_company",
-						"type": "DatasetReference"
+						"referenceName": "dsqlp_parametric",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "dwh",
+							"tableName": "STG_COMPANY"
+						}
 					}
 				}
 			}
