@@ -17,10 +17,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_input_xls_company",
+						"referenceName": "dls_input_xls_parametric",
 						"type": "DatasetReference",
 						"parameters": {
-							"fileName": "*.xlsx"
+							"filename": "*.xlsx",
+							"folderName": "Entity",
+							"SheetIndex": 3
 						}
 					},
 					"fieldList": [
@@ -53,7 +55,7 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "df_xls_to_stg_company",
+							"name": "df_xls_to_stg_contacts",
 							"type": "ExecuteDataFlow",
 							"dependsOn": [],
 							"policy": {
@@ -66,12 +68,26 @@
 							"userProperties": [],
 							"typeProperties": {
 								"dataflow": {
-									"referenceName": "df_xls_to_stg_company",
+									"referenceName": "df_xls_to_stg_contact",
 									"type": "DataFlowReference",
 									"parameters": {
 										"fileName": {
 											"value": "'@{item().name}'",
 											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"inputcontactcontainer": {
+											"filename": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
+											"folderName": "Entity",
+											"SheetIndex": 3
+										},
+										"stgContact": {
+											"schemaName": "dwh",
+											"tableName": "STG_CONTACT"
 										}
 									}
 								},
