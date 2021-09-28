@@ -19,7 +19,7 @@
 						"referenceName": "ds_custom_xml",
 						"type": "DatasetReference",
 						"parameters": {
-							"fileName": "Declaration*"
+							"xmlfileName": "Declaration*"
 						}
 					},
 					"fieldList": [
@@ -73,6 +73,9 @@
 										}
 									},
 									"datasetParameters": {
+										"source1": {
+											"xmlfileName": "@item().name"
+										},
 										"DECLARATION": {
 											"schemaName": "dwh",
 											"tableName": "STG_CUSTOMS_DEC"
