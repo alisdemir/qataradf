@@ -13,6 +13,552 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DENEME_XML_XSDSIZ')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "XmlSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "XmlReadSettings",
+									"validationMode": "none",
+									"namespaces": true
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['NotificationSender']"
+										},
+										"sink": {
+											"name": "NotificationSender",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['NotificationRef']"
+										},
+										"sink": {
+											"name": "NotificationRef",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['NotificationDate']"
+										},
+										"sink": {
+											"name": "NotificationDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['declarationNo']"
+										},
+										"sink": {
+											"name": "declarationNo",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['declarationStatus']"
+										},
+										"sink": {
+											"name": "declarationStatus",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['declarationType']"
+										},
+										"sink": {
+											"name": "declarationType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['supplierCR']"
+										},
+										"sink": {
+											"name": "supplierCR",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['supplierCustomsCode']"
+										},
+										"sink": {
+											"name": "supplierCustomsCode",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['countryOfLoading']"
+										},
+										"sink": {
+											"name": "countryOfLoading",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['accountType']"
+										},
+										"sink": {
+											"name": "accountType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['companyName']"
+										},
+										"sink": {
+											"name": "companyName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['establishmentId']"
+										},
+										"sink": {
+											"name": "establishmentId",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['companyNameAr']"
+										},
+										"sink": {
+											"name": "companyNameAr",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['address']"
+										},
+										"sink": {
+											"name": "address",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['portType']"
+										},
+										"sink": {
+											"name": "portType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['entryOrExitPortName']"
+										},
+										"sink": {
+											"name": "entryOrExitPortName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['clearingAgencyCR']"
+										},
+										"sink": {
+											"name": "clearingAgencyCR",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['clearingAgencyNameEng']"
+										},
+										"sink": {
+											"name": "clearingAgencyNameEng",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['clearingAgencyNameAR']"
+										},
+										"sink": {
+											"name": "clearingAgencyNameAR",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['portOfLoading']"
+										},
+										"sink": {
+											"name": "portOfLoading",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['importerName']"
+										},
+										"sink": {
+											"name": "importerName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['exporterName']"
+										},
+										"sink": {
+											"name": "exporterName",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_custom_xml",
+								"type": "DatasetReference",
+								"parameters": {
+									"xmlfileName": "dene.xml"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "customs_xml"
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy data1_copy1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy data1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "XmlSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "XmlReadSettings",
+									"validationMode": "none",
+									"detectDataType": true,
+									"namespaces": true
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['NotificationSender']"
+										},
+										"sink": {
+											"name": "NotificationSender",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['NotificationRef']"
+										},
+										"sink": {
+											"name": "NotificationRef",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['NotificationDate']"
+										},
+										"sink": {
+											"name": "NotificationDate",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"path": "[['name']"
+										},
+										"sink": {
+											"name": "name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "[['mobileNumber']"
+										},
+										"sink": {
+											"name": "mobileNumber",
+											"type": "String"
+										}
+									}
+								],
+								"collectionReference": "$['ReleaseNotification']['Declaration']['SupervisorDetails']['Supervisor']"
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_custom_xml",
+								"type": "DatasetReference",
+								"parameters": {
+									"xmlfileName": "dene.xml"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "customs_xml2"
+								}
+							}
+						]
+					},
+					{
+						"name": "Copy data1_copy1_copy1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy data1_copy1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "XmlSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "XmlReadSettings",
+									"validationMode": "none",
+									"detectDataType": true,
+									"namespaces": true
+								}
+							},
+							"sink": {
+								"type": "SqlDWSink",
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['NotificationSender']"
+										},
+										"sink": {
+											"name": "NotificationSender"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['NotificationRef']"
+										},
+										"sink": {
+											"name": "NotificationRef"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['NotificationDate']"
+										},
+										"sink": {
+											"name": "NotificationDate"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item']['hscode']"
+										},
+										"sink": {
+											"name": "hscode"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item']['itemQuantity']"
+										},
+										"sink": {
+											"name": "itemQuantity"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item']['itemQuantityUOM']"
+										},
+										"sink": {
+											"name": "itemQuantityUOM"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item']['netWeight']"
+										},
+										"sink": {
+											"name": "netWeight"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item']['netWeightUOM']"
+										},
+										"sink": {
+											"name": "netWeightUOM"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item']['countryOfOrigin']"
+										},
+										"sink": {
+											"name": "countryOfOrigin"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item']['declaredValue']"
+										},
+										"sink": {
+											"name": "declaredValue"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item']['foreignCurrency']"
+										},
+										"sink": {
+											"name": "foreignCurrency"
+										}
+									},
+									{
+										"source": {
+											"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item']['declaredValueQAR']"
+										},
+										"sink": {
+											"name": "declaredValueQAR"
+										}
+									}
+								],
+								"collectionReference": ""
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_custom_xml",
+								"type": "DatasetReference",
+								"parameters": {
+									"xmlfileName": "dene.xml"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "customs_xml3"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_COPY_UI_TABLE')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -660,7 +1206,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_DENE_XML')]",
+			"name": "[concat(parameters('factoryName'), '/PL_CUSTOM_TO_STG')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1308,7 +1854,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "Dev"
+					"name": "PL_CUSTOM"
 				},
 				"annotations": []
 			},
@@ -1962,7 +2508,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/df_errlogcontainer_transaction_type')]",
+			"name": "[concat(parameters('factoryName'), '/df_errlog_container_items')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1971,10 +2517,45 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "ds_stg_cr_transaction_type_error_log",
+								"referenceName": "dsqlp_parametric",
 								"type": "DatasetReference"
 							},
-							"name": "transactionerrorlog"
+							"name": "stgproductserrlog"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dls_errorlog_item_csv",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "DerivedColumn1"
+						}
+					],
+					"script": "source(output(\n\t\tITEMCODE as string,\n\t\tBARCODE as string,\n\t\tPRODUCTNAMEARABIC as string,\n\t\tDESCRIPTIONARABIC as string,\n\t\tPRODUCTNAMEENGLISH as string,\n\t\tDESCRIPTIONENGLISH as string,\n\t\tUNITITEMBARCODE as string,\n\t\tNOOFUNITITEMS as string,\n\t\tUNITWEIGHTSIZE as string,\n\t\tUNITUOM as string,\n\t\tPACKAGEUOM as string,\n\t\tCOSTPRICE as string,\n\t\tSELLINGPRICE as string,\n\t\tBRANDTRADEMARKENGLISH as string,\n\t\tBRANDTRADEMARKARABIC as string,\n\t\tMOCIPRODUCTGROUP as string,\n\t\tCOUNTRYOFORAGENNAME as string,\n\t\tCOUNTRYOFORAGENISO as string,\n\t\tHSCODE as string,\n\t\tSUPPLIERCR as string,\n\t\tSUPPLIERNAME as string,\n\t\tCATEGORYLEVEL11 as string,\n\t\tCATEGORYLEVEL12 as string,\n\t\tCATEGORYLEVEL13 as string,\n\t\tCATEGORYLEVEL14 as string,\n\t\tWIDTH as string,\n\t\tHEIGHT as string,\n\t\tDEPTH as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> stgproductserrlog\nstgproductserrlog derive(DS_FILENAME = replace(DS_FILENAME,'.','_err.')) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'DS_FILENAME',\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tITEMCODE,\n\t\tBARCODE,\n\t\tPRODUCTNAMEARABIC,\n\t\tDESCRIPTIONARABIC,\n\t\tPRODUCTNAMEENGLISH,\n\t\tDESCRIPTIONENGLISH,\n\t\tUNITITEMBARCODE,\n\t\tNOOFUNITITEMS,\n\t\tUNITWEIGHTSIZE,\n\t\tUNITUOM,\n\t\tPACKAGEUOM,\n\t\tCOSTPRICE,\n\t\tSELLINGPRICE,\n\t\tBRANDTRADEMARKENGLISH,\n\t\tBRANDTRADEMARKARABIC,\n\t\tMOCIPRODUCTGROUP,\n\t\tCOUNTRYOFORAGENNAME,\n\t\tCOUNTRYOFORAGENISO,\n\t\tHSCODE,\n\t\tSUPPLIERCR,\n\t\tSUPPLIERNAME,\n\t\tCATEGORYLEVEL11,\n\t\tCATEGORYLEVEL12,\n\t\tCATEGORYLEVEL13,\n\t\tCATEGORYLEVEL14,\n\t\tWIDTH,\n\t\tHEIGHT,\n\t\tDEPTH,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME,\n\t\tID_ERROR_CODE,\n\t\tDS_ERROR_CODE\n\t)) ~> sink1"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_errlog_container_tr_type')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "stgtransationtypeerrlog"
 						}
 					],
 					"sinks": [
@@ -1988,77 +2569,10 @@
 					],
 					"transformations": [
 						{
-							"name": "stgfilename"
+							"name": "dsfilename"
 						}
 					],
-					"script": "parameters{\n\tp_stg_filename as string (STG_FILENAME)\n}\nsource(output(\n\t\tCOMPANYCR as string,\n\t\tCOMPANYTRANSACTIONTYPEARABIC as string,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH as string,\n\t\tCOMPANYTRANSACTIONTYPE as string,\n\t\tPSMSMOCITRANSACTIONTYPES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string,\n\t\tDT_CREATE as timestamp,\n\t\tDT_UPDATE as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> transactionerrorlog\ntransactionerrorlog derive(STG_FILENAME = replace(DS_FILENAME,'.','_err.'),\n\tpartitionBy('key',\n\t\t0,\n\t\tSTG_FILENAME\n\t)) ~> stgfilename\nstgfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tCOMPANYCR as string,\n\t\tCOMPANYTRANSACTIONTYPEARABIC as string,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH as string,\n\t\tCOMPANYTRANSACTIONTYPE as string,\n\t\tPSMSMOCITRANSACTIONTYPES as string,\n\t\tERRORCODE as string\n\t),\n\trowUrlColumn:'STG_FILENAME',\n\ttruncate: true,\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tsaveOrder: 1,\n\tmapColumn(\n\t\tCOMPANYCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH,\n\t\tCOMPANYTRANSACTIONTYPE,\n\t\tPSMSMOCITRANSACTIONTYPES,\n\t\tERRORCODE = DS_ERROR_CODE\n\t)) ~> errorlogcsv"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_insert_company')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"linkedService": {
-								"referenceName": "ls_psmsii_syntodls",
-								"type": "LinkedServiceReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [],
-					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: false,\n\tformat: 'excel',\n\tfileSystem: 'input',\n\tfileName: 'Company Profile and warehouse - store  Template.xlsx',\n\tsheetName: 'بيانات الشركة',\n\trange: 'A7:Q17',\n\tfirstRowAsHeader: true) ~> source1\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_stg_file_list_ins')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Stg file list tablosuna containerdaki dosyaları insert eden pipeline",
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_stg_file_list",
-								"type": "DatasetReference"
-							},
-							"name": "dummy"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_stg_file_list",
-								"type": "DatasetReference"
-							},
-							"name": "stgfilelist"
-						}
-					],
-					"transformations": [
-						{
-							"name": "itemname"
-						}
-					],
-					"script": "parameters{\n\titemname as string (toString('CRFR_20210321.csv'))\n}\nsource(output(\n\t\tdummy as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'select 1 as dummy',\n\tformat: 'query',\n\tstaged: false) ~> dummy\ndummy derive(itemname = $itemname) ~> itemname\nitemname sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tDS_FILENAME = itemname\n\t)) ~> stgfilelist"
+					"script": "source(output(\n\t\tCOMPANYCR as string,\n\t\tCOMPANYTRANSACTIONTYPEARABIC as string,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH as string,\n\t\tCOMPANYTRANSACTIONTYPE as string,\n\t\tPSMSMOCITRANSACTIONTYPES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> stgtransationtypeerrlog\nstgtransationtypeerrlog derive(DS_FILENAME = replace(DS_FILENAME,'.','_err.')) ~> dsfilename\ndsfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tCOMPANYCR as string,\n\t\tCOMPANYTRANSACTIONTYPEARABIC as string,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH as string,\n\t\tCOMPANYTRANSACTIONTYPE as string,\n\t\tPSMSMOCITRANSACTIONTYPES as string,\n\t\tERRORCODE as string\n\t),\n\trowUrlColumn:'DS_FILENAME',\n\ttruncate: true,\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tCOMPANYCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH,\n\t\tCOMPANYTRANSACTIONTYPE,\n\t\tPSMSMOCITRANSACTIONTYPES,\n\t\tERRORCODE = DS_ERROR_CODE\n\t)) ~> errorlogcsv"
 				}
 			},
 			"dependsOn": []

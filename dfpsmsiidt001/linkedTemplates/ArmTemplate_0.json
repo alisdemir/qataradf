@@ -751,6 +751,9 @@
 					"referenceName": "ls_bss_soap",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Dedicated_SQL"
+				},
 				"annotations": [],
 				"type": "Xml",
 				"typeProperties": {
