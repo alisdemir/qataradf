@@ -1,5 +1,5 @@
 {
-	"name": "df_errlogcontainer_transaction_type",
+	"name": "df_errlogcon_tr_type",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
