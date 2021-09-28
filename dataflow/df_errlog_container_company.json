@@ -12,13 +12,21 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dls_errorlog_parametric",
+						"type": "DatasetReference"
+					},
+					"name": "errorlogcompany"
+				}
+			],
 			"transformations": [
 				{
 					"name": "DerivedColumn1"
 				}
 			],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> source1\nsource1 derive() ~> DerivedColumn1"
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> source1\nsource1 derive() ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tDS_ERROR_CODE as string\n\t),\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> errorlogcompany"
 		}
 	}
 }
