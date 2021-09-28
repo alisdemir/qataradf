@@ -19,7 +19,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "Declaration_Processed.xml",
+					"value": "Declaration.xsd",
 					"type": "Expression"
 				},
 				"folderPath": "Customs",
