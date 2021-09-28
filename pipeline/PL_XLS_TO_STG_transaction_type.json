@@ -17,10 +17,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_input_xls_transaction_type",
+						"referenceName": "dls_input_xls_parametric",
 						"type": "DatasetReference",
 						"parameters": {
-							"fileName": "*"
+							"filename": "*",
+							"folderName": "TransactionType",
+							"SheetIndex": 0
 						}
 					},
 					"fieldList": [
@@ -76,7 +78,13 @@
 									},
 									"datasetParameters": {
 										"srcTransactionType": {
-											"fileName": "@item().name"
+											"filename": "@item().name",
+											"folderName": "TransactionType",
+											"SheetIndex": 0
+										},
+										"stgTransactionType": {
+											"schemaName": "dwh",
+											"tableName": "STG_CR_TRANSACTION_TYPE"
 										}
 									}
 								},
@@ -124,8 +132,12 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "ds_stg_transaction_type",
-						"type": "DatasetReference"
+						"referenceName": "dsqlp_parametric",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "dwh",
+							"tableName": "STG_CR_TRANSACTION_TYPE"
+						}
 					}
 				}
 			}
