@@ -19,10 +19,9 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "Declaration.xsd",
+					"value": "dene.xsd",
 					"type": "Expression"
 				},
-				"folderPath": "Customs",
 				"fileSystem": "input"
 			},
 			"nullValue": "null"
