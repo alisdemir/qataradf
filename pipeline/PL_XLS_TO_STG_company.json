@@ -76,7 +76,12 @@
 									},
 									"datasetParameters": {
 										"source1": {
-											"fileName": "@item().name"
+											"filename": "135104_Entity.xlsx",
+											"folderName": "Company"
+										},
+										"stgCompany": {
+											"schemaName": "dwh",
+											"tableName": "STG_COMPANY"
 										}
 									}
 								},
