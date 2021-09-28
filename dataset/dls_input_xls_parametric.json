@@ -8,10 +8,11 @@
 		"parameters": {
 			"filename": {
 				"type": "string",
-				"defaultValue": "'a'"
+				"defaultValue": "135104_Entity.xlsx"
 			},
 			"folderName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Company"
 			}
 		},
 		"folder": {
