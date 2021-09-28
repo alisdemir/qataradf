@@ -3,13 +3,13 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "PL_CUSTOM_XML_TO_DB",
+				"name": "PL_DENE_XML",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "PL_CUSTOM_XML_TO_DB",
+						"referenceName": "PL_DENE_XML",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
