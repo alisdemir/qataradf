@@ -1,0 +1,51 @@
+{
+	"name": "PL_EXPORT_AND_EMAIL_company",
+	"properties": {
+		"activities": [
+			{
+				"name": "df_errlogcontainer_company",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_errlog_container_company",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"stgcompanyerrorlog": {
+								"schemaName": "dwh",
+								"tableName": "STG_COMPANY_ERROR_LOG"
+							},
+							"errorlogcompany": {
+								"folderName": "Company"
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_psmsii_syntodls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "stagingarea"
+					},
+					"integrationRuntime": {
+						"referenceName": "integrationRuntime10min",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "Coarse"
+				}
+			}
+		],
+		"folder": {
+			"name": "PL_INITIAL_LOAD/COMPANY"
+		},
+		"annotations": []
+	}
+}
