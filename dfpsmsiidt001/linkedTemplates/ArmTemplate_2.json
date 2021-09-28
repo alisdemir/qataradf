@@ -144,7 +144,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
-					"fileName": {
+					"xmlfileName": {
 						"type": "string"
 					}
 				},
@@ -157,9 +157,10 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "dene.xml",
+							"value": "@dataset().xmlfileName",
 							"type": "Expression"
 						},
+						"folderPath": "Customs",
 						"fileSystem": "input"
 					},
 					"nullValue": "null"
@@ -1254,7 +1255,7 @@
 								"referenceName": "ds_custom_xml",
 								"type": "DatasetReference",
 								"parameters": {
-									"fileName": "dene.xml"
+									"xmlfileName": "dene.xml"
 								}
 							}
 						],
@@ -1368,7 +1369,7 @@
 								"referenceName": "ds_custom_xml",
 								"type": "DatasetReference",
 								"parameters": {
-									"fileName": "dene.xml"
+									"xmlfileName": "dene.xml"
 								}
 							}
 						],
@@ -1533,7 +1534,7 @@
 								"referenceName": "ds_custom_xml",
 								"type": "DatasetReference",
 								"parameters": {
-									"fileName": "dene.xml"
+									"xmlfileName": "dene.xml"
 								}
 							}
 						],
@@ -1809,7 +1810,7 @@
 								"referenceName": "ds_custom_xml",
 								"type": "DatasetReference",
 								"parameters": {
-									"fileName": "dene.xml"
+									"xmlfileName": "dene.xml"
 								}
 							}
 						],
@@ -1920,7 +1921,7 @@
 								"referenceName": "ds_custom_xml",
 								"type": "DatasetReference",
 								"parameters": {
-									"fileName": "dene.xml"
+									"xmlfileName": "dene.xml"
 								}
 							}
 						],
@@ -2082,7 +2083,7 @@
 								"referenceName": "ds_custom_xml",
 								"type": "DatasetReference",
 								"parameters": {
-									"fileName": "dene.xml"
+									"xmlfileName": "dene.xml"
 								}
 							}
 						],
