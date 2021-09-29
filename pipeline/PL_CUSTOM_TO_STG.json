@@ -486,7 +486,10 @@
 										"typeProperties": {
 											"source": {
 												"type": "SqlDWSource",
-												"sqlReaderQuery": "@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',item().name,'''')",
+												"sqlReaderQuery": {
+													"value": "@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',item()['@NotficationRef'],'''')",
+													"type": "Expression"
+												},
 												"queryTimeout": "02:00:00",
 												"partitionOption": "None"
 											},
