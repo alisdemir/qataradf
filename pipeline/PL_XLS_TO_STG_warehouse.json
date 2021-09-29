@@ -20,7 +20,7 @@
 						"referenceName": "dls_input_xls_parametric",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "*.xlsx",
+							"filename": "*",
 							"folderName": "Entity",
 							"SheetIndex": 2
 						}
@@ -78,9 +78,9 @@
 									},
 									"datasetParameters": {
 										"inputwarehousecontainer": {
-											"filename": "135104_Entity.xlsx",
+											"filename": "@item().name",
 											"folderName": "Entity",
-											"SheetIndex": 2
+											"SheetIndex": 1
 										},
 										"stgWarehouse": {
 											"schemaName": "dwh",
