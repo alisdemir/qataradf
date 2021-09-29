@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "PL_XLS_TO_STG_transaction_type",
+				"name": "PL_XLS_TO_STG_tr_type",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"userProperties": [],
@@ -20,7 +20,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "PL_XLS_TO_STG_transaction_type",
+						"activity": "PL_XLS_TO_STG_tr_type",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -43,7 +43,7 @@
 				}
 			},
 			{
-				"name": "PL_EXPORT_AND_EMAIL",
+				"name": "PL_EXPORT_AND_EMAIL_tr_type",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
