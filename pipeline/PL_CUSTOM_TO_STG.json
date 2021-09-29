@@ -373,6 +373,14 @@
 												"name": "carrierName",
 												"type": "String"
 											}
+										},
+										{
+											"source": {
+												"path": "$['filename']"
+											},
+											"sink": {
+												"name": "@item().name"
+											}
 										}
 									]
 								}
