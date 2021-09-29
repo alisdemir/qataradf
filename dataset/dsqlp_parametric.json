@@ -12,7 +12,7 @@
 			},
 			"tableName": {
 				"type": "string",
-				"defaultValue": "STG_WAREHOUSE"
+				"defaultValue": "STG_CONTACT_ERROR_CODE"
 			}
 		},
 		"folder": {
