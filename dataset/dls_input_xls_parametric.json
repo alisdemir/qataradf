@@ -16,7 +16,7 @@
 			},
 			"SheetIndex": {
 				"type": "int",
-				"defaultValue": 3
+				"defaultValue": 2
 			}
 		},
 		"folder": {
