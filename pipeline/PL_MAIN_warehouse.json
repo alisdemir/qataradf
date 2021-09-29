@@ -16,7 +16,7 @@
 				}
 			},
 			{
-				"name": "Stored procedure1",
+				"name": "P_DQ_WAREHOUSE",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
@@ -47,7 +47,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Stored procedure1",
+						"activity": "P_DQ_WAREHOUSE",
 						"dependencyConditions": [
 							"Succeeded"
 						]
