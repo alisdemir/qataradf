@@ -68,8 +68,11 @@
 									"type": "XmlSource",
 									"additionalColumns": [
 										{
-											"name": "NotificationRef",
-											"value": "$$COLUMN:"
+											"name": "Filename",
+											"value": {
+												"value": "@item().name",
+												"type": "Expression"
+											}
 										}
 									],
 									"storeSettings": {
