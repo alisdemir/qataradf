@@ -75,7 +75,7 @@
 									},
 									"datasetParameters": {
 										"inputwarehousecontainer": {
-											"filename": "*",
+											"filename": "135104_Entity.xlsx",
 											"folderName": "Entity",
 											"SheetIndex": 2
 										},
