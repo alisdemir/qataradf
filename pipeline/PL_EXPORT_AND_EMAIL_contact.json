@@ -1,6 +1,41 @@
 {
 	"name": "PL_EXPORT_AND_EMAIL_contact",
 	"properties": {
+		"activities": [
+			{
+				"name": "df_errlog_container_contact",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_errlog_container_contact",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"stgcontacterrlog": {
+								"schemaName": "dwh",
+								"tableName": "STG_CONTACT_ERROR_LOG"
+							},
+							"errorlogcontact": {
+								"folderName": "Entity"
+							}
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "integrationRuntime10min",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
 		"folder": {
 			"name": "PL_INITIAL_LOAD/CONTACT"
 		},
