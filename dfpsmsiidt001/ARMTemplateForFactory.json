@@ -4375,7 +4375,9 @@
 										"schemaName": "dwh",
 										"tableName": "STG_CR_TRANSACTION_TYPE_ERROR_LOG"
 									},
-									"errorlogcsv": {}
+									"errorlogcsv": {
+										"folderName": "TransactionType"
+									}
 								}
 							},
 							"staging": {
@@ -4448,7 +4450,7 @@
 								"type": "BinarySource",
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
+									"recursive": false,
 									"wildcardFileName": "*_TransactionTypes_err.xls*",
 									"deleteFilesAfterCompletion": true
 								},
@@ -5893,10 +5895,12 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "dls_input_xls_company",
+								"referenceName": "dls_input_xls_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"fileName": "*.xlsx"
+									"filename": "*.xlsx",
+									"folderName": "Entity",
+									"SheetIndex": 3
 								}
 							},
 							"fieldList": [
@@ -5929,7 +5933,7 @@
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "df_xls_to_stg_company",
+									"name": "df_xls_to_stg_contacts",
 									"type": "ExecuteDataFlow",
 									"dependsOn": [],
 									"policy": {
@@ -5942,7 +5946,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataflow": {
-											"referenceName": "df_xls_to_stg_company",
+											"referenceName": "df_xls_to_stg_contact",
 											"type": "DataFlowReference",
 											"parameters": {
 												"fileName": {
@@ -5951,8 +5955,18 @@
 												}
 											},
 											"datasetParameters": {
-												"inputcompanycontainer": {},
-												"stgCompany": {}
+												"inputcontactcontainer": {
+													"filename": {
+														"value": "@item().name",
+														"type": "Expression"
+													},
+													"folderName": "Entity",
+													"SheetIndex": 3
+												},
+												"stgContact": {
+													"schemaName": "dwh",
+													"tableName": "STG_CONTACT"
+												}
 											}
 										},
 										"staging": {
@@ -5983,8 +5997,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dls_input_xls_company')]",
-				"[concat(variables('factoryId'), '/dataflows/df_xls_to_stg_company')]",
+				"[concat(variables('factoryId'), '/datasets/dls_input_xls_parametric')]",
+				"[concat(variables('factoryId'), '/dataflows/df_xls_to_stg_contact')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
 			]
@@ -6014,7 +6028,8 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"filename": "*.xlsx",
-									"folderName": "Input"
+									"folderName": "Input",
+									"SheetIndex": 3
 								}
 							},
 							"fieldList": [
@@ -6071,7 +6086,8 @@
 											"datasetParameters": {
 												"inputitemscontainer": {
 													"filename": "@item().name",
-													"folderName": "Items"
+													"folderName": "Items",
+													"SheetIndex": 3
 												},
 												"stgProducts": {
 													"schemaName": "dwh",
@@ -6171,10 +6187,12 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "dls_input_xls_transaction_type",
+								"referenceName": "dls_input_xls_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"fileName": "*"
+									"filename": "*",
+									"folderName": "TransactionType",
+									"SheetIndex": 0
 								}
 							},
 							"fieldList": [
@@ -6230,9 +6248,14 @@
 											},
 											"datasetParameters": {
 												"srcTransactionType": {
-													"fileName": "@item().name"
+													"filename": "@item().name",
+													"folderName": "TransactionType",
+													"SheetIndex": 0
 												},
-												"stgTransactionType": {}
+												"stgTransactionType": {
+													"schemaName": "dwh",
+													"tableName": "STG_CR_TRANSACTION_TYPE"
+												}
 											}
 										},
 										"staging": {
@@ -6279,9 +6302,12 @@
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "ds_stg_transaction_type",
+								"referenceName": "dsqlp_parametric",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "STG_CR_TRANSACTION_TYPE"
+								}
 							}
 						}
 					}
@@ -6296,8 +6322,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dls_input_xls_transaction_type')]",
-				"[concat(variables('factoryId'), '/datasets/ds_stg_transaction_type')]",
+				"[concat(variables('factoryId'), '/datasets/dls_input_xls_parametric')]",
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
 				"[concat(variables('factoryId'), '/dataflows/df_xls_to_stg_transaction_type')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
@@ -6983,158 +7009,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_input_xls_items')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"filename": {
-						"type": "string",
-						"defaultValue": "'a'"
-					}
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().FileName",
-							"type": "Expression"
-						},
-						"folderPath": "Items",
-						"fileSystem": "input"
-					},
-					"sheetIndex": 0,
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Item Code - رقم الصنف",
-						"type": "String"
-					},
-					{
-						"name": "Barcode - الباركود",
-						"type": "String"
-					},
-					{
-						"name": "Product Name Arabic - اسم الصنف عربى",
-						"type": "String"
-					},
-					{
-						"name": "Description Arabic - وصف الصنف عربى",
-						"type": "String"
-					},
-					{
-						"name": "Product Name English - اسم الصنف انجليزى",
-						"type": "String"
-					},
-					{
-						"name": "Description English - وصف الصنف انجليزى",
-						"type": "String"
-					},
-					{
-						"name": "Unit Item Barcode - الباركود للوحدة ",
-						"type": "String"
-					},
-					{
-						"name": "No Of Unit Items - عدد الوحدات",
-						"type": "String"
-					},
-					{
-						"name": "Unit Weight/size - وزن/سعة الوحدة",
-						"type": "String"
-					},
-					{
-						"name": "Unit UOM - وحدة القياس",
-						"type": "String"
-					},
-					{
-						"name": "Package UOM - وحدة قياس الحزمة-التغليف",
-						"type": "String"
-					},
-					{
-						"name": "Cost Price - سعر التكلفة",
-						"type": "String"
-					},
-					{
-						"name": "Selling Price - سعر البيع",
-						"type": "String"
-					},
-					{
-						"name": "Brand-Trade Mark English - سم العلامة التجارية انجليزى",
-						"type": "String"
-					},
-					{
-						"name": "Brand-Trade Mark Arabic - اسم العلامة التجارية عربى",
-						"type": "String"
-					},
-					{
-						"name": "MoCI Product Group - المجموعة السلعية - بالوزارة",
-						"type": "String"
-					},
-					{
-						"name": "Country of Oragen Name - اسم بلد المنشأ",
-						"type": "String"
-					},
-					{
-						"name": "Country of Oragen ISO - كود 3 لبلد المنشأ",
-						"type": "String"
-					},
-					{
-						"name": "HS Code - رمز المنسق الجمركي",
-						"type": "String"
-					},
-					{
-						"name": "Supplier CR - رقم السجل التجارى للمورد",
-						"type": "String"
-					},
-					{
-						"name": "Supplier Name - اسم المورد",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 1 - تصنيف السلعة 1",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 2 - تصنيف السلعة 2",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 3 - تصنيف السلعة 3",
-						"type": "String"
-					},
-					{
-						"name": "Category Level 4 - تصنيف السلعة 4",
-						"type": "String"
-					},
-					{
-						"name": "Width - العرض",
-						"type": "String"
-					},
-					{
-						"name": "Height - الطول",
-						"type": "String"
-					},
-					{
-						"name": "Depth - الارتفاع",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dls_input_xls_parametric')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -7146,11 +7020,15 @@
 				"parameters": {
 					"filename": {
 						"type": "string",
-						"defaultValue": "135104_ItemMasterFile.xlsx"
+						"defaultValue": "135104_TransactionTypes.xls"
 					},
 					"folderName": {
 						"type": "string",
-						"defaultValue": "Items"
+						"defaultValue": "TransactionType"
+					},
+					"SheetIndex": {
+						"type": "int",
+						"defaultValue": 0
 					}
 				},
 				"folder": {
@@ -7171,7 +7049,10 @@
 						},
 						"fileSystem": "input"
 					},
-					"sheetIndex": 0,
+					"sheetIndex": {
+						"value": "@dataset().SheetIndex",
+						"type": "Expression"
+					},
 					"firstRowAsHeader": true
 				},
 				"schema": []
@@ -8477,7 +8358,7 @@
 					},
 					"tableName": {
 						"type": "string",
-						"defaultValue": "STG_COMPANY_ERROR_LOG"
+						"defaultValue": "STG_CONTACT"
 					}
 				},
 				"folder": {
@@ -9041,7 +8922,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -9144,7 +9025,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "dls_error_log_tr_type_csv",
+								"referenceName": "dls_errorlog_parametric",
 								"type": "DatasetReference"
 							},
 							"name": "errorlogcsv"
@@ -9155,12 +9036,12 @@
 							"name": "dsfilename"
 						}
 					],
-					"script": "source(output(\n\t\tCOMPANYCR as string,\n\t\tCOMPANYTRANSACTIONTYPEARABIC as string,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH as string,\n\t\tCOMPANYTRANSACTIONTYPE as string,\n\t\tPSMSMOCITRANSACTIONTYPES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> stgtransationtypeerrlog\nstgtransationtypeerrlog derive(DS_FILENAME = replace(DS_FILENAME,'.','_err.')) ~> dsfilename\ndsfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tCOMPANYCR as string,\n\t\tCOMPANYTRANSACTIONTYPEARABIC as string,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH as string,\n\t\tCOMPANYTRANSACTIONTYPE as string,\n\t\tPSMSMOCITRANSACTIONTYPES as string,\n\t\tERRORCODE as string\n\t),\n\trowUrlColumn:'DS_FILENAME',\n\ttruncate: true,\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tCOMPANYCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH,\n\t\tCOMPANYTRANSACTIONTYPE,\n\t\tPSMSMOCITRANSACTIONTYPES,\n\t\tERRORCODE = DS_ERROR_CODE\n\t)) ~> errorlogcsv"
+					"script": "source(output(\n\t\tCOMPANYCR as string,\n\t\tCOMPANYTRANSACTIONTYPEARABIC as string,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH as string,\n\t\tCOMPANYTRANSACTIONTYPE as string,\n\t\tPSMSMOCITRANSACTIONTYPES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> stgtransationtypeerrlog\nstgtransationtypeerrlog derive(DS_FILENAME = replace(DS_FILENAME,'.','_err.')) ~> dsfilename\ndsfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'DS_FILENAME',\n\ttruncate: true,\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tCOMPANYCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH,\n\t\tCOMPANYTRANSACTIONTYPE,\n\t\tPSMSMOCITRANSACTIONTYPES,\n\t\tERRORCODE = DS_ERROR_CODE\n\t)) ~> errorlogcsv"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
-				"[concat(variables('factoryId'), '/datasets/dls_error_log_tr_type_csv')]"
+				"[concat(variables('factoryId'), '/datasets/dls_errorlog_parametric')]"
 			]
 		},
 		{
@@ -9421,6 +9302,50 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_contact')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dls_input_xls_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "inputcontactcontainer"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "stgContact"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddColumn"
+						},
+						{
+							"name": "SurrogateKey1"
+						},
+						{
+							"name": "Select1"
+						}
+					],
+					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> inputcontactcontainer\nSelect1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\ninputcontactcontainer select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tDS_FILENAME,\n\t\tDT_FILETIME,\n\t\tID_SK\n\t)) ~> stgContact"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dls_input_xls_parametric')]",
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_items')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -9477,7 +9402,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "dls_input_xls_transaction_type",
+								"referenceName": "dls_input_xls_parametric",
 								"type": "DatasetReference"
 							},
 							"name": "srcTransactionType"
@@ -9486,7 +9411,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "ds_stg_transaction_type",
+								"referenceName": "dsqlp_parametric",
 								"type": "DatasetReference"
 							},
 							"name": "stgTransactionType"
@@ -9506,12 +9431,12 @@
 							"name": "Filter1"
 						}
 					],
-					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Company CR #} as string,\n\t\t{Company Transaction Type Arabic } as string,\n\t\t{Company Transaction Type English } as string,\n\t\t{Company Transaction type} as string,\n\t\t{PSMS - MoCI Transaction Types} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> srcTransactionType\nSelect1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\nFilter1 select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsrcTransactionType filter(isNull(iifNull(iifNull({Company CR #} , {Company Transaction Type Arabic }, {Company Transaction Type English }), {Company Transaction type},{PSMS - MoCI Transaction Types})) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tCOMPANYCR as string,\n\t\tCOMPANYTRANSACTIONTYPEARABIC as string,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH as string,\n\t\tCOMPANYTRANSACTIONTYPE as string,\n\t\tPSMSMOCITRANSACTIONTYPES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCOMPANYCR = CompanyCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC = CompanyTransactionTypeArabic,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH = CompanyTransactionTypeEnglish,\n\t\tCOMPANYTRANSACTIONTYPE = CompanyTransactiontype,\n\t\tPSMSMOCITRANSACTIONTYPES = PSMSMoCITransactionTypes,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgTransactionType"
+					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Company CR #} as integer,\n\t\t{Company Transaction Type Arabic } as string,\n\t\t{Company Transaction Type English } as string,\n\t\t{Company Transaction type} as string,\n\t\t{PSMS - MoCI Transaction Types} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> srcTransactionType\nSelect1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\nFilter1 select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsrcTransactionType filter(isNull(iifNull(iifNull({Company CR #} , {Company Transaction Type Arabic }, {Company Transaction Type English }), {Company Transaction type},{PSMS - MoCI Transaction Types})) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCOMPANYCR = CompanyCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC = CompanyTransactionTypeArabic,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH = CompanyTransactionTypeEnglish,\n\t\tCOMPANYTRANSACTIONTYPE = CompanyTransactiontype,\n\t\tPSMSMOCITRANSACTIONTYPES = PSMSMoCITransactionTypes,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgTransactionType"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dls_input_xls_transaction_type')]",
-				"[concat(variables('factoryId'), '/datasets/ds_stg_transaction_type')]"
+				"[concat(variables('factoryId'), '/datasets/dls_input_xls_parametric')]",
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
 			]
 		},
 		{

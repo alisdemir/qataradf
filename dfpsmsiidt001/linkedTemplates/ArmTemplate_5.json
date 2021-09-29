@@ -499,10 +499,12 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "dls_input_xls_company",
+								"referenceName": "dls_input_xls_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"fileName": "*.xlsx"
+									"filename": "*.xlsx",
+									"folderName": "Entity",
+									"SheetIndex": 3
 								}
 							},
 							"fieldList": [
@@ -535,7 +537,7 @@
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "df_xls_to_stg_company",
+									"name": "df_xls_to_stg_contacts",
 									"type": "ExecuteDataFlow",
 									"dependsOn": [],
 									"policy": {
@@ -548,7 +550,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataflow": {
-											"referenceName": "df_xls_to_stg_company",
+											"referenceName": "df_xls_to_stg_contact",
 											"type": "DataFlowReference",
 											"parameters": {
 												"fileName": {
@@ -557,8 +559,18 @@
 												}
 											},
 											"datasetParameters": {
-												"inputcompanycontainer": {},
-												"stgCompany": {}
+												"inputcontactcontainer": {
+													"filename": {
+														"value": "@item().name",
+														"type": "Expression"
+													},
+													"folderName": "Entity",
+													"SheetIndex": 3
+												},
+												"stgContact": {
+													"schemaName": "dwh",
+													"tableName": "STG_CONTACT"
+												}
 											}
 										},
 										"staging": {
@@ -615,7 +627,8 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"filename": "*.xlsx",
-									"folderName": "Input"
+									"folderName": "Input",
+									"SheetIndex": 3
 								}
 							},
 							"fieldList": [
@@ -672,7 +685,8 @@
 											"datasetParameters": {
 												"inputitemscontainer": {
 													"filename": "@item().name",
-													"folderName": "Items"
+													"folderName": "Items",
+													"SheetIndex": 3
 												},
 												"stgProducts": {
 													"schemaName": "dwh",
@@ -766,10 +780,12 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "dls_input_xls_transaction_type",
+								"referenceName": "dls_input_xls_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"fileName": "*"
+									"filename": "*",
+									"folderName": "TransactionType",
+									"SheetIndex": 0
 								}
 							},
 							"fieldList": [
@@ -825,9 +841,14 @@
 											},
 											"datasetParameters": {
 												"srcTransactionType": {
-													"fileName": "@item().name"
+													"filename": "@item().name",
+													"folderName": "TransactionType",
+													"SheetIndex": 0
 												},
-												"stgTransactionType": {}
+												"stgTransactionType": {
+													"schemaName": "dwh",
+													"tableName": "STG_CR_TRANSACTION_TYPE"
+												}
 											}
 										},
 										"staging": {
@@ -874,9 +895,12 @@
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "ds_stg_transaction_type",
+								"referenceName": "dsqlp_parametric",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "STG_CR_TRANSACTION_TYPE"
+								}
 							}
 						}
 					}
