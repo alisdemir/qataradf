@@ -388,7 +388,7 @@
 							]
 						},
 						{
-							"name": "STG_CUSTOMS_DEC",
+							"name": "stgcustomsdec",
 							"type": "Lookup",
 							"dependsOn": [
 								{
@@ -431,7 +431,7 @@
 							"type": "IfCondition",
 							"dependsOn": [
 								{
-									"activity": "STG_CUSTOMS_DEC",
+									"activity": "stgcustomsdec",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -440,7 +440,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@equals(if(\nempty(activity('lookupFileName').output.value)\n,0,1),1)",
+									"value": "@equals(if(\nempty(activity('stgcustomsdec').output.value)\n,0,1),0)",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
