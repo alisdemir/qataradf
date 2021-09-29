@@ -367,10 +367,10 @@
 										},
 										{
 											"source": {
-												"path": "$['filename']"
+												"path": "$['@item().name']"
 											},
 											"sink": {
-												"name": "@item().name"
+												"name": "filename"
 											}
 										}
 									]
