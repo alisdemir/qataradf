@@ -20,7 +20,7 @@
 						"referenceName": "dls_input_xls_parametric",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "*.xlsx",
+							"filename": "*",
 							"folderName": "Entity",
 							"SheetIndex": 0
 						}
