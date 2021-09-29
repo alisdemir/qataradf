@@ -20,9 +20,9 @@
 						"referenceName": "dls_input_xls_parametric",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "*.xlsx",
-							"folderName": "Input",
-							"SheetIndex": 3
+							"filename": "*",
+							"folderName": "Items",
+							"SheetIndex": 0
 						}
 					},
 					"fieldList": [
@@ -80,7 +80,7 @@
 										"inputitemscontainer": {
 											"filename": "@item().name",
 											"folderName": "Items",
-											"SheetIndex": 3
+											"SheetIndex": 0
 										},
 										"stgProducts": {
 											"schemaName": "dwh",
