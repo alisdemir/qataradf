@@ -1,0 +1,16 @@
+{
+	"name": "ds_stg_customs_dec",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dsqlpqtr",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dwh",
+			"table": "STG_CUSTOMS_DEC"
+		}
+	}
+}
