@@ -24,7 +24,7 @@
 								"tableName": "STG_COMPANY_ERROR_LOG"
 							},
 							"errorlogcompany": {
-								"folderName": "Company"
+								"folderName": "Entity"
 							}
 						}
 					},
