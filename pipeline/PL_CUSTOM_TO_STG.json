@@ -772,7 +772,10 @@
 									"referenceName": "dataflow1",
 									"type": "DataFlowReference",
 									"parameters": {
-										"filename": "@item().name"
+										"filename": {
+											"value": "'@{item().name}'",
+											"type": "Expression"
+										}
 									}
 								},
 								"staging": {
