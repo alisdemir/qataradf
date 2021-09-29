@@ -182,7 +182,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "df_errlogcontainer_transaction_type",
+						"name": "df_errlogcontainer_tr_type",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -227,7 +227,7 @@
 						"type": "WebActivity",
 						"dependsOn": [
 							{
-								"activity": "Copy data1",
+								"activity": "MoveFiles",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -255,11 +255,11 @@
 						}
 					},
 					{
-						"name": "Copy data1",
+						"name": "MoveFiles",
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "df_errlogcontainer_transaction_type",
+								"activity": "df_errlogcontainer_tr_type",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -275,37 +275,46 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "BinarySource",
+								"type": "DelimitedTextSource",
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
-									"recursive": false,
-									"wildcardFileName": "*_TransactionTypes_err.xls*",
-									"deleteFilesAfterCompletion": true
+									"recursive": true,
+									"wildcardFileName": "*TransactionTypes_err.*",
+									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
-									"type": "BinaryReadSettings"
+									"type": "DelimitedTextReadSettings"
 								}
 							},
 							"sink": {
-								"type": "BinarySink",
+								"type": "DelimitedTextSink",
 								"storeSettings": {
 									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ""
 								}
 							},
 							"enableStaging": false
 						},
 						"inputs": [
 							{
-								"referenceName": "dls_errorlog_binary",
+								"referenceName": "dls_errorlog_parametric",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"folderName": "'Items'"
+								}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "dls_errorlog_TransactionType",
+								"referenceName": "dls_errorlog_parametric",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"folderName": "TransactionType"
+								}
 							}
 						]
 					}
@@ -1022,7 +1031,7 @@
 								"referenceName": "dls_input_xls_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"filename": "*.xlsx",
+									"filename": "*",
 									"folderName": "Entity",
 									"SheetIndex": 0
 								}
@@ -1179,9 +1188,9 @@
 								"referenceName": "dls_input_xls_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"filename": "*.xlsx",
+									"filename": "*",
 									"folderName": "Entity",
-									"SheetIndex": 3
+									"SheetIndex": 2
 								}
 							},
 							"fieldList": [
@@ -1242,7 +1251,7 @@
 														"type": "Expression"
 													},
 													"folderName": "Entity",
-													"SheetIndex": 3
+													"SheetIndex": 2
 												},
 												"stgContact": {
 													"schemaName": "dwh",
@@ -1303,9 +1312,9 @@
 								"referenceName": "dls_input_xls_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"filename": "*.xlsx",
-									"folderName": "Input",
-									"SheetIndex": 3
+									"filename": "*",
+									"folderName": "Items",
+									"SheetIndex": 0
 								}
 							},
 							"fieldList": [
@@ -1363,7 +1372,7 @@
 												"inputitemscontainer": {
 													"filename": "@item().name",
 													"folderName": "Items",
-													"SheetIndex": 3
+													"SheetIndex": 0
 												},
 												"stgProducts": {
 													"schemaName": "dwh",
@@ -2407,7 +2416,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "PL_XLS_TO_STG_transaction_type",
+						"name": "PL_XLS_TO_STG_tr_type",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
 						"userProperties": [],
@@ -2425,7 +2434,7 @@
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
-								"activity": "PL_XLS_TO_STG_transaction_type",
+								"activity": "PL_XLS_TO_STG_tr_type",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2448,7 +2457,7 @@
 						}
 					},
 					{
-						"name": "PL_EXPORT_AND_EMAIL",
+						"name": "PL_EXPORT_AND_EMAIL_tr_type",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
