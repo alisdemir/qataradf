@@ -56,7 +56,7 @@
 				}
 			},
 			{
-				"name": "P_ENTITY_INSERT",
+				"name": "P_STG_VALID_INSERT",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
@@ -75,7 +75,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dwh].[P_ENTITY_INSERT]"
+					"storedProcedureName": "[dwh].[P_STG_VALID_INSERT]"
 				},
 				"linkedServiceName": {
 					"referenceName": "ls_dsqlpqtr",
