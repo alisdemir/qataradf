@@ -94,45 +94,37 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "DelimitedTextSource",
+						"type": "BinarySource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"wildcardFileName": "*TransactionTypes_err.*",
-							"enablePartitionDiscovery": false
+							"recursive": false,
+							"wildcardFileName": "*_TransactionTypes_err*",
+							"deleteFilesAfterCompletion": true
 						},
 						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
+							"type": "BinaryReadSettings"
 						}
 					},
 					"sink": {
-						"type": "DelimitedTextSink",
+						"type": "BinarySink",
 						"storeSettings": {
 							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ""
 						}
 					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "dls_errorlog_parametric",
-						"type": "DatasetReference",
-						"parameters": {
-							"folderName": "'Items'"
-						}
+						"referenceName": "dls_errorlog_binary",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "dls_errorlog_parametric",
+						"referenceName": "dls_errorlog_binary_parametric",
 						"type": "DatasetReference",
 						"parameters": {
-							"folderName": "TransactionType"
+							"FolderName": "TransactionType"
 						}
 					}
 				]
