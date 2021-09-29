@@ -1,6 +1,68 @@
 {
 	"name": "PL_MAIN_warehouse",
 	"properties": {
+		"activities": [
+			{
+				"name": "PL_XLS_TO_STG_warehouse",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_XLS_TO_STG_warehouse",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "PL_XLS_TO_STG_warehouse",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_DQ_WAREHOUSE]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "PL_EXPORT_AND_EMAIL_warehouse",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_EXPORT_AND_EMAIL_warehouse",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
 		"folder": {
 			"name": "PL_INITIAL_LOAD/WAREHOUSE"
 		},
