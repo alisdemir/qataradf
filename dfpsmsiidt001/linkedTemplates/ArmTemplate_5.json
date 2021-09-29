@@ -403,7 +403,7 @@
 									"type": "AzureBlobFSReadSettings",
 									"recursive": false,
 									"wildcardFileName": "*_Entity_warehouse_err*",
-									"deleteFilesAfterCompletion": false
+									"deleteFilesAfterCompletion": true
 								},
 								"formatSettings": {
 									"type": "BinaryReadSettings"
