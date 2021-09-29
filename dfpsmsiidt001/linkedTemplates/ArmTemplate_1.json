@@ -273,7 +273,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_errorlog_TransactionType')]",
+			"name": "[concat(parameters('factoryName'), '/dls_errorlog_binary_parametric')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -281,12 +281,21 @@
 					"referenceName": "ls_psmsii_syntodls",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"FolderName": {
+						"type": "string",
+						"defaultValue": "'a'"
+					}
+				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "TransactionType",
+						"folderPath": {
+							"value": "@dataset().FolderName",
+							"type": "Expression"
+						},
 						"fileSystem": "errorlog"
 					}
 				}

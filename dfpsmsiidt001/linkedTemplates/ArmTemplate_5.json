@@ -398,51 +398,38 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "DelimitedTextSource",
+								"type": "BinarySource",
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
-									"recursive": false,
-									"wildcardFileName": "*_Entity_warehouse_err*",
-									"enablePartitionDiscovery": false
+									"recursive": true,
+									"wildcardFileName": "*_entity_warehouse_err.*",
+									"deleteFilesAfterCompletion": false
 								},
 								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
+									"type": "BinaryReadSettings"
 								}
 							},
 							"sink": {
-								"type": "DelimitedTextSink",
+								"type": "BinarySink",
 								"storeSettings": {
 									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ""
 								}
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
+							"enableStaging": false
 						},
 						"inputs": [
 							{
-								"referenceName": "dls_errorlog_parametric",
+								"referenceName": "dls_errorlog_binary",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "dls_errorlog_parametric",
+								"referenceName": "dls_errorlog_binary_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"folderName": "Entity"
+									"FolderName": "Entity"
 								}
 							}
 						]

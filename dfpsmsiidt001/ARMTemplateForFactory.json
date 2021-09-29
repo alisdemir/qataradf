@@ -4850,51 +4850,38 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "DelimitedTextSource",
+								"type": "BinarySource",
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
-									"recursive": false,
-									"wildcardFileName": "*_Entity_warehouse_err*",
-									"enablePartitionDiscovery": false
+									"recursive": true,
+									"wildcardFileName": "*_entity_warehouse_err.*",
+									"deleteFilesAfterCompletion": false
 								},
 								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
+									"type": "BinaryReadSettings"
 								}
 							},
 							"sink": {
-								"type": "DelimitedTextSink",
+								"type": "BinarySink",
 								"storeSettings": {
 									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ""
 								}
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
+							"enableStaging": false
 						},
 						"inputs": [
 							{
-								"referenceName": "dls_errorlog_parametric",
+								"referenceName": "dls_errorlog_binary",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "dls_errorlog_parametric",
+								"referenceName": "dls_errorlog_binary_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"folderName": "Entity"
+									"FolderName": "Entity"
 								}
 							}
 						]
@@ -4945,7 +4932,8 @@
 				"[concat(variables('factoryId'), '/dataflows/df_errlog_container_warehouse')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
-				"[concat(variables('factoryId'), '/datasets/dls_errorlog_parametric')]"
+				"[concat(variables('factoryId'), '/datasets/dls_errorlog_binary')]",
+				"[concat(variables('factoryId'), '/datasets/dls_errorlog_binary_parametric')]"
 			]
 		},
 		{
@@ -7449,7 +7437,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_errorlog_TransactionType')]",
+			"name": "[concat(parameters('factoryName'), '/dls_errorlog_binary_parametric')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -7457,12 +7445,21 @@
 					"referenceName": "ls_psmsii_syntodls",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"FolderName": {
+						"type": "string",
+						"defaultValue": "'a'"
+					}
+				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "TransactionType",
+						"folderPath": {
+							"value": "@dataset().FolderName",
+							"type": "Expression"
+						},
 						"fileSystem": "errorlog"
 					}
 				}
