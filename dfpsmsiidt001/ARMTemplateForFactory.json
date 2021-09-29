@@ -4212,53 +4212,38 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "DelimitedTextSource",
+								"type": "BinarySource",
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": false,
 									"wildcardFileName": "*_Entity_company_err*",
-									"enablePartitionDiscovery": false
+									"deleteFilesAfterCompletion": true
 								},
 								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
+									"type": "BinaryReadSettings"
 								}
 							},
 							"sink": {
-								"type": "DelimitedTextSink",
+								"type": "BinarySink",
 								"storeSettings": {
 									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ""
 								}
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
+							"enableStaging": false
 						},
 						"inputs": [
 							{
-								"referenceName": "dls_errorlog_parametric",
+								"referenceName": "dls_errorlog_binary",
 								"type": "DatasetReference",
-								"parameters": {
-									"folderName": "Entity"
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "dls_errorlog_parametric",
+								"referenceName": "dls_errorlog_binary_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"folderName": "Entity"
+									"FolderName": "Entity"
 								}
 							}
 						]
@@ -4309,7 +4294,8 @@
 				"[concat(variables('factoryId'), '/dataflows/df_errlog_container_company')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
-				"[concat(variables('factoryId'), '/datasets/dls_errorlog_parametric')]"
+				"[concat(variables('factoryId'), '/datasets/dls_errorlog_binary')]",
+				"[concat(variables('factoryId'), '/datasets/dls_errorlog_binary_parametric')]"
 			]
 		},
 		{
@@ -4380,53 +4366,38 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "DelimitedTextSource",
+								"type": "BinarySource",
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": false,
 									"wildcardFileName": "*_Entity_contact_err*",
-									"enablePartitionDiscovery": false
+									"deleteFilesAfterCompletion": true
 								},
 								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
+									"type": "BinaryReadSettings"
 								}
 							},
 							"sink": {
-								"type": "DelimitedTextSink",
+								"type": "BinarySink",
 								"storeSettings": {
 									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ""
 								}
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
+							"enableStaging": false
 						},
 						"inputs": [
 							{
-								"referenceName": "dls_errorlog_parametric",
+								"referenceName": "dls_errorlog_binary",
 								"type": "DatasetReference",
-								"parameters": {
-									"folderName": "Entity"
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "dls_errorlog_parametric",
+								"referenceName": "dls_errorlog_binary_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"folderName": "Entity"
+									"FolderName": "Entity"
 								}
 							}
 						]
@@ -4477,7 +4448,8 @@
 				"[concat(variables('factoryId'), '/dataflows/df_errlog_container_contact')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
-				"[concat(variables('factoryId'), '/datasets/dls_errorlog_parametric')]"
+				"[concat(variables('factoryId'), '/datasets/dls_errorlog_binary')]",
+				"[concat(variables('factoryId'), '/datasets/dls_errorlog_binary_parametric')]"
 			]
 		},
 		{
@@ -4548,53 +4520,38 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "DelimitedTextSource",
+								"type": "BinarySource",
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": false,
-									"wildcardFileName": "*ItemMasterFile_err*",
-									"enablePartitionDiscovery": false
+									"wildcardFileName": "*_ItemMasterFile_err.*",
+									"deleteFilesAfterCompletion": true
 								},
 								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
+									"type": "BinaryReadSettings"
 								}
 							},
 							"sink": {
-								"type": "DelimitedTextSink",
+								"type": "BinarySink",
 								"storeSettings": {
 									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ""
 								}
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
+							"enableStaging": false
 						},
 						"inputs": [
 							{
-								"referenceName": "dls_errorlog_parametric",
+								"referenceName": "dls_errorlog_binary",
 								"type": "DatasetReference",
-								"parameters": {
-									"folderName": "'Items'"
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "dls_errorlog_parametric",
+								"referenceName": "dls_errorlog_binary_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"folderName": "Items"
+									"FolderName": "Items"
 								}
 							}
 						]
@@ -4645,7 +4602,8 @@
 				"[concat(variables('factoryId'), '/dataflows/df_errlog_container_items')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
-				"[concat(variables('factoryId'), '/datasets/dls_errorlog_parametric')]"
+				"[concat(variables('factoryId'), '/datasets/dls_errorlog_binary')]",
+				"[concat(variables('factoryId'), '/datasets/dls_errorlog_binary_parametric')]"
 			]
 		},
 		{
@@ -4748,45 +4706,38 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "DelimitedTextSource",
+								"type": "BinarySource",
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*TransactionTypes_err.*",
-									"enablePartitionDiscovery": false
+									"recursive": false,
+									"wildcardFileName": "*_TransactionTypes_err*",
+									"deleteFilesAfterCompletion": true
 								},
 								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
+									"type": "BinaryReadSettings"
 								}
 							},
 							"sink": {
-								"type": "DelimitedTextSink",
+								"type": "BinarySink",
 								"storeSettings": {
 									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ""
 								}
 							},
 							"enableStaging": false
 						},
 						"inputs": [
 							{
-								"referenceName": "dls_errorlog_parametric",
+								"referenceName": "dls_errorlog_binary",
 								"type": "DatasetReference",
-								"parameters": {
-									"folderName": "'Items'"
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "dls_errorlog_parametric",
+								"referenceName": "dls_errorlog_binary_parametric",
 								"type": "DatasetReference",
 								"parameters": {
-									"folderName": "TransactionType"
+									"FolderName": "TransactionType"
 								}
 							}
 						]
@@ -4805,7 +4756,8 @@
 				"[concat(variables('factoryId'), '/dataflows/df_errlog_container_tr_type')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
-				"[concat(variables('factoryId'), '/datasets/dls_errorlog_parametric')]"
+				"[concat(variables('factoryId'), '/datasets/dls_errorlog_binary')]",
+				"[concat(variables('factoryId'), '/datasets/dls_errorlog_binary_parametric')]"
 			]
 		},
 		{
@@ -5496,6 +5448,33 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "P_STG_VALID_INSERT",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "PL_MAIN_contact",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_STG_VALID_INSERT]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_dsqlpqtr",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"policy": {
@@ -5510,7 +5489,8 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_company')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_warehouse')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_contact')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_contact')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
 			]
 		},
 		{
