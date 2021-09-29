@@ -1,16 +1,25 @@
 {
-	"name": "dls_errorlog_TransactionType",
+	"name": "dls_errorlog_binary_parametric",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_psmsii_syntodls",
 			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"FolderName": {
+				"type": "string",
+				"defaultValue": "'a'"
+			}
 		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "TransactionType",
+				"folderPath": {
+					"value": "@dataset().FolderName",
+					"type": "Expression"
+				},
 				"fileSystem": "errorlog"
 			}
 		}
