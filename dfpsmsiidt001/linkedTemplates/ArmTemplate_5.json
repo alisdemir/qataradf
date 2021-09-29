@@ -485,7 +485,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_INITIAL_LOAD/WAREHOUSE"
+					"name": "PL_INITIAL_LOAD/ENTITY/WAREHOUSE"
 				},
 				"annotations": []
 			},
@@ -1158,7 +1158,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_INITIAL_LOAD/COMPANY"
+					"name": "PL_INITIAL_LOAD/ENTITY/COMPANY"
 				},
 				"annotations": []
 			},
@@ -1282,7 +1282,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_INITIAL_LOAD/CONTACT"
+					"name": "PL_INITIAL_LOAD/ENTITY/CONTACT"
 				},
 				"annotations": []
 			},
@@ -1753,7 +1753,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_INITIAL_LOAD/WAREHOUSE"
+					"name": "PL_INITIAL_LOAD/ENTITY/WAREHOUSE"
 				},
 				"annotations": []
 			},
@@ -2236,7 +2236,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_INITIAL_LOAD/COMPANY"
+					"name": "PL_INITIAL_LOAD/ENTITY/COMPANY"
 				},
 				"annotations": []
 			},
@@ -2318,7 +2318,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_INITIAL_LOAD/CONTACT"
+					"name": "PL_INITIAL_LOAD/ENTITY/CONTACT"
 				},
 				"annotations": []
 			},
@@ -2566,13 +2566,91 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_INITIAL_LOAD/WAREHOUSE"
+					"name": "PL_INITIAL_LOAD/ENTITY/WAREHOUSE"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/PL_XLS_TO_STG_warehouse')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_warehouse')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_MAIN_entity')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "PL_MAIN_company",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_MAIN_company",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_MAIN_warehouse",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_MAIN_company",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_MAIN_warehouse",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_MAIN_contact",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_MAIN_warehouse",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_MAIN_contact",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/ENTITY"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_company')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_warehouse')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_contact')]"
 			]
 		}
 	]

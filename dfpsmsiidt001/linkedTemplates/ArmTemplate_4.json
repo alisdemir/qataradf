@@ -1304,7 +1304,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_INITIAL_LOAD/COMPANY"
+					"name": "PL_INITIAL_LOAD/ENTITY/COMPANY"
 				},
 				"annotations": []
 			},
@@ -1467,7 +1467,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_INITIAL_LOAD/CONTACT"
+					"name": "PL_INITIAL_LOAD/ENTITY/CONTACT"
 				},
 				"annotations": []
 			},
