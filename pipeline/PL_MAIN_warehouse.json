@@ -1,0 +1,9 @@
+{
+	"name": "PL_MAIN_warehouse",
+	"properties": {
+		"folder": {
+			"name": "PL_INITIAL_LOAD/WAREHOUSE"
+		},
+		"annotations": []
+	}
+}
