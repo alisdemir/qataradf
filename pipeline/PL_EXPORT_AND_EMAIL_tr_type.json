@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "df_errlogcontainer_transaction_type",
+				"name": "df_errlogcontainer_tr_type",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -47,7 +47,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Copy data1",
+						"activity": "MoveFiles",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -74,11 +74,11 @@
 				}
 			},
 			{
-				"name": "Copy data1",
+				"name": "MoveFiles",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "df_errlogcontainer_transaction_type",
+						"activity": "df_errlogcontainer_tr_type",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -94,35 +94,46 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "BinarySource",
+						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"recursive": false,
-							"wildcardFileName": "*_TransactionTypes_err.xls*",
-							"deleteFilesAfterCompletion": true
+							"recursive": true,
+							"wildcardFileName": "*TransactionTypes_err.*",
+							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
-							"type": "BinaryReadSettings"
+							"type": "DelimitedTextReadSettings"
 						}
 					},
 					"sink": {
-						"type": "BinarySink",
+						"type": "DelimitedTextSink",
 						"storeSettings": {
 							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ""
 						}
 					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "dls_errorlog_binary",
-						"type": "DatasetReference"
+						"referenceName": "dls_errorlog_parametric",
+						"type": "DatasetReference",
+						"parameters": {
+							"folderName": "'Items'"
+						}
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "dls_errorlog_TransactionType",
-						"type": "DatasetReference"
+						"referenceName": "dls_errorlog_parametric",
+						"type": "DatasetReference",
+						"parameters": {
+							"folderName": "TransactionType"
+						}
 					}
 				]
 			}
