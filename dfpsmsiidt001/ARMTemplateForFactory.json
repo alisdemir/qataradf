@@ -4853,8 +4853,8 @@
 								"type": "BinarySource",
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*_entity_warehouse_err.*",
+									"recursive": false,
+									"wildcardFileName": "*_Entity_warehouse_err*",
 									"deleteFilesAfterCompletion": false
 								},
 								"formatSettings": {
@@ -7437,6 +7437,28 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/dls_errorlog_binary')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "errorlog"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dls_errorlog_binary_parametric')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -7460,28 +7482,6 @@
 							"value": "@dataset().FolderName",
 							"type": "Expression"
 						},
-						"fileSystem": "errorlog"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dls_errorlog_binary')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
 						"fileSystem": "errorlog"
 					}
 				}

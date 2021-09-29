@@ -401,8 +401,8 @@
 								"type": "BinarySource",
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*_entity_warehouse_err.*",
+									"recursive": false,
+									"wildcardFileName": "*_Entity_warehouse_err*",
 									"deleteFilesAfterCompletion": false
 								},
 								"formatSettings": {
