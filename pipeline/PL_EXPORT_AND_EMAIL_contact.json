@@ -28,6 +28,13 @@
 							}
 						}
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_psmsii_syntodls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "stagingrea"
+					},
 					"integrationRuntime": {
 						"referenceName": "integrationRuntime10min",
 						"type": "IntegrationRuntimeReference"
