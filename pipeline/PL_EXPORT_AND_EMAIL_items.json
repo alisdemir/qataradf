@@ -43,7 +43,7 @@
 				}
 			},
 			{
-				"name": "Copy data1",
+				"name": "MoveFiles",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -98,7 +98,10 @@
 				"inputs": [
 					{
 						"referenceName": "dls_errorlog_parametric",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"folderName": "'Items'"
+						}
 					}
 				],
 				"outputs": [
@@ -116,7 +119,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Copy data1",
+						"activity": "MoveFiles",
 						"dependencyConditions": [
 							"Succeeded"
 						]
