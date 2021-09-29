@@ -1,0 +1,64 @@
+{
+	"name": "PL_MAIN_entity",
+	"properties": {
+		"activities": [
+			{
+				"name": "PL_MAIN_company",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_MAIN_company",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_MAIN_warehouse",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_MAIN_company",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_MAIN_warehouse",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_MAIN_contact",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_MAIN_warehouse",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_MAIN_contact",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "PL_INITIAL_LOAD"
+		},
+		"annotations": []
+	}
+}
