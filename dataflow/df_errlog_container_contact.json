@@ -1,0 +1,32 @@
+{
+	"name": "df_errlog_container_contact",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dsqlp_parametric",
+						"type": "DatasetReference"
+					},
+					"name": "stgcontacterrlog"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dls_errorlog_parametric",
+						"type": "DatasetReference"
+					},
+					"name": "errorlogcontact"
+				}
+			],
+			"transformations": [
+				{
+					"name": "dsfilename"
+				}
+			],
+			"script": "source(output(\n\t\tCOMPANYCR as string,\n\t\tCOMPANYTRANSACTIONTYPEARABIC as string,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH as string,\n\t\tCOMPANYTRANSACTIONTYPE as string,\n\t\tPSMSMOCITRANSACTIONTYPES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> stgcontacterrlog\nstgcontacterrlog derive(DS_FILENAME = replace(DS_FILENAME,'.','_err.')) ~> dsfilename\ndsfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'DS_FILENAME',\n\ttruncate: true,\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tCOMPANYCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH,\n\t\tCOMPANYTRANSACTIONTYPE,\n\t\tPSMSMOCITRANSACTIONTYPES,\n\t\tERRORCODE = DS_ERROR_CODE\n\t)) ~> errorlogcontact"
+		}
+	}
+}
