@@ -63,15 +63,15 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "DelimitedTextSource",
+						"type": "BinarySource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": false,
 							"wildcardFileName": "*_Entity_company_err*",
-							"enablePartitionDiscovery": false
+							"deleteFilesAfterCompletion": true
 						},
 						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
+							"type": "BinaryReadSettings"
 						}
 					},
 					"sink": {
@@ -85,23 +85,12 @@
 							"fileExtension": ""
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "dls_errorlog_parametric",
-						"type": "DatasetReference",
-						"parameters": {
-							"folderName": "Entity"
-						}
+						"referenceName": "dls_errorlog_binary",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
