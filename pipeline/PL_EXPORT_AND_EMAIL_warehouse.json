@@ -43,7 +43,7 @@
 				}
 			},
 			{
-				"name": "Copy data1",
+				"name": "MoveFiles",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -119,7 +119,7 @@
 				"type": "WebActivity",
 				"dependsOn": [
 					{
-						"activity": "Copy data1",
+						"activity": "MoveFiles",
 						"dependencyConditions": [
 							"Succeeded"
 						]
