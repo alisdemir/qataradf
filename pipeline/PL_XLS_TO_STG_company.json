@@ -21,7 +21,8 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"filename": "*.xlsx",
-							"folderName": "Company"
+							"folderName": "Entity",
+							"SheetIndex": 0
 						}
 					},
 					"fieldList": [
@@ -78,7 +79,8 @@
 									"datasetParameters": {
 										"inputcompanycontainer": {
 											"filename": "@item().name",
-											"folderName": "Company"
+											"folderName": "Entity",
+											"SheetIndex": 0
 										},
 										"stgCompany": {
 											"schemaName": "dwh",
