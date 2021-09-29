@@ -690,15 +690,15 @@
 				"parameters": {
 					"filename": {
 						"type": "string",
-						"defaultValue": "135104_TransactionTypes.xls"
+						"defaultValue": "135104_Entity.xlsx"
 					},
 					"folderName": {
 						"type": "string",
-						"defaultValue": "TransactionType"
+						"defaultValue": "Entity"
 					},
 					"SheetIndex": {
 						"type": "int",
-						"defaultValue": 0
+						"defaultValue": 1
 					}
 				},
 				"folder": {
