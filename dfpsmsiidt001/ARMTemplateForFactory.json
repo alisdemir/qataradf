@@ -2884,7 +2884,7 @@
 										"source": {
 											"type": "SqlDWSource",
 											"sqlReaderQuery": {
-												"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC]\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '')) IS NULL\nOR try_convert(datetime, NULLIF([NotificationDate], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '')) IS NULL\n)\nAND [NotificationRef] = ','''',item().name,'''')",
+												"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC]\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '')) IS NULL\nOR try_convert(datetime, NULLIF([NotificationDate], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '')) IS NULL\n)\nAND [NotificationRef] = ','''',item()['@NotficationRef'],'''')",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -2962,7 +2962,10 @@
 												"typeProperties": {
 													"source": {
 														"type": "SqlDWSource",
-														"sqlReaderQuery": "@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',item().name,'''')",
+														"sqlReaderQuery": {
+															"value": "@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',item()['@NotficationRef'],'''')",
+															"type": "Expression"
+														},
 														"queryTimeout": "02:00:00",
 														"partitionOption": "None"
 													},
@@ -3358,7 +3361,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_CUSTOM"
+					"name": "Dev"
 				},
 				"annotations": []
 			},
@@ -9581,6 +9584,27 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_customs_dec')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_CUSTOMS_DEC"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_file_list')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -11182,27 +11206,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_customs_dec')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_CUSTOMS_DEC"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
 			]
 		}
 	]
