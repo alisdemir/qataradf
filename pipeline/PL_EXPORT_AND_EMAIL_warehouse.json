@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "df_errlogcontainer_items",
+				"name": "df_errlogcontainer_warehouse",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,15 +16,15 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_errlog_container_items",
+						"referenceName": "df_errlog_container_warehouse",
 						"type": "DataFlowReference",
 						"datasetParameters": {
-							"stgproductserrlog": {
+							"stgwarehouseerrorlog": {
 								"schemaName": "dwh",
-								"tableName": "STG_PRODUCTS_ERROR_LOG"
+								"tableName": "STG_WAREHOUSE_ERROR_LOG"
 							},
-							"errorlogitems": {
-								"folderName": "Items"
+							"errorlogwarehouse": {
+								"folderName": "Entity"
 							}
 						}
 					},
@@ -47,7 +47,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "df_errlogcontainer_items",
+						"activity": "df_errlogcontainer_warehouse",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -67,7 +67,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": false,
-							"wildcardFileName": "*ItemMasterFile_err*",
+							"wildcardFileName": "*_Entity_warehouse_err*",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -98,7 +98,10 @@
 				"inputs": [
 					{
 						"referenceName": "dls_errorlog_parametric",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"folderName": "'Items'"
+						}
 					}
 				],
 				"outputs": [
@@ -106,13 +109,13 @@
 						"referenceName": "dls_errorlog_parametric",
 						"type": "DatasetReference",
 						"parameters": {
-							"folderName": "Items"
+							"folderName": "Entity"
 						}
 					}
 				]
 			},
 			{
-				"name": "lapp_qtr_email_items",
+				"name": "lapp_qtr_email_warehouse",
 				"type": "WebActivity",
 				"dependsOn": [
 					{
@@ -138,7 +141,7 @@
 					},
 					"method": "POST",
 					"body": {
-						"EmailType": "ItemFileFileErrors"
+						"EmailType": "WarehouseFileErrors"
 					}
 				}
 			}
