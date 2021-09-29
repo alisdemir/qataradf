@@ -75,13 +75,13 @@
 									},
 									"datasetParameters": {
 										"inputwarehousecontainer": {
-											"filename": "135104_TransactionTypes.xls",
-											"folderName": "TransactionType",
-											"SheetIndex": 0
+											"filename": "*",
+											"folderName": "Entity",
+											"SheetIndex": 2
 										},
 										"stgWarehouse": {
 											"schemaName": "dwh",
-											"tableName": "STG_CONTACT"
+											"tableName": "STG_WAREHOUSE"
 										}
 									}
 								},
