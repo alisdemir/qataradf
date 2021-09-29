@@ -55,7 +55,7 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "df_xls_to_stg_items",
+							"name": "df_xls_to_stg_warehouse",
 							"type": "ExecuteDataFlow",
 							"dependsOn": [],
 							"policy": {
@@ -68,23 +68,20 @@
 							"userProperties": [],
 							"typeProperties": {
 								"dataflow": {
-									"referenceName": "df_xls_to_stg_items",
+									"referenceName": "df_xls_to_stg_warehouse",
 									"type": "DataFlowReference",
 									"parameters": {
-										"fileName": {
-											"value": "'@{item().name}'",
-											"type": "Expression"
-										}
+										"fileName": "'58556'"
 									},
 									"datasetParameters": {
-										"inputitemscontainer": {
-											"filename": "@item().name",
-											"folderName": "Entity",
-											"SheetIndex": 2
+										"inputwarehousecontainer": {
+											"filename": "135104_TransactionTypes.xls",
+											"folderName": "TransactionType",
+											"SheetIndex": 0
 										},
-										"stgProducts": {
+										"stgWarehouse": {
 											"schemaName": "dwh",
-											"tableName": "STG_WAREHOUSE"
+											"tableName": "STG_CONTACT"
 										}
 									}
 								},
