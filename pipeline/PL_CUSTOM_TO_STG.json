@@ -66,6 +66,15 @@
 							"typeProperties": {
 								"source": {
 									"type": "XmlSource",
+									"additionalColumns": [
+										{
+											"name": "DS_FILENAME",
+											"value": {
+												"value": "@item().name",
+												"type": "Expression"
+											}
+										}
+									],
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
 										"recursive": false,
@@ -363,14 +372,6 @@
 											"sink": {
 												"name": "carrierName",
 												"type": "String"
-											}
-										},
-										{
-											"source": {
-												"path": "$['@item().name']"
-											},
-											"sink": {
-												"name": "DS_FILENAME"
 											}
 										}
 									]
