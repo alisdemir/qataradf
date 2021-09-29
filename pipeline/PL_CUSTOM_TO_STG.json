@@ -66,6 +66,12 @@
 							"typeProperties": {
 								"source": {
 									"type": "XmlSource",
+									"additionalColumns": [
+										{
+											"name": "NotificationRef",
+											"value": "$$COLUMN:"
+										}
+									],
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
 										"recursive": true,
@@ -74,6 +80,7 @@
 									"formatSettings": {
 										"type": "XmlReadSettings",
 										"validationMode": "none",
+										"detectDataType": true,
 										"namespaces": true
 									}
 								},
@@ -410,7 +417,7 @@
 								"source": {
 									"type": "SqlDWSource",
 									"sqlReaderQuery": {
-										"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC]\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '')) IS NULL OR try_convert(datetime, NULLIF([NotificationDate], '')) IS NULL OR try_convert(nvarchar(200), NULLIF([NotificationRef], '')) IS NULL OR try_convert(nvarchar(200), NULLIF([bolNumber], '')) IS NULL OR try_convert(nvarchar(200), NULLIF([declarationNo], '')) IS NULL OR try_convert(nvarchar(200), NULLIF([declarationStatus], '')) IS NULL OR try_convert(nvarchar(200), NULLIF([declarationType], '')) IS NULL) AND [NotificationRef] = ','''',activity('Copy_Dec').output,'''')",
+										"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC]\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '')) IS NULL OR try_convert(datetime, NULLIF([NotificationDate], '')) IS NULL OR try_convert(nvarchar(200), NULLIF([NotificationRef], '')) IS NULL OR try_convert(nvarchar(200), NULLIF([bolNumber], '')) IS NULL OR try_convert(nvarchar(200), NULLIF([declarationNo], '')) IS NULL OR try_convert(nvarchar(200), NULLIF([declarationStatus], '')) IS NULL OR try_convert(nvarchar(200), NULLIF([declarationType], '')) IS NULL) AND [NotificationRef] = ','''',activity('Copy_Dec').columns.NotificationRef,'''')",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
