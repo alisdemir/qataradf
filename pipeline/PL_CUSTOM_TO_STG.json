@@ -370,7 +370,7 @@
 												"path": "$['@item().name']"
 											},
 											"sink": {
-												"name": "filename"
+												"name": "DS_FILENAME"
 											}
 										}
 									]
