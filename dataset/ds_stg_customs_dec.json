@@ -7,7 +7,136 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlDWTable",
-		"schema": [],
+		"schema": [
+			{
+				"name": "NotificationSender",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NotificationDate",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NotificationRef",
+				"type": "nvarchar"
+			},
+			{
+				"name": "address",
+				"type": "nvarchar"
+			},
+			{
+				"name": "bolNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "cargoManifestNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "carrierName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "clearingAgencyCR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "clearingAgencyNameAR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "clearingAgencyNameEng",
+				"type": "nvarchar"
+			},
+			{
+				"name": "companyName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "companyNameAr",
+				"type": "nvarchar"
+			},
+			{
+				"name": "countryOfLoading",
+				"type": "nvarchar"
+			},
+			{
+				"name": "declarationNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "declarationStatus",
+				"type": "nvarchar"
+			},
+			{
+				"name": "declarationType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "email",
+				"type": "nvarchar"
+			},
+			{
+				"name": "entryOrExitPortName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "establishmentId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "exporterName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "firstCountryOfLoading",
+				"type": "nvarchar"
+			},
+			{
+				"name": "importerName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "masterBolOrAWBNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "portOfLoading",
+				"type": "nvarchar"
+			},
+			{
+				"name": "portType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "releaseOrderNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "releasedDate",
+				"type": "nvarchar"
+			},
+			{
+				"name": "supplierCR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "supplierCustomsCode",
+				"type": "nvarchar"
+			},
+			{
+				"name": "voyageOrFlightNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "accountType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DS_FILENAME",
+				"type": "varchar"
+			}
+		],
 		"typeProperties": {
 			"schema": "dwh",
 			"table": "STG_CUSTOMS_DEC"
