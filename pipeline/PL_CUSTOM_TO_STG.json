@@ -387,12 +387,8 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "dsqlp_parametric",
-									"type": "DatasetReference",
-									"parameters": {
-										"schemaName": "dwh",
-										"tableName": "STG_CUSTOMS_DEC"
-									}
+									"referenceName": "ds_stg_customs_dec",
+									"type": "DatasetReference"
 								}
 							]
 						},
