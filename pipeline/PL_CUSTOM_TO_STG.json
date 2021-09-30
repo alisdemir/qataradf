@@ -550,7 +550,7 @@
 													},
 													{
 														"source": {
-															"path": "$['ReleaseNotification']['Declaration']['SupervisorDetails']['Supervisor'][0]['name']"
+															"path": "['name']"
 														},
 														"sink": {
 															"name": "name",
@@ -559,7 +559,7 @@
 													},
 													{
 														"source": {
-															"path": "$['ReleaseNotification']['Declaration']['SupervisorDetails']['Supervisor'][0]['mobileNumber']"
+															"path": "['mobileNumber']"
 														},
 														"sink": {
 															"name": "mobileNumber",
@@ -567,7 +567,7 @@
 														}
 													}
 												],
-												"collectionReference": ""
+												"collectionReference": "$['ReleaseNotification']['Declaration']['SupervisorDetails']['Supervisor']"
 											}
 										},
 										"inputs": [
@@ -643,7 +643,7 @@
 													},
 													{
 														"source": {
-															"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['hscode']"
+															"path": "['hscode']"
 														},
 														"sink": {
 															"name": "hscode",
@@ -652,7 +652,7 @@
 													},
 													{
 														"source": {
-															"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['itemQuantity']"
+															"path": "['itemQuantity']"
 														},
 														"sink": {
 															"name": "itemQuantity",
@@ -661,7 +661,7 @@
 													},
 													{
 														"source": {
-															"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['itemQuantityUOM']"
+															"path": "['itemQuantityUOM']"
 														},
 														"sink": {
 															"name": "itemQuantityUOM",
@@ -670,7 +670,7 @@
 													},
 													{
 														"source": {
-															"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['netWeight']"
+															"path": "['netWeight']"
 														},
 														"sink": {
 															"name": "netWeight",
@@ -679,7 +679,7 @@
 													},
 													{
 														"source": {
-															"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['netWeightUOM']"
+															"path": "['netWeightUOM']"
 														},
 														"sink": {
 															"name": "netWeightUOM",
@@ -688,7 +688,7 @@
 													},
 													{
 														"source": {
-															"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['countryOfOrigin']"
+															"path": "['countryOfOrigin']"
 														},
 														"sink": {
 															"name": "countryOfOrigin",
@@ -697,7 +697,7 @@
 													},
 													{
 														"source": {
-															"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['declaredValue']"
+															"path": "['declaredValue']"
 														},
 														"sink": {
 															"name": "declaredValue",
@@ -706,7 +706,7 @@
 													},
 													{
 														"source": {
-															"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['foreignCurrency']"
+															"path": "['foreignCurrency']"
 														},
 														"sink": {
 															"name": "foreignCurrency",
@@ -715,7 +715,7 @@
 													},
 													{
 														"source": {
-															"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['declaredValueQAR']"
+															"path": "['declaredValueQAR']"
 														},
 														"sink": {
 															"name": "declaredValueQAR",
@@ -723,7 +723,7 @@
 														}
 													}
 												],
-												"collectionReference": ""
+												"collectionReference": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item']"
 											}
 										},
 										"inputs": [
