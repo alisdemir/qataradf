@@ -106,9 +106,6 @@
 					"ls_psmsii_syntosql_connectionString": {
 						"value": "[parameters('ls_psmsii_syntosql_connectionString')]"
 					},
-					"ls_qtrsqldb_connectionString": {
-						"value": "[parameters('ls_qtrsqldb_connectionString')]"
-					},
 					"ls_bss_soap_properties_typeProperties_url": {
 						"value": "[parameters('ls_bss_soap_properties_typeProperties_url')]"
 					},
@@ -153,6 +150,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"ls_qtrsqldb_connectionString": {
+						"value": "[parameters('ls_qtrsqldb_connectionString')]"
 					}
 				}
 			},
