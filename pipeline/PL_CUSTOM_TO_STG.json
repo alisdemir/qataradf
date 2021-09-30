@@ -498,7 +498,8 @@
 											"dataset": {
 												"referenceName": "ds_stg_customs_dec",
 												"type": "DatasetReference"
-											}
+											},
+											"firstRowOnly": false
 										}
 									}
 								],
