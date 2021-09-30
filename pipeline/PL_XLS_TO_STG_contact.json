@@ -17,12 +17,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_input_xls_parametric",
+						"referenceName": "dls_input_contact_xls",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "22071_Contact.xlsx",
-							"folderName": "Entity",
-							"SheetIndex": 0
+							"filename": "22071_Contact.xlsx"
 						}
 					},
 					"fieldList": [
