@@ -1,0 +1,159 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfpsmsiidt001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_xls_parametric')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string",
+						"defaultValue": "135104_Entity.xlsx"
+					},
+					"folderName": {
+						"type": "string",
+						"defaultValue": "Entity"
+					},
+					"SheetIndex": {
+						"type": "int",
+						"defaultValue": 2
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().FolderName",
+							"type": "Expression"
+						},
+						"fileSystem": "input"
+					},
+					"sheetIndex": {
+						"value": "@dataset().SheetIndex",
+						"type": "Expression"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_contact')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dls_input_xls_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "inputcontactcontainer"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "stgContact"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddColumn"
+						},
+						{
+							"name": "SurrogateKey1"
+						},
+						{
+							"name": "Select1"
+						},
+						{
+							"name": "Filter1"
+						}
+					],
+					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Seq-مسلسل} as string,\n\t\t{Name-الاسم} as string,\n\t\t{eMail- البريد الالكترونى} as string,\n\t\t{Phone-الهاتف} as string,\n\t\t{Extension-التحويلة} as string,\n\t\t{Mobile-الموبايل} as string,\n\t\t{Entity CR-رقم السجل التجارى} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> inputcontactcontainer\nFilter1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\ninputcontactcontainer select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 filter(isNull(iifNull(iifNull(Seq,Name,eMail),iifNull(Phone,Extension,EntityCR)))!= true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> stgContact"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dls_input_xls_parametric')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_warehouse')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dls_input_xls_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "inputwarehousecontainer"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "stgWarehouse"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddColumn"
+						},
+						{
+							"name": "SurrogateKey1"
+						},
+						{
+							"name": "Select1"
+						},
+						{
+							"name": "Filter1"
+						}
+					],
+					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Store Code-رقم المخزن} as string,\n\t\t{Entity Commercial Registration No-رقم السجل التجارى للشركة} as string,\n\t\t{Entity Commercial License No-رقم الرخصة التجارىة للشركة} as string,\n\t\t{Warehouse/Store Commercial Registration No-رقم السجل التجارى للمخزن} as string,\n\t\t{Warehouse/Store Commercial License No-رقم الرخصة التجارىة للمخزن} as string,\n\t\t{Warehouse/Store Code-رقم المخزن} as string,\n\t\t{Area Name-اسم المنطقة} as string,\n\t\t{St. Name-اسم الشارع } as string,\n\t\t{Area Code-رقم المنطقة} as string,\n\t\t{St. No-رقم الشارع} as string,\n\t\t{Building ID-رقم البناية } as string,\n\t\t{Map Location URL-الخريطه} as string,\n\t\t{Total Store Area M2-اجمالى المساحة متر مربع} as string,\n\t\t{Storage Capacity in TON-السعة التخزينية بالطن} as string,\n\t\t{Storage Type-نوع التخزين} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> inputwarehousecontainer\nFilter1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\ninputwarehousecontainer select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 filter(isNull(iifNull(iifNull(StoreCode,EntityCommercialRegistrationNo,EntityCommercialLicenseNo),iifNull(WarehouseStoreCommercialRegistrationNo,WarehouseStoreCommercialLicenseNo,WarehouseStoreCode),iifNull(iifNull(AreaName,StName,AreaCode),\niifNull(StNo,BuildingID,MapLocationURL),iifNull(TotalStoreAreaM2,StorageCapacityinTON,StorageType))))!= true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> stgWarehouse"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dls_input_xls_parametric')]"
+			]
+		}
+	]
+}
