@@ -19,7 +19,7 @@
 						"referenceName": "ds_custom_xml",
 						"type": "DatasetReference",
 						"parameters": {
-							"xmlfileName": "Declaration*"
+							"xmlfileName": "*"
 						}
 					},
 					"fieldList": [
