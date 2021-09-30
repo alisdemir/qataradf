@@ -411,7 +411,7 @@
 								"source": {
 									"type": "SqlDWSource",
 									"sqlReaderQuery": {
-										"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC]\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '''')) IS NULL\nOR try_convert(datetime, NULLIF([NotificationDate], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '''')) IS NULL\n)\nAND [NotificationRef] IN (SELECT [NotificationRef]\nFROM [dwh].[STG_CUSTOMS_DEC]\nWHERE \nDS_FILENAME= ','''',item().name,'''')",
+										"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC]\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '''')) IS NULL\nOR try_convert(datetime, NULLIF([NotificationDate], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '''')) IS NULL\n)\nAND [NotificationRef] IN (SELECT [NotificationRef]\nFROM [dwh].[STG_CUSTOMS_DEC]\nWHERE \nDS_FILENAME= ','''',activity('Copy_Dec').output.mappings.sink.name,'''')",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -768,16 +768,6 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"dataflow": {
-									"referenceName": "dataflow1",
-									"type": "DataFlowReference",
-									"parameters": {
-										"filename": {
-											"value": "'@{item().name}'",
-											"type": "Expression"
-										}
-									}
-								},
 								"staging": {
 									"linkedService": {
 										"referenceName": "ls_psmsii_syntodls",
