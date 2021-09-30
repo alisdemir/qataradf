@@ -3027,7 +3027,7 @@
 															},
 															{
 																"source": {
-																	"path": "$['ReleaseNotification']['Declaration']['SupervisorDetails']['Supervisor'][0]['name']"
+																	"path": "[['name']"
 																},
 																"sink": {
 																	"name": "name",
@@ -3036,7 +3036,7 @@
 															},
 															{
 																"source": {
-																	"path": "$['ReleaseNotification']['Declaration']['SupervisorDetails']['Supervisor'][0]['mobileNumber']"
+																	"path": "[['mobileNumber']"
 																},
 																"sink": {
 																	"name": "mobileNumber",
@@ -3044,7 +3044,7 @@
 																}
 															}
 														],
-														"collectionReference": ""
+														"collectionReference": "$['ReleaseNotification']['Declaration']['SupervisorDetails']['Supervisor']"
 													}
 												},
 												"inputs": [
@@ -3120,7 +3120,7 @@
 															},
 															{
 																"source": {
-																	"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['hscode']"
+																	"path": "[['hscode']"
 																},
 																"sink": {
 																	"name": "hscode",
@@ -3129,7 +3129,7 @@
 															},
 															{
 																"source": {
-																	"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['itemQuantity']"
+																	"path": "[['itemQuantity']"
 																},
 																"sink": {
 																	"name": "itemQuantity",
@@ -3138,7 +3138,7 @@
 															},
 															{
 																"source": {
-																	"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['itemQuantityUOM']"
+																	"path": "[['itemQuantityUOM']"
 																},
 																"sink": {
 																	"name": "itemQuantityUOM",
@@ -3147,7 +3147,7 @@
 															},
 															{
 																"source": {
-																	"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['netWeight']"
+																	"path": "[['netWeight']"
 																},
 																"sink": {
 																	"name": "netWeight",
@@ -3156,7 +3156,7 @@
 															},
 															{
 																"source": {
-																	"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['netWeightUOM']"
+																	"path": "[['netWeightUOM']"
 																},
 																"sink": {
 																	"name": "netWeightUOM",
@@ -3165,7 +3165,7 @@
 															},
 															{
 																"source": {
-																	"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['countryOfOrigin']"
+																	"path": "[['countryOfOrigin']"
 																},
 																"sink": {
 																	"name": "countryOfOrigin",
@@ -3174,7 +3174,7 @@
 															},
 															{
 																"source": {
-																	"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['declaredValue']"
+																	"path": "[['declaredValue']"
 																},
 																"sink": {
 																	"name": "declaredValue",
@@ -3183,7 +3183,7 @@
 															},
 															{
 																"source": {
-																	"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['foreignCurrency']"
+																	"path": "[['foreignCurrency']"
 																},
 																"sink": {
 																	"name": "foreignCurrency",
@@ -3192,7 +3192,7 @@
 															},
 															{
 																"source": {
-																	"path": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item'][0]['declaredValueQAR']"
+																	"path": "[['declaredValueQAR']"
 																},
 																"sink": {
 																	"name": "declaredValueQAR",
@@ -3200,7 +3200,7 @@
 																}
 															}
 														],
-														"collectionReference": ""
+														"collectionReference": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item']"
 													}
 												},
 												"inputs": [
@@ -11240,7 +11240,7 @@
 							"name": "Filter1"
 						}
 					],
-					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Company CR #} as integer,\n\t\t{Company Transaction Type Arabic } as string,\n\t\t{Company Transaction Type English } as string,\n\t\t{Company Transaction type} as string,\n\t\t{PSMS - MoCI Transaction Types} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> srcTransactionType\nSelect1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\nFilter1 select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsrcTransactionType filter(isNull(iifNull(iifNull({Company CR #} , {Company Transaction Type Arabic }, {Company Transaction Type English }), {Company Transaction type},{PSMS - MoCI Transaction Types})) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCOMPANYCR = CompanyCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC = CompanyTransactionTypeArabic,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH = CompanyTransactionTypeEnglish,\n\t\tCOMPANYTRANSACTIONTYPE = CompanyTransactiontype,\n\t\tPSMSMOCITRANSACTIONTYPES = PSMSMoCITransactionTypes,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgTransactionType"
+					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Company CR #} as string,\n\t\t{Company Transaction Type Arabic } as string,\n\t\t{Company Transaction Type English } as string,\n\t\t{Company Transaction type} as string,\n\t\t{PSMS - MoCI Transaction Types} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> srcTransactionType\nSelect1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\nFilter1 select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsrcTransactionType filter(isNull(iifNull(iifNull({Company CR #} , {Company Transaction Type Arabic }, {Company Transaction Type English }), {Company Transaction type},{PSMS - MoCI Transaction Types})) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCOMPANYCR = CompanyCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC = CompanyTransactionTypeArabic,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH = CompanyTransactionTypeEnglish,\n\t\tCOMPANYTRANSACTIONTYPE = CompanyTransactiontype,\n\t\tPSMSMOCITRANSACTIONTYPES = PSMSMoCITransactionTypes,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgTransactionType"
 				}
 			},
 			"dependsOn": [
