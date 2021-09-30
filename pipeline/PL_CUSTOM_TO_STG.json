@@ -489,7 +489,7 @@
 											"source": {
 												"type": "SqlDWSource",
 												"sqlReaderQuery": {
-													"value": "@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,'''')",
+													"value": "@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,''';\nSELECT 1;')",
 													"type": "Expression"
 												},
 												"queryTimeout": "02:00:00",
