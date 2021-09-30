@@ -78,12 +78,7 @@
 									},
 									"datasetParameters": {
 										"inputcontactcontainer": {
-											"filename": {
-												"value": "@item().name",
-												"type": "Expression"
-											},
-											"folderName": "Entity",
-											"SheetIndex": 2
+											"filename": "@item().name"
 										},
 										"stgContact": {
 											"schemaName": "dwh",
