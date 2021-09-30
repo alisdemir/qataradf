@@ -330,9 +330,7 @@
 											"filename": {
 												"value": "@item().name",
 												"type": "Expression"
-											},
-											"folderName": "Entity",
-											"SheetIndex": 2
+											}
 										},
 										"stgContact": {
 											"schemaName": "dwh",
