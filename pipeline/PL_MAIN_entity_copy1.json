@@ -56,12 +56,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_input_xls_parametric",
+						"referenceName": "dls_input_entity_xls",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "*",
-							"folderName": "Entity",
-							"SheetIndex": 0
+							"fileName": "*"
 						}
 					},
 					"fieldList": [
