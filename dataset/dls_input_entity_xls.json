@@ -1,5 +1,5 @@
 {
-	"name": "dls_input_xls_transaction_type",
+	"name": "dls_input_entity_xls",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_psmsii_syntodls",
@@ -19,14 +19,9 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@dataset().FileName",
-					"type": "Expression"
-				},
-				"folderPath": "TransactionType",
+				"folderPath": "Entity",
 				"fileSystem": "input"
 			},
-			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
 		"schema": [
