@@ -20,9 +20,9 @@
 						"referenceName": "dls_input_xls_parametric",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "*",
+							"filename": "22071_Contact.xlsx",
 							"folderName": "Entity",
-							"SheetIndex": 2
+							"SheetIndex": 0
 						}
 					},
 					"fieldList": [
