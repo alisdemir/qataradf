@@ -1,0 +1,56 @@
+{
+	"name": "dls_input_contact_xls",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"filename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "@dataset().filename",
+				"folderPath": "Entity",
+				"fileSystem": "input"
+			},
+			"sheetIndex": 2,
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Seq-مسلسل",
+				"type": "String"
+			},
+			{
+				"name": "Name-الاسم",
+				"type": "String"
+			},
+			{
+				"name": "eMail- البريد الالكترونى",
+				"type": "String"
+			},
+			{
+				"name": "Phone-الهاتف",
+				"type": "String"
+			},
+			{
+				"name": "Extension-التحويلة",
+				"type": "String"
+			},
+			{
+				"name": "Mobile-الموبايل\n",
+				"type": "String"
+			},
+			{
+				"name": "Entity CR-رقم السجل التجارى",
+				"type": "String"
+			}
+		]
+	}
+}
