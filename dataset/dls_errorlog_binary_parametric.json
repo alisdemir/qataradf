@@ -11,6 +11,9 @@
 				"defaultValue": "'a'"
 			}
 		},
+		"folder": {
+			"name": "Storage_DL_QTR"
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
