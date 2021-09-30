@@ -2542,12 +2542,13 @@
 											"type": "XmlSource",
 											"storeSettings": {
 												"type": "AzureBlobFSReadSettings",
-												"recursive": true,
+												"recursive": false,
 												"enablePartitionDiscovery": false
 											},
 											"formatSettings": {
 												"type": "XmlReadSettings",
 												"validationMode": "none",
+												"detectDataType": true,
 												"namespaces": true
 											}
 										},
@@ -2866,7 +2867,7 @@
 									"type": "Lookup",
 									"dependsOn": [
 										{
-											"activity": "Copy_Dec",
+											"activity": "Lookup1",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -2884,7 +2885,7 @@
 										"source": {
 											"type": "SqlDWSource",
 											"sqlReaderQuery": {
-												"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC]\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '')) IS NULL\nOR try_convert(datetime, NULLIF([NotificationDate], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '')) IS NULL\n)\nAND [NotificationRef] = ','''',item()['@NotficationRef'],'''')",
+												"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC]\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '''')) IS NULL\nOR try_convert(datetime, NULLIF([NotificationDate], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '''')) IS NULL\n)\nAND [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,'''')\n\n\n",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -2894,7 +2895,8 @@
 											"referenceName": "ds_stg_customs_dec",
 											"type": "DatasetReference",
 											"parameters": {}
-										}
+										},
+										"firstRowOnly": false
 									}
 								},
 								{
@@ -2963,7 +2965,7 @@
 													"source": {
 														"type": "SqlDWSource",
 														"sqlReaderQuery": {
-															"value": "@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',item()['@NotficationRef'],'''')",
+															"value": "@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,'''')",
 															"type": "Expression"
 														},
 														"queryTimeout": "02:00:00",
@@ -2973,7 +2975,8 @@
 														"referenceName": "ds_stg_customs_dec",
 														"type": "DatasetReference",
 														"parameters": {}
-													}
+													},
+													"firstRowOnly": false
 												}
 											}
 										],
@@ -3221,6 +3224,38 @@
 												]
 											}
 										]
+									}
+								},
+								{
+									"name": "Lookup1",
+									"type": "Lookup",
+									"dependsOn": [
+										{
+											"activity": "Copy_Dec",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "ds_stg_customs_dec",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
 									}
 								}
 							]
@@ -9594,7 +9629,136 @@
 				},
 				"annotations": [],
 				"type": "AzureSqlDWTable",
-				"schema": [],
+				"schema": [
+					{
+						"name": "NotificationSender",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NotificationDate",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NotificationRef",
+						"type": "nvarchar"
+					},
+					{
+						"name": "address",
+						"type": "nvarchar"
+					},
+					{
+						"name": "bolNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "cargoManifestNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "carrierName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "clearingAgencyCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "clearingAgencyNameAR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "clearingAgencyNameEng",
+						"type": "nvarchar"
+					},
+					{
+						"name": "companyName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "companyNameAr",
+						"type": "nvarchar"
+					},
+					{
+						"name": "countryOfLoading",
+						"type": "nvarchar"
+					},
+					{
+						"name": "declarationNo",
+						"type": "nvarchar"
+					},
+					{
+						"name": "declarationStatus",
+						"type": "nvarchar"
+					},
+					{
+						"name": "declarationType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "entryOrExitPortName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "establishmentId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "exporterName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "firstCountryOfLoading",
+						"type": "nvarchar"
+					},
+					{
+						"name": "importerName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "masterBolOrAWBNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "portOfLoading",
+						"type": "nvarchar"
+					},
+					{
+						"name": "portType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "releaseOrderNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "releasedDate",
+						"type": "nvarchar"
+					},
+					{
+						"name": "supplierCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "supplierCustomsCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "voyageOrFlightNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "accountType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "varchar"
+					}
+				],
 				"typeProperties": {
 					"schema": "dwh",
 					"table": "STG_CUSTOMS_DEC"
