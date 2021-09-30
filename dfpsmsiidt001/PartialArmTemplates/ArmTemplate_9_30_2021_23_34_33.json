@@ -13,166 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_MAIN_company')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "PL_XLS_TO_STG_company",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_XLS_TO_STG_company",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "P_DQ_COMPANY",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "PL_XLS_TO_STG_company",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dwh].[P_DQ_COMPANY]"
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_dsqlpqtr",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "PL_EXPORT_AND_EMAIL_company",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "P_DQ_COMPANY",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_EXPORT_AND_EMAIL_company",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_INITIAL_LOAD/ENTITY/COMPANY"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_MAIN_contact')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "PL_XLS_TO_STG_contact",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_XLS_TO_STG_contact",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "P_DQ_CONTACT",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "PL_XLS_TO_STG_contact",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dwh].[P_DQ_CONTACT]"
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_dsqlpqtr",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "PL_EXPORT_AND_EMAIL_contact",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "P_DQ_CONTACT",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_EXPORT_AND_EMAIL_contact",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_INITIAL_LOAD/ENTITY/CONTACT"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/PL_MAIN_entity_copy1')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -613,8 +453,7 @@
 								"referenceName": "PL_EXPORT_AND_EMAIL_company",
 								"type": "PipelineReference"
 							},
-							"waitOnCompletion": true,
-							"parameters": {}
+							"waitOnCompletion": true
 						}
 					},
 					{
@@ -661,8 +500,7 @@
 								"referenceName": "PL_EXPORT_AND_EMAIL_warehouse",
 								"type": "PipelineReference"
 							},
-							"waitOnCompletion": true,
-							"parameters": {}
+							"waitOnCompletion": true
 						}
 					},
 					{
@@ -709,366 +547,314 @@
 								"referenceName": "PL_EXPORT_AND_EMAIL_contact",
 								"type": "PipelineReference"
 							},
-							"waitOnCompletion": true,
-							"parameters": {}
+							"waitOnCompletion": true
 						}
 					}
 				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_INITIAL_LOAD/ENTITY"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_MAIN_items')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "PL_XLS_TO_STG_items",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_XLS_TO_STG_items",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_EXEC_P_DQ_ITEMS",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "PL_XLS_TO_STG_items",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dwh].[P_DQ_PRODUCTS]"
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_dsqlpqtr",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "PL_EXPORT_AND_EMAIL_items",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_EXEC_P_DQ_ITEMS",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_EXPORT_AND_EMAIL_items",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_INITIAL_LOAD/ITEMS"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_MAIN_transaction_type')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "PL_XLS_TO_STG_tr_type",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_XLS_TO_STG_transaction_type",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_EXEC_P_DQ_TR_TYPE",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "PL_XLS_TO_STG_tr_type",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dwh].[P_DQ_TRANSACTION_TYPE]"
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_dsqlpqtr",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "PL_EXPORT_AND_EMAIL_tr_type",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_EXEC_P_DQ_TR_TYPE",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_EXPORT_AND_EMAIL_tr_type",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_INITIAL_LOAD/TRANSACTION_TYPE"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_MAIN_warehouse')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "PL_XLS_TO_STG_warehouse",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_XLS_TO_STG_warehouse",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "P_DQ_WAREHOUSE",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "PL_XLS_TO_STG_warehouse",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dwh].[P_DQ_WAREHOUSE]"
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_dsqlpqtr",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "PL_EXPORT_AND_EMAIL_warehouse",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "P_DQ_WAREHOUSE",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_EXPORT_AND_EMAIL_warehouse",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_INITIAL_LOAD/ENTITY/WAREHOUSE"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_MAIN_entity')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "PL_MAIN_company",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_MAIN_company",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_MAIN_warehouse",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_MAIN_company",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_MAIN_warehouse",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_MAIN_contact",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_MAIN_warehouse",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_MAIN_contact",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "P_STG_VALID_INSERT",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "PL_MAIN_contact",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dwh].[P_STG_VALID_INSERT]"
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_dsqlpqtr",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
 				"folder": {
 					"name": "PL_INITIAL_LOAD/ENTITY"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_company')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_warehouse')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_contact')]"
+				"[concat(variables('factoryId'), '/datasets/dls_input_entity_xls')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_errorlog_binary')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "errorlog"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_errorlog_binary_parametric')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FolderName": {
+						"type": "string",
+						"defaultValue": "'a'"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().FolderName",
+							"type": "Expression"
+						},
+						"fileSystem": "errorlog"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_entity_xls')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"fileName": {
+						"type": "string",
+						"defaultValue": "'a'"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Entity",
+						"fileSystem": "input"
+					},
+					"sheetIndex": 0,
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Company CR #",
+						"type": "String"
+					},
+					{
+						"name": "Company Transaction Type Arabic ",
+						"type": "String"
+					},
+					{
+						"name": "Company Transaction Type English ",
+						"type": "String"
+					},
+					{
+						"name": "Company Transaction type",
+						"type": "String"
+					},
+					{
+						"name": "PSMS - MoCI Transaction Types",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_custom_xml')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"xmlfileName": {
+						"type": "string",
+						"defaultValue": "Declaration_2.xml"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Xml",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().xmlfileName",
+							"type": "Expression"
+						},
+						"folderPath": "Customs",
+						"fileSystem": "input"
+					},
+					"nullValue": "null"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_customs_dec')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dedicated_SQL"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "NotificationSender",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NotificationDate",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NotificationRef",
+						"type": "nvarchar"
+					},
+					{
+						"name": "address",
+						"type": "nvarchar"
+					},
+					{
+						"name": "bolNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "cargoManifestNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "carrierName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "clearingAgencyCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "clearingAgencyNameAR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "clearingAgencyNameEng",
+						"type": "nvarchar"
+					},
+					{
+						"name": "companyName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "companyNameAr",
+						"type": "nvarchar"
+					},
+					{
+						"name": "countryOfLoading",
+						"type": "nvarchar"
+					},
+					{
+						"name": "declarationNo",
+						"type": "nvarchar"
+					},
+					{
+						"name": "declarationStatus",
+						"type": "nvarchar"
+					},
+					{
+						"name": "declarationType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "entryOrExitPortName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "establishmentId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "exporterName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "firstCountryOfLoading",
+						"type": "nvarchar"
+					},
+					{
+						"name": "importerName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "masterBolOrAWBNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "portOfLoading",
+						"type": "nvarchar"
+					},
+					{
+						"name": "portType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "releaseOrderNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "releasedDate",
+						"type": "nvarchar"
+					},
+					{
+						"name": "supplierCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "supplierCustomsCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "voyageOrFlightNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "accountType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_CUSTOMS_DEC"
+				}
+			},
+			"dependsOn": []
 		}
 	]
 }

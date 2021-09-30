@@ -5680,12 +5680,10 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "dls_input_xls_parametric",
+								"referenceName": "dls_input_entity_xls",
 								"type": "DatasetReference",
 								"parameters": {
-									"filename": "*",
-									"folderName": "Entity",
-									"SheetIndex": 0
+									"fileName": "*"
 								}
 							},
 							"fieldList": [
@@ -6175,7 +6173,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]",
-				"[concat(variables('factoryId'), '/datasets/dls_input_xls_parametric')]",
+				"[concat(variables('factoryId'), '/datasets/dls_input_entity_xls')]",
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_company')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_warehouse')]",
@@ -7973,78 +7971,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/copycommand')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlDWSink",
-								"tableOption": "autoCreate",
-								"disableMetricsCollection": false
-							},
-							"enableStaging": true,
-							"stagingSettings": {
-								"linkedServiceName": {
-									"referenceName": "ls_psmsii_syntodls",
-									"type": "LinkedServiceReference"
-								},
-								"path": "stagingarea"
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dls_input_xls_company",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ds_stg_transactions_copy1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Dev"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dls_input_xls_company')]",
-				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions_copy1')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dene_logicapp')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -8084,59 +8010,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_error_log_tr_type_csv')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "TransactionType",
-						"fileSystem": "errorlog"
-					},
-					"columnDelimiter": "|",
-					"escapeChar": "",
-					"firstRowAsHeader": true,
-					"quoteChar": ""
-				},
-				"schema": [
-					{
-						"name": "COMPANYCR",
-						"type": "String"
-					},
-					{
-						"name": "COMPANYTRANSACTIONTYPEARABIC",
-						"type": "String"
-					},
-					{
-						"name": "COMPANYTRANSACTIONTYPEENGLISH",
-						"type": "String"
-					},
-					{
-						"name": "COMPANYTRANSACTIONTYPE",
-						"type": "String"
-					},
-					{
-						"name": "PSMSMOCITRANSACTIONTYPES",
-						"type": "String"
-					},
-					{
-						"name": "ERRORCODE",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dls_errorlog_binary')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -8144,6 +8017,9 @@
 				"linkedServiceName": {
 					"referenceName": "ls_psmsii_syntodls",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
 				},
 				"annotations": [],
 				"type": "Binary",
@@ -8172,6 +8048,9 @@
 						"type": "string",
 						"defaultValue": "'a'"
 					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
 				},
 				"annotations": [],
 				"type": "Binary",
@@ -8314,258 +8193,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_input_contact')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "Company",
-						"fileSystem": "input"
-					},
-					"sheetIndex": 2,
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Seq-مسلسل",
-						"type": "String"
-					},
-					{
-						"name": "Name-الاسم",
-						"type": "String"
-					},
-					{
-						"name": "eMail- البريد الالكترونى",
-						"type": "String"
-					},
-					{
-						"name": "Phone-الهاتف",
-						"type": "String"
-					},
-					{
-						"name": "Extension-التحويلة",
-						"type": "String"
-					},
-					{
-						"name": "Mobile-الموبايل\n",
-						"type": "String"
-					},
-					{
-						"name": "Entity CR-رقم السجل التجارى",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dls_input_warehouse')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "Company",
-						"fileSystem": "input"
-					},
-					"sheetIndex": 1,
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Store Code-رقم المخزن",
-						"type": "String"
-					},
-					{
-						"name": "Entity Commercial Registration No-رقم السجل التجارى للشركة",
-						"type": "String"
-					},
-					{
-						"name": "Entity Commercial License No-رقم الرخصة التجارىة للشركة",
-						"type": "String"
-					},
-					{
-						"name": "Warehouse/Store Commercial Registration No-رقم السجل التجارى للمخزن",
-						"type": "String"
-					},
-					{
-						"name": "Warehouse/Store Commercial License No-رقم الرخصة التجارىة للمخزن",
-						"type": "String"
-					},
-					{
-						"name": "Warehouse/Store Code-رقم المخزن",
-						"type": "String"
-					},
-					{
-						"name": "Area Name-اسم المنطقة",
-						"type": "String"
-					},
-					{
-						"name": "St. Name-اسم الشارع ",
-						"type": "String"
-					},
-					{
-						"name": "Area Code-رقم المنطقة",
-						"type": "String"
-					},
-					{
-						"name": "St. No-رقم الشارع",
-						"type": "String"
-					},
-					{
-						"name": "Building ID-رقم البناية ",
-						"type": "String"
-					},
-					{
-						"name": "Map Location URL-الخريطه",
-						"type": "String"
-					},
-					{
-						"name": "Total Store Area M2-اجمالى المساحة متر مربع",
-						"type": "String"
-					},
-					{
-						"name": "Storage Capacity in TON-السعة التخزينية بالطن",
-						"type": "String"
-					},
-					{
-						"name": "Storage Type-نوع التخزين",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dls_input_xls_company')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"fileName": {
-						"type": "string",
-						"defaultValue": "'a'"
-					}
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().FileName",
-							"type": "Expression"
-						},
-						"folderPath": "Company",
-						"fileSystem": "input"
-					},
-					"sheetIndex": 0,
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Main or Branch-رئيسى ام فرع",
-						"type": "String"
-					},
-					{
-						"name": "Company Name Arabic-اسم الشركة عربى",
-						"type": "String"
-					},
-					{
-						"name": "Company Name English-اسم الشركة انجليزى",
-						"type": "String"
-					},
-					{
-						"name": "Commercial Registration No-رقم السجل التجارى",
-						"type": "String"
-					},
-					{
-						"name": "Commercial License number-رقم االرخصة التجارية",
-						"type": "String"
-					},
-					{
-						"name": "Area-اسم المنطقة",
-						"type": "String"
-					},
-					{
-						"name": "Street Name-اسم الشارع",
-						"type": "String"
-					},
-					{
-						"name": "Area Number-رقم المنطقة",
-						"type": "String"
-					},
-					{
-						"name": "Street Number2-رقم الشارع",
-						"type": "String"
-					},
-					{
-						"name": "Building Number-رقم البناية",
-						"type": "String"
-					},
-					{
-						"name": " Phone Number-رقم الهاتف الارضى",
-						"type": "String"
-					},
-					{
-						"name": "Fax-الفاكس",
-						"type": "String"
-					},
-					{
-						"name": "P.O. Box-صندوق البريد",
-						"type": "String"
-					},
-					{
-						"name": "Email-ايميل الشركة",
-						"type": "String"
-					},
-					{
-						"name": "Website-الموقع الالكترون",
-						"type": "String"
-					},
-					{
-						"name": "Map Location Url-الموقع على الخريطة ",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dls_input_xls_parametric')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -8619,7 +8246,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_input_xls_transaction_type')]",
+			"name": "[concat(parameters('factoryName'), '/dls_input_entity_xls')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -8641,11 +8268,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().FileName",
-							"type": "Expression"
-						},
-						"folderPath": "TransactionType",
+						"folderPath": "Entity",
 						"fileSystem": "input"
 					},
 					"sheetIndex": 0,
@@ -8673,31 +8296,6 @@
 						"type": "String"
 					}
 				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dls_processing_bin')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "processing"
-					}
-				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
@@ -8899,135 +8497,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_processing_files')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().FileName",
-							"type": "Expression"
-						},
-						"fileSystem": "processing"
-					},
-					"columnDelimiter": "|",
-					"rowDelimiter": "\n",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "Transaction Date - ????? ?????? ",
-						"type": "String"
-					},
-					{
-						"name": "Transaction Type Code - ??? ??? ??????",
-						"type": "String"
-					},
-					{
-						"name": "Item Group - ???????? ???????",
-						"type": "String"
-					},
-					{
-						"name": "Item Code - ??? ?????",
-						"type": "String"
-					},
-					{
-						"name": "Item Barcode - ?????? ?????",
-						"type": "String"
-					},
-					{
-						"name": "Company CR# - ??? ????? ??????? ??????",
-						"type": "String"
-					},
-					{
-						"name": "Other Entity CR# - ??? ????? ??????? ????? ?????",
-						"type": "String"
-					},
-					{
-						"name": "Source Store Code - ??? ?????? ??????",
-						"type": "String"
-					},
-					{
-						"name": "Target Store Code - ??? ?????? ????????",
-						"type": "String"
-					},
-					{
-						"name": "Quantity - ??????",
-						"type": "String"
-					},
-					{
-						"name": "UOT - ???? ?????? ",
-						"type": "String"
-					},
-					{
-						"name": "Selling Price per unit - ??? ????? ??????  -",
-						"type": "String"
-					},
-					{
-						"name": "Local Purchase Order (LPO) No. - ??? ??? ??????",
-						"type": "String"
-					},
-					{
-						"name": "Sales Order No. - ??? ??? ?????",
-						"type": "String"
-					},
-					{
-						"name": "Delivery Note No. - ??? ????? ???????",
-						"type": "String"
-					},
-					{
-						"name": "Goods Received Note (GRN) No. - ??? ????? ????? ??????",
-						"type": "String"
-					},
-					{
-						"name": "Invoice No. - ??? ????????",
-						"type": "String"
-					},
-					{
-						"name": "Return Note No. - ??? ????? ?????????",
-						"type": "String"
-					},
-					{
-						"name": "Customs Statement No. - ??? ???? (???????)",
-						"type": "String"
-					},
-					{
-						"name": "Internal Transfer Number/Code - ??? ??????? ???????",
-						"type": "String"
-					},
-					{
-						"name": "Number of Consumer Invoices - ??? ?????? ????? ????????",
-						"type": "String"
-					},
-					{
-						"name": "Notes or Description -  ????? ?? ???  \r",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dls_processing_xls')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -9115,108 +8584,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_processing_xls_folder')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "processing"
-					},
-					"sheetIndex": 0,
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Transaction Date - تاريخ الحركة ",
-						"type": "String"
-					},
-					{
-						"name": "Transaction Type Code - كود نوع الحركة",
-						"type": "String"
-					},
-					{
-						"name": "Item Code - كود الصنف",
-						"type": "String"
-					},
-					{
-						"name": "Item Barcode - باركود الصنف",
-						"type": "String"
-					},
-					{
-						"name": "Your Company CR# - رقم السجل التجارى للشركة",
-						"type": "String"
-					},
-					{
-						"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
-						"type": "String"
-					},
-					{
-						"name": "Company Store/Inventory Code - رقم المخزن ",
-						"type": "String"
-					},
-					{
-						"name": "Quantity - الكمية",
-						"type": "String"
-					},
-					{
-						"name": "Selling Price per unit - سعر البيع للوحدة  -",
-						"type": "String"
-					},
-					{
-						"name": "Comon Referance No. -  رقم المرجع المشترك",
-						"type": "String"
-					},
-					{
-						"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
-						"type": "String"
-					},
-					{
-						"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dls_upload_bin')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "upload"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dls_upload_binary')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -9253,7 +8620,8 @@
 				},
 				"parameters": {
 					"xmlfileName": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "Declaration_2.xml"
 					}
 				},
 				"folder": {
@@ -9276,62 +8644,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_dwh_file_list')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DT_FILE",
-						"type": "date"
-					},
-					{
-						"name": "DS_ENTITY_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_ENTITY",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_ISEXPECTED",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_EMAIL",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "DWH_FILE_LIST"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodsqlp')]"
 			]
 		},
 		{
@@ -9414,188 +8726,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_company')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "MainorBranch",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CompanyNameArabic",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CompanyNameEnglish",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CommercialRegistrationNo",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CommercialLicensenumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Area",
-						"type": "nvarchar"
-					},
-					{
-						"name": "StreetName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AreaNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "StreetNumber2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BuildingNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PhoneNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Fax",
-						"type": "nvarchar"
-					},
-					{
-						"name": "P.O.Box",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Email",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Website",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MapLocationUrl",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_COMPANY"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodsqlp')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_cr_transaction_type_error_log')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "COMPANYCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COMPANYTRANSACTIONTYPEARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COMPANYTRANSACTIONTYPEENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COMPANYTRANSACTIONTYPE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PSMSMOCITRANSACTIONTYPES",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "ID_ERROR_CODE",
-						"type": "tinyint",
-						"precision": 3
-					},
-					{
-						"name": "DS_ERROR_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_CREATE",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "DT_UPDATE",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_CR_TRANSACTION_TYPE_ERROR_LOG"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_customs_dec')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -9603,6 +8733,9 @@
 				"linkedServiceName": {
 					"referenceName": "ls_dsqlpqtr",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dedicated_SQL"
 				},
 				"annotations": [],
 				"type": "AzureSqlDWTable",
@@ -9881,63 +9014,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_transaction_type')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "COMPANYCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COMPANYTRANSACTIONTYPEARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COMPANYTRANSACTIONTYPEENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COMPANYTRANSACTIONTYPE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PSMSMOCITRANSACTIONTYPES",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_CR_TRANSACTION_TYPE"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodsqlp')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_transactions')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -10026,30 +9102,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_transactions_copy1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_COMPANY"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dsqlp_parametric')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -10127,24 +9179,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_qtrsqldb')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sqldb_psmsii_dt_westeu_001')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntosql",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntosql')]"
 			]
 		},
 		{

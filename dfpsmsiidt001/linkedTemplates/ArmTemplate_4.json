@@ -13,791 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/df_errlog_container_tr_type')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "stgtransationtypeerrlog"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dls_errorlog_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "errorlogcsv"
-						}
-					],
-					"transformations": [
-						{
-							"name": "dsfilename"
-						}
-					],
-					"script": "source(output(\n\t\tCOMPANYCR as string,\n\t\tCOMPANYTRANSACTIONTYPEARABIC as string,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH as string,\n\t\tCOMPANYTRANSACTIONTYPE as string,\n\t\tPSMSMOCITRANSACTIONTYPES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> stgtransationtypeerrlog\nstgtransationtypeerrlog derive(DS_FILENAME = replace(DS_FILENAME,'.','_err.')) ~> dsfilename\ndsfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'DS_FILENAME',\n\ttruncate: true,\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tCOMPANYCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH,\n\t\tCOMPANYTRANSACTIONTYPE,\n\t\tPSMSMOCITRANSACTIONTYPES,\n\t\tERRORCODE = DS_ERROR_CODE\n\t)) ~> errorlogcsv"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_errlog_container_warehouse')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "stgwarehouseerrorlog"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dls_errorlog_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "errorlogwarehouse"
-						}
-					],
-					"transformations": [
-						{
-							"name": "dsfilename"
-						}
-					],
-					"script": "source(output(\n\t\tSTORECODE as string,\n\t\tENTITYCOMMERCIALREGISTRATIONNO as string,\n\t\tENTITYCOMMERCIALLICENSENO as string,\n\t\tWAREHOUSESTORECOMMERCIALREGISTRATIONNO as string,\n\t\tWAREHOUSESTORECOMMERCIALLICENSENO as string,\n\t\tWAREHOUSESTORECODE as string,\n\t\tAREANAME as string,\n\t\tSTNAME as string,\n\t\tAREACODE as string,\n\t\tSTNO as string,\n\t\tBUILDINGID as string,\n\t\tMAPLOCATIONURL as string,\n\t\tTOTALSTOREAREAM2 as string,\n\t\tSTORAGECAPACITYINTON as string,\n\t\tSTORAGETYPE as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> stgwarehouseerrorlog\nstgwarehouseerrorlog derive(DS_FILENAME = replace(DS_FILENAME,'.','_warehouse_err.')) ~> dsfilename\ndsfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'DS_FILENAME',\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tSTORECODE,\n\t\tENTITYCOMMERCIALREGISTRATIONNO,\n\t\tENTITYCOMMERCIALLICENSENO,\n\t\tWAREHOUSESTORECOMMERCIALREGISTRATIONNO,\n\t\tWAREHOUSESTORECOMMERCIALLICENSENO,\n\t\tWAREHOUSESTORECODE,\n\t\tAREANAME,\n\t\tSTNAME,\n\t\tAREACODE,\n\t\tSTNO,\n\t\tBUILDINGID,\n\t\tMAPLOCATIONURL,\n\t\tTOTALSTOREAREAM2,\n\t\tSTORAGECAPACITYINTON,\n\t\tSTORAGETYPE,\n\t\tDS_ERROR_CODE\n\t)) ~> errorlogwarehouse"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_insert_company')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"linkedService": {
-								"referenceName": "ls_psmsii_syntodls",
-								"type": "LinkedServiceReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [],
-					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: false,\n\tformat: 'excel',\n\tfileSystem: 'input',\n\tfileName: 'Company Profile and warehouse - store  Template.xlsx',\n\tsheetName: 'بيانات الشركة',\n\trange: 'A7:Q17',\n\tfirstRowAsHeader: true) ~> source1\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\trecreate:true,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_stg_file_list_ins')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Stg file list tablosuna containerdaki dosyaları insert eden pipeline",
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_stg_file_list",
-								"type": "DatasetReference"
-							},
-							"name": "dummy"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_stg_file_list",
-								"type": "DatasetReference"
-							},
-							"name": "stgfilelist"
-						}
-					],
-					"transformations": [
-						{
-							"name": "itemname"
-						}
-					],
-					"script": "parameters{\n\titemname as string (toString('CRFR_20210321.csv'))\n}\nsource(output(\n\t\tdummy as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'select 1 as dummy',\n\tformat: 'query',\n\tstaged: false) ~> dummy\ndummy derive(itemname = $itemname) ~> itemname\nitemname sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tDS_FILENAME = itemname\n\t)) ~> stgfilelist"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_stg_file_list_upd')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_dwl_file_list",
-								"type": "DatasetReference"
-							},
-							"name": "dwhfilelist"
-						},
-						{
-							"dataset": {
-								"referenceName": "ds_stg_file_list",
-								"type": "DatasetReference"
-							},
-							"name": "stgfilelistsrc"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_stg_file_list",
-								"type": "DatasetReference"
-							},
-							"name": "stgfilelisttrgt"
-						}
-					],
-					"transformations": [
-						{
-							"name": "notExists"
-						},
-						{
-							"name": "idisexpected"
-						},
-						{
-							"name": "AlterRow1"
-						}
-					],
-					"script": "parameters{\n\titemname as string (toString('CRFR_20210321.csv'))\n}\nsource(output(\n\t\tID as integer,\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelistsrc\nstgfilelistsrc, dwhfilelist exists(stgfilelistsrc@DS_FILENAME == dwhfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> notExists\nAlterRow1 derive(ID_ISEXPECTED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nnotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> stgfilelisttrgt"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_transerrlog_to_errlogcontainer')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_stg_transaction_error_log",
-								"type": "DatasetReference"
-							},
-							"name": "transactionerrorlog"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dls_errorlog_csv",
-								"type": "DatasetReference"
-							},
-							"name": "errorlogcsv"
-						}
-					],
-					"transformations": [
-						{
-							"name": "stgfilename"
-						}
-					],
-					"script": "parameters{\n\tp_stg_filename as string (STG_FILENAME)\n}\nsource(output(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> transactionerrorlog\ntransactionerrorlog derive(STG_FILENAME = replace(DS_FILENAME,'.','_err.')) ~> stgfilename\nstgfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tDS_ERROR_CODE as string\n\t),\n\trowUrlColumn:'STG_FILENAME',\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tTRANSACTION_DATE,\n\t\tTRANSACTION_TYPE_CODE,\n\t\tITEM_CODE,\n\t\tITEM_BARCODE,\n\t\tYOUR_COMPANY_CR,\n\t\tOTHER_ENTITY_CR,\n\t\tCOMPANY_STORE_INVENTORY_CODE,\n\t\tQUANTITY,\n\t\tSELLING_PRICE_PER_UNIT,\n\t\tCOMMON_REFERANCE_NO,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE,\n\t\tNUMBER_OF_CONSUMER_INVOICES,\n\t\tDS_ERROR_CODE\n\t)) ~> errorlogcsv"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_transfer_stg_Trans_to_Trans')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_stg_transactions",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						},
-						{
-							"dataset": {
-								"referenceName": "ds_stg_transaction_error_log",
-								"type": "DatasetReference"
-							},
-							"name": "source2"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "NotExists1"
-						},
-						{
-							"name": "DerivedColumn1"
-						}
-					],
-					"script": "source(output(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_GROUP as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_SOURCE_WAREHOUSE as string,\n\t\tID_TARGET_WAREHOUSE as string,\n\t\tMT_QUANTITY as string,\n\t\tID_UOM as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_LPO as string,\n\t\tID_SALES_ORDER as string,\n\t\tID_DELIVERY_NOTE as string,\n\t\tID_GRN as string,\n\t\tID_INVOICE as string,\n\t\tID_RETURN_NOTE as string,\n\t\tID_CUSTOMS_STATEMENT as string,\n\t\tID_REFERANCE_CODE as string,\n\t\tMT_INVOICE_COUNT as string,\n\t\tDS_TRANSACTION_REASON as string,\n\t\tSK_ID as string,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> source1\nsource(output(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_GROUP as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_SOURCE_WAREHOUSE as string,\n\t\tID_TARGET_WAREHOUSE as string,\n\t\tMT_QUANTITY as string,\n\t\tID_UOM as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_LPO as string,\n\t\tID_SALES_ORDER as string,\n\t\tID_DELIVERY_NOTE as string,\n\t\tID_GRN as string,\n\t\tID_INVOICE as string,\n\t\tID_RETURN_NOTE as string,\n\t\tID_CUSTOMS_STATEMENT as string,\n\t\tID_REFERANCE_CODE as string,\n\t\tMT_INVOICE_COUNT as string,\n\t\tDS_TRANSACTION_REASON as string,\n\t\tSK_ID as string,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> source2\nsource1, source2 exists(source1@SK_ID == source2@SK_ID\n\t&& source1@STG_FILENAME == source2@STG_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists1\nNotExists1 derive(NewDate = coalesce(toDate(ID_YEARMONTHDAY,'MM/dd/yyyy'),toDate(ID_YEARMONTHDAY,'yyyy/MM/dd'),toDate(ID_YEARMONTHDAY,'dd/MM/yyyy'),toDate(ID_YEARMONTHDAY,'MMddyyyy'),toDate(ID_YEARMONTHDAY,'yyyyddMM'),toDate(ID_YEARMONTHDAY,'MMddyyyy'),toDate(ID_YEARMONTHDAY,'yyyyMMdd'),toDate(ID_YEARMONTHDAY,'yyyy.MM.dd'),toDate(ID_YEARMONTHDAY,'dd.MM.yyyy'),toDate(ID_YEARMONTHDAY,'MM.dd.yyyy')),\n\t\tNewMTQuantitiy = replace(MT_QUANTITY,',','')) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_YEARMONTHDAY = NewDate,\n\t\tID_TRANSACTION_TYPE,\n\t\tID_ITEM_GROUP,\n\t\tID_ITEM_CODE,\n\t\tID_ITEM_BARCODE,\n\t\tID_ENTITY_CR,\n\t\tID_CUSTOMER_ENTITY_CR,\n\t\tID_SOURCE_WAREHOUSE,\n\t\tID_TARGET_WAREHOUSE,\n\t\tMT_QUANTITY = NewMTQuantitiy,\n\t\tID_UOM,\n\t\tMT_DISCOUNT_AMOUNT,\n\t\tID_LPO,\n\t\tID_SALES_ORDER,\n\t\tID_DELIVERY_NOTE,\n\t\tID_GRN,\n\t\tID_INVOICE,\n\t\tID_RETURN_NOTE,\n\t\tID_CUSTOMS_STATEMENT,\n\t\tID_REFERANCE_CODE,\n\t\tMT_INVOICE_COUNT,\n\t\tDS_TRANSACTION_REASON,\n\t\tSK_ID,\n\t\tSTG_FILENAME,\n\t\tSTG_FILETIME\n\t)) ~> sink1"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_company')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "dls_input_xls_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "inputcompanycontainer"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "stgCompany"
-						}
-					],
-					"transformations": [
-						{
-							"name": "AddColumn"
-						},
-						{
-							"name": "SurrogateKey1"
-						},
-						{
-							"name": "Select1"
-						},
-						{
-							"name": "Filter1"
-						}
-					],
-					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Main or Branch-رئيسى ام فرع} as string,\n\t\t{Company Name Arabic-اسم الشركة عربى} as string,\n\t\t{Company Name English-اسم الشركة انجليزى} as string,\n\t\t{Commercial Registration No-رقم السجل التجارى} as string,\n\t\t{Commercial License number-رقم االرخصة التجارية} as string,\n\t\t{Area-اسم المنطقة} as string,\n\t\t{Street Name-اسم الشارع} as string,\n\t\t{Area Number-رقم المنطقة} as string,\n\t\t{Street Number2-رقم الشارع} as string,\n\t\t{Building Number-رقم البناية} as string,\n\t\t{ Phone Number-رقم الهاتف الارضى} as string,\n\t\t{Fax-الفاكس} as string,\n\t\t{P.O. Box-صندوق البريد} as string,\n\t\t{Email-ايميل الشركة} as string,\n\t\t{Website-الموقع الالكترون} as string,\n\t\t{Map Location Url-الموقع على الخريطة } as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> inputcompanycontainer\nFilter1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\ninputcompanycontainer select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 filter(isNull(iifNull(iifNull(MainorBranch,CompanyNameArabic,CompanyNameEnglish),iifNull(CommercialRegistrationNo,CommercialLicensenumber,Area),iifNull(iifNull(StreetName,AreaNumber,StreetNumber2),\niifNull(BuildingNumber,PhoneNumber,Fax),iifNull(POBox,Email,Website))))!= true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tMainorBranch,\n\t\tCompanyNameArabic,\n\t\tCompanyNameEnglish,\n\t\tCommercialRegistrationNo,\n\t\tCommercialLicensenumber,\n\t\tArea,\n\t\tStreetName,\n\t\tAreaNumber,\n\t\tStreetNumber2,\n\t\tBuildingNumber,\n\t\tPhoneNumber,\n\t\tFax,\n\t\t{P.O.Box} = POBox,\n\t\tEmail,\n\t\tWebsite,\n\t\tMapLocationUrl,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgCompany"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_contact')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "dls_input_xls_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "inputcontactcontainer"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "stgContact"
-						}
-					],
-					"transformations": [
-						{
-							"name": "AddColumn"
-						},
-						{
-							"name": "SurrogateKey1"
-						},
-						{
-							"name": "Select1"
-						},
-						{
-							"name": "Filter1"
-						}
-					],
-					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Seq-مسلسل} as string,\n\t\t{Name-الاسم} as string,\n\t\t{eMail- البريد الالكترونى} as string,\n\t\t{Phone-الهاتف} as string,\n\t\t{Extension-التحويلة} as string,\n\t\t{Mobile-الموبايل} as string,\n\t\t{Entity CR-رقم السجل التجارى} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> inputcontactcontainer\nFilter1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\ninputcontactcontainer select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 filter(isNull(iifNull(iifNull(Seq,Name,eMail),iifNull(Phone,Extension,EntityCR)))!= true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tSeq,\n\t\tName,\n\t\teMail,\n\t\tPhone,\n\t\tExtension,\n\t\tMobile,\n\t\tEntityCR,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME,\n\t\tID_SK\n\t)) ~> stgContact"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_items')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "dls_input_xls_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "inputitemscontainer"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "stgProducts"
-						}
-					],
-					"transformations": [
-						{
-							"name": "AddColumn"
-						},
-						{
-							"name": "SurrogateKey1"
-						},
-						{
-							"name": "Select1"
-						},
-						{
-							"name": "Filter1"
-						}
-					],
-					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Item Code - رقم الصنف} as string,\n\t\t{Barcode - الباركود} as string,\n\t\t{Product Name Arabic - اسم الصنف عربى} as string,\n\t\t{Description Arabic - وصف الصنف عربى} as string,\n\t\t{Product Name English - اسم الصنف انجليزى} as string,\n\t\t{Description English - وصف الصنف انجليزى} as string,\n\t\t{Unit Item Barcode - الباركود للوحدة } as string,\n\t\t{No Of Unit Items - عدد الوحدات} as string,\n\t\t{Unit Weight/size - وزن/سعة الوحدة} as string,\n\t\t{Unit UOM - وحدة القياس} as string,\n\t\t{Package UOM - وحدة قياس الحزمة-التغليف} as string,\n\t\t{Cost Price - سعر التكلفة} as string,\n\t\t{Selling Price - سعر البيع} as string,\n\t\t{Brand-Trade Mark English - سم العلامة التجارية انجليزى} as string,\n\t\t{Brand-Trade Mark Arabic - اسم العلامة التجارية عربى} as string,\n\t\t{MoCI Product Group - المجموعة السلعية - بالوزارة} as string,\n\t\t{Country of Oragen Name - اسم بلد المنشأ} as string,\n\t\t{Country of Oragen ISO - كود 3 لبلد المنشأ} as string,\n\t\t{HS Code - رمز المنسق الجمركي} as string,\n\t\t{Supplier CR - رقم السجل التجارى للمورد} as string,\n\t\t{Supplier Name - اسم المورد} as string,\n\t\t{Category Level 1 - تصنيف السلعة 1} as string,\n\t\t{Category Level 2 - تصنيف السلعة 2} as string,\n\t\t{Category Level 3 - تصنيف السلعة 3} as string,\n\t\t{Category Level 4 - تصنيف السلعة 4} as string,\n\t\t{Width - العرض} as string,\n\t\t{Height - الطول} as string,\n\t\t{Depth - الارتفاع} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> inputitemscontainer\nFilter1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\ninputitemscontainer select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 filter(isNull(iifNull(iifNull(iifNull(ItemCode , Barcode, ProductNameArabic) , iifNull(DescriptionArabic , ProductNameEnglish, DescriptionEnglish), iifNull(UnitItemBarcode , NoOfUnitItems, UnitWeightsize)),\r\niifNull(iifNull(UnitUOM , PackageUOM, CostPrice) , iifNull(SellingPrice , BrandTradeMarkEnglish, BrandTradeMarkArabic), iifNull(MoCIProductGroup , CountryofOragenName, CountryofOragenISO3)),\r\niifNull(iifNull(HSCode , SupplierCR, SupplierName) , iifNull(CategoryLevel11 , CategoryLevel22, CategoryLevel33), iifNull(CategoryLevel44 , Width, Height)))) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tITEMCODE = ItemCode,\n\t\tBARCODE = Barcode,\n\t\tPRODUCTNAMEARABIC = ProductNameArabic,\n\t\tDESCRIPTIONARABIC = DescriptionArabic,\n\t\tPRODUCTNAMEENGLISH = ProductNameEnglish,\n\t\tDESCRIPTIONENGLISH = DescriptionEnglish,\n\t\tUNITITEMBARCODE = UnitItemBarcode,\n\t\tNOOFUNITITEMS = NoOfUnitItems,\n\t\tUNITWEIGHTSIZE = UnitWeightsize,\n\t\tUNITUOM = UnitUOM,\n\t\tPACKAGEUOM = PackageUOM,\n\t\tCOSTPRICE = CostPrice,\n\t\tSELLINGPRICE = SellingPrice,\n\t\tBRANDTRADEMARKENGLISH = BrandTradeMarkEnglish,\n\t\tBRANDTRADEMARKARABIC = BrandTradeMarkArabic,\n\t\tMOCIPRODUCTGROUP = MoCIProductGroup,\n\t\tCOUNTRYOFORAGENNAME = CountryofOragenName,\n\t\tCOUNTRYOFORAGENISO = CountryofOragenISO3,\n\t\tHSCODE = HSCode,\n\t\tSUPPLIERCR = SupplierCR,\n\t\tSUPPLIERNAME = SupplierName,\n\t\tCATEGORYLEVEL11 = CategoryLevel11,\n\t\tCATEGORYLEVEL12 = CategoryLevel22,\n\t\tCATEGORYLEVEL13 = CategoryLevel33,\n\t\tCATEGORYLEVEL14 = CategoryLevel44,\n\t\tWIDTH = Width,\n\t\tHEIGHT = Height,\n\t\tDEPTH = Depth,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgProducts"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_transaction_type')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "dls_input_xls_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "srcTransactionType"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "stgTransactionType"
-						}
-					],
-					"transformations": [
-						{
-							"name": "AddColumn"
-						},
-						{
-							"name": "SurrogateKey1"
-						},
-						{
-							"name": "Select1"
-						},
-						{
-							"name": "Filter1"
-						}
-					],
-					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Company CR #} as string,\n\t\t{Company Transaction Type Arabic } as string,\n\t\t{Company Transaction Type English } as string,\n\t\t{Company Transaction type} as string,\n\t\t{PSMS - MoCI Transaction Types} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> srcTransactionType\nSelect1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\nFilter1 select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsrcTransactionType filter(isNull(iifNull(iifNull({Company CR #} , {Company Transaction Type Arabic }, {Company Transaction Type English }), {Company Transaction type},{PSMS - MoCI Transaction Types})) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCOMPANYCR = CompanyCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC = CompanyTransactionTypeArabic,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH = CompanyTransactionTypeEnglish,\n\t\tCOMPANYTRANSACTIONTYPE = CompanyTransactiontype,\n\t\tPSMSMOCITRANSACTIONTYPES = PSMSMoCITransactionTypes,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgTransactionType"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_warehouse')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "dls_input_xls_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "inputwarehousecontainer"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "stgWarehouse"
-						}
-					],
-					"transformations": [
-						{
-							"name": "AddColumn"
-						},
-						{
-							"name": "SurrogateKey1"
-						},
-						{
-							"name": "Select1"
-						},
-						{
-							"name": "Filter1"
-						}
-					],
-					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Store Code-رقم المخزن} as string,\n\t\t{Entity Commercial Registration No-رقم السجل التجارى للشركة} as string,\n\t\t{Entity Commercial License No-رقم الرخصة التجارىة للشركة} as string,\n\t\t{Warehouse/Store Commercial Registration No-رقم السجل التجارى للمخزن} as string,\n\t\t{Warehouse/Store Commercial License No-رقم الرخصة التجارىة للمخزن} as string,\n\t\t{Warehouse/Store Code-رقم المخزن} as string,\n\t\t{Area Name-اسم المنطقة} as string,\n\t\t{St. Name-اسم الشارع } as string,\n\t\t{Area Code-رقم المنطقة} as string,\n\t\t{St. No-رقم الشارع} as string,\n\t\t{Building ID-رقم البناية } as string,\n\t\t{Map Location URL-الخريطه} as string,\n\t\t{Total Store Area M2-اجمالى المساحة متر مربع} as string,\n\t\t{Storage Capacity in TON-السعة التخزينية بالطن} as string,\n\t\t{Storage Type-نوع التخزين} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> inputwarehousecontainer\nFilter1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\ninputwarehousecontainer select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 filter(isNull(iifNull(iifNull(StoreCode,EntityCommercialRegistrationNo,EntityCommercialLicenseNo),iifNull(WarehouseStoreCommercialRegistrationNo,WarehouseStoreCommercialLicenseNo,WarehouseStoreCode),iifNull(iifNull(AreaName,StName,AreaCode),\niifNull(StNo,BuildingID,MapLocationURL),iifNull(TotalStoreAreaM2,StorageCapacityinTON,StorageType))))!= true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tStoreCode,\n\t\tEntityCommercialRegistrationNo,\n\t\tEntityCommercialLicenseNo,\n\t\tWarehouseStoreCommercialRegistrationNo,\n\t\tWarehouseStoreCommercialLicenseNo,\n\t\tWarehouseStoreCode,\n\t\tAreaName,\n\t\tStName,\n\t\tAreaCode,\n\t\tStNo,\n\t\tBuildingID,\n\t\tMapLocationURL,\n\t\tTotalStoreAreaM2,\n\t\tStorageCapacityinTON,\n\t\tStorageType,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME,\n\t\tID_SK\n\t)) ~> stgWarehouse"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_xlsx_to_stg')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "dls_processing_xls",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_stg_transactions",
-								"type": "DatasetReference"
-							},
-							"name": "stgTransactions"
-						}
-					],
-					"transformations": [
-						{
-							"name": "AddColumn"
-						},
-						{
-							"name": "SurrogateKey1"
-						},
-						{
-							"name": "Filter1"
-						}
-					],
-					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nFilter1 derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\tTRANSACTION_DATE = regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+','')) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nsource1 filter(isNull({Transaction Date - تاريخ الحركة }) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tTRANSACTION_DATE,\n\t\tTRANSACTION_TYPE_CODE = {Transaction Type Code - كود نوع الحركة},\n\t\tITEM_CODE = {Item Code - كود الصنف},\n\t\tITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tYOUR_COMPANY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tOTHER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tCOMPANY_STORE_INVENTORY_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tQUANTITY = {Quantity - الكمية},\n\t\tSELLING_PRICE_PER_UNIT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tCOMMON_REFERANCE_NO = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tINTERNAL_TRANSFER_NUMBER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tNUMBER_OF_CONSUMER_INVOICES = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tID_SK = SK_ID_SUR,\n\t\tDS_FILENAME = STG_FILENAME,\n\t\tDT_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_CSV_TO_STG_with_df')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "GetFileList",
-						"description": "Get file list from processing container",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "dls_processing_csv_folder",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "DelimitedTextReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEachFile",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "truncateStgTransactions",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('GetFileList').output.childItems",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "IsFileNameCorrect",
-									"type": "IfCondition",
-									"dependsOn": [
-										{
-											"activity": "lookupFileName",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@equals(if(\nempty(activity('lookupFileName').output.value)\n,0,1),1)\n",
-											"type": "Expression"
-										},
-										"ifFalseActivities": [
-											{
-												"name": "Send E_Mail",
-												"type": "WebActivity",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
-													"connectVia": {
-														"referenceName": "integrationRuntime10min",
-														"type": "IntegrationRuntimeReference"
-													},
-													"method": "POST",
-													"headers": {},
-													"body": {
-														"value": "{\"EmailType\":\"NotExpectedFile\"}",
-														"type": "Expression"
-													},
-													"disableCertValidation": false
-												}
-											}
-										],
-										"ifTrueActivities": [
-											{
-												"name": "df_csv_to_stg",
-												"type": "ExecuteDataFlow",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "1.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"dataflow": {
-														"referenceName": "df_csv_to_stg",
-														"type": "DataFlowReference",
-														"parameters": {
-															"fileName": "'4'"
-														},
-														"datasetParameters": {
-															"processingCsv": {
-																"FileName": "@item().name"
-															},
-															"stgTransactions": {}
-														}
-													},
-													"staging": {
-														"linkedService": {
-															"referenceName": "ls_psmsii_syntodls",
-															"type": "LinkedServiceReference"
-														},
-														"folderPath": "stagingarea"
-													},
-													"integrationRuntime": {
-														"referenceName": "integrationRuntime10min",
-														"type": "IntegrationRuntimeReference"
-													},
-													"traceLevel": "Coarse"
-												}
-											}
-										]
-									}
-								},
-								{
-									"name": "lookupFileName",
-									"type": "Lookup",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SqlDWSource",
-											"sqlReaderQuery": {
-												"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[DWL_FILE_LIST] where DS_FILENAME= ','''',item().name,'''') ",
-												"type": "Expression"
-											},
-											"queryTimeout": "02:00:00",
-											"partitionOption": "None"
-										},
-										"dataset": {
-											"referenceName": "ds_dwl_file_list",
-											"type": "DatasetReference",
-											"parameters": {}
-										},
-										"firstRowOnly": false
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "truncateStgTransactions",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "GetFileList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlDWSource",
-								"sqlReaderQuery": "truncate table [dwh].[STG_TRANSACTIONS];\nselect 1;",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "ds_stg_transactions",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					}
-				],
-				"concurrency": 1,
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Dev"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:55:14Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_CUSTOM_MAIN')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "PL_DENE_XML",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_CUSTOM_TO_STG",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_CUSTOM"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/PL_CUSTOM_XML_TO_DB')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1178,9 +393,7 @@
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:55:22Z"
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/df_transerrlog_to_errlogcontainer')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_EXPORT_AND_EMAIL_company')]",
@@ -1329,6 +542,2271 @@
 				"annotations": []
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_EXPORT_AND_EMAIL_contact')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "df_errlog_container_contact",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_errlog_container_contact",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"stgcontacterrlog": {
+										"schemaName": "dwh",
+										"tableName": "STG_CONTACT_ERROR_LOG"
+									},
+									"errorlogcontact": {
+										"folderName": "Entity"
+									}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "stagingrea"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "MoveFiles",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "df_errlog_container_contact",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": false,
+									"wildcardFileName": "*_Entity_contact_err*",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "dls_errorlog_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dls_errorlog_binary_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"FolderName": "Entity"
+								}
+							}
+						]
+					},
+					{
+						"name": "lapp_qtr_email_contact",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "MoveFiles",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
+							"connectVia": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"EmailType": "ContactFileErrors"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/ENTITY/CONTACT"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_EXPORT_AND_EMAIL_items')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "df_errlogcontainer_items",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_errlog_container_items",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"stgproductserrlog": {
+										"schemaName": "dwh",
+										"tableName": "STG_PRODUCTS_ERROR_LOG"
+									},
+									"errorlogitems": {
+										"folderName": "Items"
+									}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "stagingarea"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Coarse"
+						}
+					},
+					{
+						"name": "MoveFiles",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "df_errlogcontainer_items",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": false,
+									"wildcardFileName": "*_ItemMasterFile_err.*",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "dls_errorlog_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dls_errorlog_binary_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"FolderName": "Items"
+								}
+							}
+						]
+					},
+					{
+						"name": "lapp_qtr_email_items",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "MoveFiles",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
+							"connectVia": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"EmailType": "ItemFileFileErrors"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/ITEMS"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_EXPORT_AND_EMAIL_tr_type')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "df_errlogcontainer_tr_type",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_errlog_container_tr_type",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"stgtransationtypeerrlog": {
+										"schemaName": "dwh",
+										"tableName": "STG_CR_TRANSACTION_TYPE_ERROR_LOG"
+									},
+									"errorlogcsv": {
+										"folderName": "TransactionType"
+									}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "stagingarea"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Coarse"
+						}
+					},
+					{
+						"name": "lapp_qtr_email_tr_type",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "MoveFiles",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
+							"connectVia": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"EmailType": "TransactionTypeFileErrors"
+							}
+						}
+					},
+					{
+						"name": "MoveFiles",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "df_errlogcontainer_tr_type",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": false,
+									"wildcardFileName": "*_TransactionTypes_err*",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "dls_errorlog_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dls_errorlog_binary_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"FolderName": "TransactionType"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/TRANSACTION_TYPE"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_EXPORT_AND_EMAIL_warehouse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "df_errlogcontainer_warehouse",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_errlog_container_warehouse",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"stgwarehouseerrorlog": {
+										"schemaName": "dwh",
+										"tableName": "STG_WAREHOUSE_ERROR_LOG"
+									},
+									"errorlogwarehouse": {
+										"folderName": "Entity"
+									}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "stagingarea"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Coarse"
+						}
+					},
+					{
+						"name": "MoveFiles",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "df_errlogcontainer_warehouse",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": false,
+									"wildcardFileName": "*_Entity_warehouse_err*",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "dls_errorlog_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dls_errorlog_binary_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"FolderName": "Entity"
+								}
+							}
+						]
+					},
+					{
+						"name": "lapp_qtr_email_warehouse",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "MoveFiles",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
+							"connectVia": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"EmailType": "WarehouseFileErrors"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/ENTITY/WAREHOUSE"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_INSERT_COMPANY')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_insert_company",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {
+										"schemaName": "dwh",
+										"tableName": "STG_COMPANY"
+									}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "stagingarea"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "None",
+							"cacheSinks": {
+								"firstRowOnly": true
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_STG_FILE_LIST_INS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Insert file names to stg file list table from processing container ",
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_csv_folder",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "truncateStgTransactions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "df_stg_file_list",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "df_stg_file_list_ins",
+											"type": "DataFlowReference",
+											"parameters": {
+												"itemname": {
+													"value": "'@{item().name}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"dummy": {},
+												"stgfilelist": {}
+											}
+										},
+										"staging": {},
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime10min",
+											"type": "IntegrationRuntimeReference"
+										},
+										"traceLevel": "None",
+										"cacheSinks": {
+											"firstRowOnly": true
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "truncateStgTransactions",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [etl].[STG_FILE_LIST];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_transactions",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-26T14:24:08Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_STG_FILE_LIST_UPD')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Stg file list tablosunu update eden pipeline",
+				"activities": [
+					{
+						"name": "df_stg_file_list_upd",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_stg_file_list_upd",
+								"type": "DataFlowReference",
+								"parameters": {
+									"itemname": "toString('CRFR_20210321.csv')"
+								},
+								"datasetParameters": {
+									"dwhfilelist": {},
+									"stgfilelistsrc": {},
+									"stgfilelisttrgt": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "stagingarea"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "None",
+							"cacheSinks": {
+								"firstRowOnly": true
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:54:43Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_STG_TRANS_TO_TRANSACTION_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "df_transfer_stg_Trans_to_Trans",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_transfer_stg_Trans_to_Trans",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source2": {},
+									"sink1": {
+										"schemaName": "dwh",
+										"tableName": "DWB_TRANSACTIONS"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:54:47Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_XLS_TO_STG')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_xls",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": "*.xlsx"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "IsFileNameCorrect",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "lookupFileName",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@equals(if(\nempty(activity('lookupFileName').output.value)\n,0,1),1)\n",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "Send E_Mail",
+												"type": "WebActivity",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
+													"connectVia": {
+														"referenceName": "integrationRuntime10min",
+														"type": "IntegrationRuntimeReference"
+													},
+													"method": "POST",
+													"headers": {},
+													"body": {
+														"value": "{\"EmailType\":\"NotExpectedFile\"}",
+														"type": "Expression"
+													},
+													"disableCertValidation": false
+												}
+											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "df_xlsx_to_stg",
+												"type": "ExecuteDataFlow",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "1.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"dataflow": {
+														"referenceName": "df_xlsx_to_stg",
+														"type": "DataFlowReference",
+														"parameters": {
+															"fileName": {
+																"value": "'@{item().name}'",
+																"type": "Expression"
+															}
+														},
+														"datasetParameters": {
+															"source1": {
+																"FileName": "@item().name"
+															},
+															"stgTransactions": {}
+														}
+													},
+													"staging": {
+														"linkedService": {
+															"referenceName": "ls_psmsii_syntodls",
+															"type": "LinkedServiceReference"
+														},
+														"folderPath": "stagingarea"
+													},
+													"integrationRuntime": {
+														"referenceName": "integrationRuntime10min",
+														"type": "IntegrationRuntimeReference"
+													},
+													"traceLevel": "Coarse"
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "lookupFileName",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderQuery": {
+												"value": "@concat('SELECT 1 as lkp_id\n  FROM [etl].[DWL_FILE_LIST] where DS_FILENAME= ','''',item().name,'''') ",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "ds_dwl_file_list",
+											"type": "DatasetReference",
+											"parameters": {}
+										},
+										"firstRowOnly": false
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:55:14Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_XLS_TO_STG_company')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_input_xls_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": "*",
+									"folderName": "Entity",
+									"SheetIndex": 0
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "truncateStgCompany",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "df_xls_to_stg_company",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "1.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "df_xls_to_stg_company",
+											"type": "DataFlowReference",
+											"parameters": {
+												"fileName": {
+													"value": "'@{item().name}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"inputcompanycontainer": {
+													"filename": "@item().name",
+													"folderName": "Entity",
+													"SheetIndex": 0
+												},
+												"stgCompany": {
+													"schemaName": "dwh",
+													"tableName": "STG_COMPANY"
+												}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "ls_psmsii_syntodls",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": "stagingarea"
+										},
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime10min",
+											"type": "IntegrationRuntimeReference"
+										},
+										"traceLevel": "Coarse"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "truncateStgCompany",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_COMPANY];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "STG_COMPANY"
+								}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/ENTITY/COMPANY"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_XLS_TO_STG_contact')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_input_xls_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": "*",
+									"folderName": "Entity",
+									"SheetIndex": 2
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "df_xls_to_stg_contacts",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "1.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "df_xls_to_stg_contact",
+											"type": "DataFlowReference",
+											"parameters": {
+												"fileName": {
+													"value": "'@{item().name}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"inputcontactcontainer": {
+													"filename": {
+														"value": "@item().name",
+														"type": "Expression"
+													},
+													"folderName": "Entity",
+													"SheetIndex": 2
+												},
+												"stgContact": {
+													"schemaName": "dwh",
+													"tableName": "STG_CONTACT"
+												}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "ls_psmsii_syntodls",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": "stagingarea"
+										},
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime10min",
+											"type": "IntegrationRuntimeReference"
+										},
+										"traceLevel": "Coarse"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/ENTITY/CONTACT"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_XLS_TO_STG_items')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_input_xls_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": "*",
+									"folderName": "Items",
+									"SheetIndex": 0
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "truncateStgProducts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "df_xls_to_stg_items",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "1.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "df_xls_to_stg_items",
+											"type": "DataFlowReference",
+											"parameters": {
+												"fileName": {
+													"value": "'@{item().name}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"inputitemscontainer": {
+													"filename": "@item().name",
+													"folderName": "Items",
+													"SheetIndex": 0
+												},
+												"stgProducts": {
+													"schemaName": "dwh",
+													"tableName": "STG_PRODUCTS"
+												}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "ls_psmsii_syntodls",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": "stagingarea"
+										},
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime10min",
+											"type": "IntegrationRuntimeReference"
+										},
+										"traceLevel": "Coarse"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "truncateStgProducts",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_PRODUCTS];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "STG_PRODUCTS"
+								}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/ITEMS"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_XLS_TO_STG_transaction_type')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from  container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_input_xls_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": "*",
+									"folderName": "TransactionType",
+									"SheetIndex": 0
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "truncatestgCRTransactionType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "df_xls_to_stg_transaction_type",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "1.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "df_xls_to_stg_transaction_type",
+											"type": "DataFlowReference",
+											"parameters": {
+												"fileName": {
+													"value": "'@{item().name}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"srcTransactionType": {
+													"filename": "@item().name",
+													"folderName": "TransactionType",
+													"SheetIndex": 0
+												},
+												"stgTransactionType": {
+													"schemaName": "dwh",
+													"tableName": "STG_CR_TRANSACTION_TYPE"
+												}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "ls_psmsii_syntodls",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": "stagingarea"
+										},
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime10min",
+											"type": "IntegrationRuntimeReference"
+										},
+										"traceLevel": "Coarse"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "truncatestgCRTransactionType",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_CR_TRANSACTION_TYPE];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "STG_CR_TRANSACTION_TYPE"
+								}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/TRANSACTION_TYPE"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_XLS_TO_STG_warehouse')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_input_xls_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": "*",
+									"folderName": "Entity",
+									"SheetIndex": 1
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "truncateStgWarehouse",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "df_xls_to_stg_warehouse",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "1.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "df_xls_to_stg_warehouse",
+											"type": "DataFlowReference",
+											"parameters": {
+												"fileName": {
+													"value": "'@{item().name}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"inputwarehousecontainer": {
+													"filename": "@item().name",
+													"folderName": "Entity",
+													"SheetIndex": 1
+												},
+												"stgWarehouse": {
+													"schemaName": "dwh",
+													"tableName": "STG_WAREHOUSE"
+												}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "ls_psmsii_syntodls",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": "stagingarea"
+										},
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime10min",
+											"type": "IntegrationRuntimeReference"
+										},
+										"traceLevel": "Coarse"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "truncateStgWarehouse",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_WAREHOUSE];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "STG_WAREHOUSE"
+								}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/ENTITY/WAREHOUSE"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_DAILY_MAIN')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "PL_STG_FILE_LIST_INS",
+						"description": "deneme2",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_FILE_TRANSFER",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_STG_FILE_LIST_INS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_FILE_TRANSFER",
+						"description": "deneme2",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_FILE_TRANSFER",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_DWL_FILE_LIST_UPD",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Wait1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_DWL_FILE_LIST_UPD",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_STG_FILE_LIST_UPD",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Wait1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_STG_FILE_LIST_UPD",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_MAIL_TO_NOTEXISTS",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_DWL_FILE_LIST_UPD",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_MAIL_TO_NOTEXISTS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_CSV_TO_STG",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "truncateStgTransactions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_CSV_TO_STG",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_EXEC_P_DQ_MAIN",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_EXEC_P_DQ_MAIN",
+						"description": "deneme",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteProcessingFiles",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_EXEC_P_DQ_MAIN",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_LOAD_DWB_TRANSACTION",
+						"description": "",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_EXPORT_AND_EMAIL_ERRLOG",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_LOAD_DWB_TRANSACTION",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_DWL_FILE_LIST_ARC",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_LOAD_DWB_TRANSACTION",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_MAIL_TO_NOTEXISTS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_DWL_FILE_LIST_ARC",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_DWL_FILE_LIST_INS",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_FILE_TRANSFER",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_DWL_FILE_LIST_INS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "truncateStgTransactions",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Wait1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_TRANSACTIONS];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_transactions",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "PL_XLSX_TO_STG",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "truncateStgTransactions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_XLS_TO_STG",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [
+							{
+								"activity": "PL_DWL_FILE_LIST_INS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_STG_FILE_LIST_INS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					},
+					{
+						"name": "PL_STOCK_CALCULATE",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_LOAD_DWB_TRANSACTION",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_STOCK_CALCULATE",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteProcessingFiles",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "PL_CSV_TO_STG",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_XLSX_TO_STG",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"enableLogging": false,
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"deneme": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-25T14:24:57Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_STG_FILE_LIST_INS')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_DWL_FILE_LIST_UPD')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_STG_FILE_LIST_UPD')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_ERRLOG')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_XLS_TO_STG')]"
+			]
 		}
 	]
 }
