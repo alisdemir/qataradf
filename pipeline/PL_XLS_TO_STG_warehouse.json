@@ -17,13 +17,8 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_input_xls_parametric",
-						"type": "DatasetReference",
-						"parameters": {
-							"filename": "*",
-							"folderName": "Entity",
-							"SheetIndex": 1
-						}
+						"referenceName": "dls_input_warehouse_xls",
+						"type": "DatasetReference"
 					},
 					"fieldList": [
 						"childItems"
@@ -74,17 +69,6 @@
 										"fileName": {
 											"value": "'@{item().name}'",
 											"type": "Expression"
-										}
-									},
-									"datasetParameters": {
-										"inputwarehousecontainer": {
-											"filename": "@item().name",
-											"folderName": "Entity",
-											"SheetIndex": 1
-										},
-										"stgWarehouse": {
-											"schemaName": "dwh",
-											"tableName": "STG_WAREHOUSE"
 										}
 									}
 								},
