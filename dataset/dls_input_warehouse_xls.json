@@ -22,6 +22,7 @@
 				"folderPath": "Entity",
 				"fileSystem": "Input"
 			},
+			"sheetIndex": 1,
 			"firstRowAsHeader": true
 		},
 		"schema": [
