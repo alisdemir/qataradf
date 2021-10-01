@@ -16,13 +16,12 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "22071_Contact.xlsx",
+					"value": "@dataset().filename",
 					"type": "Expression"
 				},
 				"folderPath": "Entity",
 				"fileSystem": "input"
 			},
-			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
 		"schema": [
