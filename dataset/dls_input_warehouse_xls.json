@@ -28,63 +28,63 @@
 		},
 		"schema": [
 			{
-				"name": "Store Code-رقم المخزن",
+				"name": "Store Code",
 				"type": "String"
 			},
 			{
-				"name": "Entity Commercial Registration No-رقم السجل التجارى للشركة",
+				"name": "Entity Commercial Registration No",
 				"type": "String"
 			},
 			{
-				"name": "Entity Commercial License No-رقم الرخصة التجارىة للشركة",
+				"name": "Entity Commercial License No",
 				"type": "String"
 			},
 			{
-				"name": "Warehouse-Store Commercial Registration No-رقم السجل التجارى للمخزن",
+				"name": "Warehouse-Store Commercial Registration No",
 				"type": "String"
 			},
 			{
-				"name": "Warehouse-Store Commercial License No-رقم الرخصة التجارىة للمخزن",
+				"name": "Warehouse-Store Commercial License No",
 				"type": "String"
 			},
 			{
-				"name": "Warehouse-Store Code-رقم المخزن",
+				"name": "Warehouse-Store Code",
 				"type": "String"
 			},
 			{
-				"name": "Area Name-اسم المنطقة",
+				"name": "Area Name",
 				"type": "String"
 			},
 			{
-				"name": "St Name-اسم الشارع ",
+				"name": "St Name",
 				"type": "String"
 			},
 			{
-				"name": "Area Code-رقم المنطقة",
+				"name": "Area Code",
 				"type": "String"
 			},
 			{
-				"name": "St No-رقم الشارع",
+				"name": "St No",
 				"type": "String"
 			},
 			{
-				"name": "Building ID-رقم البناية ",
+				"name": "Building ID",
 				"type": "String"
 			},
 			{
-				"name": "Map Location URL-الخريطه",
+				"name": "Map Location URL",
 				"type": "String"
 			},
 			{
-				"name": "Total Store Area M2-اجمالى المساحة متر مربع",
+				"name": "Total Store Area M2",
 				"type": "String"
 			},
 			{
-				"name": "Storage Capacity in TON-السعة التخزينية بالطن",
+				"name": "Storage Capacity in TON",
 				"type": "String"
 			},
 			{
-				"name": "Storage Type-نوع التخزين",
+				"name": "Storage Type",
 				"type": "String"
 			}
 		]
