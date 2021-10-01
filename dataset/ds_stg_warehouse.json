@@ -1,0 +1,92 @@
+{
+	"name": "ds_stg_warehouse",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dsqlpqtr",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "STORECODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ENTITYCOMMERCIALREGISTRATIONNO",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ENTITYCOMMERCIALLICENSENO",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WAREHOUSESTORECOMMERCIALREGISTRATIONNO",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WAREHOUSESTORECOMMERCIALLICENSENO",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WAREHOUSESTORECODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AREANAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "STNAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AREACODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "STNO",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BUILDINGID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MAPLOCATIONURL",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TOTALSTOREAREAM2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "STORAGECAPACITYINTON",
+				"type": "nvarchar"
+			},
+			{
+				"name": "STORAGETYPE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_SK",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DS_FILENAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DT_FILETIME",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dwh",
+			"table": "STG_WAREHOUSE"
+		}
+	}
+}

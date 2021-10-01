@@ -1,0 +1,82 @@
+{
+	"name": "dls_input_warehouse_xls",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Entity",
+				"fileSystem": "Input"
+			},
+			"sheetIndex": 1,
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Store Code-رقم المخزن",
+				"type": "String"
+			},
+			{
+				"name": "Entity Commercial Registration No-رقم السجل التجارى للشركة",
+				"type": "String"
+			},
+			{
+				"name": "Entity Commercial License No-رقم الرخصة التجارىة للشركة",
+				"type": "String"
+			},
+			{
+				"name": "Warehouse/Store Commercial Registration No-رقم السجل التجارى للمخزن",
+				"type": "String"
+			},
+			{
+				"name": "Warehouse/Store Commercial License No-رقم الرخصة التجارىة للمخزن",
+				"type": "String"
+			},
+			{
+				"name": "Warehouse/Store Code-رقم المخزن",
+				"type": "String"
+			},
+			{
+				"name": "Area Name-اسم المنطقة",
+				"type": "String"
+			},
+			{
+				"name": "St. Name-اسم الشارع ",
+				"type": "String"
+			},
+			{
+				"name": "Area Code-رقم المنطقة",
+				"type": "String"
+			},
+			{
+				"name": "St. No-رقم الشارع",
+				"type": "String"
+			},
+			{
+				"name": "Building ID-رقم البناية ",
+				"type": "String"
+			},
+			{
+				"name": "Map Location URL-الخريطه",
+				"type": "String"
+			},
+			{
+				"name": "Total Store Area M2-اجمالى المساحة متر مربع",
+				"type": "String"
+			},
+			{
+				"name": "Storage Capacity in TON-السعة التخزينية بالطن",
+				"type": "String"
+			},
+			{
+				"name": "Storage Type-نوع التخزين",
+				"type": "String"
+			}
+		]
+	}
+}
