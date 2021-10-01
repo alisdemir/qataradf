@@ -397,6 +397,71 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_contact_xls')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": "Entity",
+						"fileSystem": "input"
+					},
+					"sheetIndex": 2,
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Seq-مسلسل",
+						"type": "String"
+					},
+					{
+						"name": "Name-الاسم",
+						"type": "String"
+					},
+					{
+						"name": "eMail- البريد الالكترونى",
+						"type": "String"
+					},
+					{
+						"name": "Phone-الهاتف",
+						"type": "String"
+					},
+					{
+						"name": "Extension-التحويلة",
+						"type": "String"
+					},
+					{
+						"name": "Mobile-الموبايل",
+						"type": "String"
+					},
+					{
+						"name": "Entity CR-رقم السجل التجارى",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dls_input_entity_xls')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -422,31 +487,10 @@
 						"folderPath": "Entity",
 						"fileSystem": "input"
 					},
-					"sheetIndex": 0,
+					"sheetIndex": 1,
 					"firstRowAsHeader": true
 				},
-				"schema": [
-					{
-						"name": "Company CR #",
-						"type": "String"
-					},
-					{
-						"name": "Company Transaction Type Arabic ",
-						"type": "String"
-					},
-					{
-						"name": "Company Transaction Type English ",
-						"type": "String"
-					},
-					{
-						"name": "Company Transaction type",
-						"type": "String"
-					},
-					{
-						"name": "PSMS - MoCI Transaction Types",
-						"type": "String"
-					}
-				]
+				"schema": []
 			},
 			"dependsOn": []
 		},
@@ -462,7 +506,7 @@
 				"parameters": {
 					"filename": {
 						"type": "string",
-						"defaultValue": "135104_Entity.xlsx"
+						"defaultValue": "22071_Entity.xlsx"
 					},
 					"folderName": {
 						"type": "string",
@@ -470,7 +514,7 @@
 					},
 					"SheetIndex": {
 						"type": "int",
-						"defaultValue": 2
+						"defaultValue": 1
 					}
 				},
 				"folder": {
@@ -1034,42 +1078,6 @@
 				"typeProperties": {
 					"schema": "dwh",
 					"table": "STG_CUSTOMS_DEC"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_file_list')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_ISEXPECTED",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_EMAIL",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "etl",
-					"table": "STG_FILE_LIST"
 				}
 			},
 			"dependsOn": []
