@@ -250,8 +250,23 @@
 									"referenceName": "df_xls_to_stg_warehouse",
 									"type": "DataFlowReference",
 									"parameters": {
-										"fileName": "'a'"
+										"fileName": {
+											"value": "'@{item().name}'",
+											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"source1": {
+											"filename": "@item().name"
+										}
 									}
+								},
+								"staging": {
+									"linkedService": {
+										"referenceName": "ls_psmsii_syntodls",
+										"type": "LinkedServiceReference"
+									},
+									"folderPath": "stagingarea"
 								},
 								"compute": {
 									"coreCount": 8,
@@ -299,14 +314,29 @@
 									"referenceName": "df_xls_to_stg_contact",
 									"type": "DataFlowReference",
 									"parameters": {
-										"fileName": "'22071_Entity.xlsx'"
+										"fileName": {
+											"value": "'@{item().name}'",
+											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"inputcontactcontainer": {
+											"filename": "@item().name"
+										}
 									}
 								},
-								"compute": {
-									"coreCount": 8,
-									"computeType": "General"
+								"staging": {
+									"linkedService": {
+										"referenceName": "ls_psmsii_syntodls",
+										"type": "LinkedServiceReference"
+									},
+									"folderPath": "stagingarea"
 								},
-								"traceLevel": "Fine"
+								"integrationRuntime": {
+									"referenceName": "integrationRuntime10min",
+									"type": "IntegrationRuntimeReference"
+								},
+								"traceLevel": "Coarse"
 							}
 						}
 					]
