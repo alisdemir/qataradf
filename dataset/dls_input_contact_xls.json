@@ -16,7 +16,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@dataset().filename",
+					"value": "22071_Contact.xlsx",
 					"type": "Expression"
 				},
 				"folderPath": "Entity",
