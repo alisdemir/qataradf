@@ -20,7 +20,7 @@
 						"referenceName": "dls_input_contact_xls",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "22071_Contact.xlsx"
+							"filename": "*"
 						}
 					},
 					"fieldList": [
