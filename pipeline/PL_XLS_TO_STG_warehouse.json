@@ -18,7 +18,10 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "dls_input_warehouse_xls",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "*"
+						}
 					},
 					"fieldList": [
 						"childItems"
@@ -69,6 +72,11 @@
 										"fileName": {
 											"value": "'@{item().name}'",
 											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"inputwarehousecontainer": {
+											"filename": "@item().name"
 										}
 									}
 								},
