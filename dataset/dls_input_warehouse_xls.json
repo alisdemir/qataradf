@@ -7,7 +7,8 @@
 		},
 		"parameters": {
 			"filename": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "135104_Entity.xlsx"
 			}
 		},
 		"annotations": [],
@@ -22,7 +23,6 @@
 				"folderPath": "Entity",
 				"fileSystem": "Input"
 			},
-			"sheetIndex": 1,
 			"firstRowAsHeader": true
 		},
 		"schema": [
@@ -55,7 +55,7 @@
 				"type": "String"
 			},
 			{
-				"name": "St. Name-اسم الشارع",
+				"name": "St. Name-اسم الشارع ",
 				"type": "String"
 			},
 			{
@@ -67,7 +67,7 @@
 				"type": "String"
 			},
 			{
-				"name": "Building ID-رقم البناية",
+				"name": "Building ID-رقم البناية ",
 				"type": "String"
 			},
 			{
