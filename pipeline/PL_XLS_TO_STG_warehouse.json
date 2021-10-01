@@ -20,7 +20,7 @@
 						"referenceName": "dls_input_warehouse_xls",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "*"
+							"filename": "135104_warehouse*"
 						}
 					},
 					"fieldList": [
