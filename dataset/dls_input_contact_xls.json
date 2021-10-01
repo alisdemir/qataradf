@@ -15,11 +15,14 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "@dataset().filename",
+				"fileName": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				},
 				"folderPath": "Entity",
 				"fileSystem": "input"
 			},
-			"sheetIndex": 2,
+			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
 		"schema": [
