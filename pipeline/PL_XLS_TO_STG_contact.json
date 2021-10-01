@@ -17,10 +17,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_input_contact_xls",
+						"referenceName": "dls_input_xls_parametric",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "*"
+							"filename": "@item().name",
+							"folderName": "Entity",
+							"SheetIndex": 2
 						}
 					},
 					"fieldList": [
@@ -76,11 +78,9 @@
 									},
 									"datasetParameters": {
 										"inputcontactcontainer": {
-											"filename": "@item().name"
-										},
-										"stgContact": {
-											"schemaName": "dwh",
-											"tableName": "STG_CONTACT"
+											"filename": "*",
+											"folderName": "Entity",
+											"SheetIndex": 2
 										}
 									}
 								},
