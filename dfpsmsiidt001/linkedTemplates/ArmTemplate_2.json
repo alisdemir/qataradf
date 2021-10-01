@@ -13,6 +13,223 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_contact')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dedicated_SQL"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "SEQ",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EMAIL",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PHONE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EXTENSION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MOBILE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ENTITYCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_FILETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_CONTACT"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_customs_dec')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dedicated_SQL"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "NotificationSender",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NotificationDate",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NotificationRef",
+						"type": "nvarchar"
+					},
+					{
+						"name": "address",
+						"type": "nvarchar"
+					},
+					{
+						"name": "bolNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "cargoManifestNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "carrierName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "clearingAgencyCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "clearingAgencyNameAR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "clearingAgencyNameEng",
+						"type": "nvarchar"
+					},
+					{
+						"name": "companyName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "companyNameAr",
+						"type": "nvarchar"
+					},
+					{
+						"name": "countryOfLoading",
+						"type": "nvarchar"
+					},
+					{
+						"name": "declarationNo",
+						"type": "nvarchar"
+					},
+					{
+						"name": "declarationStatus",
+						"type": "nvarchar"
+					},
+					{
+						"name": "declarationType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "entryOrExitPortName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "establishmentId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "exporterName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "firstCountryOfLoading",
+						"type": "nvarchar"
+					},
+					{
+						"name": "importerName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "masterBolOrAWBNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "portOfLoading",
+						"type": "nvarchar"
+					},
+					{
+						"name": "portType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "releaseOrderNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "releasedDate",
+						"type": "nvarchar"
+					},
+					{
+						"name": "supplierCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "supplierCustomsCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "voyageOrFlightNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "accountType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_CUSTOMS_DEC"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_file_list')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -230,148 +447,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dsqlp_parametric')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"schemaName": {
-						"type": "string",
-						"defaultValue": "dwh"
-					},
-					"tableName": {
-						"type": "string",
-						"defaultValue": "STG_CONTACT"
-					}
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().schemaName",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().tableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/qtrsqldb')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_qtrsqldb",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"tableName": {
-						"type": "string",
-						"defaultValue": "Products"
-					},
-					"schemaName": {
-						"type": "string",
-						"defaultValue": "dbo"
-					}
-				},
-				"folder": {
-					"name": "Qtr_SQLdb"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().schemaName",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().tableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_contact')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "SEQ",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EMAIL",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PHONE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EXTENSION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MOBILE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ENTITYCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_CONTACT"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_warehouse')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -470,99 +545,78 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dls_input_warehouse_xls')]",
+			"name": "[concat(parameters('factoryName'), '/dsqlp_parametric')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
+					"referenceName": "ls_psmsii_syntodsqlp",
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
-					"filename": {
-						"type": "string"
+					"schemaName": {
+						"type": "string",
+						"defaultValue": "dwh"
+					},
+					"tableName": {
+						"type": "string",
+						"defaultValue": "STG_CONTACT"
 					}
 				},
 				"folder": {
-					"name": "Storage_DL_QTR"
+					"name": "Dedicated_SQL"
 				},
 				"annotations": [],
-				"type": "Excel",
+				"type": "AzureSqlDWTable",
+				"schema": [],
 				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().filename",
-							"type": "Expression"
-						},
-						"folderPath": "Entity",
-						"fileSystem": "input"
+					"schema": {
+						"value": "@dataset().schemaName",
+						"type": "Expression"
 					},
-					"sheetIndex": 1,
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Store Code-رقم المخزن",
-						"type": "String"
-					},
-					{
-						"name": "Entity Commercial Registration No-رقم السجل التجارى للشركة",
-						"type": "String"
-					},
-					{
-						"name": "Entity Commercial License No-رقم الرخصة التجارىة للشركة",
-						"type": "String"
-					},
-					{
-						"name": "Warehouse/Store Commercial Registration No-رقم السجل التجارى للمخزن",
-						"type": "String"
-					},
-					{
-						"name": "Warehouse/Store Commercial License No-رقم الرخصة التجارىة للمخزن",
-						"type": "String"
-					},
-					{
-						"name": "Warehouse/Store Code-رقم المخزن",
-						"type": "String"
-					},
-					{
-						"name": "Area Name-اسم المنطقة",
-						"type": "String"
-					},
-					{
-						"name": "St. Name-اسم الشارع ",
-						"type": "String"
-					},
-					{
-						"name": "Area Code-رقم المنطقة",
-						"type": "String"
-					},
-					{
-						"name": "St. No-رقم الشارع",
-						"type": "String"
-					},
-					{
-						"name": "Building ID-رقم البناية ",
-						"type": "String"
-					},
-					{
-						"name": "Map Location URL-الخريطه",
-						"type": "String"
-					},
-					{
-						"name": "Total Store Area M2-اجمالى المساحة متر مربع",
-						"type": "String"
-					},
-					{
-						"name": "Storage Capacity in TON-السعة التخزينية بالطن",
-						"type": "String"
-					},
-					{
-						"name": "Storage Type-نوع التخزين",
-						"type": "String"
+					"table": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
 					}
-				]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/qtrsqldb')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_qtrsqldb",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "string",
+						"defaultValue": "Products"
+					},
+					"schemaName": {
+						"type": "string",
+						"defaultValue": "dbo"
+					}
+				},
+				"folder": {
+					"name": "Qtr_SQLdb"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().schemaName",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
 			},
 			"dependsOn": []
 		},
@@ -3131,7 +3185,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
+				"[concat(variables('factoryId'), '/datasets/ds_stg_customs_dec')]"
 			]
 		},
 		{

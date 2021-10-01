@@ -7821,6 +7821,7 @@
 							],
 							"storeSettings": {
 								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
 								"enablePartitionDiscovery": false
 							}
 						}
@@ -8257,6 +8258,105 @@
 					"firstRowAsHeader": true
 				},
 				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_warehouse_xls')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": "Entity",
+						"fileSystem": "input"
+					},
+					"sheetIndex": 1,
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Store Code-رقم المخزن",
+						"type": "String"
+					},
+					{
+						"name": "Entity Commercial Registration No-رقم السجل التجارى للشركة",
+						"type": "String"
+					},
+					{
+						"name": "Entity Commercial License No-رقم الرخصة التجارىة للشركة",
+						"type": "String"
+					},
+					{
+						"name": "Warehouse/Store Commercial Registration No-رقم السجل التجارى للمخزن",
+						"type": "String"
+					},
+					{
+						"name": "Warehouse/Store Commercial License No-رقم الرخصة التجارىة للمخزن",
+						"type": "String"
+					},
+					{
+						"name": "Warehouse/Store Code-رقم المخزن",
+						"type": "String"
+					},
+					{
+						"name": "Area Name-اسم المنطقة",
+						"type": "String"
+					},
+					{
+						"name": "St. Name-اسم الشارع ",
+						"type": "String"
+					},
+					{
+						"name": "Area Code-رقم المنطقة",
+						"type": "String"
+					},
+					{
+						"name": "St. No-رقم الشارع",
+						"type": "String"
+					},
+					{
+						"name": "Building ID-رقم البناية ",
+						"type": "String"
+					},
+					{
+						"name": "Map Location URL-الخريطه",
+						"type": "String"
+					},
+					{
+						"name": "Total Store Area M2-اجمالى المساحة متر مربع",
+						"type": "String"
+					},
+					{
+						"name": "Storage Capacity in TON-السعة التخزينية بالطن",
+						"type": "String"
+					},
+					{
+						"name": "Storage Type-نوع التخزين",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
@@ -8740,6 +8840,74 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_contact')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dedicated_SQL"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "SEQ",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EMAIL",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PHONE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EXTENSION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MOBILE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ENTITYCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_FILETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_CONTACT"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_customs_dec')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -9113,6 +9281,106 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodsqlp')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_warehouse')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dedicated_SQL"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "STORECODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ENTITYCOMMERCIALREGISTRATIONNO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ENTITYCOMMERCIALLICENSENO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WAREHOUSESTORECOMMERCIALREGISTRATIONNO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WAREHOUSESTORECOMMERCIALLICENSENO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WAREHOUSESTORECODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AREANAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STNAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AREACODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STNO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BUILDINGID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MAPLOCATIONURL",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TOTALSTOREAREAM2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STORAGECAPACITYINTON",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STORAGETYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_FILETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_WAREHOUSE"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
 			]
 		},
 		{
@@ -9677,7 +9945,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -10265,7 +10533,7 @@
 							"name": "Filter1"
 						}
 					],
-					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Company CR #} as string,\n\t\t{Company Transaction Type Arabic } as string,\n\t\t{Company Transaction Type English } as string,\n\t\t{Company Transaction type} as string,\n\t\t{PSMS - MoCI Transaction Types} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> srcTransactionType\nSelect1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\nFilter1 select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsrcTransactionType filter(isNull(iifNull(iifNull({Company CR #} , {Company Transaction Type Arabic }, {Company Transaction Type English }), {Company Transaction type},{PSMS - MoCI Transaction Types})) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCOMPANYCR = CompanyCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC = CompanyTransactionTypeArabic,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH = CompanyTransactionTypeEnglish,\n\t\tCOMPANYTRANSACTIONTYPE = CompanyTransactiontype,\n\t\tPSMSMOCITRANSACTIONTYPES = PSMSMoCITransactionTypes,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgTransactionType"
+					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Company CR #} as string,\n\t\t{Company Transaction Type Arabic } as string,\n\t\t{Company Transaction Type English } as string,\n\t\t{Company Transaction type} as string,\n\t\t{PSMS - MoCI Transaction Types} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tmoveFiles: ['TransactionType','Archive']) ~> srcTransactionType\nSelect1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\nFilter1 select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsrcTransactionType filter(isNull(iifNull(iifNull({Company CR #} , {Company Transaction Type Arabic }, {Company Transaction Type English }), {Company Transaction type},{PSMS - MoCI Transaction Types})) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCOMPANYCR = CompanyCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC = CompanyTransactionTypeArabic,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH = CompanyTransactionTypeEnglish,\n\t\tCOMPANYTRANSACTIONTYPE = CompanyTransactiontype,\n\t\tPSMSMOCITRANSACTIONTYPES = PSMSMoCITransactionTypes,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgTransactionType"
 				}
 			},
 			"dependsOn": [
@@ -10395,273 +10663,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_contact')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "SEQ",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EMAIL",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PHONE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EXTENSION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MOBILE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ENTITYCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_CONTACT"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_warehouse')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "STORECODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ENTITYCOMMERCIALREGISTRATIONNO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ENTITYCOMMERCIALLICENSENO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WAREHOUSESTORECOMMERCIALREGISTRATIONNO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WAREHOUSESTORECOMMERCIALLICENSENO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WAREHOUSESTORECODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AREANAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STNAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AREACODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STNO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BUILDINGID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MAPLOCATIONURL",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TOTALSTOREAREAM2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STORAGECAPACITYINTON",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STORAGETYPE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_WAREHOUSE"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dls_input_warehouse_xls')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"filename": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().filename",
-							"type": "Expression"
-						},
-						"folderPath": "Entity",
-						"fileSystem": "input"
-					},
-					"sheetIndex": 1,
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Store Code-رقم المخزن",
-						"type": "String"
-					},
-					{
-						"name": "Entity Commercial Registration No-رقم السجل التجارى للشركة",
-						"type": "String"
-					},
-					{
-						"name": "Entity Commercial License No-رقم الرخصة التجارىة للشركة",
-						"type": "String"
-					},
-					{
-						"name": "Warehouse/Store Commercial Registration No-رقم السجل التجارى للمخزن",
-						"type": "String"
-					},
-					{
-						"name": "Warehouse/Store Commercial License No-رقم الرخصة التجارىة للمخزن",
-						"type": "String"
-					},
-					{
-						"name": "Warehouse/Store Code-رقم المخزن",
-						"type": "String"
-					},
-					{
-						"name": "Area Name-اسم المنطقة",
-						"type": "String"
-					},
-					{
-						"name": "St. Name-اسم الشارع ",
-						"type": "String"
-					},
-					{
-						"name": "Area Code-رقم المنطقة",
-						"type": "String"
-					},
-					{
-						"name": "St. No-رقم الشارع",
-						"type": "String"
-					},
-					{
-						"name": "Building ID-رقم البناية ",
-						"type": "String"
-					},
-					{
-						"name": "Map Location URL-الخريطه",
-						"type": "String"
-					},
-					{
-						"name": "Total Store Area M2-اجمالى المساحة متر مربع",
-						"type": "String"
-					},
-					{
-						"name": "Storage Capacity in TON-السعة التخزينية بالطن",
-						"type": "String"
-					},
-					{
-						"name": "Storage Type-نوع التخزين",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
 			]
 		}
 	]

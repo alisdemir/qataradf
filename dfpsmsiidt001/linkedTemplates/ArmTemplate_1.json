@@ -495,6 +495,103 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_warehouse_xls')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": "Entity",
+						"fileSystem": "input"
+					},
+					"sheetIndex": 1,
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Store Code-رقم المخزن",
+						"type": "String"
+					},
+					{
+						"name": "Entity Commercial Registration No-رقم السجل التجارى للشركة",
+						"type": "String"
+					},
+					{
+						"name": "Entity Commercial License No-رقم الرخصة التجارىة للشركة",
+						"type": "String"
+					},
+					{
+						"name": "Warehouse/Store Commercial Registration No-رقم السجل التجارى للمخزن",
+						"type": "String"
+					},
+					{
+						"name": "Warehouse/Store Commercial License No-رقم الرخصة التجارىة للمخزن",
+						"type": "String"
+					},
+					{
+						"name": "Warehouse/Store Code-رقم المخزن",
+						"type": "String"
+					},
+					{
+						"name": "Area Name-اسم المنطقة",
+						"type": "String"
+					},
+					{
+						"name": "St. Name-اسم الشارع ",
+						"type": "String"
+					},
+					{
+						"name": "Area Code-رقم المنطقة",
+						"type": "String"
+					},
+					{
+						"name": "St. No-رقم الشارع",
+						"type": "String"
+					},
+					{
+						"name": "Building ID-رقم البناية ",
+						"type": "String"
+					},
+					{
+						"name": "Map Location URL-الخريطه",
+						"type": "String"
+					},
+					{
+						"name": "Total Store Area M2-اجمالى المساحة متر مربع",
+						"type": "String"
+					},
+					{
+						"name": "Storage Capacity in TON-السعة التخزينية بالطن",
+						"type": "String"
+					},
+					{
+						"name": "Storage Type-نوع التخزين",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dls_input_xls_parametric')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -927,157 +1024,6 @@
 				"typeProperties": {
 					"schema": "etl",
 					"table": "DWL_FILE_LIST"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_customs_dec')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "NotificationSender",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NotificationDate",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NotificationRef",
-						"type": "nvarchar"
-					},
-					{
-						"name": "address",
-						"type": "nvarchar"
-					},
-					{
-						"name": "bolNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "cargoManifestNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "carrierName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "clearingAgencyCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "clearingAgencyNameAR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "clearingAgencyNameEng",
-						"type": "nvarchar"
-					},
-					{
-						"name": "companyName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "companyNameAr",
-						"type": "nvarchar"
-					},
-					{
-						"name": "countryOfLoading",
-						"type": "nvarchar"
-					},
-					{
-						"name": "declarationNo",
-						"type": "nvarchar"
-					},
-					{
-						"name": "declarationStatus",
-						"type": "nvarchar"
-					},
-					{
-						"name": "declarationType",
-						"type": "nvarchar"
-					},
-					{
-						"name": "email",
-						"type": "nvarchar"
-					},
-					{
-						"name": "entryOrExitPortName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "establishmentId",
-						"type": "nvarchar"
-					},
-					{
-						"name": "exporterName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "firstCountryOfLoading",
-						"type": "nvarchar"
-					},
-					{
-						"name": "importerName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "masterBolOrAWBNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "portOfLoading",
-						"type": "nvarchar"
-					},
-					{
-						"name": "portType",
-						"type": "nvarchar"
-					},
-					{
-						"name": "releaseOrderNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "releasedDate",
-						"type": "nvarchar"
-					},
-					{
-						"name": "supplierCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "supplierCustomsCode",
-						"type": "nvarchar"
-					},
-					{
-						"name": "voyageOrFlightNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "accountType",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_CUSTOMS_DEC"
 				}
 			},
 			"dependsOn": []
