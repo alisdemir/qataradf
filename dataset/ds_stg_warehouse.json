@@ -5,6 +5,9 @@
 			"referenceName": "ls_dsqlpqtr",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Dedicated_SQL"
+		},
 		"annotations": [],
 		"type": "AzureSqlDWTable",
 		"schema": [

@@ -234,7 +234,7 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "df_xls_to_stg_warehouse_copy1",
+							"name": "df_xls_to_stg_warehouse",
 							"type": "ExecuteDataFlow",
 							"dependsOn": [],
 							"policy": {
@@ -250,35 +250,14 @@
 									"referenceName": "df_xls_to_stg_warehouse",
 									"type": "DataFlowReference",
 									"parameters": {
-										"fileName": {
-											"value": "'@{item().name}'",
-											"type": "Expression"
-										}
-									},
-									"datasetParameters": {
-										"inputwarehousecontainer": {
-											"filename": "@item().name",
-											"folderName": "Entity",
-											"SheetIndex": 1
-										},
-										"stgWarehouse": {
-											"schemaName": "dwh",
-											"tableName": "STG_WAREHOUSE"
-										}
+										"fileName": "'a'"
 									}
 								},
-								"staging": {
-									"linkedService": {
-										"referenceName": "ls_psmsii_syntodls",
-										"type": "LinkedServiceReference"
-									},
-									"folderPath": "stagingarea"
+								"compute": {
+									"coreCount": 8,
+									"computeType": "General"
 								},
-								"integrationRuntime": {
-									"referenceName": "integrationRuntime10min",
-									"type": "IntegrationRuntimeReference"
-								},
-								"traceLevel": "Coarse"
+								"traceLevel": "Fine"
 							}
 						}
 					]
@@ -331,10 +310,6 @@
 												"value": "@item().name",
 												"type": "Expression"
 											}
-										},
-										"stgContact": {
-											"schemaName": "dwh",
-											"tableName": "STG_CONTACT"
 										}
 									}
 								},

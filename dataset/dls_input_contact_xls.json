@@ -10,6 +10,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "Storage_DL_QTR"
+		},
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
