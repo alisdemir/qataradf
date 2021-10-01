@@ -17,12 +17,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_input_xls_parametric",
+						"referenceName": "dls_input_contact_xls",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "*",
-							"folderName": "Entity",
-							"SheetIndex": 2
+							"filename": "*"
 						}
 					},
 					"fieldList": [
@@ -78,9 +76,7 @@
 									},
 									"datasetParameters": {
 										"inputcontactcontainer": {
-											"filename": "@item().name",
-											"folderName": "Entity",
-											"SheetIndex": 2
+											"filename": "@item().name"
 										}
 									}
 								},
