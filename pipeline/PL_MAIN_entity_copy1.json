@@ -283,7 +283,7 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "df_xls_to_stg_contacts_copy1",
+							"name": "df_xls_to_stg_contact",
 							"type": "ExecuteDataFlow",
 							"dependsOn": [],
 							"policy": {
@@ -299,32 +299,14 @@
 									"referenceName": "df_xls_to_stg_contact",
 									"type": "DataFlowReference",
 									"parameters": {
-										"fileName": {
-											"value": "'@{item().name}'",
-											"type": "Expression"
-										}
-									},
-									"datasetParameters": {
-										"inputcontactcontainer": {
-											"filename": {
-												"value": "@item().name",
-												"type": "Expression"
-											}
-										}
+										"fileName": "'22071_Entity.xlsx'"
 									}
 								},
-								"staging": {
-									"linkedService": {
-										"referenceName": "ls_psmsii_syntodls",
-										"type": "LinkedServiceReference"
-									},
-									"folderPath": "stagingarea"
+								"compute": {
+									"coreCount": 8,
+									"computeType": "General"
 								},
-								"integrationRuntime": {
-									"referenceName": "integrationRuntime10min",
-									"type": "IntegrationRuntimeReference"
-								},
-								"traceLevel": "Coarse"
+								"traceLevel": "Fine"
 							}
 						}
 					]
