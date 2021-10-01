@@ -20,7 +20,7 @@
 						"referenceName": "dls_input_xls_parametric",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "@item().name",
+							"filename": "*",
 							"folderName": "Entity",
 							"SheetIndex": 2
 						}
@@ -78,7 +78,7 @@
 									},
 									"datasetParameters": {
 										"inputcontactcontainer": {
-											"filename": "*",
+											"filename": "@item().name",
 											"folderName": "Entity",
 											"SheetIndex": 2
 										}
