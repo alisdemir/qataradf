@@ -116,10 +116,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "dls_input_warehouse_xls",
+						"referenceName": "dls_input_entity_xls",
 						"type": "DatasetReference",
 						"parameters": {
-							"filename": "*"
+							"fileName": "*"
 						}
 					},
 					"fieldList": [
