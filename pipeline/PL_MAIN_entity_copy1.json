@@ -215,7 +215,7 @@
 				}
 			},
 			{
-				"name": "ForEachFile_copy1",
+				"name": "ForEachFile_warehouse",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -279,7 +279,7 @@
 				}
 			},
 			{
-				"name": "ForEachFile_copy2",
+				"name": "ForEachFile_contact",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -430,7 +430,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "ForEachFile_copy1",
+						"activity": "ForEachFile_warehouse",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -477,7 +477,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "ForEachFile_copy2",
+						"activity": "ForEachFile_contact",
 						"dependencyConditions": [
 							"Succeeded"
 						]
