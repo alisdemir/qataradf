@@ -5,15 +5,23 @@
 			"referenceName": "ls_psmsii_syntodls",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"filename": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				},
 				"folderPath": "Entity",
 				"fileSystem": "input"
 			},
-			"sheetIndex": 1,
 			"firstRowAsHeader": true
 		},
 		"schema": [
