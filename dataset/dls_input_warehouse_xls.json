@@ -14,7 +14,6 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "0",
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
@@ -24,6 +23,7 @@
 				"folderPath": "Entity",
 				"fileSystem": "Input"
 			},
+			"sheetIndex": 0,
 			"firstRowAsHeader": true
 		},
 		"schema": [
@@ -40,15 +40,15 @@
 				"type": "String"
 			},
 			{
-				"name": "Warehouse/Store Commercial Registration No-رقم السجل التجارى للمخزن",
+				"name": "Warehouse-Store Commercial Registration No-رقم السجل التجارى للمخزن",
 				"type": "String"
 			},
 			{
-				"name": "Warehouse/Store Commercial License No-رقم الرخصة التجارىة للمخزن",
+				"name": "Warehouse-Store Commercial License No-رقم الرخصة التجارىة للمخزن",
 				"type": "String"
 			},
 			{
-				"name": "Warehouse/Store Code-رقم المخزن",
+				"name": "Warehouse-Store Code-رقم المخزن",
 				"type": "String"
 			},
 			{
@@ -56,7 +56,7 @@
 				"type": "String"
 			},
 			{
-				"name": "St. Name-اسم الشارع ",
+				"name": "St Name-اسم الشارع ",
 				"type": "String"
 			},
 			{
@@ -64,7 +64,7 @@
 				"type": "String"
 			},
 			{
-				"name": "St. No-رقم الشارع",
+				"name": "St No-رقم الشارع",
 				"type": "String"
 			},
 			{
