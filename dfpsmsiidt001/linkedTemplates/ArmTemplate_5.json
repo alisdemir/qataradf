@@ -852,7 +852,7 @@
 							"storeSettings": {
 								"type": "AzureBlobFSReadSettings",
 								"recursive": true,
-								"wildcardFileName": "processing/*",
+								"wildcardFileName": "*",
 								"enablePartitionDiscovery": false
 							}
 						}

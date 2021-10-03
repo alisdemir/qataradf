@@ -13,72 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_contact')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "SEQ",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EMAIL",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PHONE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EXTENSION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MOBILE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ENTITYCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_CONTACT"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_customs_dec')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -3188,6 +3122,51 @@
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
 				"[concat(variables('factoryId'), '/datasets/ds_stg_customs_dec')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_DENE')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteProcessingFiles",
+						"type": "Delete",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"enableLogging": false,
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"wildcardFileName": "*",
+								"enablePartitionDiscovery": false
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_EXEC_P_DQ_MAIN')]",
