@@ -15,7 +15,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dwh].[P_DWA_STOCK_COMPANY_INITIAL_LOAD]"
+					"storedProcedureName": "[dwh].[P_DQ_COMPANY]"
 				},
 				"linkedServiceName": {
 					"referenceName": "ls_dsqlpqtr",
@@ -35,7 +35,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dwh].[P_DWA_STOCK_COUNTRY_INITIAL_LOAD]"
+					"storedProcedureName": "[dwh].[P_DWA_STOCK_COUNTRY]"
 				},
 				"linkedServiceName": {
 					"referenceName": "ls_dsqlpqtr",
