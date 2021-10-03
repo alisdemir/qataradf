@@ -8,7 +8,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "PL_FILE_TRANSFER",
+						"activity": "Wait2",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -215,7 +215,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "PL_FILE_TRANSFER",
+						"activity": "Wait2",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -360,6 +360,41 @@
 						"recursive": true,
 						"enablePartitionDiscovery": false
 					}
+				}
+			},
+			{
+				"name": "PL_COPY_UI_TABLE",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_COPY_UI_TABLE",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Wait2",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "PL_COPY_UI_TABLE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "PL_FILE_TRANSFER",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
 				}
 			}
 		],
