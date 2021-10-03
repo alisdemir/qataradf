@@ -357,7 +357,7 @@
 					"enableLogging": false,
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
-						"recursive": true,
+						"fileListPath": "processing",
 						"enablePartitionDiscovery": false
 					}
 				}
