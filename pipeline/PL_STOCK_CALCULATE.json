@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "P_STOCK_COMPANY",
+				"name": "P_DWA_STOCK_COMPANY_LOAD",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
 				"policy": {
@@ -23,7 +23,7 @@
 				}
 			},
 			{
-				"name": "P_STOCK_COUNTRY",
+				"name": "P_DWA_STOCK_COUNTRY_LOAD",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
 				"policy": {
@@ -36,6 +36,26 @@
 				"userProperties": [],
 				"typeProperties": {
 					"storedProcedureName": "[dwh].[P_DWA_STOCK_COUNTRY]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "P_DWA_STOCK_BRANCH_LOAD",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_DWA_STOCK_BRANCH]"
 				},
 				"linkedServiceName": {
 					"referenceName": "ls_dsqlpqtr",
