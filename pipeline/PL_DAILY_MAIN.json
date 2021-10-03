@@ -215,7 +215,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Stored procedure1",
+						"activity": "P_UPSERT_DWH_TABLES",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -376,7 +376,7 @@
 				}
 			},
 			{
-				"name": "Stored procedure1",
+				"name": "P_UPSERT_DWH_TABLES",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
