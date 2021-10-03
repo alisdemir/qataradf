@@ -698,7 +698,7 @@
 						"type": "WebActivity",
 						"dependsOn": [
 							{
-								"activity": "df_transerrlog_to_errlogcontainer",
+								"activity": "MoveFiles",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -725,6 +725,63 @@
 								"type": "Expression"
 							}
 						}
+					},
+					{
+						"name": "MoveFiles",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "df_transerrlog_to_errlogcontainer",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": false,
+									"wildcardFileName": "*_TransactionsData_*",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "dls_errorlog_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dls_errorlog_binary_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"FolderName": "Transactions"
+								}
+							}
+						]
 					}
 				],
 				"policy": {
