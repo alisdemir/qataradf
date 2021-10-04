@@ -3018,7 +3018,7 @@
 														"mappings": [
 															{
 																"source": {
-																	"path": "[['name']"
+																	"path": "[['Supervisor'][0]['name']"
 																},
 																"sink": {
 																	"name": "name",
@@ -3027,7 +3027,7 @@
 															},
 															{
 																"source": {
-																	"path": "[['mobileNumber']"
+																	"path": "[['Supervisor'][0]['mobileNumber']"
 																},
 																"sink": {
 																	"name": "mobileNumber",
@@ -3044,7 +3044,7 @@
 																}
 															}
 														],
-														"collectionReference": "$['ReleaseNotification']['Declaration']['SupervisorDetails'][0]['Supervisor']",
+														"collectionReference": "$['ReleaseNotification']['Declaration']['SupervisorDetails']",
 														"mapComplexValuesToString": false
 													}
 												},
@@ -3112,7 +3112,7 @@
 														"mappings": [
 															{
 																"source": {
-																	"path": "[['hscode']"
+																	"path": "[['Item'][0]['hscode']"
 																},
 																"sink": {
 																	"name": "hscode",
@@ -3121,7 +3121,7 @@
 															},
 															{
 																"source": {
-																	"path": "[['itemQuantity']"
+																	"path": "[['Item'][0]['itemQuantity']"
 																},
 																"sink": {
 																	"name": "itemQuantity",
@@ -3130,7 +3130,7 @@
 															},
 															{
 																"source": {
-																	"path": "[['itemQuantityUOM']"
+																	"path": "[['Item'][0]['itemQuantityUOM']"
 																},
 																"sink": {
 																	"name": "itemQuantityUOM",
@@ -3139,7 +3139,7 @@
 															},
 															{
 																"source": {
-																	"path": "[['netWeight']"
+																	"path": "[['Item'][0]['netWeight']"
 																},
 																"sink": {
 																	"name": "netWeight",
@@ -3148,7 +3148,7 @@
 															},
 															{
 																"source": {
-																	"path": "[['netWeightUOM']"
+																	"path": "[['Item'][0]['netWeightUOM']"
 																},
 																"sink": {
 																	"name": "netWeightUOM",
@@ -3157,7 +3157,7 @@
 															},
 															{
 																"source": {
-																	"path": "[['countryOfOrigin']"
+																	"path": "[['Item'][0]['countryOfOrigin']"
 																},
 																"sink": {
 																	"name": "countryOfOrigin",
@@ -3166,7 +3166,7 @@
 															},
 															{
 																"source": {
-																	"path": "[['declaredValue']"
+																	"path": "[['Item'][0]['declaredValue']"
 																},
 																"sink": {
 																	"name": "declaredValue",
@@ -3175,7 +3175,7 @@
 															},
 															{
 																"source": {
-																	"path": "[['foreignCurrency']"
+																	"path": "[['Item'][0]['foreignCurrency']"
 																},
 																"sink": {
 																	"name": "foreignCurrency",
@@ -3184,7 +3184,7 @@
 															},
 															{
 																"source": {
-																	"path": "[['declaredValueQAR']"
+																	"path": "[['Item'][0]['declaredValueQAR']"
 																},
 																"sink": {
 																	"name": "declaredValueQAR",
@@ -3201,7 +3201,7 @@
 																}
 															}
 														],
-														"collectionReference": "$['ReleaseNotification']['Declaration']['ItemDetails'][0]['Item']",
+														"collectionReference": "$['ReleaseNotification']['Declaration']['ItemDetails']",
 														"mapComplexValuesToString": true
 													}
 												},
