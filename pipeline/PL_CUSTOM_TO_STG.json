@@ -879,7 +879,7 @@
 											}
 										}
 									],
-									"collectionReference": "$['ReleaseNotification']['Declaration']['ItemDetails'][0]['Item']",
+									"collectionReference": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item']",
 									"mapComplexValuesToString": true
 								}
 							},
