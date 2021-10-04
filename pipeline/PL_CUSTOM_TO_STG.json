@@ -411,7 +411,7 @@
 								"source": {
 									"type": "SqlDWSource",
 									"sqlReaderQuery": {
-										"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC]\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '''')) IS NULL\nOR try_convert(datetime, NULLIF([NotificationDate], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '''')) IS NULL\n)\nAND [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,'''')\n\n\n",
+										"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC] as scd\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '''')) IS NULL\nOR try_convert(datetime, NULLIF([NotificationDate], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '''')) IS NULL\nNOT EXISTS (SELECT 1 FROM dwh.STG_CUSTOMS_ITEM AS SCI WHERE sci.declarationNo=SCD.declarationNo))\nAND [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,'''')\n\n\n",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -756,7 +756,7 @@
 							"type": "Lookup",
 							"dependsOn": [
 								{
-									"activity": "Copy_Dec",
+									"activity": "Copy_Item_copy1",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -781,6 +781,163 @@
 									"type": "DatasetReference"
 								}
 							}
+						},
+						{
+							"name": "Copy_Item_copy1",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Copy_Dec",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "XmlSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "XmlReadSettings",
+										"validationMode": "none",
+										"detectDataType": true,
+										"namespaces": true
+									}
+								},
+								"sink": {
+									"type": "SqlDWSink",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"path": "['hscode']"
+											},
+											"sink": {
+												"name": "hscode",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['itemQuantity']"
+											},
+											"sink": {
+												"name": "itemQuantity",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['itemQuantityUOM']"
+											},
+											"sink": {
+												"name": "itemQuantityUOM",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['netWeight']"
+											},
+											"sink": {
+												"name": "netWeight",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['netWeightUOM']"
+											},
+											"sink": {
+												"name": "netWeightUOM",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['countryOfOrigin']"
+											},
+											"sink": {
+												"name": "countryOfOrigin",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['declaredValue']"
+											},
+											"sink": {
+												"name": "declaredValue",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['foreignCurrency']"
+											},
+											"sink": {
+												"name": "foreignCurrency",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "['declaredValueQAR']"
+											},
+											"sink": {
+												"name": "declaredValueQAR",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['ReleaseNotification']['Declaration']['declarationNo']"
+											},
+											"sink": {
+												"name": "declarationNo",
+												"type": "String"
+											}
+										}
+									],
+									"collectionReference": "$['ReleaseNotification']['Declaration']['ItemDetails'][0]['Item']",
+									"mapComplexValuesToString": true
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_custom_xml",
+									"type": "DatasetReference",
+									"parameters": {
+										"xmlfileName": "@item().name"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "dsqlp_parametric",
+									"type": "DatasetReference",
+									"parameters": {
+										"schemaName": "dwh",
+										"tableName": "STG_CUSTOMS_ITEM"
+									}
+								}
+							]
 						}
 					]
 				}
