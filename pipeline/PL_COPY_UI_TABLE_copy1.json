@@ -42,7 +42,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"schemaName": "dwh",
-							"tableName": "STG_COMPANY_VALID"
+							"tableName": "STG_WAREHOUSE_VALID"
 						}
 					}
 				],
@@ -51,7 +51,7 @@
 						"referenceName": "qtrsqldb",
 						"type": "DatasetReference",
 						"parameters": {
-							"tableName": "STG_COMPANY_VALID",
+							"tableName": "STG_WAREHOUSE_VALID",
 							"schemaName": "dbo"
 						}
 					}
