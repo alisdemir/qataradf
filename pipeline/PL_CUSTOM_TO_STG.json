@@ -567,7 +567,7 @@
 														}
 													}
 												],
-												"collectionReference": "$['ReleaseNotification']['Declaration']['SupervisorDetails'][0]['Supervisor']",
+												"collectionReference": "$['ReleaseNotification']['Declaration']['SupervisorDetails']['Supervisor']",
 												"mapComplexValuesToString": false
 											}
 										},
