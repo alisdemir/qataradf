@@ -1,0 +1,379 @@
+{
+	"name": "PL_DAILY_MAIN_copy1",
+	"properties": {
+		"activities": [
+			{
+				"name": "PL_STG_FILE_LIST_INS",
+				"description": "deneme2",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_FILE_TRANSFER",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_STG_FILE_LIST_INS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_FILE_TRANSFER",
+				"description": "deneme2",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_FILE_TRANSFER",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_DWL_FILE_LIST_UPD",
+				"description": "deneme",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Wait1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DWL_FILE_LIST_UPD",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_STG_FILE_LIST_UPD",
+				"description": "deneme",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Wait1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_STG_FILE_LIST_UPD",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_MAIL_TO_NOTEXISTS",
+				"description": "deneme",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_DWL_FILE_LIST_UPD",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_MAIL_TO_NOTEXISTS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_CSV_TO_STG",
+				"description": "deneme",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "truncateStgTransactions",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_CSV_TO_STG",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
+				"description": "deneme",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_EXEC_P_DQ_MAIN",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_EXEC_P_DQ_MAIN",
+				"description": "deneme",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "DeleteProcessingFiles",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_EXEC_P_DQ_MAIN",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_LOAD_DWB_TRANSACTION",
+				"description": "",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_EXPORT_AND_EMAIL_ERRLOG",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_LOAD_DWB_TRANSACTION",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_DWL_FILE_LIST_ARC",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_LOAD_DWB_TRANSACTION",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "PL_MAIL_TO_NOTEXISTS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DWL_FILE_LIST_ARC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_DWL_FILE_LIST_INS",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_FILE_TRANSFER",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DWL_FILE_LIST_INS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "truncateStgTransactions",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Wait1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "truncate table [dwh].[STG_TRANSACTIONS];\nselect 1;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_stg_transactions",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "PL_XLSX_TO_STG",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "truncateStgTransactions",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_XLS_TO_STG",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "PL_DWL_FILE_LIST_INS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "PL_STG_FILE_LIST_INS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			},
+			{
+				"name": "PL_STOCK_CALCULATE",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_LOAD_DWB_TRANSACTION",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_STOCK_CALCULATE",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "DeleteProcessingFiles",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "PL_CSV_TO_STG",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "PL_XLSX_TO_STG",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "dls_processing_binary",
+						"type": "DatasetReference"
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"wildcardFileName": "*",
+						"enablePartitionDiscovery": false
+					}
+				}
+			}
+		],
+		"variables": {
+			"deneme": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "PL_MAIN"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-05-25T14:24:57Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}
