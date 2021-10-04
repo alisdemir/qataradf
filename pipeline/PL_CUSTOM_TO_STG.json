@@ -445,14 +445,7 @@
 									{
 										"name": "Web1",
 										"type": "WebActivity",
-										"dependsOn": [
-											{
-												"activity": "deletestgcustomsdec",
-												"dependencyConditions": [
-													"Succeeded"
-												]
-											}
-										],
+										"dependsOn": [],
 										"policy": {
 											"timeout": "7.00:00:00",
 											"retry": 0,
@@ -471,35 +464,6 @@
 											"body": {
 												"EmailType": "CustomInvalidFile"
 											}
-										}
-									},
-									{
-										"name": "deletestgcustomsdec",
-										"type": "Lookup",
-										"dependsOn": [],
-										"policy": {
-											"timeout": "7.00:00:00",
-											"retry": 0,
-											"retryIntervalInSeconds": 30,
-											"secureOutput": false,
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"source": {
-												"type": "SqlDWSource",
-												"sqlReaderQuery": {
-													"value": "@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,''';\nSELECT 1;\nDELETE FROM [dwh].[STG_CUSTOMS_ITEM] WHERE [declarationno] = ','''',activity('Lookup1').output.firstRow.NotificationRef,''';')",
-													"type": "Expression"
-												},
-												"queryTimeout": "02:00:00",
-												"partitionOption": "None"
-											},
-											"dataset": {
-												"referenceName": "ds_stg_customs_dec",
-												"type": "DatasetReference"
-											},
-											"firstRowOnly": false
 										}
 									}
 								],
