@@ -42,7 +42,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"schemaName": "dwh",
-							"tableName": "STG_CR_TRANSACTION_TYPE_VALID"
+							"tableName": "STG_COMPANY_VALID"
 						}
 					}
 				],
@@ -51,7 +51,7 @@
 						"referenceName": "qtrsqldb",
 						"type": "DatasetReference",
 						"parameters": {
-							"tableName": "STG_CR_TRANSACTION_TYPE_VALID",
+							"tableName": "STG_COMPANY_VALID",
 							"schemaName": "dbo"
 						}
 					}
