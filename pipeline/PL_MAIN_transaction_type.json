@@ -230,7 +230,7 @@
 												},
 												"EntityTransactionTypeNameArabic": {
 													"value": {
-														"value": "@activity('LookupColumns').output.value.COMPANYTRANSACTIONTYPEARABIC[1]",
+														"value": "@activity('LookupColumns').output.value[1]",
 														"type": "Expression"
 													},
 													"type": "String"
