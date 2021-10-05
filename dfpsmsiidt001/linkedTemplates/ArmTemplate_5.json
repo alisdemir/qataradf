@@ -2331,6 +2331,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlDWSource",
+								"sqlReaderQuery": "select DISTINCT DS_FILENAME FROM dwh.STG_CR_TRANSACTION_TYPE_VALID;\nSELECT 1;",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -2339,7 +2340,7 @@
 								"type": "DatasetReference",
 								"parameters": {}
 							},
-							"firstRowOnly": true
+							"firstRowOnly": false
 						}
 					},
 					{
@@ -2356,7 +2357,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('LookupDsFileName').output.firstRow.ds_filename",
+								"value": "@activity('LookupDsFileName').output.value",
 								"type": "Expression"
 							},
 							"isSequential": true,
@@ -2377,7 +2378,7 @@
 										"source": {
 											"type": "SqlDWSource",
 											"sqlReaderQuery": {
-												"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[STG_CR_TRANSACTION_TYPE_VALID] where DS_FILENAME= ','''',activity('LookupDsFileName').output.firstRow.ds_filename,'''') ",
+												"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[STG_CR_TRANSACTION_TYPE_VALID] where DS_FILENAME= ','''',item().ds_filename,'''') ",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -2415,7 +2416,14 @@
 											{
 												"name": "Stored procedure1",
 												"type": "SqlServerStoredProcedure",
-												"dependsOn": [],
+												"dependsOn": [
+													{
+														"activity": "LookupColumns",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
 												"policy": {
 													"timeout": "7.00:00:00",
 													"retry": 0,
@@ -2429,39 +2437,35 @@
 													"storedProcedureParameters": {
 														"CrNumber": {
 															"value": {
-																"value": "@activity('LookupValid').output.firstRow.companycr",
+																"value": "@activity('LookupColumns').output.value[0]",
 																"type": "Expression"
 															},
 															"type": "String"
 														},
 														"EntityTransactionTypeCode": {
 															"value": {
-																"value": "@activity('LookupValid').output.firstRow.COMPANYTRANSACTIONTYPE",
+																"value": "@activity('LookupColumns').output.value[3]",
 																"type": "Expression"
 															},
 															"type": "String"
 														},
 														"EntityTransactionTypeNameArabic": {
 															"value": {
-																"value": "@activity('LookupValid').output.firstRow.COMPANYTRANSACTIONTYPEARABIC",
+																"value": "@activity('LookupColumns').output.value[1]",
 																"type": "Expression"
 															},
 															"type": "String"
 														},
 														"EntityTransactionTypeNameEnglish": {
 															"value": {
-																"value": "@activity('LookupValid').output.firstRow.COMPANYTRANSACTIONTYPEARABIC",
+																"value": "@activity('LookupColumns').output.value[2]",
 																"type": "Expression"
 															},
 															"type": "String"
 														},
-														"IsInitialLoad": {
-															"value": "1",
-															"type": "Boolean"
-														},
 														"MociTransactionTypeEnglishName": {
 															"value": {
-																"value": "@activity('LookupValid').output.firstRow.PSMSMOCITRANSACTIONTYPES",
+																"value": "@activity('LookupColumns').output.value[4]",
 																"type": "Expression"
 															},
 															"type": "String"
@@ -2471,6 +2475,32 @@
 												"linkedServiceName": {
 													"referenceName": "ls_qtrsqldb",
 													"type": "LinkedServiceReference"
+												}
+											},
+											{
+												"name": "LookupColumns",
+												"type": "Lookup",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "SqlDWSource",
+														"queryTimeout": "02:00:00",
+														"partitionOption": "None"
+													},
+													"dataset": {
+														"referenceName": "ds_stg_cr_transaction_type_valid",
+														"type": "DatasetReference",
+														"parameters": {}
+													},
+													"firstRowOnly": false
 												}
 											}
 										]

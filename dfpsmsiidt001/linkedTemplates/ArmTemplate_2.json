@@ -13,6 +13,61 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_cr_transaction_type_valid')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "COMPANYCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPANYTRANSACTIONTYPEARABIC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPANYTRANSACTIONTYPEENGLISH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COMPANYTRANSACTIONTYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PSMSMOCITRANSACTIONTYPES",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_FILETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_CR_TRANSACTION_TYPE_VALID"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_customs_dec')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -550,70 +605,6 @@
 						"value": "@dataset().tableName",
 						"type": "Expression"
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_cr_transaction_type_valid')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "COMPANYCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COMPANYTRANSACTIONTYPEARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COMPANYTRANSACTIONTYPEENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COMPANYTRANSACTIONTYPE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PSMSMOCITRANSACTIONTYPES",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "ID_ERROR_CODE",
-						"type": "tinyint",
-						"precision": 3
-					},
-					{
-						"name": "DS_ERROR_CODE",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_CR_TRANSACTION_TYPE_ERROR_LOG"
 				}
 			},
 			"dependsOn": []
