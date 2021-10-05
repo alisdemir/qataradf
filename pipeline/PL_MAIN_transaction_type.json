@@ -244,7 +244,7 @@
 												},
 												"IsInitialLoad": {
 													"value": "1",
-													"type": "Byte[]"
+													"type": "Boolean"
 												},
 												"MociTransactionTypeEnglishName": {
 													"value": {
