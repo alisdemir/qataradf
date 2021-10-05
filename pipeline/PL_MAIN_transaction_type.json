@@ -111,6 +111,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
+						"sqlReaderQuery": "select DISTINCT DS_FILENAME FROM dwh.STG_CR_TRANSACTION_TYPE_VALID;\nSELECT 1;",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
