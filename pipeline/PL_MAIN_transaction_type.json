@@ -115,12 +115,8 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "dsqlp_parametric",
-						"type": "DatasetReference",
-						"parameters": {
-							"schemaName": "dwh",
-							"tableName": "STG_CR_TRANSACTION_TYPE_VALID"
-						}
+						"referenceName": "ds_stg_cr_transaction_type_valid",
+						"type": "DatasetReference"
 					},
 					"firstRowOnly": true
 				}
@@ -159,7 +155,10 @@
 							"typeProperties": {
 								"source": {
 									"type": "SqlDWSource",
-									"sqlReaderQuery": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[STG_CR_TRANSACTION_TYPE_VALID] where DS_FILENAME= ','''',activity('LookupDsFileName').output.firstRow.ds_filename,'''') ",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[STG_CR_TRANSACTION_TYPE_VALID] where DS_FILENAME= ','''',activity('LookupDsFileName').output.firstRow.ds_filename,'''') ",
+										"type": "Expression"
+									},
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
