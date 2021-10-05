@@ -159,7 +159,7 @@
 							"typeProperties": {
 								"source": {
 									"type": "SqlDWSource",
-									"sqlReaderQuery": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[STG_CR_TRANSACTION_TYPE_VALID] where DS_FILENAME= ','''',item().name,'''') ",
+									"sqlReaderQuery": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[STG_CR_TRANSACTION_TYPE_VALID] where DS_FILENAME= ','''',activity('LookupDsFileName').output.firstRow.ds_filename,'''') ",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
