@@ -2475,7 +2475,7 @@
 																"value": "bit(1)",
 																"type": "Expression"
 															},
-															"type": "Byte[]"
+															"type": "Single"
 														}
 													}
 												},
