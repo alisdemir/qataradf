@@ -90,7 +90,7 @@
 				}
 			},
 			{
-				"name": "Lookup1",
+				"name": "LookupDsFileName",
 				"type": "Lookup",
 				"dependsOn": [
 					{
@@ -130,7 +130,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup1",
+						"activity": "LookupDsFileName",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -139,7 +139,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "activity('Lookup1').output.firstRow.ds_filename",
+						"value": "@activity('LookupDsFileName').output.firstRow.ds_filename",
 						"type": "Expression"
 					},
 					"isSequential": true,
