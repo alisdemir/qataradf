@@ -216,28 +216,28 @@
 											"storedProcedureParameters": {
 												"CrNumber": {
 													"value": {
-														"value": "@activity('LookupColumns').output.value[0].companycr",
+														"value": "@activity('LookupColumns').output.value[0]",
 														"type": "Expression"
 													},
 													"type": "String"
 												},
 												"EntityTransactionTypeCode": {
 													"value": {
-														"value": "@activity('LookupColumns').output.value.COMPANYTRANSACTIONTYPE",
+														"value": "@activity('LookupColumns').output.value[3]",
 														"type": "Expression"
 													},
 													"type": "String"
 												},
 												"EntityTransactionTypeNameArabic": {
 													"value": {
-														"value": "@activity('LookupColumns').output.value.COMPANYTRANSACTIONTYPEARABIC",
+														"value": "@activity('LookupColumns').output.value.COMPANYTRANSACTIONTYPEARABIC[1]",
 														"type": "Expression"
 													},
 													"type": "String"
 												},
 												"EntityTransactionTypeNameEnglish": {
 													"value": {
-														"value": "@activity('LookupColumns').output.value.COMPANYTRANSACTIONTYPEARABIC",
+														"value": "@activity('LookupColumns').output.value[2]",
 														"type": "Expression"
 													},
 													"type": "String"
@@ -248,7 +248,7 @@
 												},
 												"MociTransactionTypeEnglishName": {
 													"value": {
-														"value": "@activity('LookupColumns').output.value.PSMSMOCITRANSACTIONTYPES",
+														"value": "@activity('LookupColumns').output.value[4]",
 														"type": "Expression"
 													},
 													"type": "String"
