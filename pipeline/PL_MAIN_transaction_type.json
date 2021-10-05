@@ -281,7 +281,8 @@
 											"dataset": {
 												"referenceName": "ds_stg_cr_transaction_type_valid",
 												"type": "DatasetReference"
-											}
+											},
+											"firstRowOnly": false
 										}
 									}
 								]
