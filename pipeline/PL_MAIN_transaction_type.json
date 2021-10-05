@@ -195,7 +195,14 @@
 									{
 										"name": "Stored procedure1",
 										"type": "SqlServerStoredProcedure",
-										"dependsOn": [],
+										"dependsOn": [
+											{
+												"activity": "LookupColumns",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
 										"policy": {
 											"timeout": "7.00:00:00",
 											"retry": 0,
@@ -209,28 +216,28 @@
 											"storedProcedureParameters": {
 												"CrNumber": {
 													"value": {
-														"value": "@activity('LookupValid').output.firstRow.companycr",
+														"value": "@activity('LookupColumns').output.firstRow.companycr",
 														"type": "Expression"
 													},
 													"type": "String"
 												},
 												"EntityTransactionTypeCode": {
 													"value": {
-														"value": "@activity('LookupValid').output.firstRow.COMPANYTRANSACTIONTYPE",
+														"value": "@activity('LookupColumns').output.firstRow.COMPANYTRANSACTIONTYPE",
 														"type": "Expression"
 													},
 													"type": "String"
 												},
 												"EntityTransactionTypeNameArabic": {
 													"value": {
-														"value": "@activity('LookupValid').output.firstRow.COMPANYTRANSACTIONTYPEARABIC",
+														"value": "@activity('LookupColumns').output.firstRow.COMPANYTRANSACTIONTYPEARABIC",
 														"type": "Expression"
 													},
 													"type": "String"
 												},
 												"EntityTransactionTypeNameEnglish": {
 													"value": {
-														"value": "@activity('LookupValid').output.firstRow.COMPANYTRANSACTIONTYPEARABIC",
+														"value": "@activity('LookupColumns').output.firstRow.COMPANYTRANSACTIONTYPEARABIC",
 														"type": "Expression"
 													},
 													"type": "String"
@@ -241,7 +248,7 @@
 												},
 												"MociTransactionTypeEnglishName": {
 													"value": {
-														"value": "@activity('LookupValid').output.firstRow.PSMSMOCITRANSACTIONTYPES",
+														"value": "@activity('LookupColumns').output.firstRow.PSMSMOCITRANSACTIONTYPES",
 														"type": "Expression"
 													},
 													"type": "String"
@@ -251,6 +258,30 @@
 										"linkedServiceName": {
 											"referenceName": "ls_qtrsqldb",
 											"type": "LinkedServiceReference"
+										}
+									},
+									{
+										"name": "LookupColumns",
+										"type": "Lookup",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "SqlDWSource",
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "ds_stg_cr_transaction_type_valid",
+												"type": "DatasetReference"
+											}
 										}
 									}
 								]
