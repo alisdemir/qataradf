@@ -250,7 +250,10 @@
 													"type": "String"
 												},
 												"IsInitialLoad": {
-													"value": null,
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
 													"type": "Byte[]"
 												}
 											}
