@@ -6869,6 +6869,33 @@
 							"referenceName": "ls_dsqlpqtr",
 							"type": "LinkedServiceReference"
 						}
+					},
+					{
+						"name": "UI_SP_TRANSACTION_TYPE",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "PL_EXEC_P_DQ_TR_TYPE",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[DwhTransferEntityTransactionType]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_qtrsqldb",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"policy": {
@@ -6883,7 +6910,8 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/PL_XLS_TO_STG_transaction_type')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_tr_type')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_tr_type')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_qtrsqldb')]"
 			]
 		},
 		{
