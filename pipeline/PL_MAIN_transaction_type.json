@@ -122,7 +122,7 @@
 							"tableName": "STG_CR_TRANSACTION_TYPE_VALID"
 						}
 					},
-					"firstRowOnly": false
+					"firstRowOnly": true
 				}
 			},
 			{
