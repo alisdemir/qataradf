@@ -248,6 +248,10 @@
 														"type": "Expression"
 													},
 													"type": "String"
+												},
+												"IsInitialLoad": {
+													"value": null,
+													"type": "Byte[]"
 												}
 											}
 										},
