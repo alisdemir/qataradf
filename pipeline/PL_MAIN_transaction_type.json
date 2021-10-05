@@ -90,8 +90,8 @@
 				}
 			},
 			{
-				"name": "UI_SP_TRANSACTION_TYPE",
-				"type": "SqlServerStoredProcedure",
+				"name": "Lookup1",
+				"type": "Lookup",
 				"dependsOn": [
 					{
 						"activity": "PL_EXEC_P_DQ_TR_TYPE",
@@ -109,11 +109,20 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[DwhTransferEntityTransactionType]"
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_qtrsqldb",
-					"type": "LinkedServiceReference"
+					"source": {
+						"type": "SqlDWSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "dsqlp_parametric",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "dwh",
+							"tableName": "STG_CR_TRANSACTION_TYPE_VALID"
+						}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
