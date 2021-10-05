@@ -2165,6 +2165,33 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "P_UPSERT_TRANSACTION_TYPE_ERROR_LOG",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "PL_EXEC_P_DQ_TR_TYPE",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_UPSERT_TRANSACTION_TYPE_ERROR_LOG]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_dsqlpqtr",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"policy": {
