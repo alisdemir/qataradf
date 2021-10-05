@@ -118,7 +118,7 @@
 						"referenceName": "ds_stg_cr_transaction_type_valid",
 						"type": "DatasetReference"
 					},
-					"firstRowOnly": true
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -135,7 +135,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('LookupDsFileName').output.firstRow.ds_filename",
+						"value": "@activity('LookupDsFileName').output.value",
 						"type": "Expression"
 					},
 					"isSequential": true,
