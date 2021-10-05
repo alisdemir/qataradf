@@ -2471,7 +2471,10 @@
 															"type": "String"
 														},
 														"IsInitialLoad": {
-															"value": null,
+															"value": {
+																"value": "1",
+																"type": "Expression"
+															},
 															"type": "Byte[]"
 														}
 													}
