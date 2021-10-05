@@ -251,7 +251,7 @@
 												},
 												"IsInitialLoad": {
 													"value": {
-														"value": "0",
+														"value": "1",
 														"type": "Expression"
 													},
 													"type": "Byte[]"
