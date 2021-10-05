@@ -243,8 +243,11 @@
 													"type": "String"
 												},
 												"IsInitialLoad": {
-													"value": "1",
-													"type": "Boolean"
+													"value": {
+														"value": "@activity('LookupColumns').output.value[8]",
+														"type": "Expression"
+													},
+													"type": "Byte[]"
 												},
 												"MociTransactionTypeEnglishName": {
 													"value": {
@@ -275,6 +278,7 @@
 										"typeProperties": {
 											"source": {
 												"type": "SqlDWSource",
+												"sqlReaderQuery": "select t.*, 1 AS INITIALLOAD FROM dwh.STG_CR_TRANSACTION_TYPE_VALID t",
 												"queryTimeout": "02:00:00",
 												"partitionOption": "None"
 											},
