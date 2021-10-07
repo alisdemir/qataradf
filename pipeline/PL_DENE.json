@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Stored procedure1",
+				"name": "PL_EXEC_P_DQ_MAIN",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
 				"policy": {
@@ -15,55 +15,53 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[DwhTransferEntityTransactionType]",
-					"storedProcedureParameters": {
-						"CrNumber": {
-							"value": {
-								"value": "'28606'",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"EntityTransactionTypeCode": {
-							"value": {
-								"value": "null",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"EntityTransactionTypeNameArabic": {
-							"value": {
-								"value": "'Stock Adjustment'",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"EntityTransactionTypeNameEnglish": {
-							"value": {
-								"value": "'IMC-ADJ-N'",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"MociTransactionTypeEnglishName": {
-							"value": {
-								"value": "'Negative Transaction Correction'",
-								"type": "Expression"
-							},
-							"type": "String"
-						},
-						"IsInitialLoad": {
-							"value": {
-								"value": "1",
-								"type": "Expression"
-							},
-							"type": "Single"
-						}
-					}
+					"storedProcedureName": "[dwh].[P_DQ_TRANSACTION]"
 				},
 				"linkedServiceName": {
-					"referenceName": "ls_qtrsqldb",
+					"referenceName": "ls_dsqlpqtr",
 					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
+				"description": "deneme",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_EXEC_P_DQ_MAIN",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_LOAD_DWB_TRANSACTION",
+				"description": "",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_EXPORT_AND_EMAIL_ERRLOG",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_LOAD_DWB_TRANSACTION",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
 				}
 			}
 		],
