@@ -13,6 +13,88 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_DENE')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Stored procedure1",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[DwhTransferEntityTransactionType]",
+							"storedProcedureParameters": {
+								"CrNumber": {
+									"value": {
+										"value": "'28606'",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"EntityTransactionTypeCode": {
+									"value": {
+										"value": "null",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"EntityTransactionTypeNameArabic": {
+									"value": {
+										"value": "'Stock Adjustment'",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"EntityTransactionTypeNameEnglish": {
+									"value": {
+										"value": "'IMC-ADJ-N'",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"MociTransactionTypeEnglishName": {
+									"value": {
+										"value": "'Negative Transaction Correction'",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"IsInitialLoad": {
+									"value": {
+										"value": "1",
+										"type": "Expression"
+									},
+									"type": "Single"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_qtrsqldb",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_DWL_FILE_LIST_ARC')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -975,60 +1057,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_dwl_file_list')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "DT_FILE",
-						"type": "date"
-					},
-					{
-						"name": "DS_ENTITY_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_ENTITY",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_ISUPLOADED",
-						"type": "smallint",
-						"precision": 5
-					},
-					{
-						"name": "ID_ISREJECTED",
-						"type": "bit"
-					},
-					{
-						"name": "DS_EMAIL",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "etl",
-					"table": "DWL_FILE_LIST"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_contact')]",
+			"name": "[concat(parameters('factoryName'), '/ds_dwl_cr_transaction_type')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1036,51 +1065,49 @@
 					"referenceName": "ls_dsqlpqtr",
 					"type": "LinkedServiceReference"
 				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
 				"annotations": [],
 				"type": "AzureSqlDWTable",
 				"schema": [
 					{
-						"name": "SEQ",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EMAIL",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PHONE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EXTENSION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MOBILE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ENTITYCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
+						"name": "ID_CR_TRANSACTION_TYPE",
 						"type": "int",
 						"precision": 10
 					},
 					{
-						"name": "DS_FILENAME",
+						"name": "ID_COMPANY_ENTITY",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ID_TRANSACTION_TYPE",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_COMPANY_TRANSACTION_TYPE_NAME_ENG",
 						"type": "nvarchar"
 					},
 					{
-						"name": "DT_FILETIME",
+						"name": "DS_COMPANY_TRANSACTION_TYPE_NAME_ARB",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DS_COMPANY_TRANSACTION_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_STATUS",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "DT_CREATE",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DT_UPDATE",
 						"type": "datetime",
 						"precision": 23,
 						"scale": 3
@@ -1088,7 +1115,7 @@
 				],
 				"typeProperties": {
 					"schema": "dwh",
-					"table": "STG_CONTACT"
+					"table": "DWL_CR_TRANSACTION_TYPE2"
 				}
 			},
 			"dependsOn": []
