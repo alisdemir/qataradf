@@ -1441,6 +1441,38 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_DENE')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "PL_EXPORT_AND_EMAIL_tr_type",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_EXPORT_AND_EMAIL_tr_type",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_MAIN_company')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2424,136 +2456,17 @@
 										},
 										"ifTrueActivities": [
 											{
-												"name": "Stored procedure1",
-												"type": "SqlServerStoredProcedure",
-												"dependsOn": [
-													{
-														"activity": "Lookup1",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"storedProcedureName": "[[dbo].[DwhTransferEntityTransactionType]",
-													"storedProcedureParameters": {
-														"CrNumber": {
-															"value": {
-																"value": "@activity('LookupColumns').output.value[0]",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"EntityTransactionTypeCode": {
-															"value": {
-																"value": "@activity('LookupColumns').output.value[3]",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"EntityTransactionTypeNameArabic": {
-															"value": {
-																"value": "@activity('LookupColumns').output.value[1]",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"EntityTransactionTypeNameEnglish": {
-															"value": {
-																"value": "@activity('LookupColumns').output.value[2]",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"MociTransactionTypeEnglishName": {
-															"value": {
-																"value": "@activity('LookupColumns').output.value[4]",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"IsInitialLoad": {
-															"value": {
-																"value": "@activity('Lookup1').output.firstrow.lkp",
-																"type": "Expression"
-															},
-															"type": "Single"
-														}
-													}
-												},
-												"linkedServiceName": {
-													"referenceName": "ls_qtrsqldb",
-													"type": "LinkedServiceReference"
-												}
-											},
-											{
-												"name": "LookupColumns",
-												"type": "Lookup",
+												"name": "PL_SP_LOOP",
+												"type": "ExecutePipeline",
 												"dependsOn": [],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
 												"userProperties": [],
 												"typeProperties": {
-													"source": {
-														"type": "SqlDWSource",
-														"queryTimeout": "02:00:00",
-														"partitionOption": "None"
+													"pipeline": {
+														"referenceName": "PL_SP_LOOP",
+														"type": "PipelineReference"
 													},
-													"dataset": {
-														"referenceName": "ds_stg_cr_transaction_type_valid",
-														"type": "DatasetReference",
-														"parameters": {}
-													},
-													"firstRowOnly": false
-												}
-											},
-											{
-												"name": "Lookup1",
-												"type": "Lookup",
-												"dependsOn": [
-													{
-														"activity": "LookupColumns",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "SqlDWSource",
-														"sqlReaderQuery": {
-															"value": "@concat('select CASE WHEN COUNT(*)=0 THEN 1 ELSE 0 END AS LKP from dwh.DWL_CR_TRANSACTION_TYPE2 T1 INNER JOIN DWH.DWL_ENTITY T2\nON T1.ID_COMPANY_ENTITY=T2.ID_ENTITY_ORG WHERE T2.DS_ENTITY_CR = ','''',item().companycr,'''') ",
-															"type": "Expression"
-														},
-														"queryTimeout": "02:00:00",
-														"partitionOption": "None"
-													},
-													"dataset": {
-														"referenceName": "ds_dwl_cr_transaction_type",
-														"type": "DatasetReference",
-														"parameters": {}
-													}
+													"waitOnCompletion": true,
+													"parameters": {}
 												}
 											}
 										]

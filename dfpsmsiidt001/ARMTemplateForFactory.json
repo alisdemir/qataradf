@@ -4368,67 +4368,17 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Stored procedure1",
-						"type": "SqlServerStoredProcedure",
+						"name": "PL_EXPORT_AND_EMAIL_tr_type",
+						"type": "ExecutePipeline",
 						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[dbo].[DwhTransferEntityTransactionType]",
-							"storedProcedureParameters": {
-								"CrNumber": {
-									"value": {
-										"value": "'28606'",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"EntityTransactionTypeCode": {
-									"value": {
-										"value": "null",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"EntityTransactionTypeNameArabic": {
-									"value": {
-										"value": "'Stock Adjustment'",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"EntityTransactionTypeNameEnglish": {
-									"value": {
-										"value": "'IMC-ADJ-N'",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"MociTransactionTypeEnglishName": {
-									"value": {
-										"value": "'Negative Transaction Correction'",
-										"type": "Expression"
-									},
-									"type": "String"
-								},
-								"IsInitialLoad": {
-									"value": {
-										"value": "1",
-										"type": "Expression"
-									},
-									"type": "Single"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_qtrsqldb",
-							"type": "LinkedServiceReference"
+							"pipeline": {
+								"referenceName": "PL_EXPORT_AND_EMAIL_tr_type",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
 						}
 					}
 				],
@@ -4442,7 +4392,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_qtrsqldb')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_tr_type')]"
 			]
 		},
 		{
@@ -6974,136 +6924,17 @@
 										},
 										"ifTrueActivities": [
 											{
-												"name": "Stored procedure1",
-												"type": "SqlServerStoredProcedure",
-												"dependsOn": [
-													{
-														"activity": "Lookup1",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"storedProcedureName": "[[dbo].[DwhTransferEntityTransactionType]",
-													"storedProcedureParameters": {
-														"CrNumber": {
-															"value": {
-																"value": "@activity('LookupColumns').output.value[0]",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"EntityTransactionTypeCode": {
-															"value": {
-																"value": "@activity('LookupColumns').output.value[3]",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"EntityTransactionTypeNameArabic": {
-															"value": {
-																"value": "@activity('LookupColumns').output.value[1]",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"EntityTransactionTypeNameEnglish": {
-															"value": {
-																"value": "@activity('LookupColumns').output.value[2]",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"MociTransactionTypeEnglishName": {
-															"value": {
-																"value": "@activity('LookupColumns').output.value[4]",
-																"type": "Expression"
-															},
-															"type": "String"
-														},
-														"IsInitialLoad": {
-															"value": {
-																"value": "@activity('Lookup1').output.firstrow.lkp",
-																"type": "Expression"
-															},
-															"type": "Single"
-														}
-													}
-												},
-												"linkedServiceName": {
-													"referenceName": "ls_qtrsqldb",
-													"type": "LinkedServiceReference"
-												}
-											},
-											{
-												"name": "LookupColumns",
-												"type": "Lookup",
+												"name": "PL_SP_LOOP",
+												"type": "ExecutePipeline",
 												"dependsOn": [],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
 												"userProperties": [],
 												"typeProperties": {
-													"source": {
-														"type": "SqlDWSource",
-														"queryTimeout": "02:00:00",
-														"partitionOption": "None"
+													"pipeline": {
+														"referenceName": "PL_SP_LOOP",
+														"type": "PipelineReference"
 													},
-													"dataset": {
-														"referenceName": "ds_stg_cr_transaction_type_valid",
-														"type": "DatasetReference",
-														"parameters": {}
-													},
-													"firstRowOnly": false
-												}
-											},
-											{
-												"name": "Lookup1",
-												"type": "Lookup",
-												"dependsOn": [
-													{
-														"activity": "LookupColumns",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "SqlDWSource",
-														"sqlReaderQuery": {
-															"value": "@concat('select CASE WHEN COUNT(*)=0 THEN 1 ELSE 0 END AS LKP from dwh.DWL_CR_TRANSACTION_TYPE2 T1 INNER JOIN DWH.DWL_ENTITY T2\nON T1.ID_COMPANY_ENTITY=T2.ID_ENTITY_ORG WHERE T2.DS_ENTITY_CR = ','''',item().companycr,'''') ",
-															"type": "Expression"
-														},
-														"queryTimeout": "02:00:00",
-														"partitionOption": "None"
-													},
-													"dataset": {
-														"referenceName": "ds_dwl_cr_transaction_type",
-														"type": "DatasetReference",
-														"parameters": {}
-													}
+													"waitOnCompletion": true,
+													"parameters": {}
 												}
 											}
 										]
@@ -7128,8 +6959,7 @@
 				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_tr_type')]",
 				"[concat(variables('factoryId'), '/datasets/ds_stg_cr_transaction_type_valid')]",
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_qtrsqldb')]",
-				"[concat(variables('factoryId'), '/datasets/ds_dwl_cr_transaction_type')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_SP_LOOP')]"
 			]
 		},
 		{
@@ -11027,7 +10857,7 @@
 							"name": "dsfilename"
 						}
 					],
-					"script": "source(output(\n\t\tCOMPANYCR as string,\n\t\tCOMPANYTRANSACTIONTYPEARABIC as string,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH as string,\n\t\tCOMPANYTRANSACTIONTYPE as string,\n\t\tPSMSMOCITRANSACTIONTYPES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> stgtransationtypeerrlog\nstgtransationtypeerrlog derive(DS_FILENAME = replace(DS_FILENAME,'.','_err.')) ~> dsfilename\ndsfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'DS_FILENAME',\n\ttruncate: true,\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tCOMPANYCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH,\n\t\tCOMPANYTRANSACTIONTYPE,\n\t\tPSMSMOCITRANSACTIONTYPES,\n\t\tERRORCODE = DS_ERROR_CODE\n\t)) ~> errorlogcsv"
+					"script": "source(output(\n\t\tCOMPANYCR as string,\n\t\tCOMPANYTRANSACTIONTYPEARABIC as string,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH as string,\n\t\tCOMPANYTRANSACTIONTYPE as string,\n\t\tPSMSMOCITRANSACTIONTYPES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> stgtransationtypeerrlog\nstgtransationtypeerrlog derive(DS_FILENAME = replace(DS_FILENAME,'.xlsx','_err.csv')) ~> dsfilename\ndsfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'DS_FILENAME',\n\ttruncate: true,\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tCOMPANYCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH,\n\t\tCOMPANYTRANSACTIONTYPE,\n\t\tPSMSMOCITRANSACTIONTYPES,\n\t\tERRORCODE = DS_ERROR_CODE\n\t)) ~> errorlogcsv"
 				}
 			},
 			"dependsOn": [
@@ -11593,6 +11423,175 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_SP_LOOP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LookupColumns",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_cr_transaction_type_valid",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "LookupInitialLoad",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "LookupColumns",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": {
+									"value": "@concat('select CASE WHEN COUNT(*)=0 THEN 1 ELSE 0 END AS LKP from dwh.DWL_CR_TRANSACTION_TYPE2 T1 INNER JOIN DWH.DWL_ENTITY T2\nON T1.ID_COMPANY_ENTITY=T2.ID_ENTITY_ORG WHERE T2.DS_ENTITY_CR = ','''',activity('LookupColumns').output.value[6],'''') ",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_dwl_cr_transaction_type",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LookupInitialLoad",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LookupColumns').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "UI_StoredProcedure",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[DwhTransferEntityTransactionType]",
+										"storedProcedureParameters": {
+											"CrNumber": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value[0]",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"EntityTransactionTypeCode": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value[3]",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"EntityTransactionTypeNameArabic": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value[1]",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"EntityTransactionTypeNameEnglish": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value[2]",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"MociTransactionTypeEnglishName": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value[4]",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"IsInitialLoad": {
+												"value": {
+													"value": "@activity('LookupInitialLoad').output.firstrow.lkp",
+													"type": "Expression"
+												},
+												"type": "Single"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "ls_qtrsqldb",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/TRANSACTION_TYPE"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_stg_cr_transaction_type_valid')]",
+				"[concat(variables('factoryId'), '/datasets/ds_dwl_cr_transaction_type')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_qtrsqldb')]"
 			]
 		}
 	]
