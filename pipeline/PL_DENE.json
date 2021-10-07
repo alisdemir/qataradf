@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "DeleteProcessingFiles",
-				"type": "Delete",
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -15,17 +15,55 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataset": {
-						"referenceName": "dls_processing_binary",
-						"type": "DatasetReference"
-					},
-					"enableLogging": false,
-					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
-						"recursive": true,
-						"wildcardFileName": "*",
-						"enablePartitionDiscovery": false
+					"storedProcedureName": "[dbo].[DwhTransferEntityTransactionType]",
+					"storedProcedureParameters": {
+						"CrNumber": {
+							"value": {
+								"value": "'28606'",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"EntityTransactionTypeCode": {
+							"value": {
+								"value": "null",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"EntityTransactionTypeNameArabic": {
+							"value": {
+								"value": "'Stock Adjustment'",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"EntityTransactionTypeNameEnglish": {
+							"value": {
+								"value": "'IMC-ADJ-N'",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"MociTransactionTypeEnglishName": {
+							"value": {
+								"value": "'Negative Transaction Correction'",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"IsInitialLoad": {
+							"value": {
+								"value": "1",
+								"type": "Expression"
+							},
+							"type": "Single"
+						}
 					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_qtrsqldb",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
