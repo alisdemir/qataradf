@@ -3,62 +3,13 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "PL_EXEC_P_DQ_MAIN",
-				"type": "SqlServerStoredProcedure",
+				"name": "PL_EXPORT_AND_EMAIL_tr_type",
+				"type": "ExecutePipeline",
 				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"storedProcedureName": "[dwh].[P_DQ_TRANSACTION]"
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
-				"description": "deneme",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "PL_EXEC_P_DQ_MAIN",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
-				"name": "PL_LOAD_DWB_TRANSACTION",
-				"description": "",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "PL_EXPORT_AND_EMAIL_ERRLOG",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "PL_LOAD_DWB_TRANSACTION",
+						"referenceName": "PL_EXPORT_AND_EMAIL_tr_type",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
