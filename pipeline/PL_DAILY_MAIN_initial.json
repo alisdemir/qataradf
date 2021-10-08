@@ -17,27 +17,6 @@
 				}
 			},
 			{
-				"name": "PL_CSV_TO_STG",
-				"description": "deneme",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "truncateStgTransactions",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "PL_CSV_TO_STG",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "PL_LOAD_DWB_TRANSACTION",
 				"description": "",
 				"type": "ExecutePipeline",
@@ -91,26 +70,6 @@
 				}
 			},
 			{
-				"name": "PL_XLSX_TO_STG",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "truncateStgTransactions",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "PL_XLS_TO_STG",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "PL_STOCK_CALCULATE",
 				"type": "ExecutePipeline",
 				"dependsOn": [
@@ -135,13 +94,13 @@
 				"type": "Delete",
 				"dependsOn": [
 					{
-						"activity": "PL_CSV_TO_STG",
+						"activity": "PL_XLS_TO_STG_initial",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "PL_XLSX_TO_STG",
+						"activity": "PL_CSV_TO_STG_initial",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -194,6 +153,46 @@
 				"linkedServiceName": {
 					"referenceName": "ls_dsqlpqtr",
 					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "PL_CSV_TO_STG_initial",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "truncateStgTransactions",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_CSV_TO_STG_initial",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_XLS_TO_STG_initial",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "truncateStgTransactions",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_XLS_TO_STG_initial",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
 				}
 			}
 		],
