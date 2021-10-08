@@ -97,7 +97,7 @@
 								"storedProcedureParameters": {
 									"CrNumber": {
 										"value": {
-											"value": "@activity('LookupColumns').output.value[0]",
+											"value": "@activity('LookupColumns').output.value.companycr",
 											"type": "Expression"
 										},
 										"type": "String"
