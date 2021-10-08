@@ -15,7 +15,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dwh].[P_DQ_COMPANY]"
+					"storedProcedureName": "[dwh].[P_DWA_STOCK_COMPANY]"
 				},
 				"linkedServiceName": {
 					"referenceName": "ls_dsqlpqtr",
