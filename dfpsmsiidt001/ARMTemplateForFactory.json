@@ -3962,28 +3962,6 @@
 						}
 					},
 					{
-						"name": "PL_CSV_TO_STG",
-						"description": "deneme",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "truncateStgTransactions",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_CSV_TO_STG",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "PL_LOAD_DWB_TRANSACTION",
 						"description": "",
 						"type": "ExecutePipeline",
@@ -4039,27 +4017,6 @@
 						}
 					},
 					{
-						"name": "PL_XLSX_TO_STG",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "truncateStgTransactions",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_XLS_TO_STG",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "PL_STOCK_CALCULATE",
 						"type": "ExecutePipeline",
 						"dependsOn": [
@@ -4085,13 +4042,13 @@
 						"type": "Delete",
 						"dependsOn": [
 							{
-								"activity": "PL_CSV_TO_STG",
+								"activity": "PL_XLS_TO_STG_initial",
 								"dependencyConditions": [
 									"Succeeded"
 								]
 							},
 							{
-								"activity": "PL_XLSX_TO_STG",
+								"activity": "PL_CSV_TO_STG_initial",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -4146,6 +4103,48 @@
 							"referenceName": "ls_dsqlpqtr",
 							"type": "LinkedServiceReference"
 						}
+					},
+					{
+						"name": "PL_CSV_TO_STG_initial",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "truncateStgTransactions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_CSV_TO_STG_initial",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_XLS_TO_STG_initial",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "truncateStgTransactions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_XLS_TO_STG_initial",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -4165,13 +4164,13 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/PL_FILE_TRANSFER')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_CSV_TO_STG')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_LOAD_DWB_TRANSACTION')]",
 				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_XLS_TO_STG')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_STOCK_CALCULATE')]",
 				"[concat(variables('factoryId'), '/datasets/dls_processing_binary')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
+				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_CSV_TO_STG_initial')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_XLS_TO_STG_initial')]"
 			]
 		},
 		{
@@ -7086,35 +7085,35 @@
 										"storedProcedureParameters": {
 											"CrNumber": {
 												"value": {
-													"value": "@activity('LookupColumns').output.value.companycr",
+													"value": "@activity('LookupColumns').output.value.COMPANYCR",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"EntityTransactionTypeCode": {
 												"value": {
-													"value": "@activity('LookupColumns').output.value[3]",
+													"value": "@activity('LookupColumns').output.value.COMPANYTRANSACTIONTYPE",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"EntityTransactionTypeNameArabic": {
 												"value": {
-													"value": "@activity('LookupColumns').output.value[1]",
+													"value": "@activity('LookupColumns').output.value.COMPANYTRANSACTIONTYPEARABIC",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"EntityTransactionTypeNameEnglish": {
 												"value": {
-													"value": "@activity('LookupColumns').output.value[2]",
+													"value": "@activity('LookupColumns').output.value.COMPANYTRANSACTIONTYPEENGLISH",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"MociTransactionTypeEnglishName": {
 												"value": {
-													"value": "@activity('LookupColumns').output.value[4]",
+													"value": "@activity('LookupColumns').output.value.PSMSMOCITRANSACTIONTYPES",
 													"type": "Expression"
 												},
 												"type": "String"
@@ -10667,7 +10666,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -11385,6 +11384,235 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_XLS_TO_STG_initial')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_xls",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": "*.xlsx"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "df_xlsx_to_stg",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "1.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "df_xlsx_to_stg",
+											"type": "DataFlowReference",
+											"parameters": {
+												"fileName": {
+													"value": "'@{item().name}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"source1": {
+													"FileName": "@item().name"
+												},
+												"stgTransactions": {}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "ls_psmsii_syntodls",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": "stagingarea"
+										},
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime10min",
+											"type": "IntegrationRuntimeReference"
+										},
+										"traceLevel": "Coarse"
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:55:14Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dls_processing_xls')]",
+				"[concat(variables('factoryId'), '/dataflows/df_xlsx_to_stg')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_CSV_TO_STG_initial')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_csv",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": "*.csv"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "P_COPY_FILE_DATA",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dwh].[P_COPY_FILE_DATA]",
+										"storedProcedureParameters": {
+											"FILENAME": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "ls_dsqlpqtr",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:55:14Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dls_processing_csv')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
 			]
 		}
 	]
