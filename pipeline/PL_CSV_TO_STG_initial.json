@@ -1,0 +1,99 @@
+{
+	"name": "PL_CSV_TO_STG_initial",
+	"properties": {
+		"activities": [
+			{
+				"name": "GetFileList",
+				"description": "Get file list from processing container",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "dls_processing_csv",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "*.csv"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "ForEachFile",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "GetFileList",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GetFileList').output.childItems",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "P_COPY_FILE_DATA",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dwh].[P_COPY_FILE_DATA]",
+								"storedProcedureParameters": {
+									"FILENAME": {
+										"value": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_dsqlpqtr",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			}
+		],
+		"concurrency": 1,
+		"folder": {
+			"name": "PL_MAIN"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-05-20T12:55:14Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}
