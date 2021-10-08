@@ -13,6 +13,171 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_SP_LOOP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LookupColumns",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_cr_transaction_type_valid",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "LookupInitialLoad",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "LookupColumns",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": {
+									"value": "@concat('select CASE WHEN COUNT(*)=0 THEN 1 ELSE 0 END AS LKP from dwh.DWL_CR_TRANSACTION_TYPE2 T1 INNER JOIN DWH.DWL_ENTITY T2\nON T1.ID_COMPANY_ENTITY=T2.ID_ENTITY_ORG WHERE T2.DS_ENTITY_CR = ','''',activity('LookupColumns').output.value[6],'''') ",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_dwl_cr_transaction_type",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LookupInitialLoad",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LookupColumns').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "UI_StoredProcedure",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[DwhTransferEntityTransactionType]",
+										"storedProcedureParameters": {
+											"CrNumber": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value.companycr",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"EntityTransactionTypeCode": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value[3]",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"EntityTransactionTypeNameArabic": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value[1]",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"EntityTransactionTypeNameEnglish": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value[2]",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"MociTransactionTypeEnglishName": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value[4]",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"IsInitialLoad": {
+												"value": {
+													"value": "@activity('LookupInitialLoad').output.firstrow.lkp",
+													"type": "Expression"
+												},
+												"type": "Single"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "ls_qtrsqldb",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/TRANSACTION_TYPE"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/deneme_custom_xml_copy1')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -286,7 +451,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": []
@@ -789,50 +954,6 @@
 						}
 					],
 					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Item Code - رقم الصنف} as string,\n\t\t{Barcode - الباركود} as string,\n\t\t{Product Name Arabic - اسم الصنف عربى} as string,\n\t\t{Description Arabic - وصف الصنف عربى} as string,\n\t\t{Product Name English - اسم الصنف انجليزى} as string,\n\t\t{Description English - وصف الصنف انجليزى} as string,\n\t\t{Unit Item Barcode - الباركود للوحدة } as string,\n\t\t{No Of Unit Items - عدد الوحدات} as string,\n\t\t{Unit Weight/size - وزن/سعة الوحدة} as string,\n\t\t{Unit UOM - وحدة القياس} as string,\n\t\t{Package UOM - وحدة قياس الحزمة-التغليف} as string,\n\t\t{Cost Price - سعر التكلفة} as string,\n\t\t{Selling Price - سعر البيع} as string,\n\t\t{Brand-Trade Mark English - سم العلامة التجارية انجليزى} as string,\n\t\t{Brand-Trade Mark Arabic - اسم العلامة التجارية عربى} as string,\n\t\t{MoCI Product Group - المجموعة السلعية - بالوزارة} as string,\n\t\t{Country of Oragen Name - اسم بلد المنشأ} as string,\n\t\t{Country of Oragen ISO - كود 3 لبلد المنشأ} as string,\n\t\t{HS Code - رمز المنسق الجمركي} as string,\n\t\t{Supplier CR - رقم السجل التجارى للمورد} as string,\n\t\t{Supplier Name - اسم المورد} as string,\n\t\t{Category Level 1 - تصنيف السلعة 1} as string,\n\t\t{Category Level 2 - تصنيف السلعة 2} as string,\n\t\t{Category Level 3 - تصنيف السلعة 3} as string,\n\t\t{Category Level 4 - تصنيف السلعة 4} as string,\n\t\t{Width - العرض} as string,\n\t\t{Height - الطول} as string,\n\t\t{Depth - الارتفاع} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> inputitemscontainer\nFilter1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\ninputitemscontainer select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 filter(isNull(iifNull(iifNull(iifNull(ItemCode , Barcode, ProductNameArabic) , iifNull(DescriptionArabic , ProductNameEnglish, DescriptionEnglish), iifNull(UnitItemBarcode , NoOfUnitItems, UnitWeightsize)),\r\niifNull(iifNull(UnitUOM , PackageUOM, CostPrice) , iifNull(SellingPrice , BrandTradeMarkEnglish, BrandTradeMarkArabic), iifNull(MoCIProductGroup , CountryofOragenName, CountryofOragenISO3)),\r\niifNull(iifNull(HSCode , SupplierCR, SupplierName) , iifNull(CategoryLevel11 , CategoryLevel22, CategoryLevel33), iifNull(CategoryLevel44 , Width, Height)))) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tITEMCODE = ItemCode,\n\t\tBARCODE = Barcode,\n\t\tPRODUCTNAMEARABIC = ProductNameArabic,\n\t\tDESCRIPTIONARABIC = DescriptionArabic,\n\t\tPRODUCTNAMEENGLISH = ProductNameEnglish,\n\t\tDESCRIPTIONENGLISH = DescriptionEnglish,\n\t\tUNITITEMBARCODE = UnitItemBarcode,\n\t\tNOOFUNITITEMS = NoOfUnitItems,\n\t\tUNITWEIGHTSIZE = UnitWeightsize,\n\t\tUNITUOM = UnitUOM,\n\t\tPACKAGEUOM = PackageUOM,\n\t\tCOSTPRICE = CostPrice,\n\t\tSELLINGPRICE = SellingPrice,\n\t\tBRANDTRADEMARKENGLISH = BrandTradeMarkEnglish,\n\t\tBRANDTRADEMARKARABIC = BrandTradeMarkArabic,\n\t\tMOCIPRODUCTGROUP = MoCIProductGroup,\n\t\tCOUNTRYOFORAGENNAME = CountryofOragenName,\n\t\tCOUNTRYOFORAGENISO = CountryofOragenISO3,\n\t\tHSCODE = HSCode,\n\t\tSUPPLIERCR = SupplierCR,\n\t\tSUPPLIERNAME = SupplierName,\n\t\tCATEGORYLEVEL11 = CategoryLevel11,\n\t\tCATEGORYLEVEL12 = CategoryLevel22,\n\t\tCATEGORYLEVEL13 = CategoryLevel33,\n\t\tCATEGORYLEVEL14 = CategoryLevel44,\n\t\tWIDTH = Width,\n\t\tHEIGHT = Height,\n\t\tDEPTH = Depth,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgProducts"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_transaction_type')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "dls_input_xls_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "srcTransactionType"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "stgTransactionType"
-						}
-					],
-					"transformations": [
-						{
-							"name": "AddColumn"
-						},
-						{
-							"name": "SurrogateKey1"
-						},
-						{
-							"name": "Select1"
-						},
-						{
-							"name": "Filter1"
-						}
-					],
-					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Company CR #} as string,\n\t\t{Company Transaction Type Arabic } as string,\n\t\t{Company Transaction Type English } as string,\n\t\t{Company Transaction type} as string,\n\t\t{PSMS - MoCI Transaction Types} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tmoveFiles: ['TransactionType','Archive']) ~> srcTransactionType\nSelect1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19)) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\nFilter1 select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsrcTransactionType filter(isNull(iifNull(iifNull({Company CR #} , {Company Transaction Type Arabic }, {Company Transaction Type English }), {Company Transaction type},{PSMS - MoCI Transaction Types})) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCOMPANYCR = CompanyCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC = CompanyTransactionTypeArabic,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH = CompanyTransactionTypeEnglish,\n\t\tCOMPANYTRANSACTIONTYPE = CompanyTransactiontype,\n\t\tPSMSMOCITRANSACTIONTYPES = PSMSMoCITransactionTypes,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgTransactionType"
 				}
 			},
 			"dependsOn": []

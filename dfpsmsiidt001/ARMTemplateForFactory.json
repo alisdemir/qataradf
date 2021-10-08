@@ -3947,28 +3947,6 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "PL_STG_FILE_LIST_INS",
-						"description": "deneme2",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_FILE_TRANSFER",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_STG_FILE_LIST_INS",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "PL_FILE_TRANSFER",
 						"description": "deneme2",
 						"type": "ExecutePipeline",
@@ -3977,72 +3955,6 @@
 						"typeProperties": {
 							"pipeline": {
 								"referenceName": "PL_FILE_TRANSFER",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_DWL_FILE_LIST_UPD",
-						"description": "deneme",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Wait1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_DWL_FILE_LIST_UPD",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_STG_FILE_LIST_UPD",
-						"description": "deneme",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Wait1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_STG_FILE_LIST_UPD",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_MAIL_TO_NOTEXISTS",
-						"description": "deneme",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_DWL_FILE_LIST_UPD",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_MAIL_TO_NOTEXISTS",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -4072,34 +3984,12 @@
 						}
 					},
 					{
-						"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
-						"description": "deneme",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_EXEC_P_DQ_MAIN",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "PL_LOAD_DWB_TRANSACTION",
 						"description": "",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "PL_EXPORT_AND_EMAIL_ERRLOG",
+								"activity": "PL_EXEC_P_DQ_MAIN",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -4116,59 +4006,11 @@
 						}
 					},
 					{
-						"name": "PL_DWL_FILE_LIST_ARC",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_LOAD_DWB_TRANSACTION",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "PL_MAIL_TO_NOTEXISTS",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_DWL_FILE_LIST_ARC",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_DWL_FILE_LIST_INS",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_FILE_TRANSFER",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_DWL_FILE_LIST_INS",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "truncateStgTransactions",
 						"type": "Lookup",
 						"dependsOn": [
 							{
-								"activity": "Wait1",
+								"activity": "PL_FILE_TRANSFER",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -4215,28 +4057,6 @@
 							},
 							"waitOnCompletion": true,
 							"parameters": {}
-						}
-					},
-					{
-						"name": "Wait1",
-						"type": "Wait",
-						"dependsOn": [
-							{
-								"activity": "PL_DWL_FILE_LIST_INS",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "PL_STG_FILE_LIST_INS",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"waitTimeInSeconds": 1
 						}
 					},
 					{
@@ -4344,16 +4164,9 @@
 				"lastPublishTime": "2021-05-25T14:24:57Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_STG_FILE_LIST_INS')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_FILE_TRANSFER')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_DWL_FILE_LIST_UPD')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_STG_FILE_LIST_UPD')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_MAIL_TO_NOTEXISTS')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_CSV_TO_STG')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_ERRLOG')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_LOAD_DWB_TRANSACTION')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_DWL_FILE_LIST_ARC')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_DWL_FILE_LIST_INS')]",
 				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_XLS_TO_STG')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_STOCK_CALCULATE')]",
@@ -7171,6 +6984,175 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_SP_LOOP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LookupColumns",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_cr_transaction_type_valid",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "LookupInitialLoad",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "LookupColumns",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": {
+									"value": "@concat('select CASE WHEN COUNT(*)=0 THEN 1 ELSE 0 END AS LKP from dwh.DWL_CR_TRANSACTION_TYPE2 T1 INNER JOIN DWH.DWL_ENTITY T2\nON T1.ID_COMPANY_ENTITY=T2.ID_ENTITY_ORG WHERE T2.DS_ENTITY_CR = ','''',activity('LookupColumns').output.value[6],'''') ",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_dwl_cr_transaction_type",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LookupInitialLoad",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LookupColumns').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "UI_StoredProcedure",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[DwhTransferEntityTransactionType]",
+										"storedProcedureParameters": {
+											"CrNumber": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value.companycr",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"EntityTransactionTypeCode": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value[3]",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"EntityTransactionTypeNameArabic": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value[1]",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"EntityTransactionTypeNameEnglish": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value[2]",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"MociTransactionTypeEnglishName": {
+												"value": {
+													"value": "@activity('LookupColumns').output.value[4]",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"IsInitialLoad": {
+												"value": {
+													"value": "@activity('LookupInitialLoad').output.firstrow.lkp",
+													"type": "Expression"
+												},
+												"type": "Single"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "ls_qtrsqldb",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/TRANSACTION_TYPE"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_stg_cr_transaction_type_valid')]",
+				"[concat(variables('factoryId'), '/datasets/ds_dwl_cr_transaction_type')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_qtrsqldb')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_STG_FILE_LIST_INS')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -7481,26 +7463,6 @@
 						"userProperties": [],
 						"typeProperties": {
 							"storedProcedureName": "[[dwh].[P_DWA_STOCK_COUNTRY]"
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_dsqlpqtr",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "P_DWA_STOCK_BRANCH_LOAD",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dwh].[P_DWA_STOCK_BRANCH]"
 						},
 						"linkedServiceName": {
 							"referenceName": "ls_dsqlpqtr",
@@ -10705,7 +10667,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -11423,175 +11385,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_SP_LOOP')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LookupColumns",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlDWSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "ds_stg_cr_transaction_type_valid",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "LookupInitialLoad",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "LookupColumns",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlDWSource",
-								"sqlReaderQuery": {
-									"value": "@concat('select CASE WHEN COUNT(*)=0 THEN 1 ELSE 0 END AS LKP from dwh.DWL_CR_TRANSACTION_TYPE2 T1 INNER JOIN DWH.DWL_ENTITY T2\nON T1.ID_COMPANY_ENTITY=T2.ID_ENTITY_ORG WHERE T2.DS_ENTITY_CR = ','''',activity('LookupColumns').output.value[6],'''') ",
-									"type": "Expression"
-								},
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "ds_dwl_cr_transaction_type",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "LookupInitialLoad",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('LookupColumns').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "UI_StoredProcedure",
-									"type": "SqlServerStoredProcedure",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"storedProcedureName": "[[dbo].[DwhTransferEntityTransactionType]",
-										"storedProcedureParameters": {
-											"CrNumber": {
-												"value": {
-													"value": "@activity('LookupColumns').output.value[0]",
-													"type": "Expression"
-												},
-												"type": "String"
-											},
-											"EntityTransactionTypeCode": {
-												"value": {
-													"value": "@activity('LookupColumns').output.value[3]",
-													"type": "Expression"
-												},
-												"type": "String"
-											},
-											"EntityTransactionTypeNameArabic": {
-												"value": {
-													"value": "@activity('LookupColumns').output.value[1]",
-													"type": "Expression"
-												},
-												"type": "String"
-											},
-											"EntityTransactionTypeNameEnglish": {
-												"value": {
-													"value": "@activity('LookupColumns').output.value[2]",
-													"type": "Expression"
-												},
-												"type": "String"
-											},
-											"MociTransactionTypeEnglishName": {
-												"value": {
-													"value": "@activity('LookupColumns').output.value[4]",
-													"type": "Expression"
-												},
-												"type": "String"
-											},
-											"IsInitialLoad": {
-												"value": {
-													"value": "@activity('LookupInitialLoad').output.firstrow.lkp",
-													"type": "Expression"
-												},
-												"type": "Single"
-											}
-										}
-									},
-									"linkedServiceName": {
-										"referenceName": "ls_qtrsqldb",
-										"type": "LinkedServiceReference"
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_INITIAL_LOAD/TRANSACTION_TYPE"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_stg_cr_transaction_type_valid')]",
-				"[concat(variables('factoryId'), '/datasets/ds_dwl_cr_transaction_type')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_qtrsqldb')]"
 			]
 		}
 	]

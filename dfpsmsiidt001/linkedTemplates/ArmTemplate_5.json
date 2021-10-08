@@ -1042,28 +1042,6 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "PL_STG_FILE_LIST_INS",
-						"description": "deneme2",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_FILE_TRANSFER",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_STG_FILE_LIST_INS",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "PL_FILE_TRANSFER",
 						"description": "deneme2",
 						"type": "ExecutePipeline",
@@ -1072,72 +1050,6 @@
 						"typeProperties": {
 							"pipeline": {
 								"referenceName": "PL_FILE_TRANSFER",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_DWL_FILE_LIST_UPD",
-						"description": "deneme",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Wait1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_DWL_FILE_LIST_UPD",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_STG_FILE_LIST_UPD",
-						"description": "deneme",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Wait1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_STG_FILE_LIST_UPD",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_MAIL_TO_NOTEXISTS",
-						"description": "deneme",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_DWL_FILE_LIST_UPD",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_MAIL_TO_NOTEXISTS",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -1167,34 +1079,12 @@
 						}
 					},
 					{
-						"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
-						"description": "deneme",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_EXEC_P_DQ_MAIN",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "PL_LOAD_DWB_TRANSACTION",
 						"description": "",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "PL_EXPORT_AND_EMAIL_ERRLOG",
+								"activity": "PL_EXEC_P_DQ_MAIN",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1211,59 +1101,11 @@
 						}
 					},
 					{
-						"name": "PL_DWL_FILE_LIST_ARC",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_LOAD_DWB_TRANSACTION",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "PL_MAIL_TO_NOTEXISTS",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_DWL_FILE_LIST_ARC",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_DWL_FILE_LIST_INS",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_FILE_TRANSFER",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_DWL_FILE_LIST_INS",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "truncateStgTransactions",
 						"type": "Lookup",
 						"dependsOn": [
 							{
-								"activity": "Wait1",
+								"activity": "PL_FILE_TRANSFER",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1310,28 +1152,6 @@
 							},
 							"waitOnCompletion": true,
 							"parameters": {}
-						}
-					},
-					{
-						"name": "Wait1",
-						"type": "Wait",
-						"dependsOn": [
-							{
-								"activity": "PL_DWL_FILE_LIST_INS",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "PL_STG_FILE_LIST_INS",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"waitTimeInSeconds": 1
 						}
 					},
 					{
