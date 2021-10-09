@@ -1,0 +1,108 @@
+{
+	"name": "ds_stg_company_valid",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dsqlpqtr",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "MainorBranch",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CompanyNameArabic",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CompanyNameEnglish",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CommercialRegistrationNo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CommercialLicensenumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Area",
+				"type": "nvarchar"
+			},
+			{
+				"name": "StreetName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AreaNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "StreetNumber2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BuildingNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PhoneNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Fax",
+				"type": "nvarchar"
+			},
+			{
+				"name": "P.O.Box",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Email",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Website",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MapLocationUrl",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_SK",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DS_FILENAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DT_FILETIME",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DT_CREATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DT_UPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dwh",
+			"table": "STG_COMPANY_VALID"
+		}
+	}
+}
