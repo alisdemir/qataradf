@@ -189,7 +189,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@equals(if(\nempty(activity('stgcustomsdec').output.value)\n,0,1),0)",
+									"value": "@equals(if(\nempty(activity('stgcustomsdec').output.value)\n,0,1),1)",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
