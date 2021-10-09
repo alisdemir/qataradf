@@ -1,5 +1,5 @@
 {
-	"name": "ds_stg_company_valid",
+	"name": "ds_stg_entity_valid",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_dsqlpqtr",
@@ -9,43 +9,55 @@
 		"type": "AzureSqlDWTable",
 		"schema": [
 			{
-				"name": "MainorBranch",
+				"name": "RecordTypeName",
 				"type": "nvarchar"
 			},
 			{
-				"name": "CompanyNameArabic",
+				"name": "EntityTypeName",
 				"type": "nvarchar"
 			},
 			{
-				"name": "CompanyNameEnglish",
+				"name": "MainCompanyCrNumber",
 				"type": "nvarchar"
 			},
 			{
-				"name": "CommercialRegistrationNo",
+				"name": "CRNumber",
 				"type": "nvarchar"
 			},
 			{
-				"name": "CommercialLicensenumber",
+				"name": "CLNumber",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Area",
+				"name": "NameEnglish",
 				"type": "nvarchar"
 			},
 			{
-				"name": "StreetName",
+				"name": "NameArabic",
 				"type": "nvarchar"
 			},
 			{
-				"name": "AreaNumber",
+				"name": "AddressArea",
 				"type": "nvarchar"
 			},
 			{
-				"name": "StreetNumber2",
+				"name": "AddressStreetName",
 				"type": "nvarchar"
 			},
 			{
-				"name": "BuildingNumber",
+				"name": "AddressAreaNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AddressStreetNumber2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AddressBuildingNumber",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AddressPostalCode",
 				"type": "nvarchar"
 			},
 			{
@@ -53,11 +65,15 @@
 				"type": "nvarchar"
 			},
 			{
-				"name": "Fax",
+				"name": "MobilePhoneNumber",
 				"type": "nvarchar"
 			},
 			{
-				"name": "P.O.Box",
+				"name": "PhoneExtension",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Fax",
 				"type": "nvarchar"
 			},
 			{
@@ -65,44 +81,25 @@
 				"type": "nvarchar"
 			},
 			{
-				"name": "Website",
+				"name": "WebSite",
 				"type": "nvarchar"
 			},
 			{
-				"name": "MapLocationUrl",
+				"name": "LocationURL",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ID_SK",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "DS_FILENAME",
+				"name": "WarehouseCapacity",
 				"type": "nvarchar"
 			},
 			{
-				"name": "DT_FILETIME",
-				"type": "datetime",
-				"precision": 23,
-				"scale": 3
-			},
-			{
-				"name": "DT_CREATE",
-				"type": "datetime",
-				"precision": 23,
-				"scale": 3
-			},
-			{
-				"name": "DT_UPDATE",
-				"type": "datetime",
-				"precision": 23,
-				"scale": 3
+				"name": "WarehouseTotalArea",
+				"type": "nvarchar"
 			}
 		],
 		"typeProperties": {
 			"schema": "dwh",
-			"table": "STG_COMPANY_VALID"
+			"table": "STG_ENTITY_VALID"
 		}
 	}
 }
