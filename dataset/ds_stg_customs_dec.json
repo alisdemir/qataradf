@@ -134,10 +134,6 @@
 			{
 				"name": "accountType",
 				"type": "nvarchar"
-			},
-			{
-				"name": "DS_FILENAME",
-				"type": "varchar"
 			}
 		],
 		"typeProperties": {
