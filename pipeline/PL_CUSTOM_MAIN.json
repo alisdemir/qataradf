@@ -75,7 +75,10 @@
 									},
 									"datasetParameters": {
 										"source1": {
-											"xmlfileName": "Declaration_5SI60018026750_20210714225709128.xml"
+											"xmlfileName": {
+												"value": "@item().name",
+												"type": "Expression"
+											}
 										},
 										"DECLARATION": {
 											"schemaName": "dwh",
