@@ -37,7 +37,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "GetXMLFiles",
+						"activity": "truncateStgCustoms",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -257,6 +257,38 @@
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "truncateStgCustoms",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "GetXMLFiles",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "TRUNCATE TABLE [dwh].[STG_CUSTOMS_DEC];\nTRUNCATE TABLE [dwh].[STG_CUSTOMS_SUPV];\nTRUNCATE TABLE [dwh].[STG_CUSTOMS_ITEM];\nselect 1;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_stg_customs_dec",
+						"type": "DatasetReference"
+					}
 				}
 			}
 		],
