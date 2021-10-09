@@ -497,7 +497,76 @@
 						"value": "@activity('LookupDsFileName').output.value",
 						"type": "Expression"
 					},
-					"isSequential": true
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "LookupValid",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlDWSource",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[STG_COMPANY_VALID] where DS_FILENAME= ','''',item().ds_filename,'''') ",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "dsqlp_parametric",
+									"type": "DatasetReference",
+									"parameters": {
+										"schemaName": "dwh",
+										"tableName": "STG_COMPANY_VALID"
+									}
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "If Condition1",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "LookupValid",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(if(\nempty(activity('LookupValid').output.value)\n,0,1),1)",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "PL_SP_LOOP_entity",
+										"type": "ExecutePipeline",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "PL_SP_LOOP_entity",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true
+										}
+									}
+								]
+							}
+						}
+					]
 				}
 			}
 		],
