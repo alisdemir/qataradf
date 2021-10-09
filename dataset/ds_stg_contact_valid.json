@@ -1,0 +1,72 @@
+{
+	"name": "ds_stg_contact_valid",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dsqlpqtr",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "SEQ",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EMAIL",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PHONE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EXTENSION",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MOBILE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ENTITYCR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_SK",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DS_FILENAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DT_FILETIME",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DT_CREATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DT_UPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dwh",
+			"table": "STG_CONTACT_VALID"
+		}
+	}
+}

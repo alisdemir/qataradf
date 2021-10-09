@@ -1,0 +1,313 @@
+{
+	"name": "PL_SP_LOOP_entity",
+	"properties": {
+		"activities": [
+			{
+				"name": "LookupColumns_company",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_stg_company_valid",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "LookupInitialLoad",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "LookupColumns_company",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "LookupColumns_wh",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "LookupColumns_contact",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": {
+							"value": "@concat('select CASE WHEN COUNT(*)=0 THEN 1 ELSE 0 END AS LKP from dwh.DWL_COMPANY T1 WHERE T1.DS_CRNUMBER= ','''',activity('LookupColumns_company').output.value[4],'''') ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_dwl_cr_transaction_type",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "LookupInitialLoad",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LookupColumns_company').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "UI_StoredProcedure",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[DwhTransferEntity]",
+								"storedProcedureParameters": {
+									"AddressArea": {
+										"value": {
+											"value": "@item().Area",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"AddressAreaNumber": {
+										"value": {
+											"value": "@item().AreaNumber",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"AddressBuildingNumber": {
+										"value": {
+											"value": "@item().BuildingNumber",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"AddressPostalCode": {
+										"value": {
+											"value": "@item().P.O.Box",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"AddressStreetName": {
+										"value": {
+											"value": "@item().StreetName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"AddressStreetNumber2": {
+										"value": {
+											"value": "@item().StreetNumber2",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"CLNumber": {
+										"value": {
+											"value": "@item().CommercialRegistrationNo",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"CRNumber": {
+										"value": {
+											"value": "@item().CommercialLicensenumber",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Email": {
+										"value": {
+											"value": "@item().Email",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"EntityTypeName": {
+										"value": {
+											"value": "@item().companytype",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Fax": {
+										"value": {
+											"value": "@item().Fax",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"IsInitialLoad": {
+										"value": {
+											"value": "@activity('LookupInitialLoad').output.firstrow.lkp",
+											"type": "Expression"
+										},
+										"type": "Boolean"
+									},
+									"LocationURL": {
+										"value": {
+											"value": "@item().MapLocationUrl",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MainCompanyCrNumber": {
+										"value": "",
+										"type": "String"
+									},
+									"MobilePhoneNumber": {
+										"value": "",
+										"type": "String"
+									},
+									"NameArabic": {
+										"value": {
+											"value": "@item().CompanyNameArabic",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"NameEnglish": {
+										"value": {
+											"value": "@item().CompanyNameEnglish",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"PhoneExtension": {
+										"value": "",
+										"type": "String"
+									},
+									"PhoneNumber": {
+										"value": "",
+										"type": "String"
+									},
+									"RecordTypeName": {
+										"value": "",
+										"type": "String"
+									},
+									"WarehouseCapacity": {
+										"value": "",
+										"type": "Decimal"
+									},
+									"WarehouseTotalArea": {
+										"value": "",
+										"type": "Decimal"
+									},
+									"WebSite": {
+										"value": "",
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_qtrsqldb",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "LookupColumns_wh",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_stg_warehouse_valid",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "LookupColumns_contact",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_stg_contact_valid",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"folder": {
+			"name": "PL_INITIAL_LOAD/ENTITY"
+		},
+		"annotations": []
+	}
+}
