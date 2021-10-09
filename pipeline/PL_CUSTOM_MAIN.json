@@ -37,7 +37,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup2",
+						"activity": "TruncateStgCustoms",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -260,7 +260,7 @@
 				}
 			},
 			{
-				"name": "Lookup2",
+				"name": "TruncateStgCustoms",
 				"type": "Lookup",
 				"dependsOn": [
 					{
