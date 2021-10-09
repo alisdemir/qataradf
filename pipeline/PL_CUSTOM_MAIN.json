@@ -75,22 +75,15 @@
 									},
 									"datasetParameters": {
 										"source1": {
-											"xmlfileName": {
-												"value": "@item().name",
-												"type": "Expression"
-											}
+											"xmlfileName": "Declaration_5SI60018026750_20210714225709128.xml"
 										},
 										"DECLARATION": {
 											"schemaName": "dwh",
-											"tableName": "STG_CONTACT"
-										},
-										"ITEM": {
-											"schemaName": "dwh",
-											"tableName": "STG_CONTACT"
+											"tableName": "STG_CUSTOMS_DEC"
 										},
 										"SUPERVISOR": {
 											"schemaName": "dwh",
-											"tableName": "STG_CONTACT"
+											"tableName": "STG_CUSTOMS_SUPV"
 										}
 									}
 								},
