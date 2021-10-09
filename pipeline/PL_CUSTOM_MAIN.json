@@ -81,6 +81,10 @@
 											"schemaName": "dwh",
 											"tableName": "STG_CUSTOMS_DEC"
 										},
+										"ITEM": {
+											"schemaName": "dwh",
+											"tableName": "STG_CUSTOMS_ITEM"
+										},
 										"SUPERVISOR": {
 											"schemaName": "dwh",
 											"tableName": "STG_CUSTOMS_SUPV"
