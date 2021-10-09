@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "LookupColumns_company",
+				"name": "LookupColumns",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -21,7 +21,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "ds_stg_company_valid",
+						"referenceName": "ds_stg_entity_valid",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
@@ -32,19 +32,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "LookupColumns_company",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "LookupColumns_wh",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "LookupColumns_contact",
+						"activity": "LookupColumns",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -88,7 +76,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('LookupColumns_company').output.value",
+						"value": "@activity('LookupColumns').output.value",
 						"type": "Expression"
 					},
 					"activities": [
@@ -199,11 +187,17 @@
 										"type": "String"
 									},
 									"MainCompanyCrNumber": {
-										"value": "",
+										"value": {
+											"value": "@item().MainCompanyCrNumber",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
 									"MobilePhoneNumber": {
-										"value": "",
+										"value": {
+											"value": "@item().MobilePhoneNumber",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
 									"NameArabic": {
@@ -221,27 +215,45 @@
 										"type": "String"
 									},
 									"PhoneExtension": {
-										"value": "",
+										"value": {
+											"value": "@item().PhoneExtension",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
 									"PhoneNumber": {
-										"value": "",
+										"value": {
+											"value": "@item().PhoneNumber",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
 									"RecordTypeName": {
-										"value": "",
+										"value": {
+											"value": "@item().RecordTypeName",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
 									"WarehouseCapacity": {
-										"value": "",
+										"value": {
+											"value": "@item().WarehouseCapacity",
+											"type": "Expression"
+										},
 										"type": "Decimal"
 									},
 									"WarehouseTotalArea": {
-										"value": "",
+										"value": {
+											"value": "@item().WarehouseTotalArea",
+											"type": "Expression"
+										},
 										"type": "Decimal"
 									},
 									"WebSite": {
-										"value": "",
+										"value": {
+											"value": "@item().WebSite",
+											"type": "Expression"
+										},
 										"type": "String"
 									}
 								}
@@ -252,56 +264,6 @@
 							}
 						}
 					]
-				}
-			},
-			{
-				"name": "LookupColumns_wh",
-				"type": "Lookup",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "SqlDWSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "ds_stg_warehouse_valid",
-						"type": "DatasetReference"
-					},
-					"firstRowOnly": false
-				}
-			},
-			{
-				"name": "LookupColumns_contact",
-				"type": "Lookup",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "SqlDWSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "ds_stg_contact_valid",
-						"type": "DatasetReference"
-					},
-					"firstRowOnly": false
 				}
 			}
 		],
