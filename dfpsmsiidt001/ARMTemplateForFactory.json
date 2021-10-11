@@ -2711,7 +2711,7 @@
 										"source": {
 											"type": "SqlDWSource",
 											"sqlReaderQuery": {
-												"value": "\n@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC] as SCD\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '''')) IS NULL\ntry_convert(datetimeoffset,SWITCHOFFSET(cast(NULLIF([NotificationDate],'''') as datetimeoffset),''+03:00'')) IS NULL OR\nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '''')) IS NULL\nOR NOT EXISTS (SELECT 1 FROM dwh.STG_CUSTOMS_ITEM AS SCI WHERE sci.declarationNo=SCD.declarationNo)\n)\nAND [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,'''')",
+												"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC] as SCD\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '''')) IS NULL\nOR try_convert(datetimeoffset,SWITCHOFFSET(cast(NULLIF([NotificationDate],'''') as datetimeoffset),''+03:00'')) IS NULL  \nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '''')) IS NULL\nOR NOT EXISTS (SELECT 1 FROM dwh.STG_CUSTOMS_ITEM AS SCI WHERE sci.declarationNo=SCD.declarationNo)\n)\nAND [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,'''')",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -2739,7 +2739,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"expression": {
-											"value": "@equals(if(\nempty(activity('stgcustomsdec').output.value)\n,0,1),1)",
+											"value": "@equals(if(\nempty(activity('stgcustomsdec').output.value)\n,0,1),0)",
 											"type": "Expression"
 										},
 										"ifFalseActivities": [
@@ -11555,7 +11555,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
