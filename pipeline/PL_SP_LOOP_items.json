@@ -1,0 +1,231 @@
+{
+	"name": "PL_SP_LOOP_items",
+	"properties": {
+		"activities": [
+			{
+				"name": "LookupColumns",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_stg_products_valid",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "LookupInitialLoad",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "LookupColumns",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": {
+							"value": "@concat('select CASE WHEN COUNT(*)=0 THEN 1 ELSE 0 END AS LKP from dwh.DWL_PRODUCTS T1 INNER JOIN DWH.DWL_ENTITY T2\nON T1.ID_COMPANY=T2.ID_ENTITY_ORG WHERE T2.DS_ENTITY_CR = ','''',activity('LookupColumns').output.value[1],'''') ",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_dwl_cr_transaction_type",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "LookupInitialLoad",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LookupColumns').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "UI_StoredProcedure",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[DwhTransferProduct]",
+								"storedProcedureParameters": {
+									"Barcode": {
+										"value": "",
+										"type": "String"
+									},
+									"BrandNameArabic": {
+										"value": "",
+										"type": "String"
+									},
+									"BrandNameEnglish": {
+										"value": "",
+										"type": "String"
+									},
+									"CostPrice": {
+										"value": "",
+										"type": "Decimal"
+									},
+									"CrNumber": {
+										"value": "",
+										"type": "String"
+									},
+									"Depth": {
+										"value": "",
+										"type": "Decimal"
+									},
+									"EntityCategoryName1": {
+										"value": "",
+										"type": "String"
+									},
+									"EntityCategoryName2": {
+										"value": "",
+										"type": "String"
+									},
+									"EntityCategoryName3": {
+										"value": "",
+										"type": "String"
+									},
+									"EntityCategoryName4": {
+										"value": "",
+										"type": "String"
+									},
+									"Height": {
+										"value": "",
+										"type": "Decimal"
+									},
+									"HsCode": {
+										"value": "",
+										"type": "String"
+									},
+									"IsInitialLoad": {
+										"value": "",
+										"type": "Boolean"
+									},
+									"ItemCode": {
+										"value": "",
+										"type": "String"
+									},
+									"OriginCountryISO": {
+										"value": "",
+										"type": "String"
+									},
+									"OriginCountryName": {
+										"value": "",
+										"type": "String"
+									},
+									"ProductDescriptionArabic": {
+										"value": "",
+										"type": "String"
+									},
+									"ProductDescriptionEnglish": {
+										"value": "",
+										"type": "String"
+									},
+									"ProductGroupName": {
+										"value": "",
+										"type": "String"
+									},
+									"ProductNameArabic": {
+										"value": "",
+										"type": "String"
+									},
+									"ProductNameEnglish": {
+										"value": "",
+										"type": "String"
+									},
+									"SellingPrice": {
+										"value": "",
+										"type": "Decimal"
+									},
+									"SupplierCrNumber": {
+										"value": "",
+										"type": "String"
+									},
+									"SupplierName": {
+										"value": "",
+										"type": "String"
+									},
+									"UnitItemBarcode": {
+										"value": "",
+										"type": "String"
+									},
+									"UnitOfItemNumber": {
+										"value": "",
+										"type": "Decimal"
+									},
+									"UnitOfMeasure": {
+										"value": "",
+										"type": "String"
+									},
+									"UnitOfMeasurePackage": {
+										"value": "",
+										"type": "String"
+									},
+									"UnitWeightSize": {
+										"value": "",
+										"type": "Decimal"
+									},
+									"Width": {
+										"value": "",
+										"type": "Decimal"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_qtrsqldb",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": []
+	}
+}
