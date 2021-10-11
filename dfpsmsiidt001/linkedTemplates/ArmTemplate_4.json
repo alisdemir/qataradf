@@ -761,6 +761,148 @@
 													"firstRowOnly": false
 												}
 											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "DQ Customs",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "[[dwh].[P_DQ_CUSTOMS]"
+												},
+												"linkedServiceName": {
+													"referenceName": "ls_dsqlpqtr",
+													"type": "LinkedServiceReference"
+												}
+											},
+											{
+												"name": "P_UPSERT_CUSTOMS_SUPV",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [
+													{
+														"activity": "DQ Customs",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "[[dwh].[P_UPSERT_CUSTOMS_SUPERVISOR]"
+												},
+												"linkedServiceName": {
+													"referenceName": "ls_dsqlpqtr",
+													"type": "LinkedServiceReference"
+												}
+											},
+											{
+												"name": "P_UPSERT_CUSTOMS_ITEM",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [
+													{
+														"activity": "DQ Customs",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "[[dwh].[P_UPSERT_CUSTOMS_ITEM]"
+												},
+												"linkedServiceName": {
+													"referenceName": "ls_dsqlpqtr",
+													"type": "LinkedServiceReference"
+												}
+											},
+											{
+												"name": "P_UPSERT_CUSTOMS_DEC",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [
+													{
+														"activity": "DQ Customs",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "[[dwh].[P_UPSERT_CUSTOMS_DECLARATION]"
+												},
+												"linkedServiceName": {
+													"referenceName": "ls_dsqlpqtr",
+													"type": "LinkedServiceReference"
+												}
+											},
+											{
+												"name": "P_DWA_CUSTOMS_STOCK",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [
+													{
+														"activity": "P_UPSERT_CUSTOMS_ITEM",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													},
+													{
+														"activity": "P_UPSERT_CUSTOMS_SUPV",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													},
+													{
+														"activity": "P_UPSERT_CUSTOMS_DEC",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "[[dwh].[P_DWA_CUSTOMS_STOCK]"
+												},
+												"linkedServiceName": {
+													"referenceName": "ls_dsqlpqtr",
+													"type": "LinkedServiceReference"
+												}
+											}
 										]
 									}
 								}
