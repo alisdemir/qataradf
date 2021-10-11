@@ -281,6 +281,114 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_entity_valid')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "RecordTypeName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EntityTypeName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MainCompanyCrNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CRNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CLNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NameEnglish",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NameArabic",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressArea",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressStreetName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressAreaNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressStreetNumber2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressBuildingNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressPostalCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PhoneNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MobilePhoneNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PhoneExtension",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Fax",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WebSite",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LocationURL",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WarehouseCapacity",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WarehouseTotalArea",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_ENTITY_VALID"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_file_list')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -3475,56 +3583,6 @@
 				"lastPublishTime": "2021-05-20T12:54:28Z"
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_LOAD_DWB_TRANSACTION')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "PL_LOAD_DWB_TRANSACTION",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlDWSource",
-								"sqlReaderStoredProcedureName": "[[dwh].[P_DWB_TRANSACTION_LOAD]",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference",
-								"parameters": {
-									"schemaName": "dwh",
-									"tableName": "DWB_transactions"
-								}
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_MAIN"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:52:28Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
-			]
 		}
 	]
 }

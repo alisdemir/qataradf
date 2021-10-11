@@ -2711,7 +2711,7 @@
 										"source": {
 											"type": "SqlDWSource",
 											"sqlReaderQuery": {
-												"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC] as SCD\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '''')) IS NULL\nOR try_convert(datetime, NULLIF([NotificationDate], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '''')) IS NULL\nOR NOT EXISTS (SELECT 1 FROM dwh.STG_CUSTOMS_ITEM AS SCI WHERE sci.declarationNo=SCD.declarationNo)\n)\nAND [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,'''')",
+												"value": "\n@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC] as SCD\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '''')) IS NULL\ntry_convert(datetimeoffset,SWITCHOFFSET(cast(NULLIF([NotificationDate],'''') as datetimeoffset),''+03:00'')) IS NULL OR\nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '''')) IS NULL\nOR NOT EXISTS (SELECT 1 FROM dwh.STG_CUSTOMS_ITEM AS SCI WHERE sci.declarationNo=SCD.declarationNo)\n)\nAND [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,'''')",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -2858,8 +2858,8 @@
 				"[concat(variables('factoryId'), '/datasets/ds_custom_xml')]",
 				"[concat(variables('factoryId'), '/datasets/ds_stg_customs_dec')]",
 				"[concat(variables('factoryId'), '/dataflows/df_custom_xml_to_db_copy1')]",
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
 			]
 		},
 		{
@@ -6300,47 +6300,11 @@
 						}
 					},
 					{
-						"name": "truncateStgCompany",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "GetFileList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlDWSource",
-								"sqlReaderQuery": "truncate table [dwh].[STG_COMPANY];\nselect 1;",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference",
-								"parameters": {
-									"schemaName": "dwh",
-									"tableName": "STG_COMPANY"
-								}
-							}
-						}
-					},
-					{
 						"name": "ForEachFile",
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "truncateStgCompany",
+								"activity": "truncateStgTables",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -6406,7 +6370,7 @@
 						}
 					},
 					{
-						"name": "truncateStgWarehouse",
+						"name": "truncateStgTables",
 						"type": "Lookup",
 						"dependsOn": [
 							{
@@ -6427,7 +6391,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlDWSource",
-								"sqlReaderQuery": "truncate table [dwh].[STG_WAREHOUSE];\nselect 1;",
+								"sqlReaderQuery": "truncate table [dwh].[STG_COMPANY];\ntruncate table [dwh].[STG_WAREHOUSE];\ntruncate table [dwh].[STG_CONTACT];\nselect 1;",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -6446,7 +6410,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "truncateStgWarehouse",
+								"activity": "truncateStgTables",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -6511,7 +6475,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "truncateStgContact",
+								"activity": "truncateStgTables",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -6569,42 +6533,6 @@
 									}
 								}
 							]
-						}
-					},
-					{
-						"name": "truncateStgContact",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "GetFileList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlDWSource",
-								"sqlReaderQuery": "truncate table [dwh].[STG_CONTACT];\nselect 1;",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference",
-								"parameters": {
-									"schemaName": "dwh",
-									"tableName": "STG_CONTACT"
-								}
-							}
 						}
 					},
 					{
@@ -6750,6 +6678,130 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "LookupDsFileName",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "P_STG_VALID_INSERT",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select DISTINCT DS_FILENAME FROM dwh.STG_COMPANY_VALID;\nSELECT 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_cr_transaction_type_valid",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LookupDsFileName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LookupDsFileName').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "LookupValid",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderQuery": {
+												"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[STG_COMPANY_VALID] where DS_FILENAME= ','''',item().ds_filename,'''') ",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "dwh",
+												"tableName": "STG_COMPANY_VALID"
+											}
+										},
+										"firstRowOnly": false
+									}
+								},
+								{
+									"name": "If Condition1",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "LookupValid",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@equals(if(\nempty(activity('LookupValid').output.value)\n,0,1),1)",
+											"type": "Expression"
+										},
+										"ifTrueActivities": [
+											{
+												"name": "PL_SP_LOOP_entity",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "PL_SP_LOOP_entity",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {}
+												}
+											}
+										]
+									}
+								}
+							]
+						}
 					}
 				],
 				"policy": {
@@ -6768,11 +6820,13 @@
 				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_company')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_warehouse')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_contact')]",
+				"[concat(variables('factoryId'), '/datasets/ds_stg_cr_transaction_type_valid')]",
 				"[concat(variables('factoryId'), '/dataflows/df_xls_to_stg_company')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
 				"[concat(variables('factoryId'), '/dataflows/df_xls_to_stg_warehouse')]",
-				"[concat(variables('factoryId'), '/dataflows/df_xls_to_stg_contact')]"
+				"[concat(variables('factoryId'), '/dataflows/df_xls_to_stg_contact')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_SP_LOOP_entity')]"
 			]
 		},
 		{
@@ -7470,6 +7524,294 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_stg_cr_transaction_type_valid')]",
+				"[concat(variables('factoryId'), '/datasets/ds_dwl_cr_transaction_type')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_qtrsqldb')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_SP_LOOP_entity')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LookupColumns",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_entity_valid",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "LookupInitialLoad",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "LookupColumns",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": {
+									"value": "@concat('select CASE WHEN COUNT(*)=0 THEN 1 ELSE 0 END AS LKP from dwh.DWL_COMPANY T1 WHERE T1.DS_CRNUMBER= ','''',activity('LookupColumns').output.value[4],'''') ",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_dwl_cr_transaction_type",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LookupInitialLoad",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LookupColumns').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "UI_StoredProcedure",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[DwhTransferEntity]",
+										"storedProcedureParameters": {
+											"AddressArea": {
+												"value": {
+													"value": "@item().Area",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"AddressAreaNumber": {
+												"value": {
+													"value": "@item().AreaNumber",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"AddressBuildingNumber": {
+												"value": {
+													"value": "@item().BuildingNumber",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"AddressPostalCode": {
+												"value": {
+													"value": "@item().P.O.Box",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"AddressStreetName": {
+												"value": {
+													"value": "@item().StreetName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"AddressStreetNumber2": {
+												"value": {
+													"value": "@item().StreetNumber2",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"CLNumber": {
+												"value": {
+													"value": "@item().CommercialRegistrationNo",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"CRNumber": {
+												"value": {
+													"value": "@item().CommercialLicensenumber",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Email": {
+												"value": {
+													"value": "@item().Email",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"EntityTypeName": {
+												"value": {
+													"value": "@item().companytype",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Fax": {
+												"value": {
+													"value": "@item().Fax",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"IsInitialLoad": {
+												"value": {
+													"value": "@activity('LookupInitialLoad').output.firstrow.lkp",
+													"type": "Expression"
+												},
+												"type": "Boolean"
+											},
+											"LocationURL": {
+												"value": {
+													"value": "@item().MapLocationUrl",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"MainCompanyCrNumber": {
+												"value": {
+													"value": "@item().MainCompanyCrNumber",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"MobilePhoneNumber": {
+												"value": {
+													"value": "@item().MobilePhoneNumber",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"NameArabic": {
+												"value": {
+													"value": "@item().CompanyNameArabic",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"NameEnglish": {
+												"value": {
+													"value": "@item().CompanyNameEnglish",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"PhoneExtension": {
+												"value": {
+													"value": "@item().PhoneExtension",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"PhoneNumber": {
+												"value": {
+													"value": "@item().PhoneNumber",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"RecordTypeName": {
+												"value": {
+													"value": "@item().RecordTypeName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"WarehouseCapacity": {
+												"value": {
+													"value": "@item().WarehouseCapacity",
+													"type": "Expression"
+												},
+												"type": "Decimal"
+											},
+											"WarehouseTotalArea": {
+												"value": {
+													"value": "@item().WarehouseTotalArea",
+													"type": "Expression"
+												},
+												"type": "Decimal"
+											},
+											"WebSite": {
+												"value": {
+													"value": "@item().WebSite",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "ls_qtrsqldb",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD/ENTITY"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_stg_entity_valid')]",
 				"[concat(variables('factoryId'), '/datasets/ds_dwl_cr_transaction_type')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_qtrsqldb')]"
 			]
@@ -10227,6 +10569,116 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_entity_valid')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "RecordTypeName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EntityTypeName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MainCompanyCrNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CRNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CLNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NameEnglish",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NameArabic",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressArea",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressStreetName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressAreaNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressStreetNumber2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressBuildingNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressPostalCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PhoneNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MobilePhoneNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PhoneExtension",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Fax",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WebSite",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LocationURL",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WarehouseCapacity",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WarehouseTotalArea",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_ENTITY_VALID"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_file_list')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -10955,6 +11407,61 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/df_custom_xml_to_db_copy1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_custom_xml",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "DECLARATION"
+						},
+						{
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "ITEM"
+						},
+						{
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "SUPERVISOR"
+						}
+					],
+					"transformations": [
+						{
+							"name": "FlattenSupervisor"
+						},
+						{
+							"name": "FlattenItem"
+						}
+					],
+					"script": "parameters{\n\txmlfilename as string ('a')\n}\nsource(output(\n\t\tReleaseNotification as (Declaration as (ItemDetails as (Item as (countryOfOrigin as string, declaredValue as double, declaredValueQAR as double, foreignCurrency as string, hscode as integer, itemQuantity as double, itemQuantityUOM as string, netWeight as short, netWeightUOM as string)[]), SupervisorDetails as (Supervisor as (mobileNumber as long, name as string)[]), accountType as string, address as string, bolNumber as string, cargoManifestNumber as integer, carrierName as string, clearingAgencyCR as string, clearingAgencyNameAR as string, clearingAgencyNameEng as string, companyName as string, companyNameAr as string, countryOfLoading as string, declarationNo as string, declarationStatus as string, declarationType as string, email as string, entryOrExitPortName as string, establishmentId as integer, exporterName as string, firstCountryOfLoading as string, importerName as string, masterBolOrAWBNumber as string, portOfLoading as string, portType as string, releaseOrderNumber as long, releasedDate as string, supplierCR as short, supplierCustomsCode as string, voyageOrFlightNumber as string), NotificationDate as string, NotificationRef as string, NotificationSender as string)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tvalidationMode: 'none',\n\tnamespaces: false) ~> source1\nsource1 foldDown(unroll(ReleaseNotification.Declaration.SupervisorDetails.Supervisor, ReleaseNotification.Declaration.SupervisorDetails.Supervisor),\n\tmapColumn(\n\t\tmobileNumber = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.mobileNumber,\n\t\tname = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.name,\n\t\tdeclarationNo = ReleaseNotification.Declaration.declarationNo\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> FlattenSupervisor\nsource1 foldDown(unroll(ReleaseNotification.Declaration.ItemDetails.Item, ReleaseNotification.Declaration.ItemDetails.Item),\n\tmapColumn(\n\t\tcountryOfOrigin = ReleaseNotification.Declaration.ItemDetails.Item.countryOfOrigin,\n\t\tdeclaredValue = ReleaseNotification.Declaration.ItemDetails.Item.declaredValue,\n\t\tdeclaredValueQAR = ReleaseNotification.Declaration.ItemDetails.Item.declaredValueQAR,\n\t\tforeignCurrency = ReleaseNotification.Declaration.ItemDetails.Item.foreignCurrency,\n\t\thscode = ReleaseNotification.Declaration.ItemDetails.Item.hscode,\n\t\titemQuantity = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantity,\n\t\titemQuantityUOM = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantityUOM,\n\t\tnetWeight = ReleaseNotification.Declaration.ItemDetails.Item.netWeight,\n\t\tnetWeightUOM = ReleaseNotification.Declaration.ItemDetails.Item.netWeightUOM,\n\t\tdeclarationNo = ReleaseNotification.Declaration.declarationNo\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> FlattenItem\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tNotificationSender = ReleaseNotification.NotificationSender,\n\t\tNotificationDate = ReleaseNotification.NotificationDate,\n\t\tNotificationRef = ReleaseNotification.NotificationRef,\n\t\taddress = ReleaseNotification.Declaration.address,\n\t\tbolNumber = ReleaseNotification.Declaration.bolNumber,\n\t\tcargoManifestNumber = ReleaseNotification.Declaration.cargoManifestNumber,\n\t\tcarrierName = ReleaseNotification.Declaration.carrierName,\n\t\tclearingAgencyCR = ReleaseNotification.Declaration.clearingAgencyCR,\n\t\tclearingAgencyNameAR = ReleaseNotification.Declaration.clearingAgencyNameAR,\n\t\tclearingAgencyNameEng = ReleaseNotification.Declaration.clearingAgencyNameEng,\n\t\tcompanyName = ReleaseNotification.Declaration.companyName,\n\t\tcompanyNameAr = ReleaseNotification.Declaration.companyNameAr,\n\t\tcountryOfLoading = ReleaseNotification.Declaration.countryOfLoading,\n\t\tdeclarationNo = ReleaseNotification.Declaration.declarationNo,\n\t\tdeclarationStatus = ReleaseNotification.Declaration.declarationStatus,\n\t\tdeclarationType = ReleaseNotification.Declaration.declarationType,\n\t\temail = ReleaseNotification.Declaration.email,\n\t\tentryOrExitPortName = ReleaseNotification.Declaration.entryOrExitPortName,\n\t\testablishmentId = ReleaseNotification.Declaration.establishmentId,\n\t\texporterName = ReleaseNotification.Declaration.exporterName,\n\t\tfirstCountryOfLoading = ReleaseNotification.Declaration.firstCountryOfLoading,\n\t\timporterName = ReleaseNotification.Declaration.importerName,\n\t\tmasterBolOrAWBNumber = ReleaseNotification.Declaration.masterBolOrAWBNumber,\n\t\tportOfLoading = ReleaseNotification.Declaration.portOfLoading,\n\t\tportType = ReleaseNotification.Declaration.portType,\n\t\treleaseOrderNumber = ReleaseNotification.Declaration.releaseOrderNumber,\n\t\treleasedDate = ReleaseNotification.Declaration.releasedDate,\n\t\tsupplierCR = ReleaseNotification.Declaration.supplierCR,\n\t\tsupplierCustomsCode = ReleaseNotification.Declaration.supplierCustomsCode,\n\t\tvoyageOrFlightNumber = ReleaseNotification.Declaration.voyageOrFlightNumber,\n\t\taccountType = ReleaseNotification.Declaration.accountType\n\t)) ~> DECLARATION\nFlattenItem sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tcountryOfOrigin,\n\t\tdeclaredValue,\n\t\tdeclaredValueQAR,\n\t\tforeignCurrency,\n\t\thscode,\n\t\titemQuantity,\n\t\titemQuantityUOM,\n\t\tnetWeight,\n\t\tnetWeightUOM,\n\t\tdeclarationNo\n\t)) ~> ITEM\nFlattenSupervisor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tmobileNumber,\n\t\tname,\n\t\tdeclarationNo\n\t)) ~> SUPERVISOR"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_custom_xml')]",
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_dwl_file_list_upd_exist')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -11048,7 +11555,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -11766,61 +12273,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_custom_xml_to_db_copy1')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_custom_xml",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "DECLARATION"
-						},
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "ITEM"
-						},
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "SUPERVISOR"
-						}
-					],
-					"transformations": [
-						{
-							"name": "FlattenSupervisor"
-						},
-						{
-							"name": "FlattenItem"
-						}
-					],
-					"script": "parameters{\n\txmlfilename as string ('a')\n}\nsource(output(\n\t\tReleaseNotification as (Declaration as (ItemDetails as (Item as (countryOfOrigin as string, declaredValue as double, declaredValueQAR as double, foreignCurrency as string, hscode as integer, itemQuantity as double, itemQuantityUOM as string, netWeight as short, netWeightUOM as string)[]), SupervisorDetails as (Supervisor as (mobileNumber as long, name as string)[]), accountType as string, address as string, bolNumber as string, cargoManifestNumber as integer, carrierName as string, clearingAgencyCR as string, clearingAgencyNameAR as string, clearingAgencyNameEng as string, companyName as string, companyNameAr as string, countryOfLoading as string, declarationNo as string, declarationStatus as string, declarationType as string, email as string, entryOrExitPortName as string, establishmentId as integer, exporterName as string, firstCountryOfLoading as string, importerName as string, masterBolOrAWBNumber as string, portOfLoading as string, portType as string, releaseOrderNumber as long, releasedDate as string, supplierCR as short, supplierCustomsCode as string, voyageOrFlightNumber as string), NotificationDate as string, NotificationRef as string, NotificationSender as string)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: true,\n\tvalidationMode: 'none',\n\tnamespaces: false) ~> source1\nsource1 foldDown(unroll(ReleaseNotification.Declaration.SupervisorDetails.Supervisor, ReleaseNotification.Declaration.SupervisorDetails.Supervisor),\n\tmapColumn(\n\t\tmobileNumber = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.mobileNumber,\n\t\tname = ReleaseNotification.Declaration.SupervisorDetails.Supervisor.name,\n\t\tdeclarationNo = ReleaseNotification.Declaration.declarationNo\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: false) ~> FlattenSupervisor\nsource1 foldDown(unroll(ReleaseNotification.Declaration.ItemDetails.Item, ReleaseNotification.Declaration.ItemDetails.Item),\n\tmapColumn(\n\t\tcountryOfOrigin = ReleaseNotification.Declaration.ItemDetails.Item.countryOfOrigin,\n\t\tdeclaredValue = ReleaseNotification.Declaration.ItemDetails.Item.declaredValue,\n\t\tdeclaredValueQAR = ReleaseNotification.Declaration.ItemDetails.Item.declaredValueQAR,\n\t\tforeignCurrency = ReleaseNotification.Declaration.ItemDetails.Item.foreignCurrency,\n\t\thscode = ReleaseNotification.Declaration.ItemDetails.Item.hscode,\n\t\titemQuantity = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantity,\n\t\titemQuantityUOM = ReleaseNotification.Declaration.ItemDetails.Item.itemQuantityUOM,\n\t\tnetWeight = ReleaseNotification.Declaration.ItemDetails.Item.netWeight,\n\t\tnetWeightUOM = ReleaseNotification.Declaration.ItemDetails.Item.netWeightUOM,\n\t\tdeclarationNo = ReleaseNotification.Declaration.declarationNo\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> FlattenItem\nsource1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tNotificationSender = ReleaseNotification.NotificationSender,\n\t\tNotificationDate = ReleaseNotification.NotificationDate,\n\t\tNotificationRef = ReleaseNotification.NotificationRef,\n\t\taddress = ReleaseNotification.Declaration.address,\n\t\tbolNumber = ReleaseNotification.Declaration.bolNumber,\n\t\tcargoManifestNumber = ReleaseNotification.Declaration.cargoManifestNumber,\n\t\tcarrierName = ReleaseNotification.Declaration.carrierName,\n\t\tclearingAgencyCR = ReleaseNotification.Declaration.clearingAgencyCR,\n\t\tclearingAgencyNameAR = ReleaseNotification.Declaration.clearingAgencyNameAR,\n\t\tclearingAgencyNameEng = ReleaseNotification.Declaration.clearingAgencyNameEng,\n\t\tcompanyName = ReleaseNotification.Declaration.companyName,\n\t\tcompanyNameAr = ReleaseNotification.Declaration.companyNameAr,\n\t\tcountryOfLoading = ReleaseNotification.Declaration.countryOfLoading,\n\t\tdeclarationNo = ReleaseNotification.Declaration.declarationNo,\n\t\tdeclarationStatus = ReleaseNotification.Declaration.declarationStatus,\n\t\tdeclarationType = ReleaseNotification.Declaration.declarationType,\n\t\temail = ReleaseNotification.Declaration.email,\n\t\tentryOrExitPortName = ReleaseNotification.Declaration.entryOrExitPortName,\n\t\testablishmentId = ReleaseNotification.Declaration.establishmentId,\n\t\texporterName = ReleaseNotification.Declaration.exporterName,\n\t\tfirstCountryOfLoading = ReleaseNotification.Declaration.firstCountryOfLoading,\n\t\timporterName = ReleaseNotification.Declaration.importerName,\n\t\tmasterBolOrAWBNumber = ReleaseNotification.Declaration.masterBolOrAWBNumber,\n\t\tportOfLoading = ReleaseNotification.Declaration.portOfLoading,\n\t\tportType = ReleaseNotification.Declaration.portType,\n\t\treleaseOrderNumber = ReleaseNotification.Declaration.releaseOrderNumber,\n\t\treleasedDate = ReleaseNotification.Declaration.releasedDate,\n\t\tsupplierCR = ReleaseNotification.Declaration.supplierCR,\n\t\tsupplierCustomsCode = ReleaseNotification.Declaration.supplierCustomsCode,\n\t\tvoyageOrFlightNumber = ReleaseNotification.Declaration.voyageOrFlightNumber,\n\t\taccountType = ReleaseNotification.Declaration.accountType\n\t)) ~> DECLARATION\nFlattenItem sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tcountryOfOrigin,\n\t\tdeclaredValue,\n\t\tdeclaredValueQAR,\n\t\tforeignCurrency,\n\t\thscode,\n\t\titemQuantity,\n\t\titemQuantityUOM,\n\t\tnetWeight,\n\t\tnetWeightUOM,\n\t\tdeclarationNo\n\t)) ~> ITEM\nFlattenSupervisor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tmobileNumber,\n\t\tname,\n\t\tdeclarationNo\n\t)) ~> SUPERVISOR"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_custom_xml')]",
-				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
 			]
 		}
 	]
