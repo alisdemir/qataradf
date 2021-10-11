@@ -276,7 +276,7 @@
 										}
 									},
 									{
-										"name": "Stored procedure1",
+										"name": "P_UPSERT_CUSTOMS_SUPV",
 										"type": "SqlServerStoredProcedure",
 										"dependsOn": [
 											{
@@ -303,7 +303,7 @@
 										}
 									},
 									{
-										"name": "Stored procedure2",
+										"name": "P_UPSERT_CUSTOMS_ITEM",
 										"type": "SqlServerStoredProcedure",
 										"dependsOn": [
 											{
@@ -330,7 +330,7 @@
 										}
 									},
 									{
-										"name": "Stored procedure3",
+										"name": "P_UPSERT_CUSTOMS_DEC",
 										"type": "SqlServerStoredProcedure",
 										"dependsOn": [
 											{
@@ -357,23 +357,23 @@
 										}
 									},
 									{
-										"name": "Stored procedure4",
+										"name": "P_DWA_CUSTOMS_STOCK",
 										"type": "SqlServerStoredProcedure",
 										"dependsOn": [
 											{
-												"activity": "Stored procedure2",
+												"activity": "P_UPSERT_CUSTOMS_ITEM",
 												"dependencyConditions": [
 													"Succeeded"
 												]
 											},
 											{
-												"activity": "Stored procedure1",
+												"activity": "P_UPSERT_CUSTOMS_SUPV",
 												"dependencyConditions": [
 													"Succeeded"
 												]
 											},
 											{
-												"activity": "Stored procedure3",
+												"activity": "P_UPSERT_CUSTOMS_DEC",
 												"dependencyConditions": [
 													"Succeeded"
 												]
