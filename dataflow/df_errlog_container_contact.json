@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "dsqlp_parametric",
+						"referenceName": "ds_stg_contact_error_log",
 						"type": "DatasetReference"
 					},
 					"name": "stgcontacterrlog"
