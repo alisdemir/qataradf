@@ -13,6 +13,121 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_STG_FILE_LIST_UPD')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Stg file list tablosunu update eden pipeline",
+				"activities": [
+					{
+						"name": "df_stg_file_list_upd",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_stg_file_list_upd",
+								"type": "DataFlowReference",
+								"parameters": {
+									"itemname": "toString('CRFR_20210321.csv')"
+								},
+								"datasetParameters": {
+									"dwhfilelist": {},
+									"stgfilelistsrc": {},
+									"stgfilelisttrgt": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "stagingarea"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "None",
+							"cacheSinks": {
+								"firstRowOnly": true
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:54:43Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_STG_TRANS_TO_TRANSACTION_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "df_transfer_stg_Trans_to_Trans",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_transfer_stg_Trans_to_Trans",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source2": {},
+									"sink1": {
+										"schemaName": "dwh",
+										"tableName": "DWB_TRANSACTIONS"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:54:47Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_XLS_TO_STG')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -840,7 +955,7 @@
 												},
 												"stgTransactionType": {
 													"schemaName": "dwh",
-													"tableName": "STG_CR_TRANSACTION_TYPE"
+													"tableName": "STG_CR_TRANSACTION_TYPE_RAW"
 												}
 											}
 										},
@@ -1503,6 +1618,7 @@
 				"lastPublishTime": "2021-05-25T14:24:57Z"
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_STG_FILE_LIST_UPD')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_XLS_TO_STG')]"
 			]
 		},
@@ -2053,7 +2169,7 @@
 												},
 												"stgCompany": {
 													"schemaName": "dwh",
-													"tableName": "STG_COMPANY"
+													"tableName": "STG_COMPANY_RAW"
 												}
 											}
 										},
@@ -2096,7 +2212,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlDWSource",
-								"sqlReaderQuery": "truncate table [dwh].[STG_COMPANY];\ntruncate table [dwh].[STG_WAREHOUSE];\ntruncate table [dwh].[STG_CONTACT];\nselect 1;",
+								"sqlReaderQuery": "truncate table [dwh].[STG_COMPANY_RAW];\ntruncate table [dwh].[STG_WAREHOUSE_RAW];\ntruncate table [dwh].[STG_CONTACT_RAW];\nselect 1;",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -2586,6 +2702,130 @@
 							},
 							"waitOnCompletion": true,
 							"parameters": {}
+						}
+					},
+					{
+						"name": "LookupDsFileName",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "PL_EXEC_P_DQ_ITEMS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select DISTINCT DS_FILENAME FROM dwh.STG_PRODUCTS_VALID;\nSELECT 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_products_valid",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LookupDsFileName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LookupDsFileName').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "LookupValid",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderQuery": {
+												"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[STG_PRODUCTS_VALID] where DS_FILENAME= ','''',item().ds_filename,'''') ",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "dwh",
+												"tableName": "STG_PRODUCTS_VALID"
+											}
+										},
+										"firstRowOnly": false
+									}
+								},
+								{
+									"name": "If Condition1",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "LookupValid",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@equals(if(\nempty(activity('LookupValid').output.value)\n,0,1),1)",
+											"type": "Expression"
+										},
+										"ifTrueActivities": [
+											{
+												"name": "PL_SP_LOOP_items",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "PL_SP_LOOP_items",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {}
+												}
+											}
+										]
+									}
+								}
+							]
 						}
 					}
 				],

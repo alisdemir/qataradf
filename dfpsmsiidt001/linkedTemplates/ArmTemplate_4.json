@@ -13,6 +13,86 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/df_transerrlog_to_errlogcontainer')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_stg_transaction_error_log",
+								"type": "DatasetReference"
+							},
+							"name": "transactionerrorlog"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dls_errorlog_csv",
+								"type": "DatasetReference"
+							},
+							"name": "errorlogcsv"
+						}
+					],
+					"transformations": [
+						{
+							"name": "stgfilename"
+						}
+					],
+					"script": "parameters{\n\tp_stg_filename as string (STG_FILENAME)\n}\nsource(output(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> transactionerrorlog\ntransactionerrorlog derive(STG_FILENAME = replace((replace(DS_FILENAME,'.xlsx','_err.csv')),'.xls','_err.csv')) ~> stgfilename\nstgfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tDS_ERROR_CODE as string\n\t),\n\trowUrlColumn:'STG_FILENAME',\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tTRANSACTION_DATE,\n\t\tTRANSACTION_TYPE_CODE,\n\t\tITEM_CODE,\n\t\tITEM_BARCODE,\n\t\tYOUR_COMPANY_CR,\n\t\tOTHER_ENTITY_CR,\n\t\tCOMPANY_STORE_INVENTORY_CODE,\n\t\tQUANTITY,\n\t\tSELLING_PRICE_PER_UNIT,\n\t\tCOMMON_REFERANCE_NO,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE,\n\t\tNUMBER_OF_CONSUMER_INVOICES,\n\t\tDS_ERROR_CODE\n\t)) ~> errorlogcsv"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_transfer_stg_Trans_to_Trans')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_stg_transactions",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_stg_transaction_error_log",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "NotExists1"
+						},
+						{
+							"name": "DerivedColumn1"
+						}
+					],
+					"script": "source(output(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_GROUP as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_SOURCE_WAREHOUSE as string,\n\t\tID_TARGET_WAREHOUSE as string,\n\t\tMT_QUANTITY as string,\n\t\tID_UOM as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_LPO as string,\n\t\tID_SALES_ORDER as string,\n\t\tID_DELIVERY_NOTE as string,\n\t\tID_GRN as string,\n\t\tID_INVOICE as string,\n\t\tID_RETURN_NOTE as string,\n\t\tID_CUSTOMS_STATEMENT as string,\n\t\tID_REFERANCE_CODE as string,\n\t\tMT_INVOICE_COUNT as string,\n\t\tDS_TRANSACTION_REASON as string,\n\t\tSK_ID as string,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> source1\nsource(output(\n\t\tID_YEARMONTHDAY as string,\n\t\tID_TRANSACTION_TYPE as string,\n\t\tID_ITEM_GROUP as string,\n\t\tID_ITEM_CODE as string,\n\t\tID_ITEM_BARCODE as string,\n\t\tID_ENTITY_CR as string,\n\t\tID_CUSTOMER_ENTITY_CR as string,\n\t\tID_SOURCE_WAREHOUSE as string,\n\t\tID_TARGET_WAREHOUSE as string,\n\t\tMT_QUANTITY as string,\n\t\tID_UOM as string,\n\t\tMT_DISCOUNT_AMOUNT as string,\n\t\tID_LPO as string,\n\t\tID_SALES_ORDER as string,\n\t\tID_DELIVERY_NOTE as string,\n\t\tID_GRN as string,\n\t\tID_INVOICE as string,\n\t\tID_RETURN_NOTE as string,\n\t\tID_CUSTOMS_STATEMENT as string,\n\t\tID_REFERANCE_CODE as string,\n\t\tMT_INVOICE_COUNT as string,\n\t\tDS_TRANSACTION_REASON as string,\n\t\tSK_ID as string,\n\t\tSTG_FILENAME as string,\n\t\tSTG_FILETIME as string,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> source2\nsource1, source2 exists(source1@SK_ID == source2@SK_ID\n\t&& source1@STG_FILENAME == source2@STG_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists1\nNotExists1 derive(NewDate = coalesce(toDate(ID_YEARMONTHDAY,'MM/dd/yyyy'),toDate(ID_YEARMONTHDAY,'yyyy/MM/dd'),toDate(ID_YEARMONTHDAY,'dd/MM/yyyy'),toDate(ID_YEARMONTHDAY,'MMddyyyy'),toDate(ID_YEARMONTHDAY,'yyyyddMM'),toDate(ID_YEARMONTHDAY,'MMddyyyy'),toDate(ID_YEARMONTHDAY,'yyyyMMdd'),toDate(ID_YEARMONTHDAY,'yyyy.MM.dd'),toDate(ID_YEARMONTHDAY,'dd.MM.yyyy'),toDate(ID_YEARMONTHDAY,'MM.dd.yyyy')),\n\t\tNewMTQuantitiy = replace(MT_QUANTITY,',','')) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tID_YEARMONTHDAY = NewDate,\n\t\tID_TRANSACTION_TYPE,\n\t\tID_ITEM_GROUP,\n\t\tID_ITEM_CODE,\n\t\tID_ITEM_BARCODE,\n\t\tID_ENTITY_CR,\n\t\tID_CUSTOMER_ENTITY_CR,\n\t\tID_SOURCE_WAREHOUSE,\n\t\tID_TARGET_WAREHOUSE,\n\t\tMT_QUANTITY = NewMTQuantitiy,\n\t\tID_UOM,\n\t\tMT_DISCOUNT_AMOUNT,\n\t\tID_LPO,\n\t\tID_SALES_ORDER,\n\t\tID_DELIVERY_NOTE,\n\t\tID_GRN,\n\t\tID_INVOICE,\n\t\tID_RETURN_NOTE,\n\t\tID_CUSTOMS_STATEMENT,\n\t\tID_REFERANCE_CODE,\n\t\tMT_INVOICE_COUNT,\n\t\tDS_TRANSACTION_REASON,\n\t\tSK_ID,\n\t\tSTG_FILENAME,\n\t\tSTG_FILETIME\n\t)) ~> sink1"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_company')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -75,7 +155,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "ds_stg_contact",
+								"referenceName": "ds_stg_contact_raw",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -207,7 +287,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "ds_stg_warehouse",
+								"referenceName": "ds_stg_warehouse_raw",
 								"type": "DatasetReference"
 							},
 							"name": "stgWarehouse"
@@ -1327,7 +1407,9 @@
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:55:22Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_transerrlog_to_errlogcontainer')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_EXPORT_AND_EMAIL_company')]",
@@ -1521,7 +1603,7 @@
 								"referenceName": "integrationRuntime10min",
 								"type": "IntegrationRuntimeReference"
 							},
-							"traceLevel": "Fine"
+							"traceLevel": "Coarse"
 						}
 					},
 					{
@@ -2271,121 +2353,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-26T14:24:08Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_STG_FILE_LIST_UPD')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Stg file list tablosunu update eden pipeline",
-				"activities": [
-					{
-						"name": "df_stg_file_list_upd",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_stg_file_list_upd",
-								"type": "DataFlowReference",
-								"parameters": {
-									"itemname": "toString('CRFR_20210321.csv')"
-								},
-								"datasetParameters": {
-									"dwhfilelist": {},
-									"stgfilelistsrc": {},
-									"stgfilelisttrgt": {}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "ls_psmsii_syntodls",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "stagingarea"
-							},
-							"integrationRuntime": {
-								"referenceName": "integrationRuntime10min",
-								"type": "IntegrationRuntimeReference"
-							},
-							"traceLevel": "None",
-							"cacheSinks": {
-								"firstRowOnly": true
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_MAIN"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:54:43Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_STG_TRANS_TO_TRANSACTION_copy1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "df_transfer_stg_Trans_to_Trans",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_transfer_stg_Trans_to_Trans",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"source2": {},
-									"sink1": {
-										"schemaName": "dwh",
-										"tableName": "DWB_TRANSACTIONS"
-									}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Dev"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:54:47Z"
 			},
 			"dependsOn": []
 		}
