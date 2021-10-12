@@ -19,16 +19,16 @@
 						"referenceName": "df_errlog_container_contact",
 						"type": "DataFlowReference",
 						"datasetParameters": {
+							"stgcontacterrlog": {
+								"schemaName": "dwh",
+								"tableName": "STG_CONTACT_ERROR_LOG"
+							},
 							"errorlogcontact": {
 								"folderName": "Entity"
 							}
 						}
 					},
 					"staging": {
-						"linkedService": {
-							"referenceName": "ls_psmsii_syntodls",
-							"type": "LinkedServiceReference"
-						},
 						"folderPath": "stagingrea"
 					},
 					"integrationRuntime": {
