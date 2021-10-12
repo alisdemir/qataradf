@@ -89,7 +89,7 @@
 		],
 		"typeProperties": {
 			"schema": "dwh",
-			"table": "STG_WAREHOUSE"
+			"table": "STG_WAREHOUSE_RAW"
 		}
 	}
 }
