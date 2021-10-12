@@ -34,9 +34,52 @@
 				}
 			},
 			{
-				"name": "ForEachFile",
+				"name": "truncateStgCompany",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "GetFileList",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "truncate table [dwh].[STG_COMPANY_RAW];\ntruncate table [dwh].[STG_WAREHOUSE_RAW];\ntruncate table [dwh].[STG_CONTACT_RAW];\nselect 1;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "dsqlp_parametric",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "dwh",
+							"tableName": "STG_COMPANY"
+						}
+					}
+				}
+			},
+			{
+				"name": "ForEachFile_company",
 				"type": "ForEach",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "truncateStgCompany",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
@@ -97,9 +140,243 @@
 				}
 			},
 			{
-				"name": "truncateStgCompany",
+				"name": "PL_EXPORT_AND_EMAIL_company",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ForEachFile_company",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_EXPORT_AND_EMAIL_company",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "ForEachFile_warehouse",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "truncateStgCompany",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GetFileList').output.childItems",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "df_xls_to_stg_warehouse_copy1",
+							"type": "ExecuteDataFlow",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "1.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataflow": {
+									"referenceName": "df_xls_to_stg_warehouse",
+									"type": "DataFlowReference",
+									"parameters": {
+										"fileName": {
+											"value": "'@{item().name}'",
+											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"source1": {
+											"filename": "@item().name"
+										}
+									}
+								},
+								"staging": {
+									"linkedService": {
+										"referenceName": "ls_psmsii_syntodls",
+										"type": "LinkedServiceReference"
+									},
+									"folderPath": "stagingarea"
+								},
+								"integrationRuntime": {
+									"referenceName": "integrationRuntime10min",
+									"type": "IntegrationRuntimeReference"
+								},
+								"traceLevel": "Coarse"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "ForEachFile_contact",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "truncateStgCompany",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GetFileList').output.childItems",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "df_xls_to_stg_contacts_copy1",
+							"type": "ExecuteDataFlow",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "1.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataflow": {
+									"referenceName": "df_xls_to_stg_contact",
+									"type": "DataFlowReference",
+									"parameters": {
+										"fileName": {
+											"value": "'@{item().name}'",
+											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"inputcontactcontainer": {
+											"filename": "@item().name"
+										}
+									}
+								},
+								"staging": {
+									"linkedService": {
+										"referenceName": "ls_psmsii_syntodls",
+										"type": "LinkedServiceReference"
+									},
+									"folderPath": "stagingarea"
+								},
+								"integrationRuntime": {
+									"referenceName": "integrationRuntime10min",
+									"type": "IntegrationRuntimeReference"
+								},
+								"traceLevel": "Coarse"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "PL_EXPORT_AND_EMAIL_contact",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ForEachFile_contact",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_EXPORT_AND_EMAIL_contact",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_EXPORT_AND_EMAIL_warehouse",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ForEachFile_warehouse",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_EXPORT_AND_EMAIL_warehouse",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SP_STG_VALID_INSERT",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "PL_EXPORT_AND_EMAIL_contact",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "PL_EXPORT_AND_EMAIL_warehouse",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "PL_EXPORT_AND_EMAIL_company",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_STG_VALID_INSERT]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "LookupDsFileName",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "SP_STG_VALID_INSERT",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -111,18 +388,103 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "truncate table [dwh].[STG_COMPANY_RAW];\ntruncate table [dwh].[STG_WAREHOUSE_RAW];\ntruncate table [dwh].[STG_CONTACT_RAW];\nselect 1;",
+						"sqlReaderQuery": "select DISTINCT DS_FILENAME, COMPANYCR FROM dwh.STG_CR_TRANSACTION_TYPE_VALID;\nSELECT 1;",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "dsqlp_parametric",
-						"type": "DatasetReference",
-						"parameters": {
-							"schemaName": "dwh",
-							"tableName": "STG_COMPANY"
-						}
+						"referenceName": "ds_stg_entity_valid",
+						"type": "DatasetReference"
 					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "LookupDsFileName",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LookupDsFileName').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "LookupValid",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlDWSource",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[STG_ENTITY_VALID] where DS_FILENAME= ','''',item().ds_filename,'''') ",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "dsqlp_parametric",
+									"type": "DatasetReference",
+									"parameters": {
+										"schemaName": "dwh",
+										"tableName": "STG_ENTITY_VALID"
+									}
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "If Condition1",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "LookupValid",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(if(\nempty(activity('LookupValid').output.value)\n,0,1),1)",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "PL_SP_LOOP_entity",
+										"type": "ExecutePipeline",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "PL_SP_LOOP_entity",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true
+										}
+									}
+								]
+							}
+						}
+					]
 				}
 			}
 		],
