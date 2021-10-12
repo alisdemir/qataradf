@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_stg_warehouse",
+						"referenceName": "ds_stg_warehouse_raw",
 						"type": "DatasetReference"
 					},
 					"name": "stgWarehouse"
