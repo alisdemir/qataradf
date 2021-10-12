@@ -39,10 +39,7 @@
 						"referenceName": "integrationRuntime10min",
 						"type": "IntegrationRuntimeReference"
 					},
-					"traceLevel": "None",
-					"cacheSinks": {
-						"firstRowOnly": true
-					}
+					"traceLevel": "Coarse"
 				}
 			},
 			{
