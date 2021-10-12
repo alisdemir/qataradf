@@ -1,0 +1,134 @@
+{
+	"name": "PL_MAIN_entity",
+	"properties": {
+		"activities": [
+			{
+				"name": "GetFileList",
+				"description": "Get file list from processing container",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "dls_input_entity_xls",
+						"type": "DatasetReference",
+						"parameters": {
+							"fileName": "*"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "ForEachFile",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GetFileList').output.childItems",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "df_xls_to_stg_company",
+							"type": "ExecuteDataFlow",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "1.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataflow": {
+									"referenceName": "df_xls_to_stg_company",
+									"type": "DataFlowReference",
+									"parameters": {
+										"fileName": {
+											"value": "'@{item().name}'",
+											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"inputcompanycontainer": {
+											"filename": "@item().name",
+											"folderName": "Entity",
+											"SheetIndex": 0
+										},
+										"stgCompany": {
+											"schemaName": "dwh",
+											"tableName": "STG_COMPANY"
+										}
+									}
+								},
+								"staging": {
+									"linkedService": {
+										"referenceName": "ls_psmsii_syntodls",
+										"type": "LinkedServiceReference"
+									},
+									"folderPath": "stagingarea"
+								},
+								"integrationRuntime": {
+									"referenceName": "integrationRuntime10min",
+									"type": "IntegrationRuntimeReference"
+								},
+								"traceLevel": "Coarse"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "truncateStgCompany",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "truncate table [dwh].[STG_COMPANY_RAW];\ntruncate table [dwh].[STG_WAREHOUSE_RAW];\ntruncate table [dwh].[STG_CONTACT_RAW];\nselect 1;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "dsqlp_parametric",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "dwh",
+							"tableName": "STG_COMPANY"
+						}
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "PL_INITIAL_LOAD/ENTITY"
+		},
+		"annotations": []
+	}
+}
