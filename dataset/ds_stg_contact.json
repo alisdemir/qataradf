@@ -57,7 +57,7 @@
 		],
 		"typeProperties": {
 			"schema": "dwh",
-			"table": "STG_CONTACT"
+			"table": "STG_CONTACT_RAW"
 		}
 	}
 }
