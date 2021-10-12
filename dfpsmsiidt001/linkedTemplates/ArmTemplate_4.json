@@ -1631,18 +1631,17 @@
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"stgcontacterrlog": {},
+									"stgcontacterrlog": {
+										"schemaName": "dwh",
+										"tableName": "STG_CONTACT_ERROR_LOG"
+									},
 									"errorlogcontact": {
 										"folderName": "Entity"
 									}
 								}
 							},
 							"staging": {
-								"linkedService": {
-									"referenceName": "ls_psmsii_syntodls",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "stagingrea"
+								"folderPath": ""
 							},
 							"integrationRuntime": {
 								"referenceName": "integrationRuntime10min",
