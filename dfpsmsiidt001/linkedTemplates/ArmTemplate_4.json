@@ -1640,9 +1640,7 @@
 									}
 								}
 							},
-							"staging": {
-								"folderPath": ""
-							},
+							"staging": {},
 							"integrationRuntime": {
 								"referenceName": "integrationRuntime10min",
 								"type": "IntegrationRuntimeReference"
