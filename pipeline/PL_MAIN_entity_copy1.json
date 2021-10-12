@@ -121,7 +121,7 @@
 										},
 										"stgCompany": {
 											"schemaName": "dwh",
-											"tableName": "STG_COMPANY"
+											"tableName": "STG_COMPANY_RAW"
 										}
 									}
 								},
@@ -164,7 +164,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "truncate table [dwh].[STG_COMPANY];\ntruncate table [dwh].[STG_WAREHOUSE];\ntruncate table [dwh].[STG_CONTACT];\nselect 1;",
+						"sqlReaderQuery": "truncate table [dwh].[STG_COMPANY_RAW];\ntruncate table [dwh].[STG_WAREHOUSE_RAW];\ntruncate table [dwh].[STG_CONTACT_RAW];\nselect 1;",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
