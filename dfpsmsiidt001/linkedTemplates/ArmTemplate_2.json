@@ -13,6 +13,78 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_contact_error_log')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "SEQ",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EMAIL",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PHONE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EXTENSION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MOBILE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ENTITYCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_FILETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ID_ERROR_CODE",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "DS_ERROR_CODE",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_CONTACT_ERROR_LOG"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_contact_raw')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -3605,74 +3677,6 @@
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
 				"[concat(variables('factoryId'), '/datasets/ds_stg_customs_dec')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_FILE_TRANSFER')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "from upload to processing folder",
-				"activities": [
-					{
-						"name": "fileTransfer",
-						"description": "file transfering from upload container to processing container on data lake.",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"deleteFilesAfterCompletion": false
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "dls_upload_binary",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dls_processing_binary",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_MAIN"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:54:28Z"
-			},
-			"dependsOn": []
 		}
 	]
 }
