@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "ds_stg_contact",
+						"referenceName": "ds_stg_contact_raw",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
