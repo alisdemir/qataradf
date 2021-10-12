@@ -84,7 +84,7 @@
 										},
 										"stgTransactionType": {
 											"schemaName": "dwh",
-											"tableName": "STG_CR_TRANSACTION_TYPE"
+											"tableName": "STG_CR_TRANSACTION_TYPE_RAW"
 										}
 									}
 								},
