@@ -29,7 +29,7 @@
 						}
 					},
 					"staging": {
-						"folderPath": "stagingrea"
+						"folderPath": ""
 					},
 					"integrationRuntime": {
 						"referenceName": "integrationRuntime10min",
