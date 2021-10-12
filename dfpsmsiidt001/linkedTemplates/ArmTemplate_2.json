@@ -873,7 +873,7 @@
 					},
 					"tableName": {
 						"type": "string",
-						"defaultValue": "STG_CONTACT"
+						"defaultValue": "STG_CONTACT_ERROR_LOG"
 					}
 				},
 				"folder": {
