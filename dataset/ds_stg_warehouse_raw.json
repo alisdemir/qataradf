@@ -1,5 +1,5 @@
 {
-	"name": "ds_stg_warehouse",
+	"name": "ds_stg_warehouse_raw",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_dsqlpqtr",
