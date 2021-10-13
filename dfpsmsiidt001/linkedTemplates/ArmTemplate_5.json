@@ -2570,7 +2570,7 @@
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "df_xls_to_stg_warehouse_copy1",
+									"name": "df_xls_to_stg_warehouse",
 									"type": "ExecuteDataFlow",
 									"dependsOn": [],
 									"policy": {
@@ -2635,7 +2635,7 @@
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "df_xls_to_stg_contacts_copy1",
+									"name": "df_xls_to_stg_contacts",
 									"type": "ExecuteDataFlow",
 									"dependsOn": [],
 									"policy": {

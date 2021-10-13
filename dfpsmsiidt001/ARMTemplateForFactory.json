@@ -5049,6 +5049,12 @@
 								"dependencyConditions": [
 									"Succeeded"
 								]
+							},
+							{
+								"activity": "DWL_MEASURE_UNITS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
 							}
 						],
 						"policy": {
@@ -5061,6 +5067,165 @@
 						"userProperties": [],
 						"typeProperties": {
 							"storedProcedureName": "[[dwh].[P_UPSERT_MASTER_PRODUCT]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_dsqlpqtr",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "DWL_PRODUCTS",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "DWL_MASTER_PRODUCTS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "DWL_PRODUCT_HSCODE",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_UPSERT_PRODUCT]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_dsqlpqtr",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "DWB_CONTRACT",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "DWL_COMPANY",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_UPSERT_CONTRACT]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_dsqlpqtr",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "DWL_ENTITY",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "DWL_COMPANY",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "DWL_WAREHOUSE",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "DWL_COMPANY_WAREHOUSE",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_UPSERT_ENTITY]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_dsqlpqtr",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "DWB_CONTRACT_INVOICES",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "DWB_CONTRACT",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_UPSERT_CONTRACT_INVOICES]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_dsqlpqtr",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "DWB_CONTRACT_PRODUCT_GROUPS",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "DWB_CONTRACT",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "DWL_PRODUCT_GROUPS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_UPSERT_CONTRACT_PRODUCT_GROUPS]"
 						},
 						"linkedServiceName": {
 							"referenceName": "ls_dsqlpqtr",
@@ -6842,7 +7007,7 @@
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "df_xls_to_stg_warehouse_copy1",
+									"name": "df_xls_to_stg_warehouse",
 									"type": "ExecuteDataFlow",
 									"dependsOn": [],
 									"policy": {
@@ -6907,7 +7072,7 @@
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "df_xls_to_stg_contacts_copy1",
+									"name": "df_xls_to_stg_contacts",
 									"type": "ExecuteDataFlow",
 									"dependsOn": [],
 									"policy": {
@@ -8218,56 +8383,56 @@
 										"storedProcedureParameters": {
 											"AddressArea": {
 												"value": {
-													"value": "@item().Area",
+													"value": "@item().AddressArea",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"AddressAreaNumber": {
 												"value": {
-													"value": "@item().AreaNumber",
+													"value": "@item().AddressAreaNumber",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"AddressBuildingNumber": {
 												"value": {
-													"value": "@item().BuildingNumber",
+													"value": "@item().AddressBuildingNumber",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"AddressPostalCode": {
 												"value": {
-													"value": "@item().P.O.Box",
+													"value": "@item().AddressPostalCode",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"AddressStreetName": {
 												"value": {
-													"value": "@item().StreetName",
+													"value": "@item().AddressStreetName",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"AddressStreetNumber2": {
 												"value": {
-													"value": "@item().StreetNumber2",
+													"value": "@item().AddressStreetNumber2",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"CLNumber": {
 												"value": {
-													"value": "@item().CommercialRegistrationNo",
+													"value": "@item().CLNumber",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"CRNumber": {
 												"value": {
-													"value": "@item().CommercialLicensenumber",
+													"value": "@item().CRNumber",
 													"type": "Expression"
 												},
 												"type": "String"
@@ -8281,7 +8446,7 @@
 											},
 											"EntityTypeName": {
 												"value": {
-													"value": "@item().companytype",
+													"value": "@item().EntityTypeName",
 													"type": "Expression"
 												},
 												"type": "String"
@@ -8302,7 +8467,7 @@
 											},
 											"LocationURL": {
 												"value": {
-													"value": "@item().MapLocationUrl",
+													"value": "@item().LocationURL",
 													"type": "Expression"
 												},
 												"type": "String"
@@ -8323,14 +8488,14 @@
 											},
 											"NameArabic": {
 												"value": {
-													"value": "@item().CompanyNameArabic",
+													"value": "@item().NameArabic",
 													"type": "Expression"
 												},
 												"type": "String"
 											},
 											"NameEnglish": {
 												"value": {
-													"value": "@item().CompanyNameEnglish",
+													"value": "@item().NameEnglish",
 													"type": "Expression"
 												},
 												"type": "String"
@@ -12722,7 +12887,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
