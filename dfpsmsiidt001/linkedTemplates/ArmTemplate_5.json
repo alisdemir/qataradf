@@ -1585,7 +1585,7 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "P_UPSERT_DWH_TABLES",
+								"activity": "PL_DWH_TABLES",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1753,33 +1753,6 @@
 						}
 					},
 					{
-						"name": "P_UPSERT_DWH_TABLES",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "PL_COPY_UI_TABLE",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dwh].[P_UPSERT_DWH_TABLES]"
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_dsqlpqtr",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
 						"name": "PL_EXEC_P_DQ_MAIN",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
@@ -1804,6 +1777,27 @@
 						"linkedServiceName": {
 							"referenceName": "ls_dsqlpqtr",
 							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "PL_DWH_TABLES",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_COPY_UI_TABLE",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_DWH_TABLES",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
 						}
 					}
 				],
