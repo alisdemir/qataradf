@@ -81,10 +81,6 @@
 											"filename": "@item().name",
 											"folderName": "Entity",
 											"SheetIndex": 0
-										},
-										"stgCompany": {
-											"schemaName": "dwh",
-											"tableName": "STG_COMPANY"
 										}
 									}
 								},
