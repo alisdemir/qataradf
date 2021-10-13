@@ -13,6 +13,42 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/df_stg_file_list_ins')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Stg file list tablosuna containerdaki dosyaları insert eden pipeline",
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_stg_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "dummy"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_stg_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "stgfilelist"
+						}
+					],
+					"transformations": [
+						{
+							"name": "itemname"
+						}
+					],
+					"script": "parameters{\n\titemname as string (toString('CRFR_20210321.csv'))\n}\nsource(output(\n\t\tdummy as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'select 1 as dummy',\n\tformat: 'query',\n\tstaged: false) ~> dummy\ndummy derive(itemname = $itemname) ~> itemname\nitemname sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tDS_FILENAME = itemname\n\t)) ~> stgfilelist"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_stg_file_list_upd')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -2188,66 +2224,6 @@
 				},
 				"folder": {
 					"name": "PL_INITIAL_LOAD/ENTITY/WAREHOUSE"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_INSERT_COMPANY')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_insert_company",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {
-										"schemaName": "dwh",
-										"tableName": "STG_COMPANY"
-									}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "ls_psmsii_syntodls",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "stagingarea"
-							},
-							"integrationRuntime": {
-								"referenceName": "integrationRuntime10min",
-								"type": "IntegrationRuntimeReference"
-							},
-							"traceLevel": "None",
-							"cacheSinks": {
-								"firstRowOnly": true
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Dev"
 				},
 				"annotations": []
 			},
