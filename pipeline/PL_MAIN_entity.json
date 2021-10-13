@@ -118,7 +118,7 @@
 										},
 										"stgCompany": {
 											"schemaName": "dwh",
-											"tableName": "STG_COMPANY"
+											"tableName": "STG_COMPANY_RAW"
 										}
 									}
 								},
