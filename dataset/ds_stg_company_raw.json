@@ -13,6 +13,10 @@
 				"type": "nvarchar"
 			},
 			{
+				"name": "CompanyType",
+				"type": "nvarchar"
+			},
+			{
 				"name": "CompanyNameArabic",
 				"type": "nvarchar"
 			},
