@@ -4663,13 +4663,83 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "PL_EXPORT_AND_EMAIL_tr_type",
+						"name": "PL_LOAD_DWB_TRANSACTION",
+						"description": "",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "PL_EXEC_P_DQ_MAIN",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "PL_EXPORT_AND_EMAIL_tr_type",
+								"referenceName": "PL_LOAD_DWB_TRANSACTION",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_STOCK_CALCULATE",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_LOAD_DWB_TRANSACTION",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_STOCK_CALCULATE",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_EXEC_P_DQ_MAIN",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_DQ_TRANSACTION]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_dsqlpqtr",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_EXEC_P_DQ_MAIN",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -4687,7 +4757,10 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_tr_type')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_LOAD_DWB_TRANSACTION')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_STOCK_CALCULATE')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_ERRLOG')]"
 			]
 		},
 		{
@@ -6401,6 +6474,8 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
+									"modifiedDatetimeStart": "2021-10-14T08:57:40.000Z",
+									"modifiedDatetimeEnd": "2021-10-14T09:09:04.000Z",
 									"deleteFilesAfterCompletion": false
 								},
 								"formatSettings": {
