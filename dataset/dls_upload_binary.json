@@ -14,7 +14,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "PSMS II - Inventory Transactions_06-2019_08-2021_ARLA.xlsx",
+				"fileName": "PSMS II - Inventory Transactions_06-2019_08-2021_QNIE.xlsx",
 				"fileSystem": "upload"
 			}
 		}
