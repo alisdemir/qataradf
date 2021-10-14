@@ -1524,7 +1524,7 @@
 													"value": "@activity('LookupInitialLoad').output.firstrow.lkp",
 													"type": "Expression"
 												},
-												"type": "Boolean"
+												"type": "Single"
 											},
 											"LocationURL": {
 												"value": {
