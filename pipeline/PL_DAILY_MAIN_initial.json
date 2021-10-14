@@ -194,6 +194,26 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_EXEC_P_DQ_MAIN",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"variables": {
