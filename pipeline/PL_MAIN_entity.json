@@ -140,7 +140,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "ForEachFile_company",
+						"activity": "PL_DQ_COMPANY",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -288,7 +288,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "ForEachFile_contact",
+						"activity": "PL_DQ_CONTACT",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -308,7 +308,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "ForEachFile_warehouse",
+						"activity": "PL_DQ_WAREHOUSE",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -482,6 +482,87 @@
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "PL_DQ_COMPANY",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ForEachFile_company",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_DQ_COMPANY]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "PL_DQ_WAREHOUSE",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ForEachFile_warehouse",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_DQ_WAREHOUSE]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "PL_DQ_CONTACT",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "ForEachFile_contact",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_DQ_CONTACT]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
