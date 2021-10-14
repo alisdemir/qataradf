@@ -82,6 +82,10 @@
 						"type": "nvarchar"
 					},
 					{
+						"name": "CompanyType",
+						"type": "nvarchar"
+					},
+					{
 						"name": "CompanyNameArabic",
 						"type": "nvarchar"
 					},
@@ -1097,7 +1101,7 @@
 					},
 					"tableName": {
 						"type": "string",
-						"defaultValue": "STG_CONTACT_ERROR_LOG"
+						"defaultValue": "STG_COMPANY_ERROR_LOG"
 					}
 				},
 				"folder": {
