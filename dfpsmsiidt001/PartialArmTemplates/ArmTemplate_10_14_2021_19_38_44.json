@@ -1,0 +1,51 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfpsmsiidt001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/df_errlog_container_contact')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "stgcontacterrlog"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dls_errorlog_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "errorlogcontact"
+						}
+					],
+					"transformations": [
+						{
+							"name": "dsfilename"
+						}
+					],
+					"script": "source(output(\n\t\tSEQ as string,\n\t\tNAME as string,\n\t\tEMAIL as string,\n\t\tPHONE as string,\n\t\tEXTENSION as string,\n\t\tMOBILE as string,\n\t\tENTITYCR as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgcontacterrlog\nstgcontacterrlog derive(DS_FILENAME = replace((replace(DS_FILENAME,'.xlsx','_contact_err.csv')),'.xls','_contact_err.csv')) ~> dsfilename\ndsfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'DS_FILENAME',\n\ttruncate: true,\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tSEQ,\n\t\tNAME,\n\t\tEMAIL,\n\t\tPHONE,\n\t\tEXTENSION,\n\t\tMOBILE,\n\t\tENTITYCR,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME,\n\t\tID_ERROR_CODE,\n\t\tDS_ERROR_CODE\n\t)) ~> errorlogcontact"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
