@@ -201,7 +201,10 @@
 									},
 									"datasetParameters": {
 										"source1": {
-											"filename": "@item().name"
+											"filename": {
+												"value": "@item().name",
+												"type": "Expression"
+											}
 										}
 									}
 								},
@@ -265,7 +268,10 @@
 									},
 									"datasetParameters": {
 										"inputcontactcontainer": {
-											"filename": "@item().name"
+											"filename": {
+												"value": "@item().name",
+												"type": "Expression"
+											}
 										}
 									}
 								},
