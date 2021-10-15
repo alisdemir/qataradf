@@ -4663,51 +4663,9 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "PL_LOAD_DWB_TRANSACTION",
-						"description": "",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_EXEC_P_DQ_MAIN",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_LOAD_DWB_TRANSACTION",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_STOCK_CALCULATE",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_LOAD_DWB_TRANSACTION",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_STOCK_CALCULATE",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_EXEC_P_DQ_MAIN",
-						"type": "SqlServerStoredProcedure",
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -4718,19 +4676,65 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[dwh].[P_DQ_TRANSACTION]"
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_dsqlpqtr",
-							"type": "LinkedServiceReference"
+							"dataset": {
+								"referenceName": "dls_input_entity_xls",
+								"type": "DatasetReference",
+								"parameters": {
+									"fileName": "*"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
 						}
 					},
 					{
-						"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
-						"type": "ExecutePipeline",
+						"name": "truncateStgCompany",
+						"type": "Lookup",
 						"dependsOn": [
 							{
-								"activity": "PL_EXEC_P_DQ_MAIN",
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_COMPANY_RAW];\ntruncate table [dwh].[STG_WAREHOUSE_RAW];\ntruncate table [dwh].[STG_CONTACT_RAW];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "STG_COMPANY"
+								}
+							}
+						}
+					},
+					{
+						"name": "ForEachFile_company",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "truncateStgCompany",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -4738,12 +4742,61 @@
 						],
 						"userProperties": [],
 						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
-								"type": "PipelineReference"
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
 							},
-							"waitOnCompletion": true,
-							"parameters": {}
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "df_xls_to_stg_company",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "1.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "df_xls_to_stg_company",
+											"type": "DataFlowReference",
+											"parameters": {
+												"fileName": {
+													"value": "'@{item().name}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"inputcompanycontainer": {
+													"filename": {
+														"value": "@item().name",
+														"type": "Expression"
+													},
+													"folderName": "Entity",
+													"SheetIndex": 0
+												},
+												"stgCompany": {}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "ls_psmsii_syntodls",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": "stagingarea"
+										},
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime10min",
+											"type": "IntegrationRuntimeReference"
+										},
+										"traceLevel": "Coarse"
+									}
+								}
+							]
 						}
 					}
 				],
@@ -4757,10 +4810,11 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_LOAD_DWB_TRANSACTION')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_STOCK_CALCULATE')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_ERRLOG')]"
+				"[concat(variables('factoryId'), '/datasets/dls_input_entity_xls')]",
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
+				"[concat(variables('factoryId'), '/dataflows/df_xls_to_stg_company')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
 			]
 		},
 		{
@@ -6474,8 +6528,8 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"modifiedDatetimeStart": "2021-10-14T20:50:40.000Z",
-									"modifiedDatetimeEnd": "2021-10-14T21:12:04.000Z",
+									"modifiedDatetimeStart": "2021-10-14T17:50:00.000Z",
+									"modifiedDatetimeEnd": "2021-10-15T00:00:00.000Z",
 									"deleteFilesAfterCompletion": false
 								},
 								"formatSettings": {
@@ -7039,7 +7093,10 @@
 											},
 											"datasetParameters": {
 												"inputcompanycontainer": {
-													"filename": "@item().name",
+													"filename": {
+														"value": "@item().name",
+														"type": "Expression"
+													},
 													"folderName": "Entity",
 													"SheetIndex": 0
 												},
@@ -7127,7 +7184,10 @@
 											},
 											"datasetParameters": {
 												"source1": {
-													"filename": "@item().name"
+													"filename": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
 												},
 												"stgWarehouse": {}
 											}
@@ -7192,7 +7252,10 @@
 											},
 											"datasetParameters": {
 												"inputcontactcontainer": {
-													"filename": "@item().name"
+													"filename": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
 												},
 												"sink1": {}
 											}
@@ -8513,7 +8576,7 @@
 							"source": {
 								"type": "SqlDWSource",
 								"sqlReaderQuery": {
-									"value": "@concat('select CASE WHEN COUNT(*)=0 THEN 1 ELSE 0 END AS LKP from dwh.DWL_COMPANY T1 WHERE T1.DS_CRNUMBER= ','''',activity('LookupColumns').output.value[4],'''') ",
+									"value": "@concat('select CASE WHEN COUNT(*)=0 THEN 1 ELSE 0 END AS LKP from dwh.DWL_COMPANY T1 WHERE T1.DS_CRNUMBER= ','''',activity('LookupColumns').output.value[0].DS_FILENAME,'''') ",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00",
@@ -13069,7 +13132,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -13787,6 +13850,83 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_company_xls')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Entity",
+						"fileSystem": "input"
+					},
+					"sheetIndex": 0
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
 			]
 		}
 	]
