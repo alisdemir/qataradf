@@ -3,52 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "PL_LOAD_DWB_TRANSACTION",
-				"description": "",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "PL_EXEC_P_DQ_MAIN",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "PL_LOAD_DWB_TRANSACTION",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
-				"name": "PL_STOCK_CALCULATE",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "PL_LOAD_DWB_TRANSACTION",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "PL_STOCK_CALCULATE",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
-				"name": "PL_EXEC_P_DQ_MAIN",
-				"type": "SqlServerStoredProcedure",
+				"name": "df_xls_to_stg_company",
+				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "7.00:00:00",
+					"timeout": "1.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -56,31 +15,35 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dwh].[P_DQ_TRANSACTION]"
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "PL_EXEC_P_DQ_MAIN",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
-						"type": "PipelineReference"
+					"dataflow": {
+						"referenceName": "df_xls_to_stg_company",
+						"type": "DataFlowReference",
+						"parameters": {
+							"fileName": {
+								"value": "'@{item().name}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"inputcompanycontainer": {
+								"filename": "*",
+								"folderName": "Entity",
+								"SheetIndex": 0
+							}
+						}
 					},
-					"waitOnCompletion": true
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_psmsii_syntodls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "stagingarea"
+					},
+					"integrationRuntime": {
+						"referenceName": "integrationRuntime10min",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "Coarse"
 				}
 			}
 		],
