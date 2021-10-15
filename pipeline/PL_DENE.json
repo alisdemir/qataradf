@@ -20,13 +20,13 @@
 						"type": "DataFlowReference",
 						"parameters": {
 							"fileName": {
-								"value": "'@{item().name}'",
+								"value": "'@{22071_Entity.xlsx}'",
 								"type": "Expression"
 							}
 						},
 						"datasetParameters": {
 							"inputcompanycontainer": {
-								"filename": "*",
+								"filename": "22071_Entity.xlsx",
 								"folderName": "Entity",
 								"SheetIndex": 0
 							}
