@@ -112,7 +112,10 @@
 									},
 									"datasetParameters": {
 										"inputcompanycontainer": {
-											"filename": "*",
+											"filename": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
 											"folderName": "Entity",
 											"SheetIndex": 0
 										}
