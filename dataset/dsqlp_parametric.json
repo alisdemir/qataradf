@@ -12,7 +12,7 @@
 			},
 			"tableName": {
 				"type": "string",
-				"defaultValue": "STG_COMPANY_ERROR_LOG"
+				"defaultValue": "STG_PRODUCTS_RAW"
 			}
 		},
 		"folder": {
