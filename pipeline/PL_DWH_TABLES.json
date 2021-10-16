@@ -559,6 +559,192 @@
 					"referenceName": "ls_dsqlpqtr",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "DWL_SHIPPING_METHOD",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_UPSERT_SHIPPING_METHOD]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "DWB_PURCHASE_ORDER",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "DWL_SHIPPING_METHOD",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "DWL_COMPANY",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "DWL_COUNTRIES",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			},
+			{
+				"name": "DWA_CONTRACT",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "DWB_CONTRACT_INVOICES",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "DWB_CONTRACT_PRODUCT_GROUPS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_DWA_CONTRACT]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "DWL_BULLETIN_CATEGORIES",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_UPSERT_BULLETIN_CATEGORIES]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "DWL_BULLETIN_TEMPLATES",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "DWL_BULLETIN_CATEGORIES",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_UPSERT_BULLETIN_TEMPLATES]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "DWL_BULLETINS",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "DWL_BULLETIN_CATEGORIES",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_UPSERT_BULLETINS]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "DWL_BULLETIN_PRODUCTS",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "DWL_BULLETINS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_UPSERT_BULLETIN_PRODUCTS]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
