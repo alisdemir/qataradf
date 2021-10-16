@@ -78,13 +78,16 @@
 									},
 									"datasetParameters": {
 										"inputitemscontainer": {
-											"filename": "@item().name",
+											"filename": {
+												"value": "@item().name",
+												"type": "Expression"
+											},
 											"folderName": "Items",
 											"SheetIndex": 0
 										},
 										"stgProducts": {
 											"schemaName": "dwh",
-											"tableName": "STG_PRODUCTS"
+											"tableName": "STG_PRODUCTS_RAW"
 										}
 									}
 								},
