@@ -180,8 +180,11 @@
 										"type": "String"
 									},
 									"IsInitialLoad": {
-										"value": "",
-										"type": "Boolean"
+										"value": {
+											"value": "@activity('LookupInitialLoad').output.firstrow.lkp",
+											"type": "Expression"
+										},
+										"type": "Single"
 									},
 									"ItemCode": {
 										"value": {
