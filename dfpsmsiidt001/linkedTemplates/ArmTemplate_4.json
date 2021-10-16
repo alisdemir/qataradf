@@ -957,7 +957,7 @@
 													"method": "POST",
 													"headers": {
 														"filename": {
-															"value": "@activity('GetXMLFiles').output.item().name",
+															"value": "@item().name",
 															"type": "Expression"
 														}
 													},
