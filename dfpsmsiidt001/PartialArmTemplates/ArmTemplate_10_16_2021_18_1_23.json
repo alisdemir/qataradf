@@ -1,0 +1,172 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfpsmsiidt001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_XLS_TO_STG_items')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_input_xls_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": "*",
+									"folderName": "Items",
+									"SheetIndex": 0
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "truncateStgProducts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "df_xls_to_stg_items",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "1.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "df_xls_to_stg_items",
+											"type": "DataFlowReference",
+											"parameters": {
+												"fileName": {
+													"value": "'@{item().name}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"inputitemscontainer": {
+													"filename": {
+														"value": "@item().name",
+														"type": "Expression"
+													},
+													"folderName": "Items",
+													"SheetIndex": 0
+												},
+												"stgProducts": {
+													"schemaName": "dwh",
+													"tableName": "STG_PRODUCTS_RAW"
+												}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "ls_psmsii_syntodls",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": "stagingarea"
+										},
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime10min",
+											"type": "IntegrationRuntimeReference"
+										},
+										"traceLevel": "Coarse"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "truncateStgProducts",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_PRODUCTS_raw];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "STG_PRODUCTS_raw"
+								}
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_INITIAL_LOAD/ITEMS"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		}
+	]
+}
