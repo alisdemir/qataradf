@@ -124,7 +124,10 @@
 										"type": "Decimal"
 									},
 									"CrNumber": {
-										"value": "",
+										"value": {
+											"value": "@item().CompanyCR",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
 									"Depth": {
