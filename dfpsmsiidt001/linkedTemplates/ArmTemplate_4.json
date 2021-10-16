@@ -786,7 +786,7 @@
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "df_custom_xml_to_db_copy1",
+									"name": "df_custom_xml_to_db",
 									"type": "ExecuteDataFlow",
 									"dependsOn": [],
 									"policy": {
@@ -847,7 +847,7 @@
 									"type": "Lookup",
 									"dependsOn": [
 										{
-											"activity": "df_custom_xml_to_db_copy1",
+											"activity": "df_custom_xml_to_db",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -912,7 +912,7 @@
 									}
 								},
 								{
-									"name": "If Condition1",
+									"name": "If Condition",
 									"type": "IfCondition",
 									"dependsOn": [
 										{
@@ -930,7 +930,7 @@
 										},
 										"ifFalseActivities": [
 											{
-												"name": "Web1",
+												"name": "Email",
 												"type": "WebActivity",
 												"dependsOn": [
 													{
@@ -955,7 +955,12 @@
 														"type": "IntegrationRuntimeReference"
 													},
 													"method": "POST",
-													"headers": {},
+													"headers": {
+														"filename": {
+															"value": "@activity('Lookup1').output.firstRow.NotificationRef",
+															"type": "Expression"
+														}
+													},
 													"body": {
 														"EmailType": "CustomInvalidFile"
 													}
