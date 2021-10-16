@@ -610,7 +610,14 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dwh].[P_UPSERT_PURCHASE_ORDER]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				}
 			},
 			{
 				"name": "DWA_CONTRACT",
