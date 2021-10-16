@@ -13,6 +13,70 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_dwl_cr_transaction_type')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "ID_CR_TRANSACTION_TYPE",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ID_COMPANY_ENTITY",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ID_TRANSACTION_TYPE",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_COMPANY_TRANSACTION_TYPE_NAME_ENG",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DS_COMPANY_TRANSACTION_TYPE_NAME_ARB",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DS_COMPANY_TRANSACTION_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_STATUS",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "DT_CREATE",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "DT_UPDATE",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "DWL_CR_TRANSACTION_TYPE2"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_dwl_file_list')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -61,28 +125,6 @@
 				"typeProperties": {
 					"schema": "etl",
 					"table": "DWL_FILE_LIST"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_soap')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_bss_soap",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "Xml",
-				"typeProperties": {
-					"location": {
-						"type": "HttpServerLocation"
-					}
 				}
 			},
 			"dependsOn": []

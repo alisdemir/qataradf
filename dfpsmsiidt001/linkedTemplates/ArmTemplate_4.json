@@ -957,7 +957,7 @@
 													"method": "POST",
 													"headers": {
 														"filename": {
-															"value": "@activity('Lookup1').output.firstRow.NotificationRef",
+															"value": "@activity('GetXMLFiles').output.item().name",
 															"type": "Expression"
 														}
 													},
