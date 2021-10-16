@@ -2050,123 +2050,213 @@
 										"storedProcedureName": "[[dbo].[DwhTransferProduct]",
 										"storedProcedureParameters": {
 											"Barcode": {
-												"value": "",
+												"value": {
+													"value": "@item().BARCODE",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"BrandNameArabic": {
-												"value": "",
+												"value": {
+													"value": "@item().BRANDTRADEMARKARABIC",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"BrandNameEnglish": {
-												"value": "",
+												"value": {
+													"value": "@item().BRANDTRADEMARKENGLISH",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"CostPrice": {
-												"value": "",
+												"value": {
+													"value": "@item().COSTPRICE",
+													"type": "Expression"
+												},
 												"type": "Decimal"
 											},
 											"CrNumber": {
-												"value": "",
+												"value": {
+													"value": "@item().CompanyCR",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"Depth": {
-												"value": "",
+												"value": {
+													"value": "@item().DEPTH",
+													"type": "Expression"
+												},
 												"type": "Decimal"
 											},
 											"EntityCategoryName1": {
-												"value": "",
+												"value": {
+													"value": "@item().CATEGORYLEVEL11",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"EntityCategoryName2": {
-												"value": "",
+												"value": {
+													"value": "@item().CATEGORYLEVEL12",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"EntityCategoryName3": {
-												"value": "",
+												"value": {
+													"value": "@item().CATEGORYLEVEL13",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"EntityCategoryName4": {
-												"value": "",
+												"value": {
+													"value": "@item().CATEGORYLEVEL14",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"Height": {
-												"value": "",
+												"value": {
+													"value": "@item().HEIGHT",
+													"type": "Expression"
+												},
 												"type": "Decimal"
 											},
 											"HsCode": {
-												"value": "",
+												"value": {
+													"value": "@item().HSCODE",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"IsInitialLoad": {
-												"value": "",
-												"type": "Boolean"
+												"value": {
+													"value": "@activity('LookupInitialLoad').output.firstrow.lkp",
+													"type": "Expression"
+												},
+												"type": "Single"
 											},
 											"ItemCode": {
-												"value": "",
+												"value": {
+													"value": "@item().ITEMCODE",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"OriginCountryISO": {
-												"value": "",
+												"value": {
+													"value": "@item().COUNTRYOFORAGENISO",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"OriginCountryName": {
-												"value": "",
+												"value": {
+													"value": "@item().COUNTRYOFORAGENNAME",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"ProductDescriptionArabic": {
-												"value": "",
+												"value": {
+													"value": "@item().DESCRIPTIONARABIC",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"ProductDescriptionEnglish": {
-												"value": "",
+												"value": {
+													"value": "@item().DESCRIPTIONENGLISH",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"ProductGroupName": {
-												"value": "",
+												"value": {
+													"value": "@item().MOCIPRODUCTGROUP",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"ProductNameArabic": {
-												"value": "",
+												"value": {
+													"value": "@item().PRODUCTNAMEARABIC",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"ProductNameEnglish": {
-												"value": "",
+												"value": {
+													"value": "@item().PRODUCTNAMEENGLISH",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"SellingPrice": {
-												"value": "",
+												"value": {
+													"value": "@item().SELLINGPRICE",
+													"type": "Expression"
+												},
 												"type": "Decimal"
 											},
 											"SupplierCrNumber": {
-												"value": "",
+												"value": {
+													"value": "@item().SUPPLIERCR",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"SupplierName": {
-												"value": "",
+												"value": {
+													"value": "@item().SUPPLIERNAME",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"UnitItemBarcode": {
-												"value": "",
+												"value": {
+													"value": "@item().UNITITEMBARCODE",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"UnitOfItemNumber": {
-												"value": "",
+												"value": {
+													"value": "@item().NOOFUNITITEMS",
+													"type": "Expression"
+												},
 												"type": "Decimal"
 											},
 											"UnitOfMeasure": {
-												"value": "",
+												"value": {
+													"value": "@item().UNITUOM",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"UnitOfMeasurePackage": {
-												"value": "",
+												"value": {
+													"value": "@item().PACKAGEUOM",
+													"type": "Expression"
+												},
 												"type": "String"
 											},
 											"UnitWeightSize": {
-												"value": "",
+												"value": {
+													"value": "@item().UNITWEIGHTSIZE",
+													"type": "Expression"
+												},
 												"type": "Decimal"
 											},
 											"Width": {
-												"value": "",
+												"value": {
+													"value": "@item().WIDTH",
+													"type": "Expression"
+												},
 												"type": "Decimal"
 											}
 										}
