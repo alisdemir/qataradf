@@ -1,5 +1,5 @@
 {
-	"name": "df_custom_xml_to_db",
+	"name": "df_custom_xml_to_db_copy",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
