@@ -799,7 +799,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataflow": {
-											"referenceName": "df_custom_xml_to_db_copy1",
+											"referenceName": "df_custom_xml_to_db",
 											"type": "DataFlowReference",
 											"parameters": {
 												"xmlfilename": {
@@ -1258,7 +1258,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataflow": {
-											"referenceName": "df_custom_xml_to_db",
+											"referenceName": "df_custom_xml_to_db_copy",
 											"type": "DataFlowReference",
 											"parameters": {
 												"xmlfilename": {
