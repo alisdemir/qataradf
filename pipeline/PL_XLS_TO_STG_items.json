@@ -130,7 +130,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "truncate table [dwh].[STG_PRODUCTS];\nselect 1;",
+						"sqlReaderQuery": "truncate table [dwh].[STG_PRODUCTS_raw];\nselect 1;",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -139,7 +139,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"schemaName": "dwh",
-							"tableName": "STG_PRODUCTS"
+							"tableName": "STG_PRODUCTS_raw"
 						}
 					}
 				}
