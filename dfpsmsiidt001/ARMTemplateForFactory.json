@@ -4668,47 +4668,9 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "GetFileList",
-						"description": "Get file list from processing container",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "dls_input_entity_xls",
-								"type": "DatasetReference",
-								"parameters": {
-									"fileName": "*"
-								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							}
-						}
-					},
-					{
-						"name": "truncateStgCompany",
+						"name": "LookupDsFileName",
 						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "GetFileList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -4720,26 +4682,24 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlDWSource",
-								"sqlReaderQuery": "truncate table [dwh].[STG_COMPANY_RAW];\ntruncate table [dwh].[STG_WAREHOUSE_RAW];\ntruncate table [dwh].[STG_CONTACT_RAW];\nselect 1;",
+								"sqlReaderQuery": "select DISTINCT DS_FILENAME FROM dwh.STG_PRODUCTS_VALID;\nSELECT 1;",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "dsqlp_parametric",
+								"referenceName": "ds_stg_products_valid",
 								"type": "DatasetReference",
-								"parameters": {
-									"schemaName": "dwh",
-									"tableName": "STG_COMPANY"
-								}
-							}
+								"parameters": {}
+							},
+							"firstRowOnly": false
 						}
 					},
 					{
-						"name": "ForEachFile_company",
+						"name": "ForEach1",
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "truncateStgCompany",
+								"activity": "LookupDsFileName",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -4748,17 +4708,17 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('GetFileList').output.childItems",
+								"value": "@activity('LookupDsFileName').output.value",
 								"type": "Expression"
 							},
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "df_xls_to_stg_company",
-									"type": "ExecuteDataFlow",
+									"name": "LookupValid",
+									"type": "Lookup",
 									"dependsOn": [],
 									"policy": {
-										"timeout": "1.00:00:00",
+										"timeout": "7.00:00:00",
 										"retry": 0,
 										"retryIntervalInSeconds": 30,
 										"secureOutput": false,
@@ -4766,39 +4726,59 @@
 									},
 									"userProperties": [],
 									"typeProperties": {
-										"dataflow": {
-											"referenceName": "df_xls_to_stg_company",
-											"type": "DataFlowReference",
-											"parameters": {
-												"fileName": {
-													"value": "'@{item().name}'",
-													"type": "Expression"
-												}
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderQuery": {
+												"value": "@concat('SELECT 1 as lkp_id\n  FROM [dwh].[STG_PRODUCTS_VALID] where DS_FILENAME= ','''',item().ds_filename,'''') ",
+												"type": "Expression"
 											},
-											"datasetParameters": {
-												"inputcompanycontainer": {
-													"filename": {
-														"value": "@item().name",
-														"type": "Expression"
-													},
-													"folderName": "Entity",
-													"SheetIndex": 0
-												},
-												"stgCompany": {}
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "dwh",
+												"tableName": "STG_PRODUCTS_VALID"
 											}
 										},
-										"staging": {
-											"linkedService": {
-												"referenceName": "ls_psmsii_syntodls",
-												"type": "LinkedServiceReference"
-											},
-											"folderPath": "stagingarea"
+										"firstRowOnly": false
+									}
+								},
+								{
+									"name": "If Condition1",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "LookupValid",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@equals(if(\nempty(activity('LookupValid').output.value)\n,0,1),1)",
+											"type": "Expression"
 										},
-										"integrationRuntime": {
-											"referenceName": "integrationRuntime10min",
-											"type": "IntegrationRuntimeReference"
-										},
-										"traceLevel": "Coarse"
+										"ifTrueActivities": [
+											{
+												"name": "PL_SP_LOOP_items",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "PL_SP_LOOP_items",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {}
+												}
+											}
+										]
 									}
 								}
 							]
@@ -4815,11 +4795,9 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dls_input_entity_xls')]",
+				"[concat(variables('factoryId'), '/datasets/ds_stg_products_valid')]",
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
-				"[concat(variables('factoryId'), '/dataflows/df_xls_to_stg_company')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_SP_LOOP_items')]"
 			]
 		},
 		{
