@@ -84,10 +84,6 @@
 											},
 											"folderName": "Items",
 											"SheetIndex": 0
-										},
-										"stgProducts": {
-											"schemaName": "dwh",
-											"tableName": "STG_PRODUCTS_RAW"
 										}
 									}
 								},
