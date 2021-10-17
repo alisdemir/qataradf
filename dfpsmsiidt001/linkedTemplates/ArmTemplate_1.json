@@ -6,12 +6,33 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "dfpsmsiidt001"
+		},
+		"ls_qtrsqldb_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_qtrsqldb'"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_qtrsqldb')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('ls_qtrsqldb_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime10min",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_DWH_TABLES')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -1798,41 +1819,6 @@
 						"type": "AzureBlobFSLocation",
 						"fileSystem": "upload"
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_custom_xml')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"xmlfileName": {
-						"type": "string",
-						"defaultValue": "Declaration_5SI60018026750_20210714225709128.xml"
-					}
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Xml",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().xmlfileName",
-							"type": "Expression"
-						},
-						"folderPath": "Customs",
-						"fileSystem": "input"
-					},
-					"nullValue": "null"
 				}
 			},
 			"dependsOn": []

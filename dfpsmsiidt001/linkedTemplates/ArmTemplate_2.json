@@ -13,6 +13,41 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_custom_xml')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"xmlfileName": {
+						"type": "string",
+						"defaultValue": "Declaration_5SI60018026750_20210714225709128.xml"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Xml",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().xmlfileName",
+							"type": "Expression"
+						},
+						"folderPath": "Customs",
+						"fileSystem": "input"
+					},
+					"nullValue": "null"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_dwl_cr_transaction_type')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1927,6 +1962,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_custom_xml')]",
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
 			]
 		},
@@ -2475,6 +2511,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_custom_xml')]",
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
 			]
 		},
@@ -2716,83 +2753,6 @@
 							},
 							"firstRowOnly": false
 						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_TOOL"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-25T14:24:40Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
-				"[concat(variables('factoryId'), '/datasets/qtrsqldb')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_COPY_UI_TABLE_copy1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "To create the tables on DWH database based on dwl_copy_table_list table ",
-				"activities": [
-					{
-						"name": "Drop and Create Table_copy1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlDWSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"tableOption": "autoCreate",
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference",
-								"parameters": {
-									"schemaName": "dwh",
-									"tableName": "STG_PRODUCTS_VALID"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "qtrsqldb",
-								"type": "DatasetReference",
-								"parameters": {
-									"tableName": "STG_PRODUCTS_VALID",
-									"schemaName": "dbo"
-								}
-							}
-						]
 					}
 				],
 				"policy": {
