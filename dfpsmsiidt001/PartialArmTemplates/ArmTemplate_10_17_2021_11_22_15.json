@@ -1,0 +1,343 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfpsmsiidt001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_SP_LOOP_items')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LookupColumns",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_products_valid",
+								"type": "DatasetReference"
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "LookupInitialLoad",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "LookupColumns",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": {
+									"value": "@concat('select CASE WHEN COUNT(*)=0 THEN 1 ELSE 0 END AS LKP from dwh.DWL_PRODUCTS T1 INNER JOIN DWH.DWL_ENTITY T2\nON T1.ID_COMPANY=T2.ID_ENTITY_ORG WHERE T2.DS_ENTITY_CR = ','''',activity('LookupColumns').output.value[0],'''') ",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_dwl_cr_transaction_type",
+								"type": "DatasetReference"
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LookupInitialLoad",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LookupColumns').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "UI_StoredProcedure",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[DwhTransferProduct]",
+										"storedProcedureParameters": {
+											"Barcode": {
+												"value": {
+													"value": "@item().BARCODE",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"BrandNameArabic": {
+												"value": {
+													"value": "@item().BRANDTRADEMARKARABIC",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"BrandNameEnglish": {
+												"value": {
+													"value": "@item().BRANDTRADEMARKENGLISH",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"CostPrice": {
+												"value": {
+													"value": "@item().COSTPRICE",
+													"type": "Expression"
+												},
+												"type": "Decimal"
+											},
+											"CrNumber": {
+												"value": {
+													"value": "@item().CompanyCR",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Depth": {
+												"value": {
+													"value": "@item().DEPTH",
+													"type": "Expression"
+												},
+												"type": "Decimal"
+											},
+											"EntityCategoryName1": {
+												"value": {
+													"value": "@item().CATEGORYLEVEL11",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"EntityCategoryName2": {
+												"value": {
+													"value": "@item().CATEGORYLEVEL12",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"EntityCategoryName3": {
+												"value": {
+													"value": "@item().CATEGORYLEVEL13",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"EntityCategoryName4": {
+												"value": {
+													"value": "@item().CATEGORYLEVEL14",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"Height": {
+												"value": {
+													"value": "@item().HEIGHT",
+													"type": "Expression"
+												},
+												"type": "Decimal"
+											},
+											"HsCode": {
+												"value": {
+													"value": "@item().HSCODE",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"IsInitialLoad": {
+												"value": {
+													"value": "@activity('LookupInitialLoad').output.firstrow.lkp",
+													"type": "Expression"
+												},
+												"type": "Single"
+											},
+											"ItemCode": {
+												"value": {
+													"value": "@item().ITEMCODE",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"OriginCountryISO": {
+												"value": {
+													"value": "@item().COUNTRYOFORAGENISO",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"OriginCountryName": {
+												"value": {
+													"value": "@item().COUNTRYOFORAGENNAME",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"ProductDescriptionArabic": {
+												"value": {
+													"value": "@item().DESCRIPTIONARABIC",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"ProductDescriptionEnglish": {
+												"value": {
+													"value": "@item().DESCRIPTIONENGLISH",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"ProductGroupName": {
+												"value": {
+													"value": "@item().MOCIPRODUCTGROUP",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"ProductNameArabic": {
+												"value": {
+													"value": "@item().PRODUCTNAMEARABIC",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"ProductNameEnglish": {
+												"value": {
+													"value": "@item().PRODUCTNAMEENGLISH",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"SellingPrice": {
+												"value": {
+													"value": "@item().SELLINGPRICE",
+													"type": "Expression"
+												},
+												"type": "Decimal"
+											},
+											"SupplierCrNumber": {
+												"value": {
+													"value": "@item().SUPPLIERCR",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"SupplierName": {
+												"value": {
+													"value": "@item().SUPPLIERNAME",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"UnitItemBarcode": {
+												"value": {
+													"value": "@item().UNITITEMBARCODE",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"UnitOfItemNumber": {
+												"value": {
+													"value": "@item().NOOFUNITITEMS",
+													"type": "Expression"
+												},
+												"type": "Decimal"
+											},
+											"UnitOfMeasure": {
+												"value": {
+													"value": "@item().UNITUOM",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"UnitOfMeasurePackage": {
+												"value": {
+													"value": "@item().PACKAGEUOM",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"UnitWeightSize": {
+												"value": {
+													"value": "@item().UNITWEIGHTSIZE",
+													"type": "Expression"
+												},
+												"type": "Decimal"
+											},
+											"Width": {
+												"value": {
+													"value": "@item().WIDTH",
+													"type": "Expression"
+												},
+												"type": "Decimal"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "ls_qtrsqldb",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"folder": {
+					"name": "PL_INITIAL_LOAD/ITEMS"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		}
+	]
+}
