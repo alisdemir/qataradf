@@ -8541,7 +8541,8 @@
 									"schemaName": "dwh",
 									"tableName": "STG_CR_TRANSACTION_TYPE_ERROR_LOG"
 								}
-							}
+							},
+							"firstRowOnly": false
 						}
 					}
 				],
