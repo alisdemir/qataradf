@@ -717,6 +717,153 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_products_raw')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "ITEMCODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BARCODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PRODUCTNAMEARABIC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DESCRIPTIONARABIC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PRODUCTNAMEENGLISH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DESCRIPTIONENGLISH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNITITEMBARCODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NOOFUNITITEMS",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNITWEIGHTSIZE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNITUOM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PACKAGEUOM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COSTPRICE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SELLINGPRICE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BRANDTRADEMARKENGLISH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BRANDTRADEMARKARABIC",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MOCIPRODUCTGROUP",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COUNTRYOFORAGENNAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "COUNTRYOFORAGENISO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "HSCODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIERCR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIERNAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CATEGORYLEVEL11",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CATEGORYLEVEL12",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CATEGORYLEVEL13",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CATEGORYLEVEL14",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WIDTH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "HEIGHT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DEPTH",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_FILETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_PRODUCTS_RAW"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_products_valid')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1221,153 +1368,6 @@
 						"value": "@dataset().tableName",
 						"type": "Expression"
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_products_raw')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "ITEMCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BARCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PRODUCTNAMEARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DESCRIPTIONARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PRODUCTNAMEENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DESCRIPTIONENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNITITEMBARCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NOOFUNITITEMS",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNITWEIGHTSIZE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNITUOM",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PACKAGEUOM",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COSTPRICE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SELLINGPRICE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BRANDTRADEMARKENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BRANDTRADEMARKARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MOCIPRODUCTGROUP",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COUNTRYOFORAGENNAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COUNTRYOFORAGENISO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "HSCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIERCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIERNAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL11",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL12",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL13",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL14",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WIDTH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "HEIGHT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DEPTH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_PRODUCTS_RAW"
 				}
 			},
 			"dependsOn": []
