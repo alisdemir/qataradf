@@ -831,7 +831,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_MAIN_TRANSACTION"
+					"name": "PL_MAIN"
 				},
 				"annotations": []
 			},
