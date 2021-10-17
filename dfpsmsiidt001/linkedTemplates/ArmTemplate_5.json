@@ -226,7 +226,7 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": false,
-									"wildcardFileName": "*_ItemMasterFile_err.*",
+									"wildcardFileName": "*_Item*",
 									"deleteFilesAfterCompletion": true
 								},
 								"formatSettings": {
