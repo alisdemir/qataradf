@@ -682,7 +682,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:50:39Z"

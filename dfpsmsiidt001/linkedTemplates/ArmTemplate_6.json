@@ -264,27 +264,6 @@
 						}
 					},
 					{
-						"name": "PL_EXPORT_AND_EMAIL_tr_type",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_EXEC_P_DQ_TR_TYPE",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_EXPORT_AND_EMAIL_tr_type",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "P_UPSERT_TRANSACTION_TYPE_ERROR_LOG",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
@@ -433,6 +412,77 @@
 									}
 								}
 							]
+						}
+					},
+					{
+						"name": "If Condition",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Lookup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals(if(\nempty(activity('lookup').output.value)\n,0,1),1)\n",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "PL_EXPORT_AND_EMAIL_tr_type",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_EXPORT_AND_EMAIL_tr_type",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "PL_EXEC_P_DQ_TR_TYPE",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "SELECT 1 FROM DWH.STG_CR_TRANSACTION_TYPE_ERROR_LOG",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "STG_CR_TRANSACTION_TYPE_ERROR_LOG"
+								}
+							}
 						}
 					}
 				],
@@ -780,7 +830,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": []
 			},

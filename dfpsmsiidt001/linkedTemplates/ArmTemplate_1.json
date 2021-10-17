@@ -835,7 +835,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": []
 			},
@@ -873,7 +873,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-25T14:24:46Z"
@@ -912,7 +912,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-25T14:24:53Z"
@@ -971,7 +971,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": []
 			},

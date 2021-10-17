@@ -1477,7 +1477,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:54:20Z"
@@ -1627,7 +1627,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:55:22Z"

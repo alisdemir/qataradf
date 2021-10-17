@@ -1684,7 +1684,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-26T14:24:08Z"
@@ -1746,7 +1746,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:54:43Z"
@@ -1995,7 +1995,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:55:14Z"
@@ -2379,7 +2379,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-20T12:55:14Z"
@@ -3240,7 +3240,7 @@
 					}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-25T14:24:57Z"
@@ -3489,7 +3489,7 @@
 					}
 				},
 				"folder": {
-					"name": "PL_MAIN"
+					"name": "PL_MAIN_TRANSACTION"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-05-25T14:24:57Z"
