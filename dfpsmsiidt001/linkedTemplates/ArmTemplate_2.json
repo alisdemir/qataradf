@@ -13,41 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_custom_xml')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"xmlfileName": {
-						"type": "string",
-						"defaultValue": "Declaration_5SI60018026750_20210714225709128.xml"
-					}
-				},
-				"folder": {
-					"name": "Storage_DL_QTR"
-				},
-				"annotations": [],
-				"type": "Xml",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().xmlfileName",
-							"type": "Expression"
-						},
-						"folderPath": "Customs",
-						"fileSystem": "input"
-					},
-					"nullValue": "null"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ds_dwl_cr_transaction_type')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -160,6 +125,28 @@
 				"typeProperties": {
 					"schema": "etl",
 					"table": "DWL_FILE_LIST"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_soap')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_bss_soap",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Dedicated_SQL"
+				},
+				"annotations": [],
+				"type": "Xml",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation"
+					}
 				}
 			},
 			"dependsOn": []
@@ -1962,7 +1949,6 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_custom_xml')]",
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
 			]
 		},
@@ -2511,7 +2497,6 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_custom_xml')]",
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
 			]
 		},

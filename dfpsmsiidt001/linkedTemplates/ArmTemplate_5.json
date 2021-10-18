@@ -3142,27 +3142,6 @@
 						}
 					},
 					{
-						"name": "PL_STOCK_CALCULATE",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_LOAD_DWB_TRANSACTION",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_STOCK_CALCULATE",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "DeleteProcessingFiles",
 						"type": "Delete",
 						"dependsOn": [

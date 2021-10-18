@@ -2918,19 +2918,7 @@
 												"type": "SqlServerStoredProcedure",
 												"dependsOn": [
 													{
-														"activity": "P_UPSERT_CUSTOMS_ITEM",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													},
-													{
-														"activity": "P_UPSERT_CUSTOMS_SUPV",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													},
-													{
-														"activity": "P_UPSERT_CUSTOMS_DEC",
+														"activity": "P_DELETE_PENDING_INSPECTION",
 														"dependencyConditions": [
 															"Succeeded"
 														]
@@ -2946,6 +2934,51 @@
 												"userProperties": [],
 												"typeProperties": {
 													"storedProcedureName": "[[dwh].[P_DWA_CUSTOMS_STOCK]"
+												},
+												"linkedServiceName": {
+													"referenceName": "ls_dsqlpqtr",
+													"type": "LinkedServiceReference"
+												}
+											},
+											{
+												"name": "P_DELETE_PENDING_INSPECTION",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [
+													{
+														"activity": "P_UPSERT_CUSTOMS_DEC",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													},
+													{
+														"activity": "P_UPSERT_CUSTOMS_ITEM",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													},
+													{
+														"activity": "P_UPSERT_CUSTOMS_SUPV",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "[[dwh].[P_DELETE_PENDING_INSPECTION]",
+													"storedProcedureParameters": {
+														"param_day": {
+															"value": "90",
+															"type": "Int32"
+														}
+													}
 												},
 												"linkedServiceName": {
 													"referenceName": "ls_dsqlpqtr",
@@ -4241,27 +4274,6 @@
 						}
 					},
 					{
-						"name": "PL_STOCK_CALCULATE",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_LOAD_DWB_TRANSACTION",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_STOCK_CALCULATE",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "DeleteProcessingFiles",
 						"type": "Delete",
 						"dependsOn": [
@@ -4357,7 +4369,6 @@
 				"[concat(variables('factoryId'), '/pipelines/PL_DWL_FILE_LIST_INS')]",
 				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_XLS_TO_STG')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_STOCK_CALCULATE')]",
 				"[concat(variables('factoryId'), '/datasets/dls_processing_binary')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
 			]
@@ -5286,39 +5297,6 @@
 						}
 					},
 					{
-						"name": "DWA_CONTRACT",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "DWB_CONTRACT_INVOICES",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "DWB_CONTRACT_PRODUCT_GROUPS",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dwh].[P_DWA_CONTRACT]"
-						},
-						"linkedServiceName": {
-							"referenceName": "ls_dsqlpqtr",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
 						"name": "DWL_BULLETIN_CATEGORIES",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [],
@@ -5452,6 +5430,39 @@
 						"userProperties": [],
 						"typeProperties": {
 							"storedProcedureName": "[[dwh].[P_UPSERT_CONTACT]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_dsqlpqtr",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "DWB_PURCHASE_ORDER_PRODUCTS",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "DWB_PURCHASE_ORDER",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "DWL_PRODUCTS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_UPSERT_PURCHASE_ORDER_PRODUCTS]"
 						},
 						"linkedServiceName": {
 							"referenceName": "ls_dsqlpqtr",
@@ -6887,6 +6898,226 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_MAIN')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "PL_MAIN_entity",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_MAIN_entity",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_MAIN_transaction_type",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_MAIN_transaction_type",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_MAIN_items",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_MAIN_items",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_COPY_UI_TABLE",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_MAIN_entity",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_MAIN_transaction_type",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_MAIN_items",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_COPY_UI_TABLE",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_DWH_TABLES",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_COPY_UI_TABLE",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_DWH_TABLES",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_DAILY_MAIN",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_DWH_TABLES",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_DAILY_MAIN",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_CUSTOM_MAIN",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_DWH_TABLES",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_CUSTOM_MAIN",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DWA_CONTRACT",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "PL_STOCK_CALCULATE",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_UPSERT_CONTRACT]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_dsqlpqtr",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "PL_STOCK_CALCULATE",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_DAILY_MAIN",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_CUSTOM_MAIN",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_STOCK_CALCULATE",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_entity')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_transaction_type')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_items')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_COPY_UI_TABLE')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_DWH_TABLES')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_DAILY_MAIN')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_CUSTOM_MAIN')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_STOCK_CALCULATE')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_MAIN_company')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -8062,6 +8293,70 @@
 				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_warehouse')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_contact')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_MAIN_initial_load')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "PL_MAIN_transaction_type",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_MAIN_transaction_type",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_MAIN_items",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_MAIN_items",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_MAIN_entity",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_MAIN_entity",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_INITIAL_LOAD"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_transaction_type')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_items')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_entity')]"
 			]
 		},
 		{
@@ -13868,7 +14163,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -14586,234 +14881,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_MAIN')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "PL_MAIN_entity",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_MAIN_entity",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_MAIN_transaction_type",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_MAIN_transaction_type",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_MAIN_items",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_MAIN_items",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_COPY_UI_TABLE",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_MAIN_entity",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "PL_MAIN_transaction_type",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "PL_MAIN_items",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_COPY_UI_TABLE",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_DWH_TABLES",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_COPY_UI_TABLE",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_DWH_TABLES",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_DAILY_MAIN",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_DWH_TABLES",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_DAILY_MAIN",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_CUSTOM_MAIN",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_DWH_TABLES",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_CUSTOM_MAIN",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_MAIN"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_entity')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_transaction_type')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_items')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_COPY_UI_TABLE')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_DWH_TABLES')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_DAILY_MAIN')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_CUSTOM_MAIN')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_MAIN_initial_load')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "PL_MAIN_transaction_type",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_MAIN_transaction_type",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_MAIN_items",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_MAIN_items",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_MAIN_entity",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_MAIN_entity",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_INITIAL_LOAD"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_transaction_type')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_items')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_entity')]"
 			]
 		}
 	]
