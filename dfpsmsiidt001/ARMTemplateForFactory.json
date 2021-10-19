@@ -1995,7 +1995,7 @@
 													"storedProcedureParameters": {
 														"FILENAME": {
 															"value": {
-																"value": "@item().name",
+																"value": "@concat(item().name,'.csv')",
 																"type": "Expression"
 															},
 															"type": "String"
