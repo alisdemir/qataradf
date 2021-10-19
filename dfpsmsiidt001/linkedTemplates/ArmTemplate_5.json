@@ -2016,7 +2016,7 @@
 										"source": {
 											"type": "SqlDWSource",
 											"sqlReaderQuery": {
-												"value": "@concat('SELECT 1 as lkp_id\n  FROM [etl].[DWL_FILE_LIST] where DS_FILENAME= ','''',item().name,'''') ",
+												"value": "@concat(\n'SELECT 1 as lkp_id FROM [etl].[DWL_FILE_LIST] where DS_FILENAME= '\n,''''\n,replace(item().name,'.xlsx','')\n,'''')",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -2038,6 +2038,11 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
+				},
+				"variables": {
+					"v_filewithoutextension": {
+						"type": "String"
+					}
 				},
 				"folder": {
 					"name": "PL_MAIN_TRANSACTION"
