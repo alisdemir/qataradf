@@ -3257,6 +3257,40 @@
 							"referenceName": "ls_dsqlpqtr",
 							"type": "LinkedServiceReference"
 						}
+					},
+					{
+						"name": "DeleteUploadFiles",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "PL_DWL_FILE_LIST_ARC",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_upload_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"enableLogging": false,
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"wildcardFileName": "*",
+								"enablePartitionDiscovery": false
+							}
+						}
 					}
 				],
 				"policy": {
