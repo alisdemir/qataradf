@@ -1488,7 +1488,7 @@
 									]
 								},
 								{
-									"name": "lapp_qtr_email_contact",
+									"name": "lapp_qtr_email",
 									"type": "WebActivity",
 									"dependsOn": [
 										{
