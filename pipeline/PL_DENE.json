@@ -21,7 +21,9 @@
 						"type": "IntegrationRuntimeReference"
 					},
 					"method": "POST",
-					"body": ""
+					"body": {
+						"EmailType": "EntityFileErrors"
+					}
 				}
 			}
 		],
