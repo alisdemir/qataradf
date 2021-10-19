@@ -177,6 +177,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"expression": {
+						"value": "@equals(if(\nempty(activity('lookup').output.value)\n,0,1),1)",
+						"type": "Expression"
+					},
 					"ifTrueActivities": [
 						{
 							"name": "PL_EXPORT_AND_EMAIL_items",
