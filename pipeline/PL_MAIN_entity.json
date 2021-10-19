@@ -515,11 +515,22 @@
 				}
 			},
 			{
-				"name": "If Condition2",
+				"name": "If Condition",
 				"type": "IfCondition",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Lookup",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
+					"expression": {
+						"value": "@equals(if(\nempty(activity('lookup').output.value)\n,0,1),1)",
+						"type": "Expression"
+					},
 					"ifTrueActivities": [
 						{
 							"name": "df_errlogcontainer_warehouse",
@@ -846,6 +857,50 @@
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "Lookup",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "PL_DQ_WAREHOUSE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "PL_DQ_CONTACT",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "PL_DQ_COMPANY",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": " SELECT 1 AS lkp FROM (\n select  DISTINCT DS_FILENAME from [dwh].[STG_COMPANY_ERROR_LOG]\n UNION \n SELECT  DISTINCT DS_FILENAME from [dwh].[STG_WAREHOUSE_ERROR_LOG]\n UNION \n SELECT  DISTINCT DS_FILENAME from [dwh].[STG_CONTACT_ERROR_LOG]\n ) A",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_stg_contact_error_log",
+						"type": "DatasetReference"
+					}
 				}
 			}
 		],
