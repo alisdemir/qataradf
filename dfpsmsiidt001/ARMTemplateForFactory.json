@@ -8399,27 +8399,6 @@
 						}
 					},
 					{
-						"name": "PL_EXPORT_AND_EMAIL_items",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_EXEC_P_DQ_ITEMS",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_EXPORT_AND_EMAIL_items",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "LookupDsFileName",
 						"type": "Lookup",
 						"dependsOn": [
@@ -8542,6 +8521,77 @@
 								}
 							]
 						}
+					},
+					{
+						"name": "If Condition2",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Lookup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals(if(\nempty(activity('lookup').output.value)\n,0,1),1)",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "PL_EXPORT_AND_EMAIL_items",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_EXPORT_AND_EMAIL_items",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "PL_EXEC_P_DQ_ITEMS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "SELECT 1 FROM DWH.STG_PRODUCTS_ERROR_LOG",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "STG_PRODUCTS_ERROR_LOG"
+								}
+							}
+						}
 					}
 				],
 				"policy": {
@@ -8556,9 +8606,9 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/PL_XLS_TO_STG_items')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_items')]",
 				"[concat(variables('factoryId'), '/datasets/ds_stg_products_valid')]",
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_EXPORT_AND_EMAIL_items')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_SP_LOOP_items')]"
 			]
 		},
