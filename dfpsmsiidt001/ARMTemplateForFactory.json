@@ -8276,7 +8276,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_MAIN_initial_load')]",
+			"name": "[concat(parameters('factoryName'), '/PL_MAIN_MASTER_DATA_LOAD')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -8284,14 +8284,7 @@
 					{
 						"name": "PL_MAIN_transaction_type",
 						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_DWH_TABLES",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -8305,14 +8298,7 @@
 					{
 						"name": "PL_MAIN_items",
 						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_DWH_TABLES",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -8326,53 +8312,11 @@
 					{
 						"name": "PL_MAIN_entity",
 						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_DWH_TABLES",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_MAIN_entity",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_COPY_UI_TABLE",
-						"type": "ExecutePipeline",
 						"dependsOn": [],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "PL_COPY_UI_TABLE",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "PL_DWH_TABLES",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "PL_COPY_UI_TABLE",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_DWH_TABLES",
+								"referenceName": "PL_MAIN_entity",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -8392,9 +8336,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_transaction_type')]",
 				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_items')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_entity')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_COPY_UI_TABLE')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_DWH_TABLES')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_MAIN_entity')]"
 			]
 		},
 		{
