@@ -1195,7 +1195,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"expression": {
-								"value": "@equals(if(\nempty(activity('lookup').output.firstRow.CNT)\n,0,1),1)",
+								"value": "@equals(if(\nempty(activity('lookup').output.value[0].CNT)\n,0,1),1)",
 								"type": "Expression"
 							},
 							"ifTrueActivities": [
@@ -1576,7 +1576,8 @@
 								"referenceName": "ds_stg_contact_error_log",
 								"type": "DatasetReference",
 								"parameters": {}
-							}
+							},
+							"firstRowOnly": false
 						}
 					}
 				],
