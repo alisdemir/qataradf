@@ -178,7 +178,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(if(\nempty(activity('Lookup').output.firstRow.LKP)\n,0,1),1)",
+						"value": "@equals(if(\nempty(activity('Lookup').output.value)\n,0,1),1)",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
@@ -231,7 +231,8 @@
 							"schemaName": "dwh",
 							"tableName": "STG_PRODUCTS_ERROR_LOG"
 						}
-					}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
