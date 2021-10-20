@@ -220,7 +220,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "SELECT 1 AS LKP FROM DWH.STG_PRODUCTS_ERROR_LOG",
+						"sqlReaderQuery": "SELECT count(1) AS LKP FROM DWH.STG_PRODUCTS_ERROR_LOG",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
