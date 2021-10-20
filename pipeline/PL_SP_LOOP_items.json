@@ -17,6 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
+						"sqlReaderQuery": "SELECT  [CompanyCR]\n      ,[ITEMCODE]\n      ,[BARCODE]\n      ,[PRODUCTNAMEARABIC]\n      ,[DESCRIPTIONARABIC]\n      ,[PRODUCTNAMEENGLISH]\n      ,[DESCRIPTIONENGLISH]\n      ,[UNITITEMBARCODE]\n      ,[NOOFUNITITEMS]\n      ,[UNITWEIGHTSIZE]\n      ,[UNITUOM]\n      ,[PACKAGEUOM]\n      ,[COSTPRICE]\n      ,[SELLINGPRICE]\n      ,[BRANDTRADEMARKENGLISH]\n      ,[BRANDTRADEMARKARABIC]\n      ,CASE\nWHEN CHARINDEX(\n'???',\nCAST(JSON_VALUE(CONCAT('[\"', REPLACE(MOCIPRODUCTGROUP, ' - ', '\",\"'), '\"]'), '$[0]') AS varchar(500))\n) > 0 THEN\nCAST(JSON_VALUE(CONCAT('[\"', REPLACE(MOCIPRODUCTGROUP, ' - ', '\",\"'), '\"]'), '$[1]') AS varchar(500))\nELSE\nCAST(JSON_VALUE(CONCAT('[\"', REPLACE(MOCIPRODUCTGROUP, ' - ', '\",\"'), '\"]'), '$[0]') AS varchar(500))\nEND [MOCIPRODUCTGROUP]\n      ,[COUNTRYOFORAGENNAME]\n      ,[COUNTRYOFORAGENISO]\n      ,[HSCODE]\n      ,[SUPPLIERCR]\n      ,[SUPPLIERNAME]\n      ,[CATEGORYLEVEL11]\n      ,[CATEGORYLEVEL12]\n      ,[CATEGORYLEVEL13]\n      ,[CATEGORYLEVEL14]\n      ,[WIDTH]\n      ,[HEIGHT]\n      ,[DEPTH]\n      ,[ID_SK]\n      ,[DS_FILENAME]\n      ,[DT_FILETIME]\n      ,[DT_CREATE]\n      ,[DT_UPDATE]\n  FROM [dwh].[STG_PRODUCTS_VALID]",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
