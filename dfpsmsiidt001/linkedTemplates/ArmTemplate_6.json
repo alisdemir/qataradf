@@ -197,7 +197,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"expression": {
-								"value": "@equals(if(\nempty(activity('lookup').output.firstRow)\n,0,1),1)",
+								"value": "@equals(if(\nempty(activity('lookup').output.firstRow.LKP)\n,0,1),1)",
 								"type": "Expression"
 							},
 							"ifTrueActivities": [
@@ -240,7 +240,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlDWSource",
-								"sqlReaderQuery": "SELECT 1 AS [ErrCheck] FROM DWH.STG_PRODUCTS_ERROR_LOG",
+								"sqlReaderQuery": "SELECT 1 AS LKP FROM DWH.STG_PRODUCTS_ERROR_LOG",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
