@@ -1,6 +1,41 @@
 {
 	"name": "PL_MAIN_copy_table",
 	"properties": {
+		"activities": [
+			{
+				"name": "PL_COPY_UI_TABLE",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_COPY_UI_TABLE",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_DWH_TABLES",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_COPY_UI_TABLE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DWH_TABLES",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
 		"folder": {
 			"name": "PL_MAIN"
 		},
