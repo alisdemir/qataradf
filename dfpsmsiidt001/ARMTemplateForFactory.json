@@ -4670,28 +4670,17 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "lapp_qtr_email",
-						"type": "WebActivity",
+						"name": "PL_DWH_TABLES",
+						"type": "ExecutePipeline",
 						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
 						"userProperties": [],
 						"typeProperties": {
-							"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_004/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TtLQzzJ2jaF-H7JOsLS6Q5_tdS3dk56myalGkjOyOf8",
-							"connectVia": {
-								"referenceName": "integrationRuntime10min",
-								"type": "IntegrationRuntimeReference"
+							"pipeline": {
+								"referenceName": "PL_DWH_TABLES",
+								"type": "PipelineReference"
 							},
-							"method": "POST",
-							"headers": {},
-							"body": {
-								"EmailType": "EntityFileErrors"
-							}
+							"waitOnCompletion": true,
+							"parameters": {}
 						}
 					}
 				],
@@ -4705,7 +4694,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_DWH_TABLES')]"
 			]
 		},
 		{
@@ -14292,7 +14281,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
