@@ -52,7 +52,7 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Drop and Create Table_copy1",
+							"name": "Drop and Create Table",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
