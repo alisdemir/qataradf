@@ -528,7 +528,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(if(\nempty(activity('lookup').output.value[0].CNT)\n,0,1),1)",
+						"value": "@equals(if(\nempty(activity('lookup').output.value.CNT)\n,0,1),1)",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
@@ -893,7 +893,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": " SELECT DISTINCT 1 AS  CNT FROM (\n select   DS_FILENAME from [dwh].[STG_COMPANY_ERROR_LOG]\n UNION \n SELECT   DS_FILENAME from [dwh].[STG_WAREHOUSE_ERROR_LOG]\n UNION \n SELECT   DS_FILENAME from [dwh].[STG_CONTACT_ERROR_LOG]\n ) A",
+						"sqlReaderQuery": "  SELECT  1 AS  CNT FROM (\n select   DS_FILENAME from [dwh].[STG_COMPANY_ERROR_LOG]\n UNION \n SELECT   DS_FILENAME from [dwh].[STG_WAREHOUSE_ERROR_LOG]\n UNION \n SELECT   DS_FILENAME from [dwh].[STG_CONTACT_ERROR_LOG]\n ) A",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
