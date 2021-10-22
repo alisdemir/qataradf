@@ -2524,7 +2524,12 @@
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
-											"partitionOption": "None"
+											"partitionOption": "DynamicRange",
+											"partitionSettings": {
+												"partitionColumnName": "table_name",
+												"partitionUpperBound": "",
+												"partitionLowerBound": ""
+											}
 										},
 										"dataset": {
 											"referenceName": "dsqlp_parametric",
@@ -2812,7 +2817,6 @@
 												"value": "@{concat('drop table ',item().target_schema_name,'.',item().table_name)}",
 												"type": "Expression"
 											},
-											"sqlWriterUseTableLock": true,
 											"tableOption": "autoCreate",
 											"disableMetricsCollection": false
 										},
