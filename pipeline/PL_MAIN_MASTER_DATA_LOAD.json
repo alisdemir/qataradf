@@ -66,10 +66,6 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"pipeline": {
-						"referenceName": "PL_COPY_UI_TABLES",
-						"type": "PipelineReference"
-					},
 					"waitOnCompletion": true
 				}
 			},
