@@ -1955,7 +1955,7 @@
 												"ods_schema_name": {
 													"type": "String",
 													"value": {
-														"value": "@item().schema_name",
+														"value": "@item().target_schema_name",
 														"type": "Expression"
 													}
 												},
