@@ -4,144 +4,6 @@
 		"description": "To create the tables on DWH database based on dwl_copy_table_list table ",
 		"activities": [
 			{
-				"name": "ForEach Table in List",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "PARTITION_ID_1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Lookup Table List').output.value",
-						"type": "Expression"
-					},
-					"isSequential": true,
-					"activities": [
-						{
-							"name": "Truncate and Insert Table",
-							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "LKP_max_date",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE createdutc > ','''',activity('LKP_max_date').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date').output.firstRow.TheMin,'''','')",
-										"type": "Expression"
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"sink": {
-									"type": "SqlDWSink",
-									"preCopyScript": {
-										"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
-										"type": "Expression"
-									},
-									"disableMetricsCollection": false
-								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
-							},
-							"inputs": [
-								{
-									"referenceName": "qtrsqldb",
-									"type": "DatasetReference",
-									"parameters": {
-										"tableName": {
-											"value": "@item().table_name",
-											"type": "Expression"
-										},
-										"schemaName": {
-											"value": "@item().schema_name",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "dsqlp_parametric",
-									"type": "DatasetReference",
-									"parameters": {
-										"schemaName": "@item().target_schema_name",
-										"tableName": "@item().table_name"
-									}
-								}
-							]
-						},
-						{
-							"name": "LKP_max_date",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "SqlDWSource",
-									"sqlReaderStoredProcedureName": "[etl].[P_LKP_ODS_MAX_DATES]",
-									"storedProcedureParameters": {
-										"ods_schema_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().target_schema_name",
-												"type": "Expression"
-											}
-										},
-										"ods_table_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().table_name",
-												"type": "Expression"
-											}
-										}
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "dsqlpqtr",
-									"type": "DatasetReference"
-								},
-								"firstRowOnly": true
-							}
-						}
-					]
-				}
-			},
-			{
 				"name": "Lookup Table List",
 				"type": "Lookup",
 				"dependsOn": [],
@@ -171,284 +33,8 @@
 				}
 			},
 			{
-				"name": "ForEach Table in List_2",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "PARTITION_ID_2",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Lookup Table List').output.value",
-						"type": "Expression"
-					},
-					"isSequential": true,
-					"activities": [
-						{
-							"name": "Truncate and Insert Table1",
-							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "LKP_max_date1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE createdutc > ','''',activity('LKP_max_date1').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date1').output.firstRow.TheMin,'''','')",
-										"type": "Expression"
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"sink": {
-									"type": "SqlDWSink",
-									"preCopyScript": {
-										"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
-										"type": "Expression"
-									},
-									"disableMetricsCollection": false
-								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
-							},
-							"inputs": [
-								{
-									"referenceName": "qtrsqldb",
-									"type": "DatasetReference",
-									"parameters": {
-										"tableName": {
-											"value": "@item().table_name",
-											"type": "Expression"
-										},
-										"schemaName": {
-											"value": "@item().schema_name",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "dsqlp_parametric",
-									"type": "DatasetReference",
-									"parameters": {
-										"schemaName": "@item().target_schema_name",
-										"tableName": "@item().table_name"
-									}
-								}
-							]
-						},
-						{
-							"name": "LKP_max_date1",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "SqlDWSource",
-									"sqlReaderStoredProcedureName": "[etl].[P_LKP_ODS_MAX_DATES]",
-									"storedProcedureParameters": {
-										"ods_schema_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().target_schema_name",
-												"type": "Expression"
-											}
-										},
-										"ods_table_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().table_name",
-												"type": "Expression"
-											}
-										}
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "dsqlpqtr",
-									"type": "DatasetReference"
-								},
-								"firstRowOnly": true
-							}
-						}
-					]
-				}
-			},
-			{
-				"name": "ForEach Table in List_3",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "PARTITION_ID_3",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Lookup Table List').output.value",
-						"type": "Expression"
-					},
-					"isSequential": true,
-					"activities": [
-						{
-							"name": "Truncate and Insert Table2",
-							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "LKP_max_date2",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE createdutc > ','''',activity('LKP_max_date2').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date2').output.firstRow.TheMin,'''','')",
-										"type": "Expression"
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"sink": {
-									"type": "SqlDWSink",
-									"preCopyScript": {
-										"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
-										"type": "Expression"
-									},
-									"disableMetricsCollection": false
-								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
-							},
-							"inputs": [
-								{
-									"referenceName": "qtrsqldb",
-									"type": "DatasetReference",
-									"parameters": {
-										"tableName": {
-											"value": "@item().table_name",
-											"type": "Expression"
-										},
-										"schemaName": {
-											"value": "@item().schema_name",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "dsqlp_parametric",
-									"type": "DatasetReference",
-									"parameters": {
-										"schemaName": "@item().target_schema_name",
-										"tableName": "@item().table_name"
-									}
-								}
-							]
-						},
-						{
-							"name": "LKP_max_date2",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "SqlDWSource",
-									"sqlReaderStoredProcedureName": "[etl].[P_LKP_ODS_MAX_DATES]",
-									"storedProcedureParameters": {
-										"ods_schema_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().target_schema_name",
-												"type": "Expression"
-											}
-										},
-										"ods_table_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().table_name",
-												"type": "Expression"
-											}
-										}
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "dsqlpqtr",
-									"type": "DatasetReference"
-								},
-								"firstRowOnly": true
-							}
-						}
-					]
-				}
-			},
-			{
-				"name": "PARTITION_ID_1",
-				"type": "Filter",
+				"name": "If Condition1",
+				"type": "IfCondition",
 				"dependsOn": [
 					{
 						"activity": "Lookup Table List",
@@ -459,19 +45,148 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "@activity('Lookup Table List').output.value[0].partition_id",
-						"type": "Expression"
-					},
-					"condition": {
+					"expression": {
 						"value": "@equals(activity('Lookup Table List').output.value[0].partition_id,1)",
 						"type": "Expression"
-					}
+					},
+					"ifTrueActivities": [
+						{
+							"name": "ForEach Table in List",
+							"type": "ForEach",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"items": {
+									"value": "@activity('Lookup Table List').output.value",
+									"type": "Expression"
+								},
+								"isSequential": true,
+								"activities": [
+									{
+										"name": "Truncate and Insert Table",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "LKP_max_date",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE createdutc > ','''',activity('LKP_max_date').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date').output.firstRow.TheMin,'''','')",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"sink": {
+												"type": "SqlDWSink",
+												"preCopyScript": {
+													"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+													"type": "Expression"
+												},
+												"disableMetricsCollection": false
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "qtrsqldb",
+												"type": "DatasetReference",
+												"parameters": {
+													"tableName": {
+														"value": "@item().table_name",
+														"type": "Expression"
+													},
+													"schemaName": {
+														"value": "@item().schema_name",
+														"type": "Expression"
+													}
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "dsqlp_parametric",
+												"type": "DatasetReference",
+												"parameters": {
+													"schemaName": "@item().target_schema_name",
+													"tableName": "@item().table_name"
+												}
+											}
+										]
+									},
+									{
+										"name": "LKP_max_date",
+										"type": "Lookup",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "SqlDWSource",
+												"sqlReaderStoredProcedureName": "[etl].[P_LKP_ODS_MAX_DATES]",
+												"storedProcedureParameters": {
+													"ods_schema_name": {
+														"type": "String",
+														"value": {
+															"value": "@item().target_schema_name",
+															"type": "Expression"
+														}
+													},
+													"ods_table_name": {
+														"type": "String",
+														"value": {
+															"value": "@item().table_name",
+															"type": "Expression"
+														}
+													}
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "dsqlpqtr",
+												"type": "DatasetReference"
+											},
+											"firstRowOnly": true
+										}
+									}
+								]
+							}
+						}
+					]
 				}
 			},
 			{
-				"name": "PARTITION_ID_2",
-				"type": "Filter",
+				"name": "If Condition2",
+				"type": "IfCondition",
 				"dependsOn": [
 					{
 						"activity": "Lookup Table List",
@@ -482,19 +197,148 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "@activity('Lookup Table List').output.value[0].partition_id",
-						"type": "Expression"
-					},
-					"condition": {
+					"expression": {
 						"value": "@equals(activity('Lookup Table List').output.value[0].partition_id,2)",
 						"type": "Expression"
-					}
+					},
+					"ifTrueActivities": [
+						{
+							"name": "ForEach Table in List_2",
+							"type": "ForEach",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"items": {
+									"value": "@activity('Lookup Table List').output.value",
+									"type": "Expression"
+								},
+								"isSequential": true,
+								"activities": [
+									{
+										"name": "Truncate and Insert Table1",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "LKP_max_date1",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE createdutc > ','''',activity('LKP_max_date1').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date1').output.firstRow.TheMin,'''','')",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"sink": {
+												"type": "SqlDWSink",
+												"preCopyScript": {
+													"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+													"type": "Expression"
+												},
+												"disableMetricsCollection": false
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "qtrsqldb",
+												"type": "DatasetReference",
+												"parameters": {
+													"tableName": {
+														"value": "@item().table_name",
+														"type": "Expression"
+													},
+													"schemaName": {
+														"value": "@item().schema_name",
+														"type": "Expression"
+													}
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "dsqlp_parametric",
+												"type": "DatasetReference",
+												"parameters": {
+													"schemaName": "@item().target_schema_name",
+													"tableName": "@item().table_name"
+												}
+											}
+										]
+									},
+									{
+										"name": "LKP_max_date1",
+										"type": "Lookup",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "SqlDWSource",
+												"sqlReaderStoredProcedureName": "[etl].[P_LKP_ODS_MAX_DATES]",
+												"storedProcedureParameters": {
+													"ods_schema_name": {
+														"type": "String",
+														"value": {
+															"value": "@item().target_schema_name",
+															"type": "Expression"
+														}
+													},
+													"ods_table_name": {
+														"type": "String",
+														"value": {
+															"value": "@item().table_name",
+															"type": "Expression"
+														}
+													}
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "dsqlpqtr",
+												"type": "DatasetReference"
+											},
+											"firstRowOnly": true
+										}
+									}
+								]
+							}
+						}
+					]
 				}
 			},
 			{
-				"name": "PARTITION_ID_3",
-				"type": "Filter",
+				"name": "If Condition3",
+				"type": "IfCondition",
 				"dependsOn": [
 					{
 						"activity": "Lookup Table List",
@@ -505,14 +349,143 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "@activity('Lookup Table List').output.value[0].partition_id",
-						"type": "Expression"
-					},
-					"condition": {
+					"expression": {
 						"value": "@equals(activity('Lookup Table List').output.value[0].partition_id,3)",
 						"type": "Expression"
-					}
+					},
+					"ifTrueActivities": [
+						{
+							"name": "ForEach Table in List_3",
+							"type": "ForEach",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"items": {
+									"value": "@activity('Lookup Table List').output.value",
+									"type": "Expression"
+								},
+								"isSequential": true,
+								"activities": [
+									{
+										"name": "Truncate and Insert Table2",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "LKP_max_date2",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE createdutc > ','''',activity('LKP_max_date2').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date2').output.firstRow.TheMin,'''','')",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"sink": {
+												"type": "SqlDWSink",
+												"preCopyScript": {
+													"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+													"type": "Expression"
+												},
+												"disableMetricsCollection": false
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "qtrsqldb",
+												"type": "DatasetReference",
+												"parameters": {
+													"tableName": {
+														"value": "@item().table_name",
+														"type": "Expression"
+													},
+													"schemaName": {
+														"value": "@item().schema_name",
+														"type": "Expression"
+													}
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "dsqlp_parametric",
+												"type": "DatasetReference",
+												"parameters": {
+													"schemaName": "@item().target_schema_name",
+													"tableName": "@item().table_name"
+												}
+											}
+										]
+									},
+									{
+										"name": "LKP_max_date2",
+										"type": "Lookup",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "SqlDWSource",
+												"sqlReaderStoredProcedureName": "[etl].[P_LKP_ODS_MAX_DATES]",
+												"storedProcedureParameters": {
+													"ods_schema_name": {
+														"type": "String",
+														"value": {
+															"value": "@item().target_schema_name",
+															"type": "Expression"
+														}
+													},
+													"ods_table_name": {
+														"type": "String",
+														"value": {
+															"value": "@item().table_name",
+															"type": "Expression"
+														}
+													}
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "dsqlpqtr",
+												"type": "DatasetReference"
+											},
+											"firstRowOnly": true
+										}
+									}
+								]
+							}
+						}
+					]
 				}
 			}
 		],
