@@ -78,7 +78,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "WHERE createdutc > ','',activity('LKP_max_date').output,'',' OR\nupdatedutc>  ','',activity('LKP_max_date').output,'',')",
+										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'',',''.'',','',item().schema_name,'','\nWHERE createdutc > ','',activity('LKP_max_date').output,'',' OR\nupdatedutc>  ','',activity('LKP_max_date').output,'','')",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
