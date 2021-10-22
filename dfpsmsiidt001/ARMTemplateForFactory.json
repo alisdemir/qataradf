@@ -2262,11 +2262,11 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup Table List').output.partition_id",
+								"value": "@activity('Lookup Table List').output.value[0].partition_id",
 								"type": "Expression"
 							},
 							"condition": {
-								"value": "@equals(activity('Lookup Table List').output.value.partition_id,1)",
+								"value": "@equals(activity('Lookup Table List').output.value[0].partition_id,1)",
 								"type": "Expression"
 							}
 						}
@@ -2285,11 +2285,11 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup Table List').output.partition_id",
+								"value": "@activity('Lookup Table List').output.value[0].partition_id",
 								"type": "Expression"
 							},
 							"condition": {
-								"value": "@equals(activity('Lookup Table List').output.value.partition_id,2)",
+								"value": "@equals(activity('Lookup Table List').output.value[0].partition_id,2)",
 								"type": "Expression"
 							}
 						}
@@ -2308,11 +2308,11 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup Table List').output.value.partition_id",
+								"value": "@activity('Lookup Table List').output.value[0].partition_id",
 								"type": "Expression"
 							},
 							"condition": {
-								"value": "@equals(activity('Lookup Table List').output.value.partition_id,3)",
+								"value": "@equals(activity('Lookup Table List').output.value[0].partition_id,3)",
 								"type": "Expression"
 							}
 						}
