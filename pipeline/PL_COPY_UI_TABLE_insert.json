@@ -156,14 +156,8 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "select schema_name,table_name, target_schema_name from etl.DWL_COPY_TABLE_LIST",
 						"queryTimeout": "02:00:00",
-						"partitionOption": "DynamicRange",
-						"partitionSettings": {
-							"partitionColumnName": "PARTITION_ID",
-							"partitionUpperBound": "",
-							"partitionLowerBound": ""
-						}
+						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "dsqlp_parametric",
@@ -196,11 +190,11 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Truncate and Insert Table_copy1",
+							"name": "Truncate and Insert Table1",
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "LKP_max_date_copy1",
+									"activity": "LKP_max_date1",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -218,7 +212,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE createdutc > ','''',activity('LKP_max_date').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date').output.firstRow.TheMin,'''','')",
+										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE createdutc > ','''',activity('LKP_max_date1').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date1').output.firstRow.TheMin,'''','')",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -270,7 +264,7 @@
 							]
 						},
 						{
-							"name": "LKP_max_date_copy1",
+							"name": "LKP_max_date1",
 							"type": "Lookup",
 							"dependsOn": [],
 							"policy": {
@@ -334,11 +328,11 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Truncate and Insert Table_copy2",
+							"name": "Truncate and Insert Table2",
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "LKP_max_date_copy2",
+									"activity": "LKP_max_date2",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -356,7 +350,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE createdutc > ','''',activity('LKP_max_date').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date').output.firstRow.TheMin,'''','')",
+										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE createdutc > ','''',activity('LKP_max_date2').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date2').output.firstRow.TheMin,'''','')",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -408,7 +402,7 @@
 							]
 						},
 						{
-							"name": "LKP_max_date_copy2",
+							"name": "LKP_max_date2",
 							"type": "Lookup",
 							"dependsOn": [],
 							"policy": {
@@ -453,23 +447,6 @@
 				}
 			},
 			{
-				"name": "Switch1",
-				"type": "Switch",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"on": {
-						"value": "PARTITION_ID",
-						"type": "Expression"
-					},
-					"cases": [
-						{
-							"value": "1"
-						}
-					]
-				}
-			},
-			{
 				"name": "PARTITION_ID_1",
 				"type": "Filter",
 				"dependsOn": [
@@ -483,11 +460,11 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "PARTITION_ID",
+						"value": "@activity('Lookup Table List').output.partition_id",
 						"type": "Expression"
 					},
 					"condition": {
-						"value": "1",
+						"value": "@equals(activity('Lookup Table List').output.value.partition_id,1)",
 						"type": "Expression"
 					}
 				}
@@ -506,11 +483,11 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "PARTITION_ID",
+						"value": "@activity('Lookup Table List').output.partition_id",
 						"type": "Expression"
 					},
 					"condition": {
-						"value": "2",
+						"value": "@equals(activity('Lookup Table List').output.value.partition_id,2)",
 						"type": "Expression"
 					}
 				}
@@ -529,11 +506,11 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "PARTITION_ID",
+						"value": "@activity('Lookup Table List').output.value.partition_id",
 						"type": "Expression"
 					},
 					"condition": {
-						"value": "3",
+						"value": "@equals(activity('Lookup Table List').output.value.partition_id,3)",
 						"type": "Expression"
 					}
 				}
