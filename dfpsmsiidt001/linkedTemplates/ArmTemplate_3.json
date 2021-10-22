@@ -13,6 +13,234 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_COPY_UI_TABLE_insert')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "To create the tables on DWH database based on dwl_copy_table_list table ",
+				"activities": [
+					{
+						"name": "ForEach Table in List",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Lookup1",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderQuery": {
+												"value": "@{concat('select 1 as flag from information_schema.tables where table_schema= ''',item().target_schema_name,''' and table_name=''',item().table_name,'''')}",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "etl",
+												"tableName": "DWL_COPY_TABLE_LIST"
+											}
+										},
+										"firstRowOnly": false
+									}
+								},
+								{
+									"name": "Truncate and Insert Table",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "LKP_max_date",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "WHERE createdutc > ','',activity('LKP_max_date').output,'',' OR\nupdatedutc>  ','',activity('LKP_max_date').output,'',')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								},
+								{
+									"name": "LKP_max_date",
+									"type": "Lookup",
+									"dependsOn": [
+										{
+											"activity": "Lookup1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderStoredProcedureName": "[[etl].[P_LKP_ODS_MAX_DATES]",
+											"storedProcedureParameters": {
+												"ods_schema_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().schema_name",
+														"type": "Expression"
+													}
+												},
+												"ods_table_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().table_name",
+														"type": "Expression"
+													}
+												}
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "dsqlpqtr",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup Table List",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select schema_name,table_name, target_schema_name from etl.DWL_COPY_TABLE_LIST",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_TOOL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-25T14:24:40Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_CSV_TO_STG')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2551,7 +2779,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": []
@@ -2622,41 +2850,6 @@
 						}
 					],
 					"script": "source(output(\n\t\tSEQ as string,\n\t\tNAME as string,\n\t\tEMAIL as string,\n\t\tPHONE as string,\n\t\tEXTENSION as string,\n\t\tMOBILE as string,\n\t\tENTITYCR as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgcontacterrlog\nstgcontacterrlog derive(DS_FILENAME = replace((replace(DS_FILENAME,'.xlsx','_contact_err.csv')),'.xls','_contact_err.csv')) ~> dsfilename\ndsfilename sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'DS_FILENAME',\n\ttruncate: true,\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tSEQ,\n\t\tNAME,\n\t\tEMAIL,\n\t\tPHONE,\n\t\tEXTENSION,\n\t\tMOBILE,\n\t\tENTITYCR,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME,\n\t\tID_ERROR_CODE,\n\t\tDS_ERROR_CODE\n\t)) ~> errorlogcontact"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_errlog_container_items')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "stgproductserrlog"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "dls_errorlog_parametric",
-								"type": "DatasetReference"
-							},
-							"name": "errorlogitems"
-						}
-					],
-					"transformations": [
-						{
-							"name": "DerivedColumn1"
-						}
-					],
-					"script": "source(output(\n\t\tITEMCODE as string,\n\t\tBARCODE as string,\n\t\tPRODUCTNAMEARABIC as string,\n\t\tDESCRIPTIONARABIC as string,\n\t\tPRODUCTNAMEENGLISH as string,\n\t\tDESCRIPTIONENGLISH as string,\n\t\tUNITITEMBARCODE as string,\n\t\tNOOFUNITITEMS as string,\n\t\tUNITWEIGHTSIZE as string,\n\t\tUNITUOM as string,\n\t\tPACKAGEUOM as string,\n\t\tCOSTPRICE as string,\n\t\tSELLINGPRICE as string,\n\t\tBRANDTRADEMARKENGLISH as string,\n\t\tBRANDTRADEMARKARABIC as string,\n\t\tMOCIPRODUCTGROUP as string,\n\t\tCOUNTRYOFORAGENNAME as string,\n\t\tCOUNTRYOFORAGENISO as string,\n\t\tHSCODE as string,\n\t\tSUPPLIERCR as string,\n\t\tSUPPLIERNAME as string,\n\t\tCATEGORYLEVEL11 as string,\n\t\tCATEGORYLEVEL12 as string,\n\t\tCATEGORYLEVEL13 as string,\n\t\tCATEGORYLEVEL14 as string,\n\t\tWIDTH as string,\n\t\tHEIGHT as string,\n\t\tDEPTH as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp,\n\t\tID_ERROR_CODE as integer,\n\t\tDS_ERROR_CODE as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: true) ~> stgproductserrlog\nstgproductserrlog derive(DS_FILENAME = replace((replace(DS_FILENAME,'.xlsx','_err.csv')),'.xls','_err.csv')) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\trowUrlColumn:'DS_FILENAME',\n\tumask: 0777,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tITEMCODE,\n\t\tBARCODE,\n\t\tPRODUCTNAMEARABIC,\n\t\tDESCRIPTIONARABIC,\n\t\tPRODUCTNAMEENGLISH,\n\t\tDESCRIPTIONENGLISH,\n\t\tUNITITEMBARCODE,\n\t\tNOOFUNITITEMS,\n\t\tUNITWEIGHTSIZE,\n\t\tUNITUOM,\n\t\tPACKAGEUOM,\n\t\tCOSTPRICE,\n\t\tSELLINGPRICE,\n\t\tBRANDTRADEMARKENGLISH,\n\t\tBRANDTRADEMARKARABIC,\n\t\tMOCIPRODUCTGROUP,\n\t\tCOUNTRYOFORAGENNAME,\n\t\tCOUNTRYOFORAGENISO,\n\t\tHSCODE,\n\t\tSUPPLIERCR,\n\t\tSUPPLIERNAME,\n\t\tCATEGORYLEVEL11,\n\t\tCATEGORYLEVEL12,\n\t\tCATEGORYLEVEL13,\n\t\tCATEGORYLEVEL14,\n\t\tWIDTH,\n\t\tHEIGHT,\n\t\tDEPTH,\n\t\tDS_ERROR_CODE\n\t)) ~> errorlogitems"
 				}
 			},
 			"dependsOn": []
