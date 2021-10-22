@@ -42,44 +42,9 @@
 				}
 			},
 			{
-				"name": "PL_COPY_UI_TABLES",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "PL_MAIN_transaction_type",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "PL_MAIN_items",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "PL_MAIN_entity",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "PL_DWH_TABLES",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "PL_COPY_UI_TABLES",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
