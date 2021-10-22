@@ -23,7 +23,7 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Lookup1",
+							"name": "LKP_TableList",
 							"type": "Lookup",
 							"dependsOn": [],
 							"policy": {
@@ -134,7 +134,7 @@
 							"type": "Lookup",
 							"dependsOn": [
 								{
-									"activity": "Lookup1",
+									"activity": "LKP_TableList",
 									"dependencyConditions": [
 										"Succeeded"
 									]
