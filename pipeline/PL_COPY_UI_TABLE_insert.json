@@ -177,7 +177,7 @@
 				}
 			},
 			{
-				"name": "ForEach Table in List_copy1",
+				"name": "ForEach Table in List_2",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -315,7 +315,7 @@
 				}
 			},
 			{
-				"name": "ForEach Table in List_copy2",
+				"name": "ForEach Table in List_3",
 				"type": "ForEach",
 				"dependsOn": [
 					{
