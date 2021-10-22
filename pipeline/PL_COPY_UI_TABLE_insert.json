@@ -45,7 +45,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'',',''.'',','',item().schema_name,'','\nWHERE createdutc > ','',activity('LKP_max_date').output.firstRow.TheMin,'',' OR\nupdatedutc>  ','',activity('LKP_max_date').output.firstRow.TheMin,'','')",
+										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'',',''.'',','',item().table_name,'','\nWHERE createdutc > ','',activity('LKP_max_date').output.firstRow.TheMin,'',' OR\nupdatedutc>  ','',activity('LKP_max_date').output.firstRow.TheMin,'','')",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
