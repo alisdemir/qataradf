@@ -37,7 +37,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Filter1_copy1",
+						"activity": "Filter1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -46,7 +46,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup Table List').output.value",
+						"value": "@activity('Filter1').output.value",
 						"type": "Expression"
 					},
 					"isSequential": true,
@@ -175,7 +175,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Filter1",
+						"activity": "Filter2",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -184,7 +184,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup Table List').output.value",
+						"value": "@activity('Filter2').output.value",
 						"type": "Expression"
 					},
 					"isSequential": true,
@@ -313,7 +313,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Filter1_copy2",
+						"activity": "Filter3",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -322,7 +322,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup Table List').output.value",
+						"value": "@activity('Filter3').output.value\n",
 						"type": "Expression"
 					},
 					"isSequential": true,
@@ -447,29 +447,6 @@
 				}
 			},
 			{
-				"name": "Filter1_copy1",
-				"type": "Filter",
-				"dependsOn": [
-					{
-						"activity": "Lookup Table List",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Lookup Table List').output.value.partition_id",
-						"type": "Expression"
-					},
-					"condition": {
-						"value": "@equals(activity('Lookup Table List').output.value.partition_id,1)",
-						"type": "Expression"
-					}
-				}
-			},
-			{
 				"name": "Filter1",
 				"type": "Filter",
 				"dependsOn": [
@@ -483,17 +460,17 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup Table List').output.value.partition_id",
+						"value": "@activity('Lookup Table List').output.value",
 						"type": "Expression"
 					},
 					"condition": {
-						"value": "@equals(activity('Lookup Table List').output.value.partition_id,2)",
+						"value": "@equals(activity('Lookup Table List').output.value.partition_id,1)",
 						"type": "Expression"
 					}
 				}
 			},
 			{
-				"name": "Filter1_copy2",
+				"name": "Filter2",
 				"type": "Filter",
 				"dependsOn": [
 					{
@@ -506,7 +483,30 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup Table List').output.value.partition_id",
+						"value": "@activity('Lookup Table List').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(activity('Lookup Table List').output.value.partition_id,2)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Filter3",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Lookup Table List",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup Table List').output.value",
 						"type": "Expression"
 					},
 					"condition": {
