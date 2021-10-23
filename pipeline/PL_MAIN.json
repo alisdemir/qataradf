@@ -3,24 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "PL_COPY_UI_TABLE",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "PL_COPY_UI_TABLE",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "PL_DWH_TABLES",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "PL_COPY_UI_TABLE",
+						"activity": "PL_COPY_UI_TABLE_insert",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -123,6 +110,19 @@
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "PL_STOCK_CALCULATE",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_COPY_UI_TABLE_insert",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_COPY_UI_TABLE_insert",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
