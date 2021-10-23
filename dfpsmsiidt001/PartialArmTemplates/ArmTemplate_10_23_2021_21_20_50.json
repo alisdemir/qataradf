@@ -1,0 +1,189 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfpsmsiidt001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_company')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dls_input_xls_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "inputcompanycontainer"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_stg_company_raw",
+								"type": "DatasetReference"
+							},
+							"name": "stgCompany"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddColumn"
+						},
+						{
+							"name": "SurrogateKey1"
+						},
+						{
+							"name": "Select1"
+						},
+						{
+							"name": "Filter1"
+						}
+					],
+					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Main or Branch-رئيسى ام فرع} as string,\n\t\t{Company Type} as string,\n\t\t{Company Name Arabic-اسم الشركة عربى} as string,\n\t\t{Company Name English-اسم الشركة انجليزى} as string,\n\t\t{Commercial Registration No-رقم السجل التجارى} as string,\n\t\t{Commercial License number-رقم االرخصة التجارية} as string,\n\t\t{Area-اسم المنطقة} as string,\n\t\t{Street Name-اسم الشارع} as string,\n\t\t{Area Number-رقم المنطقة} as string,\n\t\t{Street Number2-رقم الشارع} as string,\n\t\t{Building Number-رقم البناية} as string,\n\t\t{ Phone Number-رقم الهاتف الارضى} as string,\n\t\t{Fax-الفاكس} as string,\n\t\t{P.O. Box-صندوق البريد} as string,\n\t\t{Email-ايميل الشركة} as string,\n\t\t{Website-الموقع الالكترون} as string,\n\t\t{Map Location Url-الموقع على الخريطة } as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> inputcompanycontainer\nFilter1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\teach(match(type=='string'), $$ = replace(trim($$), '\\n', ''))) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\ninputcompanycontainer select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 filter(isNull(iifNull(iifNull(MainorBranch,CompanyNameArabic,CompanyNameEnglish),iifNull(CommercialRegistrationNo,CommercialLicensenumber,Area),iifNull(iifNull(StreetName,AreaNumber,StreetNumber2),\niifNull(BuildingNumber,PhoneNumber,Fax),iifNull(POBox,Email,Website))))!= true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tMainorBranch as string,\n\t\tCompanyType as string,\n\t\tCompanyNameArabic as string,\n\t\tCompanyNameEnglish as string,\n\t\tCommercialRegistrationNo as string,\n\t\tCommercialLicensenumber as string,\n\t\tArea as string,\n\t\tStreetName as string,\n\t\tAreaNumber as string,\n\t\tStreetNumber2 as string,\n\t\tBuildingNumber as string,\n\t\tPhoneNumber as string,\n\t\tFax as string,\n\t\t{P.O.Box} as string,\n\t\tEmail as string,\n\t\tWebsite as string,\n\t\tMapLocationUrl as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tMainorBranch,\n\t\tCompanyType,\n\t\tCompanyNameArabic,\n\t\tCompanyNameEnglish,\n\t\tCommercialRegistrationNo,\n\t\tCommercialLicensenumber,\n\t\tArea,\n\t\tStreetName,\n\t\tAreaNumber,\n\t\tStreetNumber2,\n\t\tBuildingNumber,\n\t\tPhoneNumber,\n\t\tFax,\n\t\t{P.O.Box} = POBox,\n\t\tEmail,\n\t\tWebsite,\n\t\tMapLocationUrl,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgCompany"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_items')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dls_input_xls_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "inputitemscontainer"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_stg_products_raw",
+								"type": "DatasetReference"
+							},
+							"name": "stgProducts"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddColumn"
+						},
+						{
+							"name": "SurrogateKey1"
+						},
+						{
+							"name": "Select1"
+						},
+						{
+							"name": "Filter1"
+						}
+					],
+					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Item Code - رقم الصنف} as string,\n\t\t{Barcode - الباركود} as string,\n\t\t{Product Name Arabic - اسم الصنف عربى} as string,\n\t\t{Description Arabic - وصف الصنف عربى} as string,\n\t\t{Product Name English - اسم الصنف انجليزى} as string,\n\t\t{Description English - وصف الصنف انجليزى} as string,\n\t\t{Unit Item Barcode - الباركود للوحدة } as string,\n\t\t{No Of Unit Items - عدد الوحدات} as string,\n\t\t{Unit Weight/size - وزن/سعة الوحدة} as string,\n\t\t{Unit UOM - وحدة القياس} as string,\n\t\t{Package UOM - وحدة قياس الحزمة-التغليف} as string,\n\t\t{Cost Price - سعر التكلفة} as string,\n\t\t{Selling Price - سعر البيع} as string,\n\t\t{Brand-Trade Mark English - سم العلامة التجارية انجليزى} as string,\n\t\t{Brand-Trade Mark Arabic - اسم العلامة التجارية عربى} as string,\n\t\t{MoCI Product Group - المجموعة السلعية - بالوزارة} as string,\n\t\t{Country of Oragen Name - اسم بلد المنشأ} as string,\n\t\t{Country of Oragen ISO - كود 3 لبلد المنشأ} as string,\n\t\t{HS Code - رمز المنسق الجمركي} as string,\n\t\t{Supplier CR - رقم السجل التجارى للمورد} as string,\n\t\t{Supplier Name - اسم المورد} as string,\n\t\t{Category Level 1 - تصنيف السلعة 1} as string,\n\t\t{Category Level 2 - تصنيف السلعة 2} as string,\n\t\t{Category Level 3 - تصنيف السلعة 3} as string,\n\t\t{Category Level 4 - تصنيف السلعة 4} as string,\n\t\t{Width - العرض} as string,\n\t\t{Height - الطول} as string,\n\t\t{Depth - الارتفاع} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tmoveFiles: ['Items','Archive']) ~> inputitemscontainer\nFilter1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\teach(match(type=='string'), $$ = replace(trim($$), '\\n', ''))) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\ninputitemscontainer select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 filter(isNull(iifNull(iifNull(iifNull(ItemCode , Barcode, ProductNameArabic) , iifNull(DescriptionArabic , ProductNameEnglish, DescriptionEnglish), iifNull(UnitItemBarcode , NoOfUnitItems, UnitWeightsize)),\r\niifNull(iifNull(UnitUOM , PackageUOM, CostPrice) , iifNull(SellingPrice , BrandTradeMarkEnglish, BrandTradeMarkArabic), iifNull(MoCIProductGroup , CountryofOragenName, CountryofOragenISO3)),\r\niifNull(iifNull(HSCode , SupplierCR, SupplierName) , iifNull(CategoryLevel11 , CategoryLevel22, CategoryLevel33), iifNull(CategoryLevel44 , Width, Height)))) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tITEMCODE as string,\n\t\tBARCODE as string,\n\t\tPRODUCTNAMEARABIC as string,\n\t\tDESCRIPTIONARABIC as string,\n\t\tPRODUCTNAMEENGLISH as string,\n\t\tDESCRIPTIONENGLISH as string,\n\t\tUNITITEMBARCODE as string,\n\t\tNOOFUNITITEMS as string,\n\t\tUNITWEIGHTSIZE as string,\n\t\tUNITUOM as string,\n\t\tPACKAGEUOM as string,\n\t\tCOSTPRICE as string,\n\t\tSELLINGPRICE as string,\n\t\tBRANDTRADEMARKENGLISH as string,\n\t\tBRANDTRADEMARKARABIC as string,\n\t\tMOCIPRODUCTGROUP as string,\n\t\tCOUNTRYOFORAGENNAME as string,\n\t\tCOUNTRYOFORAGENISO as string,\n\t\tHSCODE as string,\n\t\tSUPPLIERCR as string,\n\t\tSUPPLIERNAME as string,\n\t\tCATEGORYLEVEL11 as string,\n\t\tCATEGORYLEVEL12 as string,\n\t\tCATEGORYLEVEL13 as string,\n\t\tCATEGORYLEVEL14 as string,\n\t\tWIDTH as string,\n\t\tHEIGHT as string,\n\t\tDEPTH as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tITEMCODE = ItemCode,\n\t\tBARCODE = Barcode,\n\t\tPRODUCTNAMEARABIC = ProductNameArabic,\n\t\tDESCRIPTIONARABIC = DescriptionArabic,\n\t\tPRODUCTNAMEENGLISH = ProductNameEnglish,\n\t\tDESCRIPTIONENGLISH = DescriptionEnglish,\n\t\tUNITITEMBARCODE = UnitItemBarcode,\n\t\tNOOFUNITITEMS = NoOfUnitItems,\n\t\tUNITWEIGHTSIZE = UnitWeightsize,\n\t\tUNITUOM = UnitUOM,\n\t\tPACKAGEUOM = PackageUOM,\n\t\tCOSTPRICE = CostPrice,\n\t\tSELLINGPRICE = SellingPrice,\n\t\tBRANDTRADEMARKENGLISH = BrandTradeMarkEnglish,\n\t\tBRANDTRADEMARKARABIC = BrandTradeMarkArabic,\n\t\tMOCIPRODUCTGROUP = MoCIProductGroup,\n\t\tCOUNTRYOFORAGENNAME = CountryofOragenName,\n\t\tCOUNTRYOFORAGENISO = CountryofOragenISO3,\n\t\tHSCODE = HSCode,\n\t\tSUPPLIERCR = SupplierCR,\n\t\tSUPPLIERNAME = SupplierName,\n\t\tCATEGORYLEVEL11 = CategoryLevel11,\n\t\tCATEGORYLEVEL12 = CategoryLevel22,\n\t\tCATEGORYLEVEL13 = CategoryLevel33,\n\t\tCATEGORYLEVEL14 = CategoryLevel44,\n\t\tWIDTH = Width,\n\t\tHEIGHT = Height,\n\t\tDEPTH = Depth,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgProducts"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_xls_to_stg_transaction_type')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dls_input_xls_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "srcTransactionType"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference"
+							},
+							"name": "stgTransactionType"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddColumn"
+						},
+						{
+							"name": "SurrogateKey1"
+						},
+						{
+							"name": "Select1"
+						},
+						{
+							"name": "Filter1"
+						}
+					],
+					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Company CR #} as string,\n\t\t{Company Transaction Type Arabic } as string,\n\t\t{Company Transaction Type English } as string,\n\t\t{Company Transaction type} as string,\n\t\t{PSMS - MoCI Transaction Types} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tmoveFiles: ['TransactionType','Archive']) ~> srcTransactionType\nSelect1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\teach(match(type=='string'), $$ = replace(trim($$), '\\n', ''))) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\nFilter1 select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsrcTransactionType filter(isNull(iifNull(iifNull({Company CR #} , {Company Transaction Type Arabic }, {Company Transaction Type English }), {Company Transaction type},{PSMS - MoCI Transaction Types})) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tCOMPANYCR = CompanyCR,\n\t\tCOMPANYTRANSACTIONTYPEARABIC = CompanyTransactionTypeArabic,\n\t\tCOMPANYTRANSACTIONTYPEENGLISH = CompanyTransactionTypeEnglish,\n\t\tCOMPANYTRANSACTIONTYPE = CompanyTransactiontype,\n\t\tPSMSMOCITRANSACTIONTYPES = PSMSMoCITransactionTypes,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgTransactionType"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_xlsx_to_stg')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dls_processing_xls",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_stg_transactions",
+								"type": "DatasetReference"
+							},
+							"name": "stgTransactions"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddColumn"
+						},
+						{
+							"name": "SurrogateKey1"
+						},
+						{
+							"name": "Filter1"
+						}
+					],
+					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Transaction Date - تاريخ الحركة } as string,\n\t\t{Transaction Type Code - كود نوع الحركة} as string,\n\t\t{Item Code - كود الصنف} as string,\n\t\t{Item Barcode - باركود الصنف} as string,\n\t\t{Your Company CR# - رقم السجل التجارى للشركة} as string,\n\t\t{Other Entity CR# - رقم السجل التجارى للطرف الاخر} as string,\n\t\t{Company Store/Inventory Code - رقم المخزن } as string,\n\t\t{Quantity - الكمية} as string,\n\t\t{Selling Price per unit - سعر البيع للوحدة  -} as string,\n\t\t{Comon Referance No. -  رقم المرجع المشترك} as string,\n\t\t{Internal Transfer Number/Code - رقم التحويل الداخلي} as string,\n\t\t{Number of Consumer Invoices - عدد فواتير البيع للمستهلك} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nFilter1 derive(STG_FILENAME = $fileName,\n\t\tSTG_FILEDATE = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\tTRANSACTION_DATE = regexReplace({Transaction Date - تاريخ الحركة },'[^0-9a-zA-Z]+',''),\n\t\teach(match(type=='string'), $$ = replace(trim($$), '\\n', ''))) ~> AddColumn\nAddColumn keyGenerate(output(SK_ID_SUR as long),\n\tstartAt: 1L) ~> SurrogateKey1\nsource1 filter(isNull({Transaction Date - تاريخ الحركة }) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: true,\n\tinput(\n\t\tTRANSACTION_DATE as string,\n\t\tTRANSACTION_TYPE_CODE as string,\n\t\tITEM_CODE as string,\n\t\tITEM_BARCODE as string,\n\t\tYOUR_COMPANY_CR as string,\n\t\tOTHER_ENTITY_CR as string,\n\t\tCOMPANY_STORE_INVENTORY_CODE as string,\n\t\tQUANTITY as string,\n\t\tSELLING_PRICE_PER_UNIT as string,\n\t\tCOMMON_REFERANCE_NO as string,\n\t\tINTERNAL_TRANSFER_NUMBER_CODE as string,\n\t\tNUMBER_OF_CONSUMER_INVOICES as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tTRANSACTION_DATE,\n\t\tTRANSACTION_TYPE_CODE = {Transaction Type Code - كود نوع الحركة},\n\t\tITEM_CODE = {Item Code - كود الصنف},\n\t\tITEM_BARCODE = {Item Barcode - باركود الصنف},\n\t\tYOUR_COMPANY_CR = {Your Company CR# - رقم السجل التجارى للشركة},\n\t\tOTHER_ENTITY_CR = {Other Entity CR# - رقم السجل التجارى للطرف الاخر},\n\t\tCOMPANY_STORE_INVENTORY_CODE = {Company Store/Inventory Code - رقم المخزن },\n\t\tQUANTITY = {Quantity - الكمية},\n\t\tSELLING_PRICE_PER_UNIT = {Selling Price per unit - سعر البيع للوحدة  -},\n\t\tCOMMON_REFERANCE_NO = {Comon Referance No. -  رقم المرجع المشترك},\n\t\tINTERNAL_TRANSFER_NUMBER_CODE = {Internal Transfer Number/Code - رقم التحويل الداخلي},\n\t\tNUMBER_OF_CONSUMER_INVOICES = {Number of Consumer Invoices - عدد فواتير البيع للمستهلك},\n\t\tID_SK = SK_ID_SUR,\n\t\tDS_FILENAME = STG_FILENAME,\n\t\tDT_FILETIME = STG_FILEDATE\n\t)) ~> stgTransactions"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
