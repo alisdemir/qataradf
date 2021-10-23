@@ -185,7 +185,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity(Lookup Table List2').output.value\n",
+						"value": "@activity('Lookup Table List2').output.value",
 						"type": "Expression"
 					},
 					"isSequential": true,
