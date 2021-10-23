@@ -1836,7 +1836,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup Table List",
+								"activity": "Filter1",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1845,7 +1845,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup Table List').output.value",
+								"value": "@activity('Filter1').output.value",
 								"type": "Expression"
 							},
 							"isSequential": true,
@@ -1927,14 +1927,7 @@
 								{
 									"name": "LKP_max_date",
 									"type": "Lookup",
-									"dependsOn": [
-										{
-											"activity": "Filter1_copy1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
+									"dependsOn": [],
 									"policy": {
 										"timeout": "7.00:00:00",
 										"retry": 0,
@@ -1973,22 +1966,6 @@
 										},
 										"firstRowOnly": true
 									}
-								},
-								{
-									"name": "Filter1_copy1",
-									"type": "Filter",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"items": {
-											"value": "@activity('Lookup Table List').output.value.partition_id",
-											"type": "Expression"
-										},
-										"condition": {
-											"value": "@equals(activity('Lookup Table List').output.value.partition_id,1)",
-											"type": "Expression"
-										}
-									}
 								}
 							]
 						}
@@ -1998,7 +1975,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup Table List",
+								"activity": "Filter2",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2007,7 +1984,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup Table List').output.value",
+								"value": "@activity('Filter2').output.value",
 								"type": "Expression"
 							},
 							"isSequential": true,
@@ -2089,14 +2066,7 @@
 								{
 									"name": "LKP_max_date1",
 									"type": "Lookup",
-									"dependsOn": [
-										{
-											"activity": "Filter1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
+									"dependsOn": [],
 									"policy": {
 										"timeout": "7.00:00:00",
 										"retry": 0,
@@ -2135,22 +2105,6 @@
 										},
 										"firstRowOnly": true
 									}
-								},
-								{
-									"name": "Filter1",
-									"type": "Filter",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"items": {
-											"value": "@activity('Lookup Table List').output.value.partition_id",
-											"type": "Expression"
-										},
-										"condition": {
-											"value": "@equals(activity('Lookup Table List').output.value.partition_id,2)",
-											"type": "Expression"
-										}
-									}
 								}
 							]
 						}
@@ -2160,7 +2114,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup Table List",
+								"activity": "Filter3",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2169,7 +2123,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup Table List').output.value",
+								"value": "@activity('Filter3').output.value\n",
 								"type": "Expression"
 							},
 							"isSequential": true,
@@ -2251,14 +2205,7 @@
 								{
 									"name": "LKP_max_date2",
 									"type": "Lookup",
-									"dependsOn": [
-										{
-											"activity": "Filter1_copy2",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
+									"dependsOn": [],
 									"policy": {
 										"timeout": "7.00:00:00",
 										"retry": 0,
@@ -2297,24 +2244,77 @@
 										},
 										"firstRowOnly": true
 									}
-								},
-								{
-									"name": "Filter1_copy2",
-									"type": "Filter",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"items": {
-											"value": "@activity('Lookup Table List').output.value.partition_id",
-											"type": "Expression"
-										},
-										"condition": {
-											"value": "@equals(activity('Lookup Table List').output.value.partition_id,3)",
-											"type": "Expression"
-										}
-									}
 								}
 							]
+						}
+					},
+					{
+						"name": "Filter1",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(activity('Lookup Table List').output.value.partition_id,1)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Filter2",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(activity('Lookup Table List').output.value.partition_id,2)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Filter3",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(activity('Lookup Table List').output.value.partition_id,3)",
+								"type": "Expression"
+							}
 						}
 					}
 				],
@@ -15155,7 +15155,7 @@
 							"name": "idisexpected"
 						}
 					],
-					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
 				}
 			},
 			"dependsOn": [
