@@ -91,7 +91,7 @@
 										"source": {
 											"type": "AzureSqlSource",
 											"sqlReaderQuery": {
-												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date').output.firstRow.TheMin,'''',' )\nand status<>0')",
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date').output.firstRow.TheMin,'''',' )\nand status=1')",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -230,7 +230,7 @@
 										"source": {
 											"type": "AzureSqlSource",
 											"sqlReaderQuery": {
-												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date1').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date1').output.firstRow.TheMin,'''',')\nand status<>0')",
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date1').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date1').output.firstRow.TheMin,'''',')\nand status=1')",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -369,7 +369,7 @@
 										"source": {
 											"type": "AzureSqlSource",
 											"sqlReaderQuery": {
-												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date2').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date2').output.firstRow.TheMin,'''',' )\nand status<>0')",
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date2').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date2').output.firstRow.TheMin,'''',' )\nand status=1')",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
