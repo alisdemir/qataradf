@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "PL_BSS",
 	"properties": {
 		"activities": [
 			{
@@ -108,6 +108,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "PL_CUSTOM"
+		},
 		"annotations": []
 	}
 }
