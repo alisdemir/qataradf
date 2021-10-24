@@ -3438,6 +3438,27 @@
 													"referenceName": "ls_dsqlpqtr",
 													"type": "LinkedServiceReference"
 												}
+											},
+											{
+												"name": "PL_BSS_XML",
+												"type": "ExecutePipeline",
+												"dependsOn": [
+													{
+														"activity": "P_UPSERT_CUSTOMS_DEC",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "pipeline1",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {}
+												}
 											}
 										]
 									}
@@ -3494,7 +3515,8 @@
 				"[concat(variables('factoryId'), '/dataflows/df_custom_xml_to_db')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]"
+				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]",
+				"[concat(variables('factoryId'), '/pipelines/pipeline1')]"
 			]
 		},
 		{
@@ -9591,7 +9613,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy data1",
+						"name": "CALL_BSS",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -9608,7 +9630,7 @@
 								"storeSettings": {
 									"type": "HttpReadSettings",
 									"requestMethod": "POST",
-									"requestBody": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:onep=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <onep:GetCommercialRegistrationInfoRequest_Input>\n         <onep:commercialRegistrationCode>72219</onep:commercialRegistrationCode>\n         <onep:RefNumber>?</onep:RefNumber>\n      </onep:GetCommercialRegistrationInfoRequest_Input>\n   </soapenv:Body>\n</soapenv:Envelope>",
+									"requestBody": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:onep=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <onep:GetCommercialRegistrationInfoRequest_Input>      <onep:commercialRegistrationCode>72219</onep:commercialRegistrationCode>\n         <onep:RefNumber>?</onep:RefNumber>\n      </onep:GetCommercialRegistrationInfoRequest_Input>\n   </soapenv:Body>\n</soapenv:Envelope>",
 									"requestTimeout": "00:10:00"
 								},
 								"formatSettings": {
@@ -9637,7 +9659,7 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"schemaName": "dwh",
-									"tableName": "STG_SOAP"
+									"tableName": "STG_SOAP_DENEME"
 								}
 							}
 						]
@@ -12055,6 +12077,130 @@
 				"annotations": []
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LKP_CUSTOMS_DEC",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LKP_CUSTOMS_DEC').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "CALL_BSS",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "XmlSource",
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "POST",
+												"requestBody": {
+													"value": "@{concat('<env:Envelope\n  xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\"\n  xmlns:wsa=\"http://www.w3.org/2005/08/addressing\">\n <env:Header>\n  <wsa:MessageID>urn:2CD68C011BA311ECAF36A94D498CBA63</wsa:MessageID>\n  <wsa:ReplyTo>\n   <wsa:Address>http://www.w3.org/2005/08/addressing/anonymous</wsa:Address>\n   <wsa:ReferenceParameters>\n    <instra:tracking.ecid\n      xmlns:instra=\"http://xmlns.oracle.com/sca/tracking/1.0\">d0d50e863b7f775e:-1324c748:17bf253b807:-8000-00000000000ec5a2</instra:tracking.ecid>\n    <instra:tracking.compositeInstanceCreatedTime\n      xmlns:instra=\"http://xmlns.oracle.com/sca/tracking/1.0\">2021-09-22T15:46:58.197+03:00</instra:tracking.compositeInstanceCreatedTime>\n   </wsa:ReferenceParameters>\n  </wsa:ReplyTo>\n  <wsa:FaultTo>\n   <wsa:Address>http://www.w3.org/2005/08/addressing/anonymous</wsa:Address>\n   <wsa:ReferenceParameters>\n    <instra:tracking.ecid\n      xmlns:instra=\"http://xmlns.oracle.com/sca/tracking/1.0\">d0d50e863b7f775e:-1324c748:17bf253b807:-8000-00000000000ec5a2</instra:tracking.ecid>\n    <instra:tracking.compositeInstanceCreatedTime\n      xmlns:instra=\"http://xmlns.oracle.com/sca/tracking/1.0\">2021-09-22T15:46:58.197+03:00</instra:tracking.compositeInstanceCreatedTime>\n   </wsa:ReferenceParameters>\n  </wsa:FaultTo>\n </env:Header>\n <env:Body>\n  <GetCommercialRegistrationInfoResponse_Output\n    xmlns:ns0=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\"\n    xmlns=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <ns0:commercialRegistration>\n    <ns0:location>مركز رئيسي</ns0:location>\n    <ns0:creationDate>2019-06-20T00:00:00.000Z</ns0:creationDate>\n    <ns0:expiryDate>2023-12-16T00:00:00.000Z</ns0:expiryDate>\n    <ns0:arabicCommercialName>فاريتي للتجارة</ns0:arabicCommercialName>\n    <ns0:companyStartDate>1900-01-01T00:00:00.000Z</ns0:companyStartDate>\n    <ns0:branchesCount>0</ns0:branchesCount>\n    <ns0:commercialRegistrationEntityType>شركة ذات مسؤولية محدودة</ns0:commercialRegistrationEntityType>\n    <ns0:addressPOBox/>\n    <ns0:telephone/>\n    <ns0:addressStreet>طريق سلوى</ns0:addressStreet>\n    <ns0:addressArea>العسيري+ الخليفات الجديده/المع</ns0:addressArea>\n    <ns0:companyCapital>4000000</ns0:companyCapital>\n    <ns0:humanPartners>\n     <ns0:nameAr>محمدشفيع فيصلو</ns0:nameAr>\n     <ns0:nationality>الهند</ns0:nationality>\n     <ns0:nIN>28635600446</ns0:nIN>\n     <ns0:percentage>10</ns0:percentage>\n     <ns0:nINType>\n      <ns0:Code>SSN</ns0:Code>\n      <ns0:description>رقم البطاقة الشخصية</ns0:description>\n     </ns0:nINType>\n     <ns0:partnerType>\n      <ns0:code>Partner</ns0:code>\n      <ns0:description>شريك</ns0:description>\n     </ns0:partnerType>\n     <ns0:partnerStatus>\n      <ns0:code>Active</ns0:code>\n      <ns0:description>نشط</ns0:description>\n     </ns0:partnerStatus>\n    </ns0:humanPartners>\n    <ns0:humanPartners>\n     <ns0:nameAr>بيرومبوليبات بايورايل فاسالو</ns0:nameAr>\n     <ns0:nationality>الهند</ns0:nationality>\n     <ns0:nIN>26535600044</ns0:nIN>\n     <ns0:percentage>39</ns0:percentage>\n     <ns0:nINType>\n      <ns0:Code>SSN</ns0:Code>\n      <ns0:description>رقم البطاقة الشخصية</ns0:description>\n     </ns0:nINType>\n     <ns0:partnerType>\n      <ns0:code>Partner</ns0:code>\n      <ns0:description>شريك</ns0:description>\n     </ns0:partnerType>\n     <ns0:partnerStatus>\n      <ns0:code>Active</ns0:code>\n      <ns0:description>نشط</ns0:description>\n     </ns0:partnerStatus>\n    </ns0:humanPartners>\n    <ns0:humanPartners>\n     <ns0:nameAr>عبدالرحمن عبدالله ابراهيم الانصارى</ns0:nameAr>\n     <ns0:nationality>قطر</ns0:nationality>\n     <ns0:nIN>26063400592</ns0:nIN>\n     <ns0:percentage>51</ns0:percentage>\n     <ns0:nINType>\n      <ns0:Code>SSN</ns0:Code>\n      <ns0:description>رقم البطاقة الشخصية</ns0:description>\n     </ns0:nINType>\n     <ns0:partnerType>\n      <ns0:code>Partner</ns0:code>\n      <ns0:description>شريك</ns0:description>\n     </ns0:partnerType>\n     <ns0:partnerStatus>\n      <ns0:code>Active</ns0:code>\n      <ns0:description>نشط</ns0:description>\n     </ns0:partnerStatus>\n    </ns0:humanPartners>\n    <ns0:signatories>\n     <ns0:nameAr>بارامبوليبات بايورايل جمالو</ns0:nameAr>\n     <ns0:nationality>الهند</ns0:nationality>\n     <ns0:nIN>26735601939</ns0:nIN>\n     <ns0:nINType>\n      <ns0:Code>SSN</ns0:Code>\n      <ns0:description>رقم البطاقة الشخصية</ns0:description>\n     </ns0:nINType>\n     <ns0:partnerType>\n      <ns0:code>04</ns0:code>\n      <ns0:description>مدير</ns0:description>\n     </ns0:partnerType>\n    </ns0:signatories>\n    <ns0:signatories>\n     <ns0:nameAr>محمدشفيع فيصلو</ns0:nameAr>\n     <ns0:nationality>الهند</ns0:nationality>\n     <ns0:nIN>28635600446</ns0:nIN>\n     <ns0:nINType>\n      <ns0:Code>SSN</ns0:Code>\n      <ns0:description>رقم البطاقة الشخصية</ns0:description>\n     </ns0:nINType>\n     <ns0:partnerType>\n      <ns0:code>Partner</ns0:code>\n      <ns0:description>شريك</ns0:description>\n     </ns0:partnerType>\n    </ns0:signatories>\n    <ns0:signatories>\n     <ns0:nameAr>بيرومبوليبات بايورايل فاسالو</ns0:nameAr>\n     <ns0:nationality>الهند</ns0:nationality>\n     <ns0:nIN>26535600044</ns0:nIN>\n     <ns0:nINType>\n      <ns0:Code>SSN</ns0:Code>\n      <ns0:description>رقم البطاقة الشخصية</ns0:description>\n     </ns0:nINType>\n     <ns0:partnerType>\n      <ns0:code>Partner</ns0:code>\n      <ns0:description>شريك</ns0:description>\n     </ns0:partnerType>\n    </ns0:signatories>\n    <ns0:signatories>\n     <ns0:nameAr>عبدالرحمن عبدالله ابراهيم الانصارى</ns0:nameAr>\n     <ns0:nationality>قطر</ns0:nationality>\n     <ns0:nIN>26063400592</ns0:nIN>\n     <ns0:nINType>\n      <ns0:Code>SSN</ns0:Code>\n      <ns0:description>رقم البطاقة الشخصية</ns0:description>\n     </ns0:nINType>\n     <ns0:partnerType>\n      <ns0:code>Partner</ns0:code>\n      <ns0:description>شريك</ns0:description>\n     </ns0:partnerType>\n    </ns0:signatories>\n    <ns0:activities>\n     <ns0:title>تعبئة و تغليف المواد الغذائية</ns0:title>\n     <ns0:activitySerial>8292094</ns0:activitySerial>\n     <ns0:cost>500</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>التجارة في معدات النظافة والتنظيف</ns0:title>\n     <ns0:activitySerial>4773913</ns0:activitySerial>\n     <ns0:cost>3000</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>التجارة في المواد الغذائية</ns0:title>\n     <ns0:activitySerial>4630901</ns0:activitySerial>\n     <ns0:cost>500</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>التجارة في المواد الاستهلاكية</ns0:title>\n     <ns0:activitySerial>4711101</ns0:activitySerial>\n     <ns0:cost>500</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>التجاره فى المياه المعدنيه</ns0:title>\n     <ns0:activitySerial>513500</ns0:activitySerial>\n     <ns0:cost>500</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>تجارة المرطبات والمياه الغازية</ns0:title>\n     <ns0:activitySerial>2002169</ns0:activitySerial>\n     <ns0:cost>500</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>التجارة في الورق</ns0:title>\n     <ns0:activitySerial>534105</ns0:activitySerial>\n     <ns0:cost>1000</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>تجارة المنتجات الورقية</ns0:title>\n     <ns0:activitySerial>2000703</ns0:activitySerial>\n     <ns0:cost>1000</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>تجارة العصائر</ns0:title>\n     <ns0:activitySerial>2002170</ns0:activitySerial>\n     <ns0:cost>500</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>تجارة اللحوم الطازجة والمبردة والمجمدة</ns0:title>\n     <ns0:activitySerial>2001940</ns0:activitySerial>\n     <ns0:cost>500</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>التجاره فى الاسماك الطازجه</ns0:title>\n     <ns0:activitySerial>4620511</ns0:activitySerial>\n     <ns0:cost>500</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>تجارة الاسماك والاغذية البحرية المجمدة</ns0:title>\n     <ns0:activitySerial>2001342</ns0:activitySerial>\n     <ns0:cost>500</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>التجاره فى الفواكه والخضروات الطازجه</ns0:title>\n     <ns0:activitySerial>511700</ns0:activitySerial>\n     <ns0:cost>500</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>التجاره فى الدواجن المذبوحه ومنتجاتها</ns0:title>\n     <ns0:activitySerial>513100</ns0:activitySerial>\n     <ns0:cost>500</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>التجاره فى ادوات الطهى و الاطباق و الاكواب و الاوانى وغيرها</ns0:title>\n     <ns0:activitySerial>526300</ns0:activitySerial>\n     <ns0:cost>1000</ns0:cost>\n    </ns0:activities>\n    <ns0:activities>\n     <ns0:title>التجاره فى المستلزمات المنزليه</ns0:title>\n     <ns0:activitySerial>526200</ns0:activitySerial>\n     <ns0:cost>1000</ns0:cost>\n    </ns0:activities>\n    <ns0:commercialRegistrationCode>','',item().CRNUMBER,'','</ns0:commercialRegistrationCode>\n    <ns0:statuses>\n     <ns0:code>Active</ns0:code>\n     <ns0:description>نشط</ns0:description>\n    </ns0:statuses>\n    <ns0:InstanceType>\n     <ns0:InstanceID>71933931</ns0:InstanceID>\n     <ns0:CaseID> - aecc4b16b297ce5e:20916429:17bf2543d95:-28c8</ns0:CaseID>\n    </ns0:InstanceType>\n   </ns0:commercialRegistration>\n  </GetCommercialRegistrationInfoResponse_Output>\n </env:Body>\n</env:Envelope>')\n }",
+													"type": "Expression"
+												},
+												"requestTimeout": ""
+											},
+											"formatSettings": {
+												"type": "XmlReadSettings",
+												"validationMode": "none",
+												"namespaces": true
+											}
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_soap",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "dwh",
+												"tableName": "STG_SOAP_DENEME"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "LKP_CUSTOMS_DEC",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select 1 from [dwh].[DWL_CUSTOMS_DECLARATION] WHERE FLG_SUPPLIER_CHECK=1",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "DWL_CUSTOMS_DECLARATION"
+								}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
+				"[concat(variables('factoryId'), '/datasets/ds_soap')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/dls_errorlog_binary')]",

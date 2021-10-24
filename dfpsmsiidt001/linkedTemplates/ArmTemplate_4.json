@@ -13,6 +13,54 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/df_dwl_file_list_upd_notexist')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_dwl_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "dwhfilelist"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_stg_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "stgfilelist"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_dwl_file_list",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "NotExists"
+						},
+						{
+							"name": "AlterRow1"
+						},
+						{
+							"name": "idisexpected"
+						}
+					],
+					"script": "source(output(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> dwhfilelist\nsource(output(\n\t\tDS_FILENAME as string,\n\t\tID_ISEXPECTED as integer,\n\t\tDS_EMAIL as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> stgfilelist\ndwhfilelist, stgfilelist exists(dwhfilelist@DS_FILENAME == stgfilelist@DS_FILENAME,\n\tnegate:true,\n\tbroadcast: 'auto')~> NotExists\nNotExists alterRow(updateIf(not(isNull(DS_FILENAME)))) ~> AlterRow1\nAlterRow1 derive(ID_ISUPLOADED = 0,\n\t\tDS_EMAIL = 'ali.demir@obase.com') ~> idisexpected\nidisexpected sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tDT_FILE as date,\n\t\tDS_ENTITY_CODE as string,\n\t\tID_ENTITY as integer,\n\t\tDS_FILENAME as string,\n\t\tID_ISUPLOADED as integer,\n\t\tID_ISREJECTED as boolean,\n\t\tDS_EMAIL as string\n\t),\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['DS_FILENAME'],\n\tformat: 'table',\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_errlog_container_company')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1310,6 +1358,27 @@
 													"referenceName": "ls_dsqlpqtr",
 													"type": "LinkedServiceReference"
 												}
+											},
+											{
+												"name": "PL_BSS_XML",
+												"type": "ExecutePipeline",
+												"dependsOn": [
+													{
+														"activity": "P_UPSERT_CUSTOMS_DEC",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"pipeline": {
+														"referenceName": "pipeline1",
+														"type": "PipelineReference"
+													},
+													"waitOnCompletion": true,
+													"parameters": {}
+												}
 											}
 										]
 									}
@@ -1483,107 +1552,6 @@
 					"name": "Dev"
 				},
 				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_DWL_FILE_LIST_UPD')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Update dwl file list table is expected column",
-				"activities": [
-					{
-						"name": "df_dwl_file_list_upd_notexist",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_dwl_file_list_upd_notexist",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"dwhfilelist": {},
-									"stgfilelist": {},
-									"sink1": {}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "ls_psmsii_syntodls",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "stagingarea"
-							},
-							"integrationRuntime": {
-								"referenceName": "integrationRuntime10min",
-								"type": "IntegrationRuntimeReference"
-							},
-							"traceLevel": "Coarse"
-						}
-					},
-					{
-						"name": "df_dwl_file_list_upd_exist",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "df_dwl_file_list_upd_notexist",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_dwl_file_list_upd_exist",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"dwhfilelist": {},
-									"stgfilelist": {},
-									"sink2": {}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "ls_psmsii_syntodls",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "stagingarea"
-							},
-							"integrationRuntime": {
-								"referenceName": "integrationRuntime10min",
-								"type": "IntegrationRuntimeReference"
-							},
-							"traceLevel": "Coarse"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_MAIN_TRANSACTION"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:54:20Z"
 			},
 			"dependsOn": []
 		}
