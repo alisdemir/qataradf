@@ -13,6 +13,251 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_DAILY_MAIN_initial')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "PL_FILE_TRANSFER",
+						"description": "deneme2",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_FILE_TRANSFER",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_LOAD_DWB_TRANSACTION",
+						"description": "",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_EXEC_P_DQ_MAIN",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_LOAD_DWB_TRANSACTION",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "truncateStgTransactions",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "PL_FILE_TRANSFER",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_TRANSACTIONS];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_transactions",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "PL_STOCK_CALCULATE",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_LOAD_DWB_TRANSACTION",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_STOCK_CALCULATE",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteProcessingFiles",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "PL_XLS_TO_STG_initial",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_CSV_TO_STG_initial",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"enableLogging": false,
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"wildcardFileName": "*",
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "PL_EXEC_P_DQ_MAIN",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "DeleteProcessingFiles",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_DQ_TRANSACTION]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_dsqlpqtr",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "PL_CSV_TO_STG_initial",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "truncateStgTransactions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_CSV_TO_STG_initial",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_XLS_TO_STG_initial",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "truncateStgTransactions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_XLS_TO_STG_initial",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_EXPORT_AND_EMAIL_ERRLOG",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_EXEC_P_DQ_MAIN",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_EXPORT_AND_EMAIL_ERRLOG",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"deneme": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "PL_MAIN_TRANSACTION"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-25T14:24:57Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_MAIN_company')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -994,6 +1239,39 @@
 						"typeProperties": {
 							"pipeline": {
 								"referenceName": "PL_DWH_TABLES",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "PL_COPY_UI_TABLE_insert",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "PL_MAIN_entity",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_MAIN_items",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "PL_MAIN_transaction_type",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_COPY_UI_TABLE_insert",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
