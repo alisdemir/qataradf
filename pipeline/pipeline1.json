@@ -39,7 +39,7 @@
 										"type": "HttpReadSettings",
 										"requestMethod": "POST",
 										"requestBody": {
-											"value": "@{concat('<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialRegistrationInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialRegistrationCode>','',item().CRNUMBER,'','</ns1:commercialRegistrationCode>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialRegistrationInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>')\n}",
+											"value": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialRegistrationInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialRegistrationCode>16070</ns1:commercialRegistrationCode>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialRegistrationInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>",
 											"type": "Expression"
 										},
 										"requestTimeout": ""
