@@ -559,6 +559,130 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_BSS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LKP_CUSTOMS_DEC",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LKP_CUSTOMS_DEC').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "CALL_BSS",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "XmlSource",
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "POST",
+												"requestBody": {
+													"value": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialRegistrationInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialRegistrationCode>16070</ns1:commercialRegistrationCode>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialRegistrationInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>",
+													"type": "Expression"
+												},
+												"requestTimeout": ""
+											},
+											"formatSettings": {
+												"type": "XmlReadSettings",
+												"validationMode": "none",
+												"namespaces": true
+											}
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_soap",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "dwh",
+												"tableName": "STG_SOAP_DENEME"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "LKP_CUSTOMS_DEC",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select 1 from [dwh].[DWL_CUSTOMS_DECLARATION] WHERE FLG_SUPPLIER_CHECK=1",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "DWL_CUSTOMS_DECLARATION"
+								}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_CUSTOM"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_COPY_UI_TABLE')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1008,14 +1132,7 @@
 								{
 									"name": "Truncate and Insert Table1",
 									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "LKP_max_date1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
+									"dependsOn": [],
 									"policy": {
 										"timeout": "7.00:00:00",
 										"retry": 0,
@@ -1027,10 +1144,6 @@
 									"typeProperties": {
 										"source": {
 											"type": "AzureSqlSource",
-											"sqlReaderQuery": {
-												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date1').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date1').output.firstRow.TheMin,'''',')\nand status=1')",
-												"type": "Expression"
-											},
 											"queryTimeout": "02:00:00",
 											"partitionOption": "None"
 										},
@@ -1078,49 +1191,6 @@
 											}
 										}
 									]
-								},
-								{
-									"name": "LKP_max_date1",
-									"type": "Lookup",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SqlDWSource",
-											"sqlReaderStoredProcedureName": "[[etl].[P_LKP_ODS_MAX_DATES]",
-											"storedProcedureParameters": {
-												"ods_schema_name": {
-													"type": "String",
-													"value": {
-														"value": "@item().target_schema_name",
-														"type": "Expression"
-													}
-												},
-												"ods_table_name": {
-													"type": "String",
-													"value": {
-														"value": "@item().table_name",
-														"type": "Expression"
-													}
-												}
-											},
-											"queryTimeout": "02:00:00",
-											"partitionOption": "None"
-										},
-										"dataset": {
-											"referenceName": "dsqlpqtr",
-											"type": "DatasetReference",
-											"parameters": {}
-										},
-										"firstRowOnly": true
-									}
 								}
 							]
 						}
@@ -1147,14 +1217,7 @@
 								{
 									"name": "Truncate and Insert Table2",
 									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "LKP_max_date2",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
+									"dependsOn": [],
 									"policy": {
 										"timeout": "7.00:00:00",
 										"retry": 0,
@@ -1166,10 +1229,6 @@
 									"typeProperties": {
 										"source": {
 											"type": "AzureSqlSource",
-											"sqlReaderQuery": {
-												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date2').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date2').output.firstRow.TheMin,'''',' )\nand status=1')",
-												"type": "Expression"
-											},
 											"queryTimeout": "02:00:00",
 											"partitionOption": "None"
 										},
@@ -1217,49 +1276,6 @@
 											}
 										}
 									]
-								},
-								{
-									"name": "LKP_max_date2",
-									"type": "Lookup",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SqlDWSource",
-											"sqlReaderStoredProcedureName": "[[etl].[P_LKP_ODS_MAX_DATES]",
-											"storedProcedureParameters": {
-												"ods_schema_name": {
-													"type": "String",
-													"value": {
-														"value": "@item().target_schema_name",
-														"type": "Expression"
-													}
-												},
-												"ods_table_name": {
-													"type": "String",
-													"value": {
-														"value": "@item().table_name",
-														"type": "Expression"
-													}
-												}
-											},
-											"queryTimeout": "02:00:00",
-											"partitionOption": "None"
-										},
-										"dataset": {
-											"referenceName": "dsqlpqtr",
-											"type": "DatasetReference",
-											"parameters": {}
-										},
-										"firstRowOnly": true
-									}
 								}
 							]
 						}
@@ -3600,127 +3616,6 @@
 				},
 				"folder": {
 					"name": "PL_INITIAL_LOAD/ITEMS"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "LKP_CUSTOMS_DEC",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('LKP_CUSTOMS_DEC').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "CALL_BSS",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "XmlSource",
-											"storeSettings": {
-												"type": "HttpReadSettings",
-												"requestMethod": "POST",
-												"requestBody": {
-													"value": "@{concat('<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialRegistrationInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialRegistrationCode>','',item().CRNUMBER,'','</ns1:commercialRegistrationCode>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialRegistrationInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>')\n}",
-													"type": "Expression"
-												},
-												"requestTimeout": ""
-											},
-											"formatSettings": {
-												"type": "XmlReadSettings",
-												"validationMode": "none",
-												"namespaces": true
-											}
-										},
-										"sink": {
-											"type": "SqlDWSink",
-											"tableOption": "autoCreate",
-											"disableMetricsCollection": false
-										},
-										"enableStaging": false
-									},
-									"inputs": [
-										{
-											"referenceName": "ds_soap",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "dsqlp_parametric",
-											"type": "DatasetReference",
-											"parameters": {
-												"schemaName": "dwh",
-												"tableName": "STG_SOAP_DENEME"
-											}
-										}
-									]
-								}
-							]
-						}
-					},
-					{
-						"name": "LKP_CUSTOMS_DEC",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlDWSource",
-								"sqlReaderQuery": "select 1 from [dwh].[DWL_CUSTOMS_DECLARATION] WHERE FLG_SUPPLIER_CHECK=1",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference",
-								"parameters": {
-									"schemaName": "dwh",
-									"tableName": "DWL_CUSTOMS_DECLARATION"
-								}
-							},
-							"firstRowOnly": false
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
 				},
 				"annotations": []
 			},

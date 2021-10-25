@@ -1647,7 +1647,14 @@
 					{
 						"name": "PL_DWH_TABLES",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "PL_COPY_UI_TABLE_insert",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
