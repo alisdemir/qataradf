@@ -47,7 +47,8 @@
 									"formatSettings": {
 										"type": "XmlReadSettings",
 										"validationMode": "none",
-										"namespaces": true
+										"detectDataType": false,
+										"namespaces": false
 									}
 								},
 								"sink": {
