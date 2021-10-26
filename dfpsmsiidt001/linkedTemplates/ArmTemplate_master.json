@@ -27,6 +27,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_qtrsqldb'"
 		},
+		"Barbaros_BSS_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
+		},
 		"ls_bss_rest_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
@@ -100,11 +104,8 @@
 					"ls_psmsii_syntodsqlp_connectionString": {
 						"value": "[parameters('ls_psmsii_syntodsqlp_connectionString')]"
 					},
-					"ls_psmsii_syntoobasesql_connectionString": {
-						"value": "[parameters('ls_psmsii_syntoobasesql_connectionString')]"
-					},
-					"ls_psmsii_syntosql_connectionString": {
-						"value": "[parameters('ls_psmsii_syntosql_connectionString')]"
+					"Barbaros_BSS_properties_typeProperties_url": {
+						"value": "[parameters('Barbaros_BSS_properties_typeProperties_url')]"
 					},
 					"ls_bss_soap_properties_typeProperties_url": {
 						"value": "[parameters('ls_bss_soap_properties_typeProperties_url')]"
@@ -150,6 +151,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"ls_psmsii_syntoobasesql_connectionString": {
+						"value": "[parameters('ls_psmsii_syntoobasesql_connectionString')]"
+					},
+					"ls_psmsii_syntosql_connectionString": {
+						"value": "[parameters('ls_psmsii_syntosql_connectionString')]"
 					},
 					"ls_qtrsqldb_connectionString": {
 						"value": "[parameters('ls_qtrsqldb_connectionString')]"

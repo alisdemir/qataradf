@@ -20,6 +20,9 @@
 		"ls_qtrsqldb_connectionString": {
 			"value": ""
 		},
+		"Barbaros_BSS_properties_typeProperties_url": {
+			"value": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
+		},
 		"ls_bss_rest_properties_typeProperties_url": {
 			"value": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
 		},
