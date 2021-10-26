@@ -1,0 +1,133 @@
+{
+	"name": "PL_COPY_UI_TABLE_entity",
+	"properties": {
+		"description": "To create the tables on DWH database based on dwl_copy_table_list table ",
+		"activities": [
+			{
+				"name": "Lookup Table List",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\n where\n  TARGET_TABLE_NAME IN (\n'CompanyEntityTransactionTypes'\n,'CompanyEntities'\n,'TransactionTypes'\n)",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "dsqlp_parametric",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "etl",
+							"tableName": "DWL_COPY_TABLE_LIST"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach Table in List",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup Table List",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup Table List').output.value\n",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Truncate and Insert Table",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE status=1')",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlDWSink",
+									"preCopyScript": {
+										"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+										"type": "Expression"
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "qtrsqldb",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@item().table_name",
+											"type": "Expression"
+										},
+										"schemaName": {
+											"value": "@item().schema_name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "dsqlp_parametric",
+									"type": "DatasetReference",
+									"parameters": {
+										"schemaName": "@item().target_schema_name",
+										"tableName": "@item().table_name"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "PL_TOOL"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-05-25T14:24:40Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}
