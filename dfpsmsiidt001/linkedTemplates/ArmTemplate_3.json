@@ -128,13 +128,14 @@
 								"storeSettings": {
 									"type": "HttpReadSettings",
 									"requestMethod": "POST",
-									"additionalHeaders": "Content-Type: application/soap+xml; charset=utf-8",
+									"additionalHeaders": "Content-Type: application/soap+xml; charset=utf-8;soapaction=\"http://tempuri.org/GetCommercialRegistrationInfoRequest\"",
 									"requestBody": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialRegistrationInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialRegistrationCode>135104</ns1:commercialRegistrationCode>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialRegistrationInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>",
 									"requestTimeout": ""
 								},
 								"formatSettings": {
 									"type": "XmlReadSettings",
 									"validationMode": "none",
+									"detectDataType": false,
 									"namespaces": true
 								}
 							},
