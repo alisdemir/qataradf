@@ -261,6 +261,26 @@
 					},
 					"firstRowOnly": false
 				}
+			},
+			{
+				"name": "PL_COPY_UI_TABLE_cr_tr_type",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_COPY_UI_TABLE_cr_tr_type",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"folder": {
