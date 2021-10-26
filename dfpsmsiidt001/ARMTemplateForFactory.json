@@ -2704,7 +2704,6 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlDWSource",
-								"sqlReaderQuery": "select schema_name,table_name, target_schema_name from etl.DWL_COPY_TABLE_LIST",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -2713,7 +2712,7 @@
 								"type": "DatasetReference",
 								"parameters": {
 									"schemaName": "etl",
-									"tableName": "DWL_COPY_TABLE_LIST"
+									"tableName": "DWL_CREATE_TABLE_LIST"
 								}
 							},
 							"firstRowOnly": false
