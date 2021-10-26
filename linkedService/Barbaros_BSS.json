@@ -1,0 +1,12 @@
+{
+	"name": "Barbaros_BSS",
+	"properties": {
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
