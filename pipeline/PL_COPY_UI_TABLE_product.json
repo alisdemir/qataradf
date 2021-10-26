@@ -315,7 +315,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=2",
+						"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere target_Table_name='MasterProducts'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
