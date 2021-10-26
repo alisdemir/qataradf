@@ -13,6 +13,29 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/dls_processing_binary')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "processing"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dls_processing_csv')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1608,104 +1631,6 @@
 				"typeProperties": {
 					"schema": "dwh",
 					"table": "STG_WAREHOUSE_ERROR_LOG"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_warehouse_raw')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "STORECODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ENTITYCOMMERCIALREGISTRATIONNO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ENTITYCOMMERCIALLICENSENO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WAREHOUSESTORECOMMERCIALREGISTRATIONNO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WAREHOUSESTORECOMMERCIALLICENSENO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WAREHOUSESTORECODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AREANAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STNAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AREACODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STNO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BUILDINGID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MAPLOCATIONURL",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TOTALSTOREAREAM2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STORAGECAPACITYINTON",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STORAGETYPE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_WAREHOUSE_RAW"
 				}
 			},
 			"dependsOn": []
