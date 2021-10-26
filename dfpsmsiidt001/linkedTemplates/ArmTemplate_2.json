@@ -13,6 +13,172 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/dls_processing_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "csv files under processing container",
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "6-RAYAN NATURAL WATER 9097_PSMS II - Inventory Transactions - Data Collection Sheet.csv"
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"fileSystem": "processing"
+					},
+					"columnDelimiter": "|",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": ""
+				},
+				"schema": [
+					{
+						"name": "Transaction Date - تاريخ الحركة ",
+						"type": "String"
+					},
+					{
+						"name": "Transaction Type Code - كود نوع الحركة",
+						"type": "String"
+					},
+					{
+						"name": "Item Code - كود الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Item Barcode - باركود الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Your Company CR# - رقم السجل التجارى للشركة",
+						"type": "String"
+					},
+					{
+						"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
+						"type": "String"
+					},
+					{
+						"name": "Company Store/Inventory Code - رقم المخزن ",
+						"type": "String"
+					},
+					{
+						"name": "Quantity - الكمية",
+						"type": "String"
+					},
+					{
+						"name": "Selling Price per unit - سعر البيع للوحدة  -",
+						"type": "String"
+					},
+					{
+						"name": "Comon Referance No. -  رقم المرجع المشترك",
+						"type": "String"
+					},
+					{
+						"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
+						"type": "String"
+					},
+					{
+						"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dls_processing_csv_folder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "csv files under processing container",
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "processing"
+					},
+					"columnDelimiter": "|",
+					"escapeChar": "",
+					"firstRowAsHeader": true,
+					"quoteChar": ""
+				},
+				"schema": [
+					{
+						"name": "Transaction Date - تاريخ الحركة ",
+						"type": "String"
+					},
+					{
+						"name": "Transaction Type Code - كود نوع الحركة",
+						"type": "String"
+					},
+					{
+						"name": "Item Code - كود الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Item Barcode - باركود الصنف",
+						"type": "String"
+					},
+					{
+						"name": "Your Company CR# - رقم السجل التجارى للشركة",
+						"type": "String"
+					},
+					{
+						"name": "Other Entity CR# - رقم السجل التجارى للطرف الاخر",
+						"type": "String"
+					},
+					{
+						"name": "Company Store/Inventory Code - رقم المخزن ",
+						"type": "String"
+					},
+					{
+						"name": "Quantity - الكمية",
+						"type": "String"
+					},
+					{
+						"name": "Selling Price per unit - سعر البيع للوحدة  -",
+						"type": "String"
+					},
+					{
+						"name": "Comon Referance No. -  رقم المرجع المشترك",
+						"type": "String"
+					},
+					{
+						"name": "Internal Transfer Number/Code - رقم التحويل الداخلي",
+						"type": "String"
+					},
+					{
+						"name": "Number of Consumer Invoices - عدد فواتير البيع للمستهلك",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dls_processing_xls')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1541,60 +1707,6 @@
 					"schema": "dwh",
 					"table": "STG_WAREHOUSE_RAW"
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dsqlp_parametric')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"schemaName": {
-						"type": "string",
-						"defaultValue": "dwh"
-					},
-					"tableName": {
-						"type": "string",
-						"defaultValue": "STG_PRODUCTS_RAW"
-					}
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().schemaName",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().tableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dsqlpqtr')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [],
-				"typeProperties": {}
 			},
 			"dependsOn": []
 		}
