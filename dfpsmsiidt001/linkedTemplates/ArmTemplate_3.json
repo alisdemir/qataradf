@@ -600,8 +600,9 @@
 											"storeSettings": {
 												"type": "HttpReadSettings",
 												"requestMethod": "POST",
+												"additionalHeaders": "Content-Type: application/soap+xml; charset=utf-8; action=\"http://tempuri.org/GetCommercialRegistrationInfoRequest\"",
 												"requestBody": {
-													"value": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialRegistrationInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialRegistrationCode>16070</ns1:commercialRegistrationCode>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialRegistrationInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>",
+													"value": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialRegistrationInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialRegistrationCode>135104</ns1:commercialRegistrationCode>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialRegistrationInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>\n",
 													"type": "Expression"
 												},
 												"requestTimeout": ""
@@ -609,7 +610,8 @@
 											"formatSettings": {
 												"type": "XmlReadSettings",
 												"validationMode": "none",
-												"namespaces": true
+												"detectDataType": false,
+												"namespaces": false
 											}
 										},
 										"sink": {
