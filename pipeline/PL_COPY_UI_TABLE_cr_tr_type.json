@@ -1,5 +1,5 @@
 {
-	"name": "PL_COPY_UI_TABLE_CR_TR_TYPE",
+	"name": "PL_COPY_UI_TABLE_cr_tr_type",
 	"properties": {
 		"description": "To create the tables on DWH database based on dwl_copy_table_list table ",
 		"activities": [
