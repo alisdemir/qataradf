@@ -100,8 +100,8 @@
 								"storeSettings": {
 									"type": "HttpReadSettings",
 									"requestMethod": "POST",
-									"additionalHeaders": "Content-Type: application/soap+xml; charset=utf-8;soapaction=\"http://tempuri.org/GetCommercialRegistrationInfoRequest\"",
-									"requestBody": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialRegistrationInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialRegistrationCode>135104</ns1:commercialRegistrationCode>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialRegistrationInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>",
+									"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialRegistration\"\n",
+									"requestBody": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:onep=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <onep:GetCommercialRegistrationInfoRequest_Input>\n         <onep:commercialRegistrationCode>51600</onep:commercialRegistrationCode>\n         <onep:RefNumber>?</onep:RefNumber>\n      </onep:GetCommercialRegistrationInfoRequest_Input>\n   </soapenv:Body>\n</soapenv:Envelope>",
 									"requestTimeout": ""
 								},
 								"formatSettings": {
