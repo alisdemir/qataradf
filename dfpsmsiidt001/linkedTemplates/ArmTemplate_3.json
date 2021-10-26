@@ -3926,7 +3926,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlDWSource",
-								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=8",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=10",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
