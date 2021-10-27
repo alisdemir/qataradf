@@ -17,7 +17,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@concat(dataset().dsparamFileName,'.csv')",
+					"value": "@concat(dataset().dsparamFileName,'_permit.csv')",
 					"type": "Expression"
 				},
 				"fileSystem": "stagingarea"
