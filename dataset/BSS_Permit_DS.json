@@ -20,7 +20,75 @@
 		},
 		"schema": [
 			{
-				"name": "DS_COMPANY_ENG;DS_COMPANY_ARB;FLG_MASTER_ENTITY;FLG_STRATEGIC_ENTITY;DS_CRNUMBER;DS_CLNUMBER;DS_MAIN_ADDRESS;DS_POSTAL_CODE;DS_BUILDING_NUMBER;DS_MUNICIPALITY_NAME;DS_MUNICIPALITY_NUMBER;DS_DISTRICT_NAME;DS_DISTRICT_NUMBER;DS_STREET_NAME;DS_STREET_NUMBER;DS_ZONE_NAME;DS_ZONE_NUMBER;DS_PHONENUMBER",
+				"name": "DS_COMPANY_ENG",
+				"type": "String"
+			},
+			{
+				"name": "DS_COMPANY_ARB",
+				"type": "String"
+			},
+			{
+				"name": "FLG_MASTER_ENTITY",
+				"type": "String"
+			},
+			{
+				"name": "FLG_STRATEGIC_ENTITY",
+				"type": "String"
+			},
+			{
+				"name": "DS_CRNUMBER",
+				"type": "String"
+			},
+			{
+				"name": "DS_CLNUMBER",
+				"type": "String"
+			},
+			{
+				"name": "DS_MAIN_ADDRESS",
+				"type": "String"
+			},
+			{
+				"name": "DS_POSTAL_CODE",
+				"type": "String"
+			},
+			{
+				"name": "DS_BUILDING_NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "DS_MUNICIPALITY_NAME",
+				"type": "String"
+			},
+			{
+				"name": "DS_MUNICIPALITY_NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "DS_DISTRICT_NAME",
+				"type": "String"
+			},
+			{
+				"name": "DS_DISTRICT_NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "DS_STREET_NAME",
+				"type": "String"
+			},
+			{
+				"name": "DS_STREET_NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "DS_ZONE_NAME",
+				"type": "String"
+			},
+			{
+				"name": "DS_ZONE_NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "DS_PHONENUMBER",
 				"type": "String"
 			}
 		]
