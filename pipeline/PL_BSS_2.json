@@ -151,8 +151,8 @@
 									"referenceName": "BSS_Permit_DS",
 									"type": "DatasetReference",
 									"parameters": {
-										"FileName": {
-											"value": "@concat(item().DS_SUPPLIER_CR,'.xml')",
+										"dsparamFileName": {
+											"value": "@{item().DS_SUPPLIER_CR}",
 											"type": "Expression"
 										}
 									}
