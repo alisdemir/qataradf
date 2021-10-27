@@ -39,7 +39,10 @@
 										"type": "HttpReadSettings",
 										"requestMethod": "POST",
 										"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialPermit\"\n",
-										"requestBody": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialPermitInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialPermitID></ns1:commercialPermitID>\n            <ns1:commercialRegistration>\n                <ns1:ID>51600</ns1:ID>\n                <ns1:branchNumber></ns1:branchNumber>\n            </ns1:commercialRegistration>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialPermitInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>",
+										"requestBody": {
+											"value": "@{replace('<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialPermitInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialPermitID></ns1:commercialPermitID>\n            <ns1:commercialRegistration>\n                <ns1:ID>?paramCR</ns1:ID>\n                <ns1:branchNumber></ns1:branchNumber>\n            </ns1:commercialRegistration>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialPermitInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>','?paramCR',item().DS_SUPPLIER_CR)}",
+											"type": "Expression"
+										},
 										"requestTimeout": ""
 									},
 									"formatSettings": {
@@ -158,6 +161,70 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "Registration",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "XmlSource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "POST",
+										"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialRegistration\"\n",
+										"requestBody": {
+											"value": "@{replace('<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:onep=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <onep:GetCommercialRegistrationInfoRequest_Input>\n         <onep:commercialRegistrationCode>?paramCR</onep:commercialRegistrationCode>\n         <onep:RefNumber>?</onep:RefNumber>\n      </onep:GetCommercialRegistrationInfoRequest_Input>\n   </soapenv:Body>\n</soapenv:Envelope>','?paramCR',item().DS_SUPPLIER_CR)}",
+											"type": "Expression"
+										},
+										"requestTimeout": ""
+									},
+									"formatSettings": {
+										"type": "XmlReadSettings",
+										"validationMode": "none",
+										"detectDataType": false,
+										"namespaces": true
+									}
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Barbaros_BSS_Dataset",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "BSS_Permit_DS",
+									"type": "DatasetReference",
+									"parameters": {
+										"dsparamFileName": {
+											"value": "@{item().DS_SUPPLIER_CR}",
+											"type": "Expression"
+										}
+									}
+								}
+							]
 						}
 					]
 				}
@@ -177,7 +244,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "select \nDS_SUPPLIER_CR\nFROM [dwh].[DWL_CUSTOMS_DECLARATION] WHERE FLG_SUPPLIER_CHECK=1",
+						"sqlReaderQuery": "SELECT\nDS_SUPPLIER_CR\nFROM [dwh].[DWL_CUSTOMS_DECLARATION] WHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
