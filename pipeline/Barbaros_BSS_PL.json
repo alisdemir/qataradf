@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "Registration-Branch details",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -447,7 +447,7 @@
 				]
 			},
 			{
-				"name": "Copy data1_copy1",
+				"name": "Permit-Entity Main Data",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -770,7 +770,8 @@
 									"ordinal": 35
 								}
 							}
-						]
+						],
+						"mapComplexValuesToString": false
 					}
 				},
 				"inputs": [
