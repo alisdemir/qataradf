@@ -13,6 +13,110 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_stg_warehouse_error_log')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "STORECODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ENTITYCOMMERCIALREGISTRATIONNO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ENTITYCOMMERCIALLICENSENO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WAREHOUSESTORECOMMERCIALREGISTRATIONNO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WAREHOUSESTORECOMMERCIALLICENSENO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WAREHOUSESTORECODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AREANAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STNAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AREACODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STNO",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BUILDINGID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MAPLOCATIONURL",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TOTALSTOREAREAM2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STORAGECAPACITYINTON",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STORAGETYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ID_SK",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DS_FILENAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DT_FILETIME",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ID_ERROR_CODE",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "DS_ERROR_CODE",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dwh",
+					"table": "STG_WAREHOUSE_ERROR_LOG"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_warehouse_raw')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -203,13 +307,111 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/BSS_Permit_DS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "stagingarea"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "DS_COMPANY_ENG",
+						"type": "String"
+					},
+					{
+						"name": "DS_COMPANY_ARB",
+						"type": "String"
+					},
+					{
+						"name": "FLG_MASTER_ENTITY",
+						"type": "String"
+					},
+					{
+						"name": "FLG_STRATEGIC_ENTITY",
+						"type": "String"
+					},
+					{
+						"name": "DS_CRNUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_CLNUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_MAIN_ADDRESS",
+						"type": "String"
+					},
+					{
+						"name": "DS_POSTAL_CODE",
+						"type": "String"
+					},
+					{
+						"name": "DS_BUILDING_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_MUNICIPALITY_NAME",
+						"type": "String"
+					},
+					{
+						"name": "DS_MUNICIPALITY_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_DISTRICT_NAME",
+						"type": "String"
+					},
+					{
+						"name": "DS_DISTRICT_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_STREET_NAME",
+						"type": "String"
+					},
+					{
+						"name": "DS_STREET_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_ZONE_NAME",
+						"type": "String"
+					},
+					{
+						"name": "DS_ZONE_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_PHONENUMBER",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Barbaros_BSS_PL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy data1",
+						"name": "Registration-Branch details",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -655,7 +857,7 @@
 						]
 					},
 					{
-						"name": "Copy data1_copy1",
+						"name": "Permit-Entity Main Data",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -691,7 +893,7 @@
 								"formatSettings": {
 									"type": "DelimitedTextWriteSettings",
 									"quoteAllText": true,
-									"fileExtension": ".txt"
+									"fileExtension": ".csv"
 								}
 							},
 							"enableStaging": false,
@@ -700,74 +902,11 @@
 								"mappings": [
 									{
 										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:MessageID']"
-										},
-										"sink": {
-											"ordinal": 1
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:Address']"
-										},
-										"sink": {
-											"ordinal": 2
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:ReferenceParameters']['instra:tracking.ecid']"
-										},
-										"sink": {
-											"ordinal": 3
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:ReferenceParameters']['instra:tracking.compositeInstanceCreatedTime']"
-										},
-										"sink": {
-											"ordinal": 4
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:Address']"
-										},
-										"sink": {
-											"ordinal": 5
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:ReferenceParameters']['instra:tracking.ecid']"
-										},
-										"sink": {
-											"ordinal": 6
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:ReferenceParameters']['instra:tracking.compositeInstanceCreatedTime']"
-										},
-										"sink": {
-											"ordinal": 7
-										}
-									},
-									{
-										"source": {
 											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:ID']"
 										},
 										"sink": {
-											"ordinal": 8
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:branchNumber']"
-										},
-										"sink": {
-											"ordinal": 9
+											"name": "DS_CRNUMBER",
+											"type": "String"
 										}
 									},
 									{
@@ -775,7 +914,8 @@
 											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameArabic']"
 										},
 										"sink": {
-											"ordinal": 10
+											"name": "DS_COMPANY_ARB",
+											"type": "String"
 										}
 									},
 									{
@@ -783,23 +923,8 @@
 											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameEnglish']"
 										},
 										"sink": {
-											"ordinal": 11
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:issueDate']"
-										},
-										"sink": {
-											"ordinal": 12
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:expiryDate']"
-										},
-										"sink": {
-											"ordinal": 13
+											"name": "DS_COMPANY_ENG",
+											"type": "String"
 										}
 									},
 									{
@@ -807,15 +932,8 @@
 											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:municipalityName']['ns0:nameArabic']"
 										},
 										"sink": {
-											"ordinal": 14
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:municipalityName']['ns0:nameEnglish']"
-										},
-										"sink": {
-											"ordinal": 15
+											"name": "DS_MUNICIPALITY_NAME",
+											"type": "String"
 										}
 									},
 									{
@@ -823,7 +941,8 @@
 											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:number']"
 										},
 										"sink": {
-											"ordinal": 16
+											"name": "DS_STREET_NUMBER",
+											"type": "String"
 										}
 									},
 									{
@@ -831,15 +950,8 @@
 											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:name']['ns0:nameArabic']"
 										},
 										"sink": {
-											"ordinal": 17
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:name']['ns0:nameEnglish']"
-										},
-										"sink": {
-											"ordinal": 18
+											"name": "DS_STREET_NAME",
+											"type": "String"
 										}
 									},
 									{
@@ -847,7 +959,8 @@
 											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:number']"
 										},
 										"sink": {
-											"ordinal": 19
+											"name": "DS_ZONE_NUMBER",
+											"type": "String"
 										}
 									},
 									{
@@ -855,130 +968,12 @@
 											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:name']['ns0:nameArabic']"
 										},
 										"sink": {
-											"ordinal": 20
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:name']['ns0:nameEnglish']"
-										},
-										"sink": {
-											"ordinal": 21
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialPermitID']"
-										},
-										"sink": {
-											"ordinal": 22
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:licenseeQID']"
-										},
-										"sink": {
-											"ordinal": 23
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:licenseeName']"
-										},
-										"sink": {
-											"ordinal": 24
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:licenseeNationality']"
-										},
-										"sink": {
-											"ordinal": 25
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerQID']"
-										},
-										"sink": {
-											"ordinal": 26
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerName']"
-										},
-										"sink": {
-											"ordinal": 27
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerNationality']"
-										},
-										"sink": {
-											"ordinal": 28
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:companyActivity']"
-										},
-										"sink": {
-											"ordinal": 29
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:buildingOwner']"
-										},
-										"sink": {
-											"ordinal": 30
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:licenseType']"
-										},
-										"sink": {
-											"ordinal": 31
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentType']"
-										},
-										"sink": {
-											"ordinal": 32
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:applicationNumber']['ns0:municipalityID']"
-										},
-										"sink": {
-											"ordinal": 33
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:applicationNumber']['ns0:year']"
-										},
-										"sink": {
-											"ordinal": 34
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:applicationNumber']['ns0:number']"
-										},
-										"sink": {
-											"ordinal": 35
+											"name": "DS_ZONE_NAME",
+											"type": "String"
 										}
 									}
-								]
+								],
+								"mapComplexValuesToString": false
 							}
 						},
 						"inputs": [
@@ -990,7 +985,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "Barbaros_BSS_Sink_CSV2",
+								"referenceName": "BSS_Permit_DS",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -1003,7 +998,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/BSS_Permit_DS')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DENEME_XML_XSDLI')]",
@@ -6277,125 +6274,6 @@
 				"lastPublishTime": "2021-05-20T12:54:28Z"
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_FILE_TRANSFER_xlsx')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "from upload to processing folder",
-				"activities": [
-					{
-						"name": "fileTransfer",
-						"description": "file transfering from upload container to processing container on data lake.",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*.xlsx",
-									"deleteFilesAfterCompletion": false
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "dls_upload_binary",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dls_processing_binary",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Dev"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:54:28Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_LOAD_DWB_TRANSACTION')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "PL_LOAD_DWB_TRANSACTION",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlDWSource",
-								"sqlReaderStoredProcedureName": "[[dwh].[P_DWB_TRANSACTION_LOAD]",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference",
-								"parameters": {
-									"schemaName": "dwh",
-									"tableName": "DWB_transactions"
-								}
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_MAIN_TRANSACTION"
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-05-20T12:52:28Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
-			]
 		}
 	]
 }

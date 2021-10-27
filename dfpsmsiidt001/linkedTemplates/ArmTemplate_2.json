@@ -13,6 +13,57 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_xls_parametric')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string",
+						"defaultValue": "33976_ItemMasterFile_EDİTED.xlsx"
+					},
+					"folderName": {
+						"type": "string",
+						"defaultValue": "Items"
+					},
+					"SheetIndex": {
+						"type": "int",
+						"defaultValue": 0
+					}
+				},
+				"folder": {
+					"name": "Storage_DL_QTR"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().FolderName",
+							"type": "Expression"
+						},
+						"fileSystem": "input"
+					},
+					"sheetIndex": {
+						"value": "@dataset().SheetIndex",
+						"type": "Expression"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dls_processing_binary')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1527,110 +1578,6 @@
 				"typeProperties": {
 					"schema": "dwh",
 					"table": "STG_TRANSACTIONS"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_warehouse_error_log')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "STORECODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ENTITYCOMMERCIALREGISTRATIONNO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ENTITYCOMMERCIALLICENSENO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WAREHOUSESTORECOMMERCIALREGISTRATIONNO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WAREHOUSESTORECOMMERCIALLICENSENO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WAREHOUSESTORECODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AREANAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STNAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AREACODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STNO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BUILDINGID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MAPLOCATIONURL",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TOTALSTOREAREAM2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STORAGECAPACITYINTON",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STORAGETYPE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "ID_ERROR_CODE",
-						"type": "tinyint",
-						"precision": 3
-					},
-					{
-						"name": "DS_ERROR_CODE",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_WAREHOUSE_ERROR_LOG"
 				}
 			},
 			"dependsOn": []

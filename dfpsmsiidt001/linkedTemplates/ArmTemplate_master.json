@@ -71,6 +71,10 @@
 				"synpsmsiidt001ws1.sql.azuresynapse.net"
 			]
 		},
+		"Barbaros_BSS_REST_LS_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -101,9 +105,6 @@
 					"ls_dsqlpqtr_connectionString": {
 						"value": "[parameters('ls_dsqlpqtr_connectionString')]"
 					},
-					"ls_psmsii_syntodsqlp_connectionString": {
-						"value": "[parameters('ls_psmsii_syntodsqlp_connectionString')]"
-					},
 					"Barbaros_BSS_properties_typeProperties_url": {
 						"value": "[parameters('Barbaros_BSS_properties_typeProperties_url')]"
 					},
@@ -128,6 +129,9 @@
 					"pendp_psmsii_adftodsqlp_properties_fqdns": {
 						"value": "[parameters('pendp_psmsii_adftodsqlp_properties_fqdns')]"
 					},
+					"Barbaros_BSS_REST_LS_properties_typeProperties_url": {
+						"value": "[parameters('Barbaros_BSS_REST_LS_properties_typeProperties_url')]"
+					},
 					"ls_bss_rest_properties_typeProperties_url": {
 						"value": "[parameters('ls_bss_rest_properties_typeProperties_url')]"
 					},
@@ -151,6 +155,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"ls_psmsii_syntodsqlp_connectionString": {
+						"value": "[parameters('ls_psmsii_syntodsqlp_connectionString')]"
 					},
 					"ls_psmsii_syntoobasesql_connectionString": {
 						"value": "[parameters('ls_psmsii_syntoobasesql_connectionString')]"
@@ -265,6 +272,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'dfpsmsiidt001_ArmTemplate_5')]"
+			]
+		},
+		{
+			"name": "dfpsmsiidt001_ArmTemplate_7",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_7.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'dfpsmsiidt001_ArmTemplate_6')]"
 			]
 		}
 	]

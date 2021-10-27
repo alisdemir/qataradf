@@ -1,0 +1,723 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "dfpsmsiidt001"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Barbaros_BSS_PL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Registration-Branch details",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "XmlSource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "POST",
+									"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialRegistration\"\n",
+									"requestBody": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:onep=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <onep:GetCommercialRegistrationInfoRequest_Input>\n         <onep:commercialRegistrationCode>51600</onep:commercialRegistrationCode>\n         <onep:RefNumber>?</onep:RefNumber>\n      </onep:GetCommercialRegistrationInfoRequest_Input>\n   </soapenv:Body>\n</soapenv:Envelope>",
+									"requestTimeout": ""
+								},
+								"formatSettings": {
+									"type": "XmlReadSettings",
+									"validationMode": "none",
+									"detectDataType": false,
+									"namespaces": true
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Header']['wsa:MessageID']"
+										},
+										"sink": {
+											"ordinal": 1
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:Address']"
+										},
+										"sink": {
+											"ordinal": 2
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:ReferenceParameters']['instra:tracking.ecid']"
+										},
+										"sink": {
+											"ordinal": 3
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:ReferenceParameters']['instra:tracking.compositeInstanceCreatedTime']"
+										},
+										"sink": {
+											"ordinal": 4
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:Address']"
+										},
+										"sink": {
+											"ordinal": 5
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:ReferenceParameters']['instra:tracking.ecid']"
+										},
+										"sink": {
+											"ordinal": 6
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:ReferenceParameters']['instra:tracking.compositeInstanceCreatedTime']"
+										},
+										"sink": {
+											"ordinal": 7
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:location']"
+										},
+										"sink": {
+											"ordinal": 8
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:creationDate']"
+										},
+										"sink": {
+											"ordinal": 9
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:expiryDate']"
+										},
+										"sink": {
+											"ordinal": 10
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:arabicCommercialName']"
+										},
+										"sink": {
+											"ordinal": 11
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:companyStartDate']"
+										},
+										"sink": {
+											"ordinal": 12
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branchesCount']"
+										},
+										"sink": {
+											"ordinal": 13
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:commercialRegistrationEntityType']"
+										},
+										"sink": {
+											"ordinal": 14
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:addressPOBox']"
+										},
+										"sink": {
+											"ordinal": 15
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:telephone']"
+										},
+										"sink": {
+											"ordinal": 16
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:addressStreet']"
+										},
+										"sink": {
+											"ordinal": 17
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:addressArea']"
+										},
+										"sink": {
+											"ordinal": 18
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:companyCapital']"
+										},
+										"sink": {
+											"ordinal": 19
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:nameAr']"
+										},
+										"sink": {
+											"ordinal": 20
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:nationality']"
+										},
+										"sink": {
+											"ordinal": 21
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:nIN']"
+										},
+										"sink": {
+											"ordinal": 22
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:percentage']"
+										},
+										"sink": {
+											"ordinal": 23
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:nINType']['ns0:Code']"
+										},
+										"sink": {
+											"ordinal": 24
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:nINType']['ns0:description']"
+										},
+										"sink": {
+											"ordinal": 25
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:partnerType']['ns0:code']"
+										},
+										"sink": {
+											"ordinal": 26
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:partnerType']['ns0:description']"
+										},
+										"sink": {
+											"ordinal": 27
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:partnerStatus']['ns0:code']"
+										},
+										"sink": {
+											"ordinal": 28
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:partnerStatus']['ns0:description']"
+										},
+										"sink": {
+											"ordinal": 29
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nameAr']"
+										},
+										"sink": {
+											"ordinal": 30
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nationality']"
+										},
+										"sink": {
+											"ordinal": 31
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nIN']"
+										},
+										"sink": {
+											"ordinal": 32
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nINType']['ns0:Code']"
+										},
+										"sink": {
+											"ordinal": 33
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nINType']['ns0:description']"
+										},
+										"sink": {
+											"ordinal": 34
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:partnerType']['ns0:code']"
+										},
+										"sink": {
+											"ordinal": 35
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:partnerType']['ns0:description']"
+										},
+										"sink": {
+											"ordinal": 36
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches'][0]['ns0:nameAr']"
+										},
+										"sink": {
+											"ordinal": 37
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches'][0]['ns0:serialNumber']"
+										},
+										"sink": {
+											"ordinal": 38
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches'][0]['ns0:statuses']['ns0:code']"
+										},
+										"sink": {
+											"ordinal": 39
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches'][0]['ns0:statuses']['ns0:description']"
+										},
+										"sink": {
+											"ordinal": 40
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:activities'][0]['ns0:title']"
+										},
+										"sink": {
+											"ordinal": 41
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:activities'][0]['ns0:activitySerial']"
+										},
+										"sink": {
+											"ordinal": 42
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:activities'][0]['ns0:cost']"
+										},
+										"sink": {
+											"ordinal": 43
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:commercialRegistrationCode']"
+										},
+										"sink": {
+											"ordinal": 44
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:statuses']['ns0:code']"
+										},
+										"sink": {
+											"ordinal": 45
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:statuses']['ns0:description']"
+										},
+										"sink": {
+											"ordinal": 46
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:InstanceType']['ns0:InstanceID']"
+										},
+										"sink": {
+											"ordinal": 47
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:InstanceType']['ns0:CaseID']"
+										},
+										"sink": {
+											"ordinal": 48
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Barbaros_BSS_Dataset",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Barbaros_BSS_Sink_CSV",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Permit-Entity Main Data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "XmlSource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "POST",
+									"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialPermit\"\n",
+									"requestBody": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialPermitInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialPermitID></ns1:commercialPermitID>\n            <ns1:commercialRegistration>\n                <ns1:ID>51600</ns1:ID>\n                <ns1:branchNumber></ns1:branchNumber>\n            </ns1:commercialRegistration>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialPermitInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>",
+									"requestTimeout": ""
+								},
+								"formatSettings": {
+									"type": "XmlReadSettings",
+									"validationMode": "none",
+									"detectDataType": false,
+									"namespaces": true
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:ID']"
+										},
+										"sink": {
+											"name": "DS_CRNUMBER",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameArabic']"
+										},
+										"sink": {
+											"name": "DS_COMPANY_ARB",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameEnglish']"
+										},
+										"sink": {
+											"name": "DS_COMPANY_ENG",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:municipalityName']['ns0:nameArabic']"
+										},
+										"sink": {
+											"name": "DS_MUNICIPALITY_NAME",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:number']"
+										},
+										"sink": {
+											"name": "DS_STREET_NUMBER",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:name']['ns0:nameArabic']"
+										},
+										"sink": {
+											"name": "DS_STREET_NAME",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:number']"
+										},
+										"sink": {
+											"name": "DS_ZONE_NUMBER",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:name']['ns0:nameArabic']"
+										},
+										"sink": {
+											"name": "DS_ZONE_NAME",
+											"type": "String"
+										}
+									}
+								],
+								"mapComplexValuesToString": false
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Barbaros_BSS_Dataset",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "BSS_Permit_DS",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/BSS_Permit_DS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Barbaros_BSS_REST_LS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep",
+					"enableServerCertificateValidation": false,
+					"authenticationType": "Anonymous"
+				},
+				"connectVia": {
+					"referenceName": "shir-sql-azure-psmsii-dt-01",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BSS_Permit_DS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "stagingarea"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "DS_COMPANY_ENG",
+						"type": "String"
+					},
+					{
+						"name": "DS_COMPANY_ARB",
+						"type": "String"
+					},
+					{
+						"name": "FLG_MASTER_ENTITY",
+						"type": "String"
+					},
+					{
+						"name": "FLG_STRATEGIC_ENTITY",
+						"type": "String"
+					},
+					{
+						"name": "DS_CRNUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_CLNUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_MAIN_ADDRESS",
+						"type": "String"
+					},
+					{
+						"name": "DS_POSTAL_CODE",
+						"type": "String"
+					},
+					{
+						"name": "DS_BUILDING_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_MUNICIPALITY_NAME",
+						"type": "String"
+					},
+					{
+						"name": "DS_MUNICIPALITY_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_DISTRICT_NAME",
+						"type": "String"
+					},
+					{
+						"name": "DS_DISTRICT_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_STREET_NAME",
+						"type": "String"
+					},
+					{
+						"name": "DS_STREET_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_ZONE_NAME",
+						"type": "String"
+					},
+					{
+						"name": "DS_ZONE_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_PHONENUMBER",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		}
+	]
+}
