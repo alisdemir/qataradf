@@ -69,11 +69,74 @@
 									"mappings": [
 										{
 											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:MessageID']"
+											},
+											"sink": {
+												"name": "wsa:MessageID"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:Address']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Header_wsa:ReplyTo_wsa:Address"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:ReferenceParameters']['instra:tracking.ecid']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Header_wsa:ReplyTo_wsa:ReferenceParameters_instra:tracking.ecid"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:ReferenceParameters']['instra:tracking.compositeInstanceCreatedTime']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Header_wsa:ReplyTo_wsa:ReferenceParameters_instra:tracking.compositeInstanceCreatedTime"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:Address']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Header_wsa:FaultTo_wsa:Address"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:ReferenceParameters']['instra:tracking.ecid']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Header_wsa:FaultTo_wsa:ReferenceParameters_instra:tracking.ecid"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:ReferenceParameters']['instra:tracking.compositeInstanceCreatedTime']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Header_wsa:FaultTo_wsa:ReferenceParameters_instra:tracking.compositeInstanceCreatedTime"
+											}
+										},
+										{
+											"source": {
 												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:ID']"
 											},
 											"sink": {
-												"name": "DS_CRNUMBER",
-												"type": "String"
+												"name": "ns0:ID"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:branchNumber']"
+											},
+											"sink": {
+												"name": "ns0:branchNumber"
 											}
 										},
 										{
@@ -81,8 +144,7 @@
 												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameArabic']"
 											},
 											"sink": {
-												"name": "DS_COMPANY_ARB",
-												"type": "String"
+												"name": "env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:establishmentCommercialName_ns0:nameArabic"
 											}
 										},
 										{
@@ -90,8 +152,23 @@
 												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameEnglish']"
 											},
 											"sink": {
-												"name": "DS_COMPANY_ENG",
-												"type": "String"
+												"name": "env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:establishmentCommercialName_ns0:nameEnglish"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:issueDate']"
+											},
+											"sink": {
+												"name": "ns0:issueDate"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:expiryDate']"
+											},
+											"sink": {
+												"name": "ns0:expiryDate"
 											}
 										},
 										{
@@ -99,8 +176,15 @@
 												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:municipalityName']['ns0:nameArabic']"
 											},
 											"sink": {
-												"name": "DS_MUNICIPALITY_NAME",
-												"type": "String"
+												"name": "env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:municipalityName_ns0:nameArabic"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:municipalityName']['ns0:nameEnglish']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:municipalityName_ns0:nameEnglish"
 											}
 										},
 										{
@@ -108,8 +192,7 @@
 												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:number']"
 											},
 											"sink": {
-												"name": "DS_STREET_NUMBER",
-												"type": "String"
+												"name": "env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:street_ns0:number"
 											}
 										},
 										{
@@ -117,8 +200,15 @@
 												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:name']['ns0:nameArabic']"
 											},
 											"sink": {
-												"name": "DS_STREET_NAME",
-												"type": "String"
+												"name": "env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:street_ns0:name_ns0:nameArabic"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:name']['ns0:nameEnglish']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:street_ns0:name_ns0:nameEnglish"
 											}
 										},
 										{
@@ -126,8 +216,7 @@
 												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:number']"
 											},
 											"sink": {
-												"name": "DS_ZONE_NUMBER",
-												"type": "String"
+												"name": "env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:zone_ns0:number"
 											}
 										},
 										{
@@ -135,8 +224,127 @@
 												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:name']['ns0:nameArabic']"
 											},
 											"sink": {
-												"name": "DS_ZONE_NAME",
-												"type": "String"
+												"name": "env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:zone_ns0:name_ns0:nameArabic"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:name']['ns0:nameEnglish']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:zone_ns0:name_ns0:nameEnglish"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialPermitID']"
+											},
+											"sink": {
+												"name": "ns0:commercialPermitID"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:licenseeQID']"
+											},
+											"sink": {
+												"name": "ns0:licenseeQID"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:licenseeName']"
+											},
+											"sink": {
+												"name": "ns0:licenseeName"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:licenseeNationality']"
+											},
+											"sink": {
+												"name": "ns0:licenseeNationality"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerQID']"
+											},
+											"sink": {
+												"name": "ns0:managerQID"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerName']"
+											},
+											"sink": {
+												"name": "ns0:managerName"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerNationality']"
+											},
+											"sink": {
+												"name": "ns0:managerNationality"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:companyActivity']"
+											},
+											"sink": {
+												"name": "ns0:companyActivity"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:buildingOwner']"
+											},
+											"sink": {
+												"name": "ns0:buildingOwner"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:licenseType']"
+											},
+											"sink": {
+												"name": "ns0:licenseType"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentType']"
+											},
+											"sink": {
+												"name": "ns0:establishmentType"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:applicationNumber']['ns0:municipalityID']"
+											},
+											"sink": {
+												"name": "ns0:municipalityID"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:applicationNumber']['ns0:year']"
+											},
+											"sink": {
+												"name": "ns0:year"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:applicationNumber']['ns0:number']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:applicationNumber_ns0:number"
 											}
 										}
 									],
@@ -211,7 +419,397 @@
 										"fileExtension": ".txt"
 									}
 								},
-								"enableStaging": false
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:MessageID']"
+											},
+											"sink": {
+												"name": "wsa:MessageID"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:Address']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Header_wsa:ReplyTo_wsa:Address"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:ReferenceParameters']['instra:tracking.ecid']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Header_wsa:ReplyTo_wsa:ReferenceParameters_instra:tracking.ecid"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:ReferenceParameters']['instra:tracking.compositeInstanceCreatedTime']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Header_wsa:ReplyTo_wsa:ReferenceParameters_instra:tracking.compositeInstanceCreatedTime"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:Address']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Header_wsa:FaultTo_wsa:Address"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:ReferenceParameters']['instra:tracking.ecid']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Header_wsa:FaultTo_wsa:ReferenceParameters_instra:tracking.ecid"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:ReferenceParameters']['instra:tracking.compositeInstanceCreatedTime']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Header_wsa:FaultTo_wsa:ReferenceParameters_instra:tracking.compositeInstanceCreatedTime"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:location']"
+											},
+											"sink": {
+												"name": "ns0:location"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:creationDate']"
+											},
+											"sink": {
+												"name": "ns0:creationDate"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:expiryDate']"
+											},
+											"sink": {
+												"name": "ns0:expiryDate"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:arabicCommercialName']"
+											},
+											"sink": {
+												"name": "ns0:arabicCommercialName"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:companyStartDate']"
+											},
+											"sink": {
+												"name": "ns0:companyStartDate"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branchesCount']"
+											},
+											"sink": {
+												"name": "ns0:branchesCount"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:commercialRegistrationEntityType']"
+											},
+											"sink": {
+												"name": "ns0:commercialRegistrationEntityType"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:addressPOBox']"
+											},
+											"sink": {
+												"name": "ns0:addressPOBox"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:telephone']"
+											},
+											"sink": {
+												"name": "ns0:telephone"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:addressStreet']"
+											},
+											"sink": {
+												"name": "ns0:addressStreet"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:addressArea']"
+											},
+											"sink": {
+												"name": "ns0:addressArea"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:companyCapital']"
+											},
+											"sink": {
+												"name": "ns0:companyCapital"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners']['ns0:nameAr']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:humanPartners_ns0:nameAr"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners']['ns0:nationality']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:humanPartners_ns0:nationality"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners']['ns0:nIN']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:humanPartners_ns0:nIN"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners']['ns0:percentage']"
+											},
+											"sink": {
+												"name": "ns0:percentage"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners']['ns0:nINType']['ns0:Code']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:humanPartners_ns0:nINType_ns0:Code"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners']['ns0:nINType']['ns0:description']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:humanPartners_ns0:nINType_ns0:description"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners']['ns0:partnerType']['ns0:code']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:humanPartners_ns0:partnerType_ns0:code"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners']['ns0:partnerType']['ns0:description']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:humanPartners_ns0:partnerType_ns0:description"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners']['ns0:partnerStatus']['ns0:code']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:humanPartners_ns0:partnerStatus_ns0:code"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners']['ns0:partnerStatus']['ns0:description']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:humanPartners_ns0:partnerStatus_ns0:description"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nameAr']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:signatories'][0]['ns0:nameAr"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nationality']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:signatories'][0]['ns0:nationality"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nIN']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:signatories'][0]['ns0:nIN"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nINType']['ns0:Code']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:signatories'][0]['ns0:nINType_ns0:Code"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nINType']['ns0:description']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:signatories'][0]['ns0:nINType_ns0:description"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:partnerType']['ns0:code']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:signatories'][0]['ns0:partnerType_ns0:code"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:partnerType']['ns0:description']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:signatories'][0]['ns0:partnerType_ns0:description"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches'][0]['ns0:nameAr']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:branches'][0]['ns0:nameAr"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches'][0]['ns0:serialNumber']"
+											},
+											"sink": {
+												"name": "ns0:serialNumber"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches'][0]['ns0:statuses']['ns0:code']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:branches'][0]['ns0:statuses_ns0:code"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches'][0]['ns0:statuses']['ns0:description']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:branches'][0]['ns0:statuses_ns0:description"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:activities']['ns0:title']"
+											},
+											"sink": {
+												"name": "ns0:title"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:activities']['ns0:activitySerial']"
+											},
+											"sink": {
+												"name": "ns0:activitySerial"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:activities']['ns0:cost']"
+											},
+											"sink": {
+												"name": "ns0:cost"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:commercialRegistrationCode']"
+											},
+											"sink": {
+												"name": "ns0:commercialRegistrationCode"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:statuses']['ns0:code']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:statuses_ns0:code"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:statuses']['ns0:description']"
+											},
+											"sink": {
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:statuses_ns0:description"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:InstanceType']['ns0:InstanceID']"
+											},
+											"sink": {
+												"name": "ns0:InstanceID"
+											}
+										},
+										{
+											"source": {
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:InstanceType']['ns0:CaseID']"
+											},
+											"sink": {
+												"name": "ns0:CaseID"
+											}
+										}
+									],
+									"collectionReference": ""
+								}
 							},
 							"inputs": [
 								{
