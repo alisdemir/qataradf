@@ -165,7 +165,14 @@
 						{
 							"name": "Registration",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "Permit-Entity Main Data",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -180,7 +187,7 @@
 									"storeSettings": {
 										"type": "HttpReadSettings",
 										"requestMethod": "POST",
-										"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialRegistration\"\n",
+										"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialRegistration\"",
 										"requestBody": {
 											"value": "@{replace('<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:onep=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <onep:GetCommercialRegistrationInfoRequest_Input>\n         <onep:commercialRegistrationCode>?paramCR</onep:commercialRegistrationCode>\n         <onep:RefNumber>?</onep:RefNumber>\n      </onep:GetCommercialRegistrationInfoRequest_Input>\n   </soapenv:Body>\n</soapenv:Envelope>','?paramCR',item().DS_SUPPLIER_CR)}",
 											"type": "Expression"
@@ -190,7 +197,6 @@
 									"formatSettings": {
 										"type": "XmlReadSettings",
 										"validationMode": "none",
-										"detectDataType": false,
 										"namespaces": true
 									}
 								},
@@ -209,13 +215,13 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "Barbaros_BSS_Dataset",
+									"referenceName": "BSS_Dataset",
 									"type": "DatasetReference"
 								}
 							],
 							"outputs": [
 								{
-									"referenceName": "BSS_Permit_DS",
+									"referenceName": "BSS_Registration_DS",
 									"type": "DatasetReference",
 									"parameters": {
 										"dsparamFileName": {
