@@ -1,0 +1,28 @@
+{
+	"name": "BSS_Permit_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "BSS_Permit.csv",
+				"fileSystem": "stagingarea"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "DS_COMPANY_ENG;DS_COMPANY_ARB;FLG_MASTER_ENTITY;FLG_STRATEGIC_ENTITY;DS_CRNUMBER;DS_CLNUMBER;DS_MAIN_ADDRESS;DS_POSTAL_CODE;DS_BUILDING_NUMBER;DS_MUNICIPALITY_NAME;DS_MUNICIPALITY_NUMBER;DS_DISTRICT_NAME;DS_DISTRICT_NUMBER;DS_STREET_NAME;DS_STREET_NUMBER;DS_ZONE_NAME;DS_ZONE_NUMBER;DS_PHONENUMBER",
+				"type": "String"
+			}
+		]
+	}
+}
