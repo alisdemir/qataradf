@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"FileName": {
+			"dsparamFileName": {
 				"type": "string",
 				"defaultValue": "DummyName"
 			}
@@ -16,6 +16,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat(dataset().dsparamFileName,'.csv')",
+					"type": "Expression"
+				},
 				"fileSystem": "stagingarea"
 			},
 			"columnDelimiter": ",",
