@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "BSS_Permit.csv",
 				"fileSystem": "stagingarea"
 			},
 			"columnDelimiter": ",",
