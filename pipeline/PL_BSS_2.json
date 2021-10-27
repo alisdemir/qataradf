@@ -151,13 +151,10 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "BSS_Permit_DS",
+									"referenceName": "BSS_Permit_DS_copy1",
 									"type": "DatasetReference",
 									"parameters": {
-										"dsparamFileName": {
-											"value": "@{item().DS_SUPPLIER_CR}",
-											"type": "Expression"
-										}
+										"dsparamFileName": "DummyName"
 									}
 								}
 							]
