@@ -174,14 +174,7 @@
 						{
 							"name": "Registration",
 							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "Permit-Entity Main Data",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -226,33 +219,31 @@
 									"mappings": [
 										{
 											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:telephone']"
+												"path": "['ns0:nameAr']"
 											},
 											"sink": {
-												"name": "ns0:telephone",
-												"type": "String"
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:branches'][0]['ns0:nameAr"
 											}
 										},
 										{
 											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:commercialRegistrationCode']"
+												"path": "['ns0:serialNumber']"
 											},
 											"sink": {
-												"name": "ns0:commercialRegistrationCode",
-												"type": "String"
+												"name": "ns0:serialNumber"
 											}
 										},
 										{
 											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:statuses']['ns0:code']"
+												"path": "['ns0:statuses']['ns0:code']"
 											},
 											"sink": {
-												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:statuses_ns0:code",
-												"type": "String"
+												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:branches'][0]['ns0:statuses_ns0:code"
 											}
 										}
 									],
-									"collectionReference": ""
+									"collectionReference": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches']",
+									"mapComplexValuesToString": true
 								}
 							},
 							"inputs": [
