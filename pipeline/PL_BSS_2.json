@@ -219,22 +219,15 @@
 									"mappings": [
 										{
 											"source": {
-												"path": "['ns0:serialNumber']"
+												"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:commercialRegistrationCode']"
 											},
 											"sink": {
-												"name": "BranchCR"
-											}
-										},
-										{
-											"source": {
-												"path": "['ns0:statuses']['ns0:code']"
-											},
-											"sink": {
-												"name": "Status"
+												"name": "MainCRNumber",
+												"type": "Int64"
 											}
 										}
 									],
-									"collectionReference": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches']",
+									"collectionReference": "",
 									"mapComplexValuesToString": true
 								}
 							},

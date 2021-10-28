@@ -19,22 +19,7 @@
 					"name": "source2"
 				}
 			],
-			"sinks": [
-				{
-					"linkedService": {
-						"referenceName": "ls_psmsii_syntodls",
-						"type": "LinkedServiceReference"
-					},
-					"name": "sink1"
-				},
-				{
-					"linkedService": {
-						"referenceName": "ls_psmsii_syntodls",
-						"type": "LinkedServiceReference"
-					},
-					"name": "sink2"
-				}
-			],
+			"sinks": [],
 			"transformations": [
 				{
 					"name": "MapDrifted1",
@@ -43,9 +28,12 @@
 				{
 					"name": "MapDrifted2",
 					"description": "Creates an explicit mapping for each drifted column"
+				},
+				{
+					"name": "Join1"
 				}
 			],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\trowUrlColumn: 'SourceFileName',\n\twildcardPaths:['*_registration.csv']) ~> source1\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\trowUrlColumn: 'SourceFileName',\n\twildcardPaths:['*_permit.csv']) ~> source2\nsource1 derive(BranchCR = toString(byName('BranchCR')),\n\t\tStatus = toString(byName('Status')),\n\t\tSourceFileName = SourceFileName) ~> MapDrifted1\nsource2 derive(CR_Number = toString(byName('ns0:ID')),\n\t\tName_Arabic = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:establishmentCommercialName_ns0:nameArabic')),\n\t\tName_English = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:establishmentCommercialName_ns0:nameEnglish')),\n\t\tMunicipalityName_Arabic = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:municipalityName_ns0:nameArabic')),\n\t\tStreet_Number = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:street_ns0:number')),\n\t\tStreetName_Arabic = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:street_ns0:name_ns0:nameArabic')),\n\t\tZone_Number = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:zone_ns0:number')),\n\t\tZoneName_Arabic = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:zone_ns0:name_ns0:nameArabic')),\n\t\tSourceFileName = SourceFileName) ~> MapDrifted2\nMapDrifted1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delimited',\n\tfileSystem: 'stagingarea',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: true,\n\tpartitionFileNames:['bss_all_register_data.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1\nMapDrifted2 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delimited',\n\tfileSystem: 'stagingarea',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: true,\n\tpartitionFileNames:['bss_all_permit_data.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink2"
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\trowUrlColumn: 'SourceFileName',\n\twildcardPaths:['*_registration.csv']) ~> source1\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\trowUrlColumn: 'SourceFileName',\n\twildcardPaths:['*_permit.csv']) ~> source2\nsource1 derive(BranchCR = toString(byName('BranchCR')),\n\t\tStatus = toString(byName('Status')),\n\t\tSourceFileName = SourceFileName) ~> MapDrifted1\nsource2 derive(CR_Number = toString(byName('ns0:ID')),\n\t\tName_Arabic = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:establishmentCommercialName_ns0:nameArabic')),\n\t\tName_English = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:establishmentCommercialName_ns0:nameEnglish')),\n\t\tMunicipalityName_Arabic = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:municipalityName_ns0:nameArabic')),\n\t\tStreet_Number = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:street_ns0:number')),\n\t\tStreetName_Arabic = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:street_ns0:name_ns0:nameArabic')),\n\t\tZone_Number = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:zone_ns0:number')),\n\t\tZoneName_Arabic = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:zone_ns0:name_ns0:nameArabic')),\n\t\tSourceFileName = SourceFileName) ~> MapDrifted2\nMapDrifted2, MapDrifted1 join(CR_Number == ERROR_FUNCTION(''),\n\tjoinType:'left',\n\tbroadcast: 'auto')~> Join1"
 		}
 	}
 }
