@@ -256,37 +256,6 @@
 									}
 								}
 							]
-						},
-						{
-							"name": "Data flow1",
-							"type": "ExecuteDataFlow",
-							"dependsOn": [
-								{
-									"activity": "Registration",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "1.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"dataflow": {
-									"referenceName": "df_BSS_Branch_Process",
-									"type": "DataFlowReference"
-								},
-								"integrationRuntime": {
-									"referenceName": "integrationRuntime10min",
-									"type": "IntegrationRuntimeReference"
-								},
-								"traceLevel": "Fine"
-							}
 						}
 					]
 				}
@@ -319,6 +288,37 @@
 						}
 					},
 					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "CopyFromBSS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_BSS_Registiration_Process",
+						"type": "DataFlowReference"
+					},
+					"integrationRuntime": {
+						"referenceName": "integrationRuntime10min",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "Fine"
 				}
 			}
 		],

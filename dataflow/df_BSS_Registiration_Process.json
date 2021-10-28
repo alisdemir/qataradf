@@ -1,5 +1,5 @@
 {
-	"name": "df_BSS_Branch_Process",
+	"name": "df_BSS_Registiration_Process",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -10,6 +10,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_BSS_Files_Folder",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
 				}
 			],
 			"sinks": [
@@ -25,9 +32,13 @@
 				{
 					"name": "MapDrifted1",
 					"description": "Creates an explicit mapping for each drifted column"
+				},
+				{
+					"name": "MapDrifted2",
+					"description": "Creates an explicit mapping for each drifted column"
 				}
 			],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\trowUrlColumn: 'SourceFileName',\n\twildcardPaths:['*_registration.csv']) ~> source1\nsource1 derive(BranchCR = toString(byName('BranchCR')),\n\t\tStatus = toString(byName('Status')),\n\t\tSourceFileName = SourceFileName) ~> MapDrifted1\nMapDrifted1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delimited',\n\tfileSystem: 'stagingarea',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: true,\n\tpartitionFileNames:['bss_all_register_data.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\trowUrlColumn: 'SourceFileName',\n\twildcardPaths:['*_registration.csv']) ~> source1\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\trowUrlColumn: 'SourceFileName',\n\twildcardPaths:['*_permit.csv']) ~> source2\nsource1 derive(BranchCR = toString(byName('BranchCR')),\n\t\tStatus = toString(byName('Status')),\n\t\tSourceFileName = SourceFileName) ~> MapDrifted1\nsource2 derive(CR_Number = toString(byName('ns0:ID')),\n\t\tName_Arabic = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:establishmentCommercialName_ns0:nameArabic')),\n\t\tName_English = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:establishmentCommercialName_ns0:nameEnglish')),\n\t\tMunicipalityName_Arabic = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:municipalityName_ns0:nameArabic')),\n\t\tStreet_Number = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:street_ns0:number')),\n\t\tStreetName_Arabic = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:street_ns0:name_ns0:nameArabic')),\n\t\tZone_Number = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:zone_ns0:number')),\n\t\tZoneName_Arabic = toString(byName('env:Envelope_env:Body_GetCommercialPermitInfoResponse_Output_ns0:commercialPermit_ns0:location_ns0:zone_ns0:name_ns0:nameArabic')),\n\t\tSourceFileName = SourceFileName) ~> MapDrifted2\nMapDrifted1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delimited',\n\tfileSystem: 'stagingarea',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: true,\n\tpartitionFileNames:['bss_all_register_data.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
 		}
 	}
 }
