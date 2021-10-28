@@ -222,7 +222,7 @@
 												"path": "['ns0:serialNumber']"
 											},
 											"sink": {
-												"name": "ns0:serialNumber"
+												"name": "BranchCR"
 											}
 										},
 										{
@@ -230,7 +230,7 @@
 												"path": "['ns0:statuses']['ns0:code']"
 											},
 											"sink": {
-												"name": "env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:branches'][0]['ns0:statuses_ns0:code"
+												"name": "Status"
 											}
 										}
 									],
