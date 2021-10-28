@@ -27,7 +27,7 @@
 					"description": "Creates an explicit mapping for each drifted column"
 				}
 			],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\trowUrlColumn: 'SourceFileName',\n\twildcardPaths:['*_registration.csv']) ~> source1\nsource1 derive({ns0:serialNumber} = toString(byName('ns0:serialNumber')),\n\t\t{env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:branches'][0]['ns0:statuses_ns0:code} = toString(byName('env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:branches'][0]['ns0:statuses_ns0:code')),\n\t\tSourceFileName = SourceFileName) ~> MapDrifted1\nMapDrifted1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['bss_all_register_data.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\trowUrlColumn: 'SourceFileName',\n\twildcardPaths:['*_registration.csv']) ~> source1\nsource1 derive({ns0:serialNumber} = CR,\n\t\t{env:Envelope_env:Body_GetCommercialRegistrationInfoResponse_Output_ns0:commercialRegistration_ns0:branches'][0]['ns0:statuses_ns0:code} = Status,\n\t\tSourceFileName = SourceFileName) ~> MapDrifted1\nMapDrifted1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['bss_all_register_data.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
 		}
 	}
 }
