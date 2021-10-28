@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEach1",
+				"name": "CopyFromBSS",
 				"type": "ForEach",
 				"dependsOn": [
 					{
