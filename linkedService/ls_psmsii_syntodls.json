@@ -7,7 +7,7 @@
 			"url": "https://dlsapsmsiidt001.dfs.core.windows.net"
 		},
 		"connectVia": {
-			"referenceName": "shir-sql-azure-psmsii-dt-01",
+			"referenceName": "integrationRuntime10min",
 			"type": "IntegrationRuntimeReference"
 		}
 	},
