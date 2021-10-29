@@ -181,10 +181,7 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "df_BSS_Registiration_Process",
-						"type": "DataFlowReference",
-						"parameters": {
-							"MainCrNumberParam": "ddd"
-						}
+						"type": "DataFlowReference"
 					},
 					"integrationRuntime": {
 						"referenceName": "integrationRuntime10min",
