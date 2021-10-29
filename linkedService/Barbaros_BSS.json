@@ -9,7 +9,7 @@
 			"authenticationType": "Anonymous"
 		},
 		"connectVia": {
-			"referenceName": "shir-sql-azure-psmsii-dt-01",
+			"referenceName": "integrationRuntime10min",
 			"type": "IntegrationRuntimeReference"
 		}
 	}
