@@ -21,195 +21,6 @@
 					},
 					"activities": [
 						{
-							"name": "Permit-Entity Main Data",
-							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "Registration",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "XmlSource",
-									"additionalColumns": [
-										{
-											"name": "BRANCH_CR",
-											"value": {
-												"value": "@item().DS_SUPPLIER_CR",
-												"type": "Expression"
-											}
-										},
-										{
-											"name": "BRANCH_STATUS",
-											"value": "'Active'"
-										},
-										{
-											"name": "MainCRNumber",
-											"value": {
-												"value": "@item().DS_SUPPLIER_CR",
-												"type": "Expression"
-											}
-										}
-									],
-									"storeSettings": {
-										"type": "HttpReadSettings",
-										"requestMethod": "POST",
-										"requestTimeout": ""
-									},
-									"formatSettings": {
-										"type": "XmlReadSettings",
-										"validationMode": "none",
-										"detectDataType": false,
-										"namespaces": false
-									}
-								},
-								"sink": {
-									"type": "DelimitedTextSink",
-									"storeSettings": {
-										"type": "AzureBlobFSWriteSettings",
-										"copyBehavior": "MergeFiles"
-									},
-									"formatSettings": {
-										"type": "DelimitedTextWriteSettings",
-										"quoteAllText": true,
-										"fileExtension": ".csv"
-									}
-								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"mappings": [
-										{
-											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:ID']"
-											},
-											"sink": {
-												"name": "CRNUMBER",
-												"type": "String"
-											}
-										},
-										{
-											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:branchNumber']"
-											},
-											"sink": {
-												"name": "BRANCHNUMBER",
-												"type": "Int16"
-											}
-										},
-										{
-											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameArabic']"
-											},
-											"sink": {
-												"name": "COMPANY_ARB",
-												"type": "String"
-											}
-										},
-										{
-											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameEnglish']"
-											},
-											"sink": {
-												"name": "COMPANY_ENG",
-												"type": "String"
-											}
-										},
-										{
-											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:municipalityName']['ns0:nameArabic']"
-											},
-											"sink": {
-												"name": "MUNICIPALITY_NAME",
-												"type": "String"
-											}
-										},
-										{
-											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:number']"
-											},
-											"sink": {
-												"name": "STREET_NUMBER",
-												"type": "String"
-											}
-										},
-										{
-											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:name']['ns0:nameArabic']"
-											},
-											"sink": {
-												"name": "STREET_NAME",
-												"type": "String"
-											}
-										},
-										{
-											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:number']"
-											},
-											"sink": {
-												"name": "ZONE_NUMBER",
-												"type": "String"
-											}
-										},
-										{
-											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:name']['ns0:nameArabic']"
-											},
-											"sink": {
-												"name": "ZONE_NAME",
-												"type": "String"
-											}
-										},
-										{
-											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerQID']"
-											},
-											"sink": {
-												"name": "MANAGER_QID",
-												"type": "String"
-											}
-										},
-										{
-											"source": {
-												"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerName']"
-											},
-											"sink": {
-												"name": "MANAGER_NAME",
-												"type": "String"
-											}
-										}
-									],
-									"mapComplexValuesToString": false
-								}
-							},
-							"inputs": [
-								{
-									"referenceName": "BSS_Dataset",
-									"type": "DatasetReference"
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "BSS_Registration_DS",
-									"type": "DatasetReference",
-									"parameters": {
-										"dsparamFileName": "@item().DS_SUPPLIER_CR"
-									}
-								}
-							]
-						},
-						{
 							"name": "Registration",
 							"type": "Copy",
 							"dependsOn": [],
@@ -346,6 +157,40 @@
 						}
 					},
 					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "CopyFromBSS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_BSS_Registiration_Process",
+						"type": "DataFlowReference",
+						"parameters": {
+							"MainCrNumberParam": "ddd"
+						}
+					},
+					"integrationRuntime": {
+						"referenceName": "integrationRuntime10min",
+						"type": "IntegrationRuntimeReference"
+					},
+					"traceLevel": "Fine"
 				}
 			}
 		],
