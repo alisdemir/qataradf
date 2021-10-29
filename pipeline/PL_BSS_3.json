@@ -228,7 +228,7 @@
 										{
 											"name": "MainCRNumber",
 											"value": {
-												"value": "@pipeline().parameters.CR_Number",
+												"value": "@item().DS_SUPPLIER_CR",
 												"type": "Expression"
 											}
 										}
