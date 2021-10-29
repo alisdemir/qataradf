@@ -168,6 +168,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "XmlSource",
+						"additionalColumns": [
+							{
+								"name": "MainCRNumber",
+								"value": {
+									"value": "@pipeline().parameters.CR_Number",
+									"type": "Expression"
+								}
+							}
+						],
 						"storeSettings": {
 							"type": "HttpReadSettings",
 							"requestMethod": "POST",
@@ -204,13 +213,31 @@
 									"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:commercialRegistrationCode']"
 								},
 								"sink": {
-									"name": "MainCRNumber",
-									"type": "Int64"
+									"name": "CRNumber",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:statuses']['ns0:code']"
+								},
+								"sink": {
+									"name": "Status",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "MainCRNumber"
+								},
+								"sink": {
+									"name": "Main_CRNumber",
+									"type": "String"
 								}
 							}
 						],
 						"collectionReference": "",
-						"mapComplexValuesToString": true
+						"mapComplexValuesToString": false
 					}
 				},
 				"inputs": [
