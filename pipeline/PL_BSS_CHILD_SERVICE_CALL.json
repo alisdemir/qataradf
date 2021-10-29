@@ -228,33 +228,33 @@
 						"mappings": [
 							{
 								"source": {
-									"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:commercialRegistrationCode']"
+									"path": "['ns0:serialNumber']"
 								},
 								"sink": {
-									"name": "CRNumber",
+									"name": "BRANCH_CR",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:statuses']['ns0:code']"
+									"path": "['ns0:statuses']['ns0:code']"
 								},
 								"sink": {
-									"name": "Status",
+									"name": "BRANCH_STATUS",
 									"type": "String"
 								}
 							},
 							{
 								"source": {
-									"path": "MainCRNumber"
+									"path": "$['MainCRNumber']"
 								},
 								"sink": {
-									"name": "Main_CRNumber",
+									"name": "MainCRNumber",
 									"type": "String"
 								}
 							}
 						],
-						"collectionReference": "",
+						"collectionReference": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches']",
 						"mapComplexValuesToString": false
 					}
 				},
