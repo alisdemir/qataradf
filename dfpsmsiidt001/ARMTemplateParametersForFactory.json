@@ -53,9 +53,6 @@
 			"value": [
 				"synpsmsiidt001ws1.sql.azuresynapse.net"
 			]
-		},
-		"Barbaros_BSS_REST_LS_properties_typeProperties_url": {
-			"value": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
 		}
 	}
 }

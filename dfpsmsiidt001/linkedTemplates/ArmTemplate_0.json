@@ -47,10 +47,6 @@
 				"synpsmsiidt001ws1.sql.azuresynapse.net"
 			]
 		},
-		"Barbaros_BSS_REST_LS_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
-		},
 		"ls_bss_rest_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
@@ -616,27 +612,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Barbaros_BSS_REST_LS')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "RestService",
-				"typeProperties": {
-					"url": "[parameters('Barbaros_BSS_REST_LS_properties_typeProperties_url')]",
-					"enableServerCertificateValidation": false,
-					"authenticationType": "Anonymous"
-				},
-				"connectVia": {
-					"referenceName": "shir-sql-azure-psmsii-dt-01",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/shir-sql-azure-psmsii-dt-01')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/PL_DENE')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -781,6 +756,27 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_bss_soap')]",
 				"[concat(variables('factoryId'), '/integrationRuntimes/shir-sql-azure-psmsii-dt-01')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BSS_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Barbaros_BSS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Xml",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Barbaros_BSS')]"
 			]
 		},
 		{

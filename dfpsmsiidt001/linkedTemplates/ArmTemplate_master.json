@@ -71,10 +71,6 @@
 				"synpsmsiidt001ws1.sql.azuresynapse.net"
 			]
 		},
-		"Barbaros_BSS_REST_LS_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
-		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -128,9 +124,6 @@
 					},
 					"pendp_psmsii_adftodsqlp_properties_fqdns": {
 						"value": "[parameters('pendp_psmsii_adftodsqlp_properties_fqdns')]"
-					},
-					"Barbaros_BSS_REST_LS_properties_typeProperties_url": {
-						"value": "[parameters('Barbaros_BSS_REST_LS_properties_typeProperties_url')]"
 					},
 					"ls_bss_rest_properties_typeProperties_url": {
 						"value": "[parameters('ls_bss_rest_properties_typeProperties_url')]"

@@ -70,10 +70,6 @@
 			"defaultValue": [
 				"synpsmsiidt001ws1.sql.azuresynapse.net"
 			]
-		},
-		"Barbaros_BSS_REST_LS_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
 		}
 	},
 	"variables": {
@@ -2278,6 +2274,1154 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_BSS_2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CopyFromBSS",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LKP_CUSTOMS_DEC",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LKP_CUSTOMS_DEC').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Execute PL_BSS_CHILD_SERVICE_CALL",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_BSS_CHILD_SERVICE_CALL",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"CR_Number": {
+												"value": "@item().DS_SUPPLIER_CR",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "LKP_CUSTOMS_DEC",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "SELECT\nDS_SUPPLIER_CR\nFROM [dwh].[DWL_CUSTOMS_DECLARATION] WHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "DWL_CUSTOMS_DECLARATION"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": "16070_registration.csv",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "ds_BSS_Files_Folder",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_CUSTOM"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
+				"[concat(variables('factoryId'), '/datasets/ds_BSS_Files_Folder')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_BSS_CHILD_SERVICE_CALL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_BSS_3')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CopyFromBSS",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LKP_CUSTOMS_DEC",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LKP_CUSTOMS_DEC').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Registration",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "XmlSource",
+											"additionalColumns": [
+												{
+													"name": "MainCRNumber",
+													"value": {
+														"value": "@item().DS_SUPPLIER_CR",
+														"type": "Expression"
+													}
+												}
+											],
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "POST",
+												"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialRegistration\"",
+												"requestBody": {
+													"value": "@{replace('<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:onep=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <onep:GetCommercialRegistrationInfoRequest_Input>\n         <onep:commercialRegistrationCode>?paramCR</onep:commercialRegistrationCode>\n         <onep:RefNumber></onep:RefNumber>\n      </onep:GetCommercialRegistrationInfoRequest_Input>\n   </soapenv:Body>\n</soapenv:Envelope>','?paramCR',item().DS_SUPPLIER_CR)}",
+													"type": "Expression"
+												},
+												"requestTimeout": ""
+											},
+											"formatSettings": {
+												"type": "XmlReadSettings",
+												"validationMode": "none",
+												"namespaces": true
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "[['ns0:serialNumber']"
+													},
+													"sink": {
+														"name": "BRANCH_CR",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "[['ns0:statuses']['ns0:code']"
+													},
+													"sink": {
+														"name": "BRANCH_STATUS",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['MainCRNumber']"
+													},
+													"sink": {
+														"name": "MainCRNumber",
+														"type": "String"
+													}
+												}
+											],
+											"collectionReference": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches']",
+											"mapComplexValuesToString": false
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "BSS_Dataset",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "BSS_Registration_DS",
+											"type": "DatasetReference",
+											"parameters": {
+												"dsparamFileName": {
+													"value": "@concat(item().DS_SUPPLIER_CR,'_regtemp.csv')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "LKP_CUSTOMS_DEC",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "SELECT\nDS_SUPPLIER_CR\nFROM [dwh].[DWL_CUSTOMS_DECLARATION] WHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "DWL_CUSTOMS_DECLARATION"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "CopyFromBSS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_BSS_Registiration_Process",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source3": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": "BSS_Source_CR_List.csv",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "ds_BSS_Files_Folder",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup1').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Registration Call",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "XmlSource",
+											"additionalColumns": [
+												{
+													"name": "MainCRNumber",
+													"value": {
+														"value": "@item().MainCRNumber",
+														"type": "Expression"
+													}
+												},
+												{
+													"name": "CRNumber",
+													"value": {
+														"value": "@item().BRANCH_CR",
+														"type": "Expression"
+													}
+												}
+											],
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "POST",
+												"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialRegistration\"",
+												"requestBody": {
+													"value": "@{replace('<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:onep=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <onep:GetCommercialRegistrationInfoRequest_Input>\n         <onep:commercialRegistrationCode>?paramCR</onep:commercialRegistrationCode>\n         <onep:RefNumber></onep:RefNumber>\n      </onep:GetCommercialRegistrationInfoRequest_Input>\n   </soapenv:Body>\n</soapenv:Envelope>','?paramCR',item().BRANCH_CR)}",
+													"type": "Expression"
+												},
+												"requestTimeout": ""
+											},
+											"formatSettings": {
+												"type": "XmlReadSettings",
+												"validationMode": "none",
+												"namespaces": true
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:addressPOBox']"
+													},
+													"sink": {
+														"name": "POBox",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:telephone']"
+													},
+													"sink": {
+														"name": "Telephone",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['MainCRNumber']"
+													},
+													"sink": {
+														"name": "MainCRNumber",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['CRNumber']"
+													},
+													"sink": {
+														"name": "CRNumber",
+														"type": "String"
+													}
+												}
+											],
+											"collectionReference": "",
+											"mapComplexValuesToString": true
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "BSS_Dataset",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "BSS_Registration_DS",
+											"type": "DatasetReference",
+											"parameters": {
+												"dsparamFileName": {
+													"value": "@concat(replace(item().BRANCH_CR,'/','-'),'_registration.csv')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "Permit-Entity Main Data",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "XmlSource",
+											"additionalColumns": [
+												{
+													"name": "CRNumber_Key",
+													"value": {
+														"value": "@item().BRANCH_CR",
+														"type": "Expression"
+													}
+												}
+											],
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "POST",
+												"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialPermit\"",
+												"requestBody": {
+													"value": "@{replace('<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialPermitInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialPermitID></ns1:commercialPermitID>\n            <ns1:commercialRegistration>\n                <ns1:ID>?paramCR</ns1:ID>\n                <ns1:branchNumber></ns1:branchNumber>\n            </ns1:commercialRegistration>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialPermitInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>','?paramCR',item().BRANCH_CR)}",
+													"type": "Expression"
+												},
+												"requestTimeout": ""
+											},
+											"formatSettings": {
+												"type": "XmlReadSettings",
+												"validationMode": "none",
+												"detectDataType": false,
+												"namespaces": true
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".csv"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:ID']"
+													},
+													"sink": {
+														"name": "CRNUMBER",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:branchNumber']"
+													},
+													"sink": {
+														"name": "BRANCHNUMBER",
+														"type": "Int16"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameArabic']"
+													},
+													"sink": {
+														"name": "COMPANY_ARB",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameEnglish']"
+													},
+													"sink": {
+														"name": "COMPANY_ENG",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:municipalityName']['ns0:nameArabic']"
+													},
+													"sink": {
+														"name": "MUNICIPALITY_NAME",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:number']"
+													},
+													"sink": {
+														"name": "STREET_NUMBER",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:name']['ns0:nameArabic']"
+													},
+													"sink": {
+														"name": "STREET_NAME",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:number']"
+													},
+													"sink": {
+														"name": "ZONE_NUMBER",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:name']['ns0:nameEnglish']"
+													},
+													"sink": {
+														"name": "ZONE_NAME",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerQID']"
+													},
+													"sink": {
+														"name": "MANAGER_QID",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerName']"
+													},
+													"sink": {
+														"name": "MANAGER_NAME",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['CRNumber_Key']"
+													},
+													"sink": {
+														"name": "CRNumber_Key",
+														"type": "String"
+													}
+												}
+											],
+											"mapComplexValuesToString": false
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "BSS_Dataset",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "BSS_Permit_DS",
+											"type": "DatasetReference",
+											"parameters": {
+												"dsparamFileName": {
+													"value": "@concat(replace(item().BRANCH_CR,'/','-'),'_permit.csv')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Data flow2",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "ForEach1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_BSS_Registiration_Process_copy1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source2": {},
+									"sink1": {},
+									"sink2": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow3",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Data flow2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_BSS_Registiration_Process_copy2",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source2": {},
+									"sink1": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "stagingarea"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_CUSTOM"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
+				"[concat(variables('factoryId'), '/dataflows/df_BSS_Registiration_Process')]",
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
+				"[concat(variables('factoryId'), '/datasets/ds_BSS_Files_Folder')]",
+				"[concat(variables('factoryId'), '/dataflows/df_BSS_Registiration_Process_copy1')]",
+				"[concat(variables('factoryId'), '/dataflows/df_BSS_Registiration_Process_copy2')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
+				"[concat(variables('factoryId'), '/datasets/BSS_Dataset')]",
+				"[concat(variables('factoryId'), '/datasets/BSS_Registration_DS')]",
+				"[concat(variables('factoryId'), '/datasets/BSS_Permit_DS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_BSS_CHILD_SERVICE_CALL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Permit-Entity Main Data",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "XmlSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "XmlReadSettings",
+									"validationMode": "none",
+									"detectDataType": false,
+									"namespaces": true
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:ID']"
+										},
+										"sink": {
+											"name": "CRNUMBER",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:branchNumber']"
+										},
+										"sink": {
+											"name": "BRANCHNUMBER",
+											"type": "Int16"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameArabic']"
+										},
+										"sink": {
+											"name": "COMPANY_ARB",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameEnglish']"
+										},
+										"sink": {
+											"name": "COMPANY_ENG",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:municipalityName']['ns0:nameArabic']"
+										},
+										"sink": {
+											"name": "MUNICIPALITY_NAME",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:number']"
+										},
+										"sink": {
+											"name": "STREET_NUMBER",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:name']['ns0:nameArabic']"
+										},
+										"sink": {
+											"name": "STREET_NAME",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:number']"
+										},
+										"sink": {
+											"name": "ZONE_NUMBER",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:name']['ns0:nameArabic']"
+										},
+										"sink": {
+											"name": "ZONE_NAME",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerQID']"
+										},
+										"sink": {
+											"name": "MANAGER_QID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerName']"
+										},
+										"sink": {
+											"name": "MANAGER_NAME",
+											"type": "String"
+										}
+									}
+								],
+								"mapComplexValuesToString": false
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "BSS_Dataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "BSS_Permit_DS",
+								"type": "DatasetReference",
+								"parameters": {
+									"dsparamFileName": {
+										"value": "@pipeline().parameters.CR_Number",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Registration",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "XmlSource",
+								"additionalColumns": [
+									{
+										"name": "MainCRNumber",
+										"value": {
+											"value": "@pipeline().parameters.CR_Number",
+											"type": "Expression"
+										}
+									}
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "XmlReadSettings",
+									"validationMode": "none",
+									"namespaces": true
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "[['ns0:serialNumber']"
+										},
+										"sink": {
+											"name": "BRANCH_CR",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "[['ns0:statuses']['ns0:code']"
+										},
+										"sink": {
+											"name": "BRANCH_STATUS",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['MainCRNumber']"
+										},
+										"sink": {
+											"name": "MainCRNumber",
+											"type": "String"
+										}
+									}
+								],
+								"collectionReference": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches']",
+								"mapComplexValuesToString": false
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "BSS_Dataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "BSS_Registration_DS",
+								"type": "DatasetReference",
+								"parameters": {
+									"dsparamFileName": {
+										"value": "@pipeline().parameters.CR_Number",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": "16070_registration.csv",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "ds_BSS_Files_Folder",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"CR_Number": {
+						"type": "string",
+						"defaultValue": "DefaultValue-ReplaceThis"
+					}
+				},
+				"folder": {
+					"name": "PL_CUSTOM"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/BSS_Dataset')]",
+				"[concat(variables('factoryId'), '/datasets/BSS_Permit_DS')]",
+				"[concat(variables('factoryId'), '/datasets/BSS_Registration_DS')]",
+				"[concat(variables('factoryId'), '/datasets/ds_BSS_Files_Folder')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_COPY_UI_TABLE')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2873,7 +4017,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlDWSource",
-								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=2",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere target_table_name in(\n'CompanyBranchTypes'\n,'CompanyEntityBranches')",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -2903,7 +4047,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlDWSource",
-								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=4",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere target_table_name in ('CompanyEntityWarehouses'\n,'Warehouses'\n,'WarehouseTypes')",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -3022,7 +4166,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlDWSource",
-								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=8",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere target_table_name in (\n'CompanyEntities'\n,'CompanyEntityTypes'\n,'CompanyEntityContacts')",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -11931,6 +13075,33 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "P_STG_PRODUCTS_VALID_ARCH",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "PL_EXEC_P_DQ_ITEMS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dwh].[P_STG_PRODUCTS_VALID_ARCH]"
+						},
+						"linkedServiceName": {
+							"referenceName": "ls_dsqlpqtr",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"policy": {
@@ -14820,6 +15991,211 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/BSS_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Barbaros_BSS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Xml",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Barbaros_BSS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BSS_Permit_DS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"dsparamFileName": {
+						"type": "string",
+						"defaultValue": "DummyName"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().dsparamFileName",
+							"type": "Expression"
+						},
+						"fileSystem": "stagingarea"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "DS_COMPANY_ENG",
+						"type": "String"
+					},
+					{
+						"name": "DS_COMPANY_ARB",
+						"type": "String"
+					},
+					{
+						"name": "FLG_MASTER_ENTITY",
+						"type": "String"
+					},
+					{
+						"name": "FLG_STRATEGIC_ENTITY",
+						"type": "String"
+					},
+					{
+						"name": "DS_CRNUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_CLNUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_MAIN_ADDRESS",
+						"type": "String"
+					},
+					{
+						"name": "DS_POSTAL_CODE",
+						"type": "String"
+					},
+					{
+						"name": "DS_BUILDING_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_MUNICIPALITY_NAME",
+						"type": "String"
+					},
+					{
+						"name": "DS_MUNICIPALITY_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_DISTRICT_NAME",
+						"type": "String"
+					},
+					{
+						"name": "DS_DISTRICT_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_STREET_NAME",
+						"type": "String"
+					},
+					{
+						"name": "DS_STREET_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_ZONE_NAME",
+						"type": "String"
+					},
+					{
+						"name": "DS_ZONE_NUMBER",
+						"type": "String"
+					},
+					{
+						"name": "DS_PHONENUMBER",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BSS_Permit_DS_copy1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"dsparamFileName": {
+						"type": "string",
+						"defaultValue": "DummyName"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(dataset().dsparamFileName,'_permit.csv')",
+							"type": "Expression"
+						},
+						"fileSystem": "stagingarea"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BSS_Registration_DS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"dsparamFileName": {
+						"type": "string",
+						"defaultValue": "DummyName"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().dsparamFileName",
+							"type": "Expression"
+						},
+						"fileSystem": "stagingarea"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Barbaros_BSS_Dataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -15740,6 +17116,33 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_BSS_Files_Folder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "stagingarea"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_custom_xml')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -15919,6 +17322,43 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_bss_soap')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_staging_blank_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "dummy"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"fileSystem": "stagingarea"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
 			]
 		},
 		{
@@ -16683,6 +18123,10 @@
 				"annotations": [],
 				"type": "AzureSqlDWTable",
 				"schema": [
+					{
+						"name": "CompanyCR",
+						"type": "nvarchar"
+					},
 					{
 						"name": "ITEMCODE",
 						"type": "nvarchar"
@@ -17569,6 +19013,169 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_BSS_Registiration_Process')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_BSS_Files_Folder",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"linkedService": {
+								"referenceName": "ls_dsqlpqtr",
+								"type": "LinkedServiceReference"
+							},
+							"name": "source3"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "ls_psmsii_syntodls",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "MapDrifted3",
+							"description": "Creates an explicit mapping for each drifted column"
+						},
+						{
+							"name": "Union1"
+						},
+						{
+							"name": "Filter1"
+						}
+					],
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpurgeFiles: true,\n\twildcardPaths:['*_regtemp.csv']) ~> source1\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'query',\n\tstore: 'synapseanalytics',\n\tquery: 'SELECT\\nDS_SUPPLIER_CR AS BRANCH_CR,\\n\\'Active\\' AS BRANCH_STATUS,\\nDS_SUPPLIER_CR AS MainCRNumber\\nFROM [dwh].[DWL_CUSTOMS_DECLARATION] WHERE FLG_SUPPLIER_CHECK=1\\nAND DS_SUPPLIER_CR IS NOT NULL',\n\tisolationLevel: 'NONE',\n\tstaged: false) ~> source3\nsource1 derive(BRANCH_CR = toString(byName('BRANCH_CR')),\n\t\tBRANCH_STATUS = toString(byName('BRANCH_STATUS')),\n\t\tMainCRNumber = toString(byName('MainCRNumber'))) ~> MapDrifted3\nMapDrifted3, source3 union(byName: true)~> Union1\nUnion1 filter(equalsIgnoreCase(BRANCH_STATUS,'Active')) ~> Filter1\nFilter1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delimited',\n\tfileSystem: 'stagingarea',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: true,\n\tpartitionFileNames:['BSS_Source_CR_List.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_BSS_Files_Folder')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_dsqlpqtr')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_BSS_Registiration_Process_copy1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_BSS_Files_Folder",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_BSS_Files_Folder",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "ls_psmsii_syntodls",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink1"
+						},
+						{
+							"linkedService": {
+								"referenceName": "ls_psmsii_syntodls",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink2"
+						}
+					],
+					"transformations": [
+						{
+							"name": "MapDrifted2",
+							"description": "Creates an explicit mapping for each drifted column"
+						},
+						{
+							"name": "MapDrifted3",
+							"description": "Creates an explicit mapping for each drifted column"
+						}
+					],
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpurgeFiles: true,\n\twildcardPaths:['*_registration.csv']) ~> source1\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpurgeFiles: true,\n\twildcardPaths:['*_permit.csv']) ~> source2\nsource2 derive(CRNUMBER = toString(byName('CRNUMBER')),\n\t\tBRANCHNUMBER = toString(byName('BRANCHNUMBER')),\n\t\tCOMPANY_ARB = toString(byName('COMPANY_ARB')),\n\t\tCOMPANY_ENG = toString(byName('COMPANY_ENG')),\n\t\tMUNICIPALITY_NAME = toString(byName('MUNICIPALITY_NAME')),\n\t\tSTREET_NUMBER = toString(byName('STREET_NUMBER')),\n\t\tSTREET_NAME = toString(byName('STREET_NAME')),\n\t\tZONE_NUMBER = toString(byName('ZONE_NUMBER')),\n\t\tZONE_NAME = toString(byName('ZONE_NAME')),\n\t\tMANAGER_QID = toString(byName('MANAGER_QID')),\n\t\tMANAGER_NAME = toString(byName('MANAGER_NAME')),\n\t\tCRNumber_Key = toString(byName('CRNumber_Key'))) ~> MapDrifted2\nsource1 derive(POBox = toString(byName('POBox')),\n\t\tTelephone = toString(byName('Telephone')),\n\t\tMainCRNumber = toString(byName('MainCRNumber')),\n\t\tCRNumber = toString(byName('CRNumber'))) ~> MapDrifted3\nMapDrifted3 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delimited',\n\tfileSystem: 'stagingarea',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: true,\n\tpartitionFileNames:['bss_all_register_data.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1\nMapDrifted2 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tBranchCR as string,\n\t\tStatus as string,\n\t\tSourceFileName as string\n\t),\n\tformat: 'delimited',\n\tfileSystem: 'stagingarea',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: true,\n\tpartitionFileNames:['bss_all_permit_data.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink2"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_BSS_Files_Folder')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_BSS_Registiration_Process_copy2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_BSS_Files_Folder",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_BSS_Files_Folder",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "ls_psmsii_syntodsqlp",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "MapDrifted1",
+							"description": "Creates an explicit mapping for each drifted column"
+						},
+						{
+							"name": "MapDrifted2",
+							"description": "Creates an explicit mapping for each drifted column"
+						},
+						{
+							"name": "Join1"
+						}
+					],
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpurgeFiles: true,\n\twildcardPaths:['bss_all_register_data.csv']) ~> source1\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpurgeFiles: true,\n\twildcardPaths:['bss_all_permit_data.csv']) ~> source2\nsource1 derive(POBox = toString(byName('POBox')),\n\t\tTelephone = toString(byName('Telephone')),\n\t\tMainCRNumber = toString(byName('MainCRNumber')),\n\t\tCRNumber = toString(byName('CRNumber'))) ~> MapDrifted1\nsource2 derive(CRNUMBER = toString(byName('CRNUMBER')),\n\t\tBRANCHNUMBER = toString(byName('BRANCHNUMBER')),\n\t\tCOMPANY_ARB = toString(byName('COMPANY_ARB')),\n\t\tCOMPANY_ENG = toString(byName('COMPANY_ENG')),\n\t\tMUNICIPALITY_NAME = toString(byName('MUNICIPALITY_NAME')),\n\t\tSTREET_NUMBER = toString(byName('STREET_NUMBER')),\n\t\tSTREET_NAME = toString(byName('STREET_NAME')),\n\t\tZONE_NUMBER = toString(byName('ZONE_NUMBER')),\n\t\tZONE_NAME = toString(byName('ZONE_NAME')),\n\t\tMANAGER_QID = toString(byName('MANAGER_QID')),\n\t\tMANAGER_NAME = toString(byName('MANAGER_NAME')),\n\t\tCRNumber_Key = toString(byName('CRNumber_Key'))) ~> MapDrifted2\nMapDrifted2, MapDrifted1 join(CRNumber_Key == MapDrifted1@CRNumber,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> Join1\nJoin1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tMAIN_CRNUMBER as long,\n\t\tBRANCHNUMBER as integer,\n\t\tCOMPANY_ARB as string,\n\t\tCOMPANY_ENG as string,\n\t\tMUNICIPALITY_NAME as string,\n\t\tSTREET_NUMBER as integer,\n\t\tSTREET_NAME as string,\n\t\tZONE_NUMBER as integer,\n\t\tZONE_NAME as string,\n\t\tMANAGER_QID as long,\n\t\tMANAGER_NAME as string,\n\t\tPOBox as integer,\n\t\tTelephone as string,\n\t\tCRNumber as string\n\t),\n\tformat: 'table',\n\tstore: 'synapseanalytics',\n\tschemaName: 'tmp',\n\ttableName: 'STG_BSS_DATA',\n\tinsertable: true,\n\tupdateable: false,\n\tdeletable: false,\n\tupsertable: false,\n\ttruncate: true,\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tMAIN_CRNUMBER = MapDrifted2@CRNUMBER,\n\t\tBRANCHNUMBER,\n\t\tCOMPANY_ARB,\n\t\tCOMPANY_ENG,\n\t\tMUNICIPALITY_NAME,\n\t\tSTREET_NUMBER,\n\t\tSTREET_NAME,\n\t\tZONE_NUMBER,\n\t\tZONE_NAME,\n\t\tMANAGER_QID,\n\t\tMANAGER_NAME,\n\t\tPOBox,\n\t\tTelephone,\n\t\tCRNumber = MapDrifted1@CRNumber\n\t)) ~> sink1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_BSS_Files_Folder')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodsqlp')]"
 			]
 		},
 		{
@@ -18534,127 +20141,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Barbaros_BSS_REST_LS')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "RestService",
-				"typeProperties": {
-					"url": "[parameters('Barbaros_BSS_REST_LS_properties_typeProperties_url')]",
-					"enableServerCertificateValidation": false,
-					"authenticationType": "Anonymous"
-				},
-				"connectVia": {
-					"referenceName": "shir-sql-azure-psmsii-dt-01",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/shir-sql-azure-psmsii-dt-01')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BSS_Permit_DS')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodls",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "stagingarea"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "DS_COMPANY_ENG",
-						"type": "String"
-					},
-					{
-						"name": "DS_COMPANY_ARB",
-						"type": "String"
-					},
-					{
-						"name": "FLG_MASTER_ENTITY",
-						"type": "String"
-					},
-					{
-						"name": "FLG_STRATEGIC_ENTITY",
-						"type": "String"
-					},
-					{
-						"name": "DS_CRNUMBER",
-						"type": "String"
-					},
-					{
-						"name": "DS_CLNUMBER",
-						"type": "String"
-					},
-					{
-						"name": "DS_MAIN_ADDRESS",
-						"type": "String"
-					},
-					{
-						"name": "DS_POSTAL_CODE",
-						"type": "String"
-					},
-					{
-						"name": "DS_BUILDING_NUMBER",
-						"type": "String"
-					},
-					{
-						"name": "DS_MUNICIPALITY_NAME",
-						"type": "String"
-					},
-					{
-						"name": "DS_MUNICIPALITY_NUMBER",
-						"type": "String"
-					},
-					{
-						"name": "DS_DISTRICT_NAME",
-						"type": "String"
-					},
-					{
-						"name": "DS_DISTRICT_NUMBER",
-						"type": "String"
-					},
-					{
-						"name": "DS_STREET_NAME",
-						"type": "String"
-					},
-					{
-						"name": "DS_STREET_NUMBER",
-						"type": "String"
-					},
-					{
-						"name": "DS_ZONE_NAME",
-						"type": "String"
-					},
-					{
-						"name": "DS_ZONE_NUMBER",
-						"type": "String"
-					},
-					{
-						"name": "DS_PHONENUMBER",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]"
 			]
 		}
 	]
