@@ -384,6 +384,15 @@
 							"typeProperties": {
 								"source": {
 									"type": "XmlSource",
+									"additionalColumns": [
+										{
+											"name": "CRNumber_Key",
+											"value": {
+												"value": "@item().BRANCH_CR",
+												"type": "Expression"
+											}
+										}
+									],
 									"storeSettings": {
 										"type": "HttpReadSettings",
 										"requestMethod": "POST",
@@ -512,6 +521,15 @@
 											},
 											"sink": {
 												"name": "MANAGER_NAME",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['CRNumber_Key']"
+											},
+											"sink": {
+												"name": "CRNumber_Key",
 												"type": "String"
 											}
 										}
