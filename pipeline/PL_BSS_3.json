@@ -614,6 +614,13 @@
 						"referenceName": "df_BSS_Registiration_Process_copy2",
 						"type": "DataFlowReference"
 					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_psmsii_syntodls",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "stagingarea"
+					},
 					"integrationRuntime": {
 						"referenceName": "integrationRuntime10min",
 						"type": "IntegrationRuntimeReference"
