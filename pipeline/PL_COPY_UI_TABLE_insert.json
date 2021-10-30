@@ -412,14 +412,7 @@
 						{
 							"name": "Truncate and Insert Table3",
 							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "LKP_max_date3",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -432,7 +425,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date3').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date3').output.firstRow.TheMin,'''',' )\nand status=1')",
+										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE status=1')",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -482,48 +475,6 @@
 									}
 								}
 							]
-						},
-						{
-							"name": "LKP_max_date3",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "SqlDWSource",
-									"sqlReaderStoredProcedureName": "[etl].[P_LKP_ODS_MAX_DATES]",
-									"storedProcedureParameters": {
-										"ods_schema_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().target_schema_name",
-												"type": "Expression"
-											}
-										},
-										"ods_table_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().table_name",
-												"type": "Expression"
-											}
-										}
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "dsqlpqtr",
-									"type": "DatasetReference"
-								},
-								"firstRowOnly": true
-							}
 						}
 					]
 				}
@@ -580,14 +531,7 @@
 						{
 							"name": "Truncate and Insert Table5",
 							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "LKP_max_date5",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -600,7 +544,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date5').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date5').output.firstRow.TheMin,'''',' )\nand status=1')",
+										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE status=1')",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -650,48 +594,6 @@
 									}
 								}
 							]
-						},
-						{
-							"name": "LKP_max_date5",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "SqlDWSource",
-									"sqlReaderStoredProcedureName": "[etl].[P_LKP_ODS_MAX_DATES]",
-									"storedProcedureParameters": {
-										"ods_schema_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().target_schema_name",
-												"type": "Expression"
-											}
-										},
-										"ods_table_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().table_name",
-												"type": "Expression"
-											}
-										}
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "dsqlpqtr",
-									"type": "DatasetReference"
-								},
-								"firstRowOnly": true
-							}
 						}
 					]
 				}
@@ -748,14 +650,7 @@
 						{
 							"name": "Truncate and Insert Table7",
 							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "LKP_max_date7",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -768,7 +663,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date7').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date7').output.firstRow.TheMin,'''',' )\nand status=1')",
+										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE status=1')",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -818,48 +713,6 @@
 									}
 								}
 							]
-						},
-						{
-							"name": "LKP_max_date7",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "SqlDWSource",
-									"sqlReaderStoredProcedureName": "[etl].[P_LKP_ODS_MAX_DATES]",
-									"storedProcedureParameters": {
-										"ods_schema_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().target_schema_name",
-												"type": "Expression"
-											}
-										},
-										"ods_table_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().table_name",
-												"type": "Expression"
-											}
-										}
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "dsqlpqtr",
-									"type": "DatasetReference"
-								},
-								"firstRowOnly": true
-							}
 						}
 					]
 				}
@@ -916,14 +769,7 @@
 						{
 							"name": "Truncate and Insert Table9",
 							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "LKP_max_date9",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -936,7 +782,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date9').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date9').output.firstRow.TheMin,'''',' )\nand status=1')",
+										"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE status=1')",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -986,48 +832,6 @@
 									}
 								}
 							]
-						},
-						{
-							"name": "LKP_max_date9",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "SqlDWSource",
-									"sqlReaderStoredProcedureName": "[etl].[P_LKP_ODS_MAX_DATES]",
-									"storedProcedureParameters": {
-										"ods_schema_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().target_schema_name",
-												"type": "Expression"
-											}
-										},
-										"ods_table_name": {
-											"type": "String",
-											"value": {
-												"value": "@item().table_name",
-												"type": "Expression"
-											}
-										}
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "dsqlpqtr",
-									"type": "DatasetReference"
-								},
-								"firstRowOnly": true
-							}
 						}
 					]
 				}
