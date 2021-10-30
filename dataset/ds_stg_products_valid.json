@@ -7,7 +7,151 @@
 		},
 		"annotations": [],
 		"type": "AzureSqlDWTable",
-		"schema": [],
+		"schema": [
+			{
+				"name": "CompanyCR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ITEMCODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BARCODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PRODUCTNAMEARABIC",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DESCRIPTIONARABIC",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PRODUCTNAMEENGLISH",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DESCRIPTIONENGLISH",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UNITITEMBARCODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NOOFUNITITEMS",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UNITWEIGHTSIZE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UNITUOM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PACKAGEUOM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "COSTPRICE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SELLINGPRICE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BRANDTRADEMARKENGLISH",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BRANDTRADEMARKARABIC",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MOCIPRODUCTGROUP",
+				"type": "nvarchar"
+			},
+			{
+				"name": "COUNTRYOFORAGENNAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "COUNTRYOFORAGENISO",
+				"type": "nvarchar"
+			},
+			{
+				"name": "HSCODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SUPPLIERCR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SUPPLIERNAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CATEGORYLEVEL11",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CATEGORYLEVEL12",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CATEGORYLEVEL13",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CATEGORYLEVEL14",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WIDTH",
+				"type": "nvarchar"
+			},
+			{
+				"name": "HEIGHT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DEPTH",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ID_SK",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DS_FILENAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DT_FILETIME",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DT_CREATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DT_UPDATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
 		"typeProperties": {
 			"schema": "dwh",
 			"table": "STG_PRODUCTS_VALID"
