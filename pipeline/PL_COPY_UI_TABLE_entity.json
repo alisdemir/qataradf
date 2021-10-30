@@ -196,7 +196,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=2",
+						"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere target_table_name in(\n'CompanyBranchTypes'\n,'CompanyEntityBranches')",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -226,7 +226,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=4",
+						"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere target_table_name in ('CompanyEntityWarehouses'\n,'Warehouses'\n,'WarehouseTypes')",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -345,7 +345,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=8",
+						"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere target_table_name in (\n'CompanyEntities'\n,'CompanyEntityTypes'\n,'CompanyEntityContacts')",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
