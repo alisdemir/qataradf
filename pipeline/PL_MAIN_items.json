@@ -157,6 +157,26 @@
 											},
 											"waitOnCompletion": true
 										}
+									},
+									{
+										"name": "PL_COPY_UI_TABLE_product",
+										"type": "ExecutePipeline",
+										"dependsOn": [
+											{
+												"activity": "PL_SP_LOOP_items",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"userProperties": [],
+										"typeProperties": {
+											"pipeline": {
+												"referenceName": "PL_COPY_UI_TABLE_product",
+												"type": "PipelineReference"
+											},
+											"waitOnCompletion": true
+										}
 									}
 								]
 							}
@@ -233,26 +253,6 @@
 						}
 					},
 					"firstRowOnly": false
-				}
-			},
-			{
-				"name": "PL_COPY_UI_TABLE_product",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "ForEach1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "PL_COPY_UI_TABLE_product",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
 				}
 			},
 			{
