@@ -433,26 +433,6 @@
 											"referenceName": "ls_dsqlpqtr",
 											"type": "LinkedServiceReference"
 										}
-									},
-									{
-										"name": "PL_BSS_XML",
-										"type": "ExecutePipeline",
-										"dependsOn": [
-											{
-												"activity": "P_UPSERT_CUSTOMS_DEC",
-												"dependencyConditions": [
-													"Succeeded"
-												]
-											}
-										],
-										"userProperties": [],
-										"typeProperties": {
-											"pipeline": {
-												"referenceName": "PL_BSS",
-												"type": "PipelineReference"
-											},
-											"waitOnCompletion": true
-										}
 									}
 								]
 							}
