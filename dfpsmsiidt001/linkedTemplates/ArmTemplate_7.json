@@ -1378,27 +1378,6 @@
 						}
 					},
 					{
-						"name": "PL_COPY_UI_TABLE_product",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "ForEach1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_COPY_UI_TABLE_product",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "P_STG_PRODUCTS_VALID_ARCH",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
@@ -1423,6 +1402,27 @@
 						"linkedServiceName": {
 							"referenceName": "ls_dsqlpqtr",
 							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "PL_COPY_UI_TABLE_product",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ForEach1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_COPY_UI_TABLE_product",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
 						}
 					}
 				],
