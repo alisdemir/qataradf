@@ -26,7 +26,7 @@
 				"fileSystem": "errorlog"
 			},
 			"columnDelimiter": "|",
-			"encodingName": "UTF-16LE",
+			"encodingName": "ISO-8859-1",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
