@@ -736,21 +736,6 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "PL_FILE_TRANSFER",
-						"description": "deneme2",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_FILE_TRANSFER",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "PL_LOAD_DWB_TRANSACTION",
 						"description": "",
 						"type": "ExecutePipeline",
@@ -775,14 +760,7 @@
 					{
 						"name": "truncateStgTransactions",
 						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "PL_FILE_TRANSFER",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
