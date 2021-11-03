@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "df_custom_xml_to_db",
+				"name": "df_custom_xml_to_db_copy1",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,32 +16,26 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_custom_xml_to_db",
+						"referenceName": "df_custom_xml_to_db_copy1",
 						"type": "DataFlowReference",
 						"parameters": {
-							"xmlfilename": {
-								"value": "'@{item().name}'",
-								"type": "Expression"
-							}
+							"xmlfilename": "'a'"
 						},
 						"datasetParameters": {
 							"source1": {
-								"xmlfileName": {
-									"value": "@item().name",
-									"type": "Expression"
-								}
+								"xmlfileName": "Declaration_5SI60018039378_20210714200146744.xml"
 							},
 							"DECLARATION": {
 								"schemaName": "dwh",
-								"tableName": "STG_CUSTOMS_DEC"
+								"tableName": "STG_PRODUCTS_RAW"
 							},
 							"ITEM": {
 								"schemaName": "dwh",
-								"tableName": "STG_CUSTOMS_ITEM"
+								"tableName": "STG_PRODUCTS_RAW"
 							},
 							"SUPERVISOR": {
 								"schemaName": "dwh",
-								"tableName": "STG_CUSTOMS_SUPV"
+								"tableName": "STG_PRODUCTS_RAW"
 							}
 						}
 					},
@@ -56,7 +50,7 @@
 						"referenceName": "integrationRuntime10min",
 						"type": "IntegrationRuntimeReference"
 					},
-					"traceLevel": "Coarse"
+					"traceLevel": "Fine"
 				}
 			}
 		],
