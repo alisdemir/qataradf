@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "df_custom_xml_to_db_copy1",
+				"name": "df_errlog_container_items_copy1",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,26 +16,15 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_custom_xml_to_db_copy1",
+						"referenceName": "df_errlog_container_items_copy1",
 						"type": "DataFlowReference",
-						"parameters": {
-							"xmlfilename": "'a'"
-						},
 						"datasetParameters": {
-							"source1": {
-								"xmlfileName": "Declaration_5SI60018037249_20210714204422019.xml"
-							},
-							"DECLARATION": {
+							"stgproductserrlog": {
 								"schemaName": "dwh",
-								"tableName": "STG_CUSTOMS_DEC"
+								"tableName": "STG_PRODUCTS_ERROR_LOG"
 							},
-							"ITEM": {
-								"schemaName": "dwh",
-								"tableName": "STG_CUSTOMS_ITEM"
-							},
-							"SUPERVISOR": {
-								"schemaName": "dwh",
-								"tableName": "STG_CUSTOMS_SUPV"
+							"errorlogitems": {
+								"folderName": "Items"
 							}
 						}
 					},
