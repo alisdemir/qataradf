@@ -27,15 +27,15 @@
 							},
 							"DECLARATION": {
 								"schemaName": "dwh",
-								"tableName": "STG_PRODUCTS_RAW"
+								"tableName": "STG_CUSTOMS_DEC"
 							},
 							"ITEM": {
 								"schemaName": "dwh",
-								"tableName": "STG_PRODUCTS_RAW"
+								"tableName": "STG_CUSTOMS_ITEM"
 							},
 							"SUPERVISOR": {
 								"schemaName": "dwh",
-								"tableName": "STG_PRODUCTS_RAW"
+								"tableName": "STG_CUSTOMS_SUPV"
 							}
 						}
 					},
@@ -50,7 +50,10 @@
 						"referenceName": "integrationRuntime10min",
 						"type": "IntegrationRuntimeReference"
 					},
-					"traceLevel": "Fine"
+					"traceLevel": "None",
+					"cacheSinks": {
+						"firstRowOnly": true
+					}
 				}
 			}
 		],
