@@ -13,6 +13,122 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_XLS_TO_STG_initial')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_xls",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": "*.xlsx"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "df_xlsx_to_stg",
+									"type": "ExecuteDataFlow",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "1.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataflow": {
+											"referenceName": "df_xlsx_to_stg",
+											"type": "DataFlowReference",
+											"parameters": {
+												"fileName": {
+													"value": "'@{item().name}'",
+													"type": "Expression"
+												}
+											},
+											"datasetParameters": {
+												"source1": {
+													"FileName": "@item().name"
+												},
+												"stgTransactions": {}
+											}
+										},
+										"staging": {
+											"linkedService": {
+												"referenceName": "ls_psmsii_syntodls",
+												"type": "LinkedServiceReference"
+											},
+											"folderPath": "stagingarea"
+										},
+										"integrationRuntime": {
+											"referenceName": "integrationRuntime10min",
+											"type": "IntegrationRuntimeReference"
+										},
+										"traceLevel": "Coarse"
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN_TRANSACTION"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:55:14Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_XLS_TO_STG_items')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1107,7 +1223,9 @@
 				"annotations": [],
 				"lastPublishTime": "2021-05-25T14:24:57Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_XLS_TO_STG_initial')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_MAIN_company')]",
