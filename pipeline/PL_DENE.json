@@ -3,8 +3,49 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "lapp_qtr_email_items",
+				"name": "Email",
 				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "P_DQ_Invalid_Customs",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
+					"connectVia": {
+						"referenceName": "integrationRuntime10min",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "POST",
+					"headers": {
+						"filename": {
+							"value": "@item().name",
+							"type": "Expression"
+						},
+						"errorcode": {
+							"value": "@activity('P_DQ_Invalid_Customs').output",
+							"type": "Expression"
+						}
+					},
+					"body": {
+						"EmailType": "CustomInvalidFile"
+					}
+				}
+			},
+			{
+				"name": "P_DQ_Invalid_Customs",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -15,18 +56,20 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"url": {
-						"value": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
-						"type": "Expression"
-					},
-					"connectVia": {
-						"referenceName": "integrationRuntime10min",
-						"type": "IntegrationRuntimeReference"
-					},
-					"method": "POST",
-					"body": {
-						"EmailType": "ItemFileErrors"
+					"storedProcedureName": "[dwh].[P_DQ_INVALID_CUSTOM]",
+					"storedProcedureParameters": {
+						"notref": {
+							"value": {
+								"value": "@activity('Lookup1').output.firstRow.NotificationRef",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
 					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_dsqlpqtr",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
