@@ -225,7 +225,7 @@
 													"type": "Expression"
 												},
 												"errorcode": {
-													"value": "@activity('P_DQ_Invalid_Customs').output",
+													"value": "@activity('P_DQ_Invalid_Customs').output.firstrow.error",
 													"type": "Expression"
 												}
 											},
@@ -236,7 +236,7 @@
 									},
 									{
 										"name": "P_DQ_Invalid_Customs",
-										"type": "SqlServerStoredProcedure",
+										"type": "Lookup",
 										"dependsOn": [],
 										"policy": {
 											"timeout": "7.00:00:00",
@@ -247,20 +247,25 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"storedProcedureName": "[dwh].[P_DQ_INVALID_CUSTOM]",
-											"storedProcedureParameters": {
-												"notref": {
-													"value": {
-														"value": "@activity('Lookup1').output.firstRow.NotificationRef",
-														"type": "Expression"
-													},
-													"type": "String"
-												}
+											"source": {
+												"type": "SqlDWSource",
+												"sqlReaderStoredProcedureName": "[dwh].[P_DQ_INVALID_CUSTOM]",
+												"storedProcedureParameters": {
+													"notref": {
+														"type": "String",
+														"value": {
+															"value": "@activity('Lookup1').output.firstRow.NotificationRef",
+															"type": "Expression"
+														}
+													}
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "dsqlpqtr",
+												"type": "DatasetReference"
 											}
-										},
-										"linkedServiceName": {
-											"referenceName": "ls_dsqlpqtr",
-											"type": "LinkedServiceReference"
 										}
 									}
 								],
