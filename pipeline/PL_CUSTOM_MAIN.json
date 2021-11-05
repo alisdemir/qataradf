@@ -198,7 +198,7 @@
 										"type": "WebActivity",
 										"dependsOn": [
 											{
-												"activity": "MoveFiles",
+												"activity": "P_DQ_Invalid_Customs",
 												"dependencyConditions": [
 													"Succeeded"
 												]
@@ -269,11 +269,11 @@
 										}
 									},
 									{
-										"name": "MoveFiles",
-										"type": "Copy",
+										"name": "deletestgcustomsdec",
+										"type": "Lookup",
 										"dependsOn": [
 											{
-												"activity": "P_DQ_Invalid_Customs",
+												"activity": "Email",
 												"dependencyConditions": [
 													"Succeeded"
 												]
@@ -289,41 +289,20 @@
 										"userProperties": [],
 										"typeProperties": {
 											"source": {
-												"type": "BinarySource",
-												"storeSettings": {
-													"type": "AzureBlobFSReadSettings",
-													"recursive": true
+												"type": "SqlDWSource",
+												"sqlReaderQuery": {
+													"value": "@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,''';\nSELECT 1;\nDELETE FROM [dwh].[STG_CUSTOMS_ITEM] WHERE [declarationno] = ','''',activity('Lookup1').output.firstRow.declarationno,''';\nSELECT 1;\nDELETE FROM [dwh].[STG_CUSTOMS_SUPV] WHERE [declarationno] = ','''',activity('Lookup1').output.firstRow.declarationno,''';')",
+													"type": "Expression"
 												},
-												"formatSettings": {
-													"type": "BinaryReadSettings"
-												}
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
 											},
-											"sink": {
-												"type": "BinarySink",
-												"storeSettings": {
-													"type": "AzureBlobFSWriteSettings"
-												}
-											},
-											"enableStaging": false
-										},
-										"inputs": [
-											{
-												"referenceName": "dls_binary_input",
-												"type": "DatasetReference",
-												"parameters": {
-													"invalidxmlfilename": {
-														"value": "@item().name",
-														"type": "Expression"
-													}
-												}
-											}
-										],
-										"outputs": [
-											{
-												"referenceName": "dls_binary_errorlog",
+											"dataset": {
+												"referenceName": "ds_stg_customs_dec",
 												"type": "DatasetReference"
-											}
-										]
+											},
+											"firstRowOnly": false
+										}
 									}
 								],
 								"ifTrueActivities": [
