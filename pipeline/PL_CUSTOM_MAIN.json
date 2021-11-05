@@ -198,7 +198,7 @@
 										"type": "WebActivity",
 										"dependsOn": [
 											{
-												"activity": "deletestgcustomsdec",
+												"activity": "P_DQ_Invalid_Customs",
 												"dependencyConditions": [
 													"Succeeded"
 												]
@@ -222,6 +222,10 @@
 											"headers": {
 												"filename": {
 													"value": "@item().name",
+													"type": "Expression"
+												},
+												"errorcode": {
+													"value": "@activity('P_DQ_Invalid_Customs').output",
 													"type": "Expression"
 												}
 											},
@@ -257,6 +261,35 @@
 												"type": "DatasetReference"
 											},
 											"firstRowOnly": false
+										}
+									},
+									{
+										"name": "P_DQ_Invalid_Customs",
+										"type": "SqlServerStoredProcedure",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"storedProcedureName": "[dwh].[P_DQ_INVALID_CUSTOM]",
+											"storedProcedureParameters": {
+												"notref": {
+													"value": {
+														"value": "@activity('Lookup1').output.firstRow.NotificationRef",
+														"type": "Expression"
+													},
+													"type": "String"
+												}
+											}
+										},
+										"linkedServiceName": {
+											"referenceName": "ls_dsqlpqtr",
+											"type": "LinkedServiceReference"
 										}
 									}
 								],
