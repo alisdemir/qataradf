@@ -13,6 +13,675 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_BSS_3')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CopyFromBSS",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LKP_CUSTOMS_DEC",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LKP_CUSTOMS_DEC').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Registration",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "XmlSource",
+											"additionalColumns": [
+												{
+													"name": "MainCRNumber",
+													"value": {
+														"value": "@item().DS_SUPPLIER_CR",
+														"type": "Expression"
+													}
+												}
+											],
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "POST",
+												"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialRegistration\"",
+												"requestBody": {
+													"value": "@{replace('<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:onep=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <onep:GetCommercialRegistrationInfoRequest_Input>\n         <onep:commercialRegistrationCode>?paramCR</onep:commercialRegistrationCode>\n         <onep:RefNumber></onep:RefNumber>\n      </onep:GetCommercialRegistrationInfoRequest_Input>\n   </soapenv:Body>\n</soapenv:Envelope>','?paramCR',item().DS_SUPPLIER_CR)}",
+													"type": "Expression"
+												},
+												"requestTimeout": ""
+											},
+											"formatSettings": {
+												"type": "XmlReadSettings",
+												"validationMode": "none",
+												"namespaces": true
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "[['ns0:serialNumber']"
+													},
+													"sink": {
+														"name": "BRANCH_CR",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "[['ns0:statuses']['ns0:code']"
+													},
+													"sink": {
+														"name": "BRANCH_STATUS",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['MainCRNumber']"
+													},
+													"sink": {
+														"name": "MainCRNumber",
+														"type": "String"
+													}
+												}
+											],
+											"collectionReference": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches']",
+											"mapComplexValuesToString": false
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "BSS_Dataset",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "BSS_Registration_DS",
+											"type": "DatasetReference",
+											"parameters": {
+												"dsparamFileName": {
+													"value": "@concat(item().DS_SUPPLIER_CR,'_regtemp.csv')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "LKP_CUSTOMS_DEC",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "SELECT DISTINCT \n'16070' as DS_SUPPLIER_CR\nFROM [dwh].[DWL_CUSTOMS_DECLARATION] /*WHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL*/",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "DWL_CUSTOMS_DECLARATION"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "CopyFromBSS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_BSS_Registiration_Process",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source3": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": "BSS_Source_CR_List.csv",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "ds_BSS_Files_Folder",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup1').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Registration Call",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "XmlSource",
+											"additionalColumns": [
+												{
+													"name": "MainCRNumber",
+													"value": {
+														"value": "@item().MainCRNumber",
+														"type": "Expression"
+													}
+												},
+												{
+													"name": "CRNumber",
+													"value": {
+														"value": "@item().BRANCH_CR",
+														"type": "Expression"
+													}
+												}
+											],
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "POST",
+												"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialRegistration\"",
+												"requestBody": {
+													"value": "@{replace('<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:onep=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <onep:GetCommercialRegistrationInfoRequest_Input>\n         <onep:commercialRegistrationCode>?paramCR</onep:commercialRegistrationCode>\n         <onep:RefNumber></onep:RefNumber>\n      </onep:GetCommercialRegistrationInfoRequest_Input>\n   </soapenv:Body>\n</soapenv:Envelope>','?paramCR',item().BRANCH_CR)}",
+													"type": "Expression"
+												},
+												"requestTimeout": ""
+											},
+											"formatSettings": {
+												"type": "XmlReadSettings",
+												"validationMode": "none",
+												"namespaces": true
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:addressPOBox']"
+													},
+													"sink": {
+														"name": "POBox",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:telephone']"
+													},
+													"sink": {
+														"name": "Telephone",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['MainCRNumber']"
+													},
+													"sink": {
+														"name": "MainCRNumber",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['CRNumber']"
+													},
+													"sink": {
+														"name": "CRNumber",
+														"type": "String"
+													}
+												}
+											],
+											"collectionReference": "",
+											"mapComplexValuesToString": true
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "BSS_Dataset",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "BSS_Registration_DS",
+											"type": "DatasetReference",
+											"parameters": {
+												"dsparamFileName": {
+													"value": "@concat(replace(item().BRANCH_CR,'/','-'),'_registration.csv')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "Permit-Entity Main Data",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "XmlSource",
+											"additionalColumns": [
+												{
+													"name": "CRNumber_Key",
+													"value": {
+														"value": "@item().BRANCH_CR",
+														"type": "Expression"
+													}
+												}
+											],
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "POST",
+												"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialPermit\"",
+												"requestBody": {
+													"value": "@{replace('<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialPermitInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialPermitID></ns1:commercialPermitID>\n            <ns1:commercialRegistration>\n                <ns1:ID>?paramCR</ns1:ID>\n                <ns1:branchNumber></ns1:branchNumber>\n            </ns1:commercialRegistration>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialPermitInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>','?paramCR',item().BRANCH_CR)}",
+													"type": "Expression"
+												},
+												"requestTimeout": ""
+											},
+											"formatSettings": {
+												"type": "XmlReadSettings",
+												"validationMode": "none",
+												"detectDataType": false,
+												"namespaces": true
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".csv"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:ID']"
+													},
+													"sink": {
+														"name": "CRNUMBER",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:branchNumber']"
+													},
+													"sink": {
+														"name": "BRANCHNUMBER",
+														"type": "Int16"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameArabic']"
+													},
+													"sink": {
+														"name": "COMPANY_ARB",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameEnglish']"
+													},
+													"sink": {
+														"name": "COMPANY_ENG",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:municipalityName']['ns0:nameArabic']"
+													},
+													"sink": {
+														"name": "MUNICIPALITY_NAME",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:number']"
+													},
+													"sink": {
+														"name": "STREET_NUMBER",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:name']['ns0:nameArabic']"
+													},
+													"sink": {
+														"name": "STREET_NAME",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:number']"
+													},
+													"sink": {
+														"name": "ZONE_NUMBER",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:name']['ns0:nameEnglish']"
+													},
+													"sink": {
+														"name": "ZONE_NAME",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerQID']"
+													},
+													"sink": {
+														"name": "MANAGER_QID",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerName']"
+													},
+													"sink": {
+														"name": "MANAGER_NAME",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['CRNumber_Key']"
+													},
+													"sink": {
+														"name": "CRNumber_Key",
+														"type": "String"
+													}
+												}
+											],
+											"mapComplexValuesToString": false
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "BSS_Dataset",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "BSS_Permit_DS",
+											"type": "DatasetReference",
+											"parameters": {
+												"dsparamFileName": {
+													"value": "@concat(replace(item().BRANCH_CR,'/','-'),'_permit.csv')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Data flow2",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "ForEach1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_BSS_Registiration_Process_copy1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source2": {},
+									"sink1": {},
+									"sink2": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Data flow3",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Data flow2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_BSS_Registiration_Process_copy2",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source2": {},
+									"sink1": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "stagingarea"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_CUSTOM"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_CSV_TO_STG_with_df')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -406,7 +1075,7 @@
 										"source": {
 											"type": "SqlDWSource",
 											"sqlReaderQuery": {
-												"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC] as SCD\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '''')) IS NULL\nOR try_convert(datetimeoffset,SWITCHOFFSET(cast(NULLIF([NotificationDate],'''') as datetimeoffset),''+03:00'')) IS NULL  \nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '''')) IS NULL\nOR NOT EXISTS (SELECT 1 FROM dwh.STG_CUSTOMS_ITEM AS SCI WHERE sci.declarationNo=SCD.declarationNo)\n)\nAND [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,'''')",
+												"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC] as SCD\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '''')) IS NULL\nOR try_convert(datetimeoffset,SWITCHOFFSET(cast(NULLIF([NotificationDate],'''') as datetimeoffset),''+03:00'')) IS NULL  \nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([supplierCR], '''')) IS NULL\nOR NOT EXISTS (SELECT 1 FROM dwh.STG_CUSTOMS_ITEM AS SCI WHERE sci.declarationNo=SCD.declarationNo)\n)\nAND [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,'''')",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -443,7 +1112,7 @@
 												"type": "WebActivity",
 												"dependsOn": [
 													{
-														"activity": "deletestgcustomsdec",
+														"activity": "P_DQ_Invalid_Customs",
 														"dependencyConditions": [
 															"Succeeded"
 														]
@@ -468,6 +1137,10 @@
 														"filename": {
 															"value": "@item().name",
 															"type": "Expression"
+														},
+														"errorcode": {
+															"value": "@activity('P_DQ_Invalid_Customs').output",
+															"type": "Expression"
 														}
 													},
 													"body": {
@@ -478,7 +1151,14 @@
 											{
 												"name": "deletestgcustomsdec",
 												"type": "Lookup",
-												"dependsOn": [],
+												"dependsOn": [
+													{
+														"activity": "Email",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
 												"policy": {
 													"timeout": "7.00:00:00",
 													"retry": 0,
@@ -503,6 +1183,35 @@
 														"parameters": {}
 													},
 													"firstRowOnly": false
+												}
+											},
+											{
+												"name": "P_DQ_Invalid_Customs",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "[[dwh].[P_DQ_INVALID_CUSTOM]",
+													"storedProcedureParameters": {
+														"notref": {
+															"value": {
+																"value": "@activity('Lookup1').output.firstRow.NotificationRef",
+																"type": "Expression"
+															},
+															"type": "String"
+														}
+													}
+												},
+												"linkedServiceName": {
+													"referenceName": "ls_dsqlpqtr",
+													"type": "LinkedServiceReference"
 												}
 											}
 										],
@@ -841,68 +1550,6 @@
 									}
 								}
 							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Dev"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_DENE')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "df_errlog_container_items_copy1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_errlog_container_items_copy1",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"stgproductserrlog": {
-										"schemaName": "dwh",
-										"tableName": "STG_PRODUCTS_ERROR_LOG"
-									},
-									"errorlogitems": {
-										"folderName": "Items"
-									}
-								}
-							},
-							"staging": {
-								"linkedService": {
-									"referenceName": "ls_psmsii_syntodls",
-									"type": "LinkedServiceReference"
-								},
-								"folderPath": "stagingarea"
-							},
-							"integrationRuntime": {
-								"referenceName": "integrationRuntime10min",
-								"type": "IntegrationRuntimeReference"
-							},
-							"traceLevel": "None",
-							"cacheSinks": {
-								"firstRowOnly": true
-							}
 						}
 					}
 				],
