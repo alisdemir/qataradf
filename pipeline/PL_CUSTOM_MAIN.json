@@ -198,7 +198,7 @@
 										"type": "WebActivity",
 										"dependsOn": [
 											{
-												"activity": "P_DQ_Invalid_Customs",
+												"activity": "MoveFiles",
 												"dependencyConditions": [
 													"Succeeded"
 												]
@@ -267,6 +267,63 @@
 												"type": "DatasetReference"
 											}
 										}
+									},
+									{
+										"name": "MoveFiles",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "P_DQ_Invalid_Customs",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "BinarySource",
+												"storeSettings": {
+													"type": "AzureBlobFSReadSettings",
+													"recursive": true
+												},
+												"formatSettings": {
+													"type": "BinaryReadSettings"
+												}
+											},
+											"sink": {
+												"type": "BinarySink",
+												"storeSettings": {
+													"type": "AzureBlobFSWriteSettings"
+												}
+											},
+											"enableStaging": false
+										},
+										"inputs": [
+											{
+												"referenceName": "dls_binary_input",
+												"type": "DatasetReference",
+												"parameters": {
+													"invalidxmlfilename": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "dls_binary_errorlog",
+												"type": "DatasetReference"
+											}
+										]
 									}
 								],
 								"ifTrueActivities": [

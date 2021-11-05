@@ -1,0 +1,23 @@
+{
+	"name": "dls_binary_input",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_psmsii_syntodls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"invalidxmlfilename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Customs",
+				"fileSystem": "Input"
+			}
+		}
+	}
+}
