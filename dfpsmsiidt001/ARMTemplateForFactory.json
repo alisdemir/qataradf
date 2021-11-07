@@ -8343,7 +8343,7 @@
 													"source": {
 														"type": "SqlDWSource",
 														"sqlReaderQuery": {
-															"value": "@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,''';\nSELECT 1;\nDELETE FROM [dwh].[STG_CUSTOMS_ITEM] WHERE [declarationno] = ','''',activity('Lookup1').output.firstRow.declarationno,''';\nSELECT 1;\nDELETE FROM [dwh].[STG_CUSTOMS_SUPV] WHERE [declarationno] = ','''',activity('Lookup1').output.firstRow.declarationno,''';')",
+															"value": "/*@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,''';\nSELECT 1;\nDELETE FROM [dwh].[STG_CUSTOMS_ITEM] WHERE [declarationno] = ','''',activity('Lookup1').output.firstRow.declarationno,''';\nSELECT 1;\nDELETE FROM [dwh].[STG_CUSTOMS_SUPV] WHERE [declarationno] = ','''',activity('Lookup1').output.firstRow.declarationno,''';')*/",
 															"type": "Expression"
 														},
 														"queryTimeout": "02:00:00",
