@@ -101,6 +101,9 @@
 					"ls_dsqlpqtr_connectionString": {
 						"value": "[parameters('ls_dsqlpqtr_connectionString')]"
 					},
+					"ls_psmsii_syntodsqlp_connectionString": {
+						"value": "[parameters('ls_psmsii_syntodsqlp_connectionString')]"
+					},
 					"Barbaros_BSS_properties_typeProperties_url": {
 						"value": "[parameters('Barbaros_BSS_properties_typeProperties_url')]"
 					},
@@ -148,9 +151,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"ls_psmsii_syntodsqlp_connectionString": {
-						"value": "[parameters('ls_psmsii_syntodsqlp_connectionString')]"
 					},
 					"ls_psmsii_syntoobasesql_connectionString": {
 						"value": "[parameters('ls_psmsii_syntoobasesql_connectionString')]"

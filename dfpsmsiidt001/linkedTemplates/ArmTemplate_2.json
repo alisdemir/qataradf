@@ -13,6 +13,81 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/dls_input_company_xls')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_psmsii_syntodls",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Entity",
+						"fileSystem": "input"
+					},
+					"sheetIndex": 0
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dls_input_contact_xls')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1207,114 +1282,6 @@
 				"typeProperties": {
 					"schema": "dwh",
 					"table": "STG_CUSTOMS_DEC"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_entity_valid')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "RecordTypeName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EntityTypeName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MainCompanyCrNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CRNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CLNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NameEnglish",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NameArabic",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AddressArea",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AddressStreetName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AddressAreaNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AddressStreetNumber2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AddressBuildingNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AddressPostalCode",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PhoneNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MobilePhoneNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PhoneExtension",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Fax",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Email",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WebSite",
-						"type": "nvarchar"
-					},
-					{
-						"name": "LocationURL",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WarehouseCapacity",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WarehouseTotalArea",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_ENTITY_VALID"
 				}
 			},
 			"dependsOn": []
