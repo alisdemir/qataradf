@@ -54,13 +54,7 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "df_BSS_Registiration_Process_copy2",
-						"type": "DataFlowReference",
-						"parameters": {
-							"SourceCR": {
-								"value": "'@{activity('LKP_CUSTOMS_DEC').output.value}'",
-								"type": "Expression"
-							}
-						}
+						"type": "DataFlowReference"
 					},
 					"staging": {
 						"linkedService": {
