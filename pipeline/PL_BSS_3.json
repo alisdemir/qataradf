@@ -119,7 +119,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"dsparamFileName": {
-											"value": "@concat(item().DS_SUPPLIER_CR,'_regtemp.csv')",
+											"value": "@concat(replace(item().DS_SUPPLIER_CR,'/','-'),'_regtemp.csv')",
 											"type": "Expression"
 										}
 									}
@@ -144,7 +144,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "SELECT DISTINCT \n'16070' as DS_SUPPLIER_CR\nFROM [dwh].[DWL_CUSTOMS_DECLARATION] /*WHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL*/",
+						"sqlReaderQuery": "SELECT DISTINCT \n'16070/50' as DS_SUPPLIER_CR\nFROM [dwh].[DWL_CUSTOMS_DECLARATION] /*WHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL*/",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
