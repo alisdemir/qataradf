@@ -33,7 +33,7 @@
 				}
 			},
 			{
-				"name": "Data flow2",
+				"name": "Data flow3",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
@@ -53,39 +53,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "df_BSS_Registiration_Process_copy1",
-						"type": "DataFlowReference"
-					},
-					"integrationRuntime": {
-						"referenceName": "integrationRuntime10min",
-						"type": "IntegrationRuntimeReference"
-					},
-					"traceLevel": "Fine"
-				}
-			},
-			{
-				"name": "Data flow3",
-				"type": "ExecuteDataFlow",
-				"dependsOn": [
-					{
-						"activity": "Data flow2",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "1.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataflow": {
 						"referenceName": "df_BSS_Registiration_Process_copy2",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"CRNumber": {
+								"value": "'@{activity('LKP_CUSTOMS_DEC').output.value}'",
+								"type": "Expression"
+							}
+						}
 					},
 					"staging": {
 						"linkedService": {
