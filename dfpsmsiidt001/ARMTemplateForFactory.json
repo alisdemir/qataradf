@@ -2522,7 +2522,7 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"dsparamFileName": {
-													"value": "@concat(item().DS_SUPPLIER_CR,'_regtemp.csv')",
+													"value": "@concat(replace(item().DS_SUPPLIER_CR,'/','-'),'_regtemp.csv')",
 													"type": "Expression"
 												}
 											}
@@ -2547,7 +2547,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlDWSource",
-								"sqlReaderQuery": "SELECT DISTINCT \n'16070' as DS_SUPPLIER_CR\nFROM [dwh].[DWL_CUSTOMS_DECLARATION] /*WHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL*/",
+								"sqlReaderQuery": "SELECT \n'16070/50' as DS_SUPPLIER_CR\n/*FROM [dwh].[DWL_CUSTOMS_DECLARATION] WHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL*/",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -3073,6 +3073,431 @@
 				"[concat(variables('factoryId'), '/dataflows/df_BSS_Registiration_Process_copy1')]",
 				"[concat(variables('factoryId'), '/dataflows/df_BSS_Registiration_Process_copy2')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
+				"[concat(variables('factoryId'), '/datasets/BSS_Dataset')]",
+				"[concat(variables('factoryId'), '/datasets/BSS_Registration_DS')]",
+				"[concat(variables('factoryId'), '/datasets/BSS_Permit_DS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_BSS_4')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LKP_CUSTOMS_DEC",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "SELECT DISTINCT \n'16070/50' as DS_SUPPLIER_CR\nFROM [dwh].[DWL_CUSTOMS_DECLARATION] /*WHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL*/",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "dwh",
+									"tableName": "DWL_CUSTOMS_DECLARATION"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Data flow3",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Registration Call_copy1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_BSS_Registiration_Process_copy2",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source2": {},
+									"sink1": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_psmsii_syntodls",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "stagingarea"
+							},
+							"integrationRuntime": {
+								"referenceName": "integrationRuntime10min",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Registration Call_copy1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Permit-Entity Main Data_copy1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "XmlSource",
+								"additionalColumns": [
+									{
+										"name": "MainCRNumber",
+										"value": {
+											"value": "@activity('LKP_CUSTOMS_DEC').output.value",
+											"type": "Expression"
+										}
+									},
+									{
+										"name": "CRNumber",
+										"value": {
+											"value": "@activity('LKP_CUSTOMS_DEC').output.value",
+											"type": "Expression"
+										}
+									}
+								],
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "POST",
+									"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialRegistration\"",
+									"requestBody": {
+										"value": "@{replace('<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:onep=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <onep:GetCommercialRegistrationInfoRequest_Input>\n         <onep:commercialRegistrationCode>?paramCR</onep:commercialRegistrationCode>\n         <onep:RefNumber></onep:RefNumber>\n      </onep:GetCommercialRegistrationInfoRequest_Input>\n   </soapenv:Body>\n</soapenv:Envelope>','?paramCR',activity('LKP_CUSTOMS_DEC').output.value)}",
+										"type": "Expression"
+									},
+									"requestTimeout": ""
+								},
+								"formatSettings": {
+									"type": "XmlReadSettings",
+									"validationMode": "none",
+									"namespaces": true
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:addressPOBox']"
+										},
+										"sink": {
+											"name": "POBox",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:telephone']"
+										},
+										"sink": {
+											"name": "Telephone",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['MainCRNumber']"
+										},
+										"sink": {
+											"name": "MainCRNumber",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['CRNumber']"
+										},
+										"sink": {
+											"name": "CRNumber",
+											"type": "String"
+										}
+									}
+								],
+								"collectionReference": "",
+								"mapComplexValuesToString": true
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "BSS_Dataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "BSS_Registration_DS",
+								"type": "DatasetReference",
+								"parameters": {
+									"dsparamFileName": {
+										"value": "@concat(replace(activity('LKP_CUSTOMS_DEC').output.value,'/','-'),'_registration.csv')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Permit-Entity Main Data_copy1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LKP_CUSTOMS_DEC",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "XmlSource",
+								"additionalColumns": [
+									{
+										"name": "CRNumber_Key",
+										"value": {
+											"value": "@activity('LKP_CUSTOMS_DEC').output.value",
+											"type": "Expression"
+										}
+									}
+								],
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "POST",
+									"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialPermit\"",
+									"requestBody": {
+										"value": "@{replace('<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialPermitInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialPermitID></ns1:commercialPermitID>\n            <ns1:commercialRegistration>\n                <ns1:ID>?paramCR</ns1:ID>\n                <ns1:branchNumber></ns1:branchNumber>\n            </ns1:commercialRegistration>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialPermitInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>','?paramCR',activity('LKP_CUSTOMS_DEC').output.value)}",
+										"type": "Expression"
+									},
+									"requestTimeout": ""
+								},
+								"formatSettings": {
+									"type": "XmlReadSettings",
+									"validationMode": "none",
+									"detectDataType": false,
+									"namespaces": true
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:ID']"
+										},
+										"sink": {
+											"name": "CRNUMBER",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:branchNumber']"
+										},
+										"sink": {
+											"name": "BRANCHNUMBER",
+											"type": "Int16"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameArabic']"
+										},
+										"sink": {
+											"name": "COMPANY_ARB",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameEnglish']"
+										},
+										"sink": {
+											"name": "COMPANY_ENG",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:municipalityName']['ns0:nameArabic']"
+										},
+										"sink": {
+											"name": "MUNICIPALITY_NAME",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:number']"
+										},
+										"sink": {
+											"name": "STREET_NUMBER",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:name']['ns0:nameArabic']"
+										},
+										"sink": {
+											"name": "STREET_NAME",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:number']"
+										},
+										"sink": {
+											"name": "ZONE_NUMBER",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:name']['ns0:nameEnglish']"
+										},
+										"sink": {
+											"name": "ZONE_NAME",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerQID']"
+										},
+										"sink": {
+											"name": "MANAGER_QID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerName']"
+										},
+										"sink": {
+											"name": "MANAGER_NAME",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['CRNumber_Key']"
+										},
+										"sink": {
+											"name": "CRNumber_Key",
+											"type": "String"
+										}
+									}
+								],
+								"mapComplexValuesToString": false
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "BSS_Dataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "BSS_Permit_DS",
+								"type": "DatasetReference",
+								"parameters": {
+									"dsparamFileName": {
+										"value": "@concat(replace(activity('LKP_CUSTOMS_DEC').output.value,'/','-'),'_permit.csv')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_CUSTOM"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
+				"[concat(variables('factoryId'), '/dataflows/df_BSS_Registiration_Process_copy2')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_psmsii_syntodls')]",
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]",
 				"[concat(variables('factoryId'), '/datasets/BSS_Dataset')]",
 				"[concat(variables('factoryId'), '/datasets/BSS_Registration_DS')]",
 				"[concat(variables('factoryId'), '/datasets/BSS_Permit_DS')]"
@@ -18022,7 +18447,7 @@
 				"parameters": {
 					"filename": {
 						"type": "string",
-						"defaultValue": "33976_ItemMasterFile_EDİTED.xlsx"
+						"defaultValue": "31864_Item_20211108.xlsx"
 					},
 					"folderName": {
 						"type": "string",
@@ -20315,7 +20740,7 @@
 							"name": "Filter1"
 						}
 					],
-					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpurgeFiles: true,\n\twildcardPaths:['*_regtemp.csv']) ~> source1\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'query',\n\tstore: 'synapseanalytics',\n\tquery: 'SELECT\\nDS_SUPPLIER_CR AS BRANCH_CR,\\n\\'Active\\' AS BRANCH_STATUS,\\nDS_SUPPLIER_CR AS MainCRNumber\\nFROM [dwh].[DWL_CUSTOMS_DECLARATION] WHERE FLG_SUPPLIER_CHECK=1\\nAND DS_SUPPLIER_CR IS NOT NULL',\n\tisolationLevel: 'NONE',\n\tstaged: false) ~> source3\nsource1 derive(BRANCH_CR = toString(byName('BRANCH_CR')),\n\t\tBRANCH_STATUS = toString(byName('BRANCH_STATUS')),\n\t\tMainCRNumber = toString(byName('MainCRNumber'))) ~> MapDrifted3\nMapDrifted3, source3 union(byName: true)~> Union1\nUnion1 filter(equalsIgnoreCase(BRANCH_STATUS,'Active')) ~> Filter1\nFilter1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delimited',\n\tfileSystem: 'stagingarea',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: true,\n\tpartitionFileNames:['BSS_Source_CR_List.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpurgeFiles: true,\n\twildcardPaths:['*_regtemp.csv']) ~> source1\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'query',\n\tstore: 'synapseanalytics',\n\tquery: 'SELECT\\n\\'16070/50\\' AS BRANCH_CR,\\n\\'Active\\' AS BRANCH_STATUS,\\n\\'16070/50\\' AS MainCRNumber\\n/*FROM [dwh].[DWL_CUSTOMS_DECLARATION] WHERE FLG_SUPPLIER_CHECK=1\\nAND DS_SUPPLIER_CR IS NOT NULL*/',\n\tisolationLevel: 'NONE',\n\tstaged: false) ~> source3\nsource1 derive(BRANCH_CR = toString(byName('BRANCH_CR')),\n\t\tBRANCH_STATUS = toString(byName('BRANCH_STATUS')),\n\t\tMainCRNumber = toString(byName('MainCRNumber'))) ~> MapDrifted3\nMapDrifted3, source3 union(byName: true)~> Union1\nUnion1 filter(equalsIgnoreCase(BRANCH_STATUS,'Active')) ~> Filter1\nFilter1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delimited',\n\tfileSystem: 'stagingarea',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: true,\n\tpartitionFileNames:['BSS_Source_CR_List.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -20426,7 +20851,7 @@
 							"name": "Join1"
 						}
 					],
-					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['bss_all_register_data.csv']) ~> source1\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['bss_all_permit_data.csv']) ~> source2\nsource1 derive(POBox = toString(byName('POBox')),\n\t\tTelephone = toString(byName('Telephone')),\n\t\tMainCRNumber = toString(byName('MainCRNumber')),\n\t\tCRNumber = toString(byName('CRNumber'))) ~> MapDrifted1\nsource2 derive(CRNUMBER = toString(byName('CRNUMBER')),\n\t\tBRANCHNUMBER = toString(byName('BRANCHNUMBER')),\n\t\tCOMPANY_ARB = toString(byName('COMPANY_ARB')),\n\t\tCOMPANY_ENG = toString(byName('COMPANY_ENG')),\n\t\tMUNICIPALITY_NAME = toString(byName('MUNICIPALITY_NAME')),\n\t\tSTREET_NUMBER = toString(byName('STREET_NUMBER')),\n\t\tSTREET_NAME = toString(byName('STREET_NAME')),\n\t\tZONE_NUMBER = toString(byName('ZONE_NUMBER')),\n\t\tZONE_NAME = toString(byName('ZONE_NAME')),\n\t\tMANAGER_QID = toString(byName('MANAGER_QID')),\n\t\tMANAGER_NAME = toString(byName('MANAGER_NAME')),\n\t\tCRNumber_Key = toString(byName('CRNumber_Key'))) ~> MapDrifted2\nMapDrifted2, MapDrifted1 join(CRNumber_Key == MapDrifted1@CRNumber,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> Join1\nJoin1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tMAIN_CRNUMBER as long,\n\t\tBRANCHNUMBER as integer,\n\t\tCOMPANY_ARB as string,\n\t\tCOMPANY_ENG as string,\n\t\tMUNICIPALITY_NAME as string,\n\t\tSTREET_NUMBER as integer,\n\t\tSTREET_NAME as string,\n\t\tZONE_NUMBER as integer,\n\t\tZONE_NAME as string,\n\t\tMANAGER_QID as long,\n\t\tMANAGER_NAME as string,\n\t\tPOBox as integer,\n\t\tTelephone as string,\n\t\tCRNumber as string\n\t),\n\tformat: 'table',\n\tstore: 'synapseanalytics',\n\tschemaName: 'tmp',\n\ttableName: 'STG_BSS_DATA',\n\tinsertable: true,\n\tupdateable: false,\n\tdeletable: false,\n\tupsertable: false,\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tMAIN_CRNUMBER = MapDrifted2@CRNUMBER,\n\t\tBRANCHNUMBER,\n\t\tCOMPANY_ARB,\n\t\tCOMPANY_ENG,\n\t\tMUNICIPALITY_NAME,\n\t\tSTREET_NUMBER,\n\t\tSTREET_NAME,\n\t\tZONE_NUMBER,\n\t\tZONE_NAME,\n\t\tMANAGER_QID,\n\t\tMANAGER_NAME,\n\t\tPOBox,\n\t\tTelephone,\n\t\tCRNumber = MapDrifted1@CRNumber\n\t)) ~> sink1"
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpurgeFiles: true,\n\twildcardPaths:['bss_all_register_data.csv']) ~> source1\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpurgeFiles: true,\n\twildcardPaths:['bss_all_permit_data.csv']) ~> source2\nsource1 derive(POBox = toString(byName('POBox')),\n\t\tTelephone = toString(byName('Telephone')),\n\t\tMainCRNumber = toString(byName('MainCRNumber')),\n\t\tCRNumber = toString(byName('CRNumber'))) ~> MapDrifted1\nsource2 derive(CRNUMBER = toString(byName('CRNUMBER')),\n\t\tBRANCHNUMBER = toString(byName('BRANCHNUMBER')),\n\t\tCOMPANY_ARB = toString(byName('COMPANY_ARB')),\n\t\tCOMPANY_ENG = toString(byName('COMPANY_ENG')),\n\t\tMUNICIPALITY_NAME = toString(byName('MUNICIPALITY_NAME')),\n\t\tSTREET_NUMBER = toString(byName('STREET_NUMBER')),\n\t\tSTREET_NAME = toString(byName('STREET_NAME')),\n\t\tZONE_NUMBER = toString(byName('ZONE_NUMBER')),\n\t\tZONE_NAME = toString(byName('ZONE_NAME')),\n\t\tMANAGER_QID = toString(byName('MANAGER_QID')),\n\t\tMANAGER_NAME = toString(byName('MANAGER_NAME')),\n\t\tCRNumber_Key = toString(byName('CRNumber_Key'))) ~> MapDrifted2\nMapDrifted2, MapDrifted1 join(CRNumber_Key == MapDrifted1@CRNumber,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> Join1\nJoin1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tMAIN_CRNUMBER as long,\n\t\tBRANCHNUMBER as integer,\n\t\tCOMPANY_ARB as string,\n\t\tCOMPANY_ENG as string,\n\t\tMUNICIPALITY_NAME as string,\n\t\tSTREET_NUMBER as integer,\n\t\tSTREET_NAME as string,\n\t\tZONE_NUMBER as integer,\n\t\tZONE_NAME as string,\n\t\tMANAGER_QID as long,\n\t\tMANAGER_NAME as string,\n\t\tPOBox as integer,\n\t\tTelephone as string,\n\t\tCRNumber as string\n\t),\n\tformat: 'table',\n\tstore: 'synapseanalytics',\n\tschemaName: 'tmp',\n\ttableName: 'STG_BSS_DATA',\n\tinsertable: true,\n\tupdateable: false,\n\tdeletable: false,\n\tupsertable: false,\n\tstaged: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tMAIN_CRNUMBER = MapDrifted2@CRNUMBER,\n\t\tBRANCHNUMBER,\n\t\tCOMPANY_ARB,\n\t\tCOMPANY_ENG,\n\t\tMUNICIPALITY_NAME,\n\t\tSTREET_NUMBER,\n\t\tSTREET_NAME,\n\t\tZONE_NUMBER,\n\t\tZONE_NAME,\n\t\tMANAGER_QID,\n\t\tMANAGER_NAME,\n\t\tPOBox,\n\t\tTelephone,\n\t\tCRNumber = MapDrifted1@CRNumber\n\t)) ~> sink1"
 				}
 			},
 			"dependsOn": [
@@ -21313,7 +21738,7 @@
 							"name": "Filter1"
 						}
 					],
-					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Item Code - رقم الصنف} as string,\n\t\t{Barcode - الباركود} as string,\n\t\t{Product Name Arabic - اسم الصنف عربى} as string,\n\t\t{Description Arabic - وصف الصنف عربى} as string,\n\t\t{Product Name English - اسم الصنف انجليزى} as string,\n\t\t{Description English - وصف الصنف انجليزى} as string,\n\t\t{Unit Item Barcode - الباركود للوحدة } as string,\n\t\t{No Of Unit Items - عدد الوحدات} as string,\n\t\t{Unit Weight/size - وزن/سعة الوحدة} as string,\n\t\t{Unit UOM - وحدة القياس} as string,\n\t\t{Package UOM - وحدة قياس الحزمة-التغليف} as string,\n\t\t{Cost Price - سعر التكلفة} as string,\n\t\t{Selling Price - سعر البيع} as string,\n\t\t{Brand-Trade Mark English - سم العلامة التجارية انجليزى} as string,\n\t\t{Brand-Trade Mark Arabic - اسم العلامة التجارية عربى} as string,\n\t\t{MoCI Product Group - المجموعة السلعية - بالوزارة} as string,\n\t\t{Country of Oragen Name - اسم بلد المنشأ} as string,\n\t\t{Country of Oragen ISO - كود 3 لبلد المنشأ} as string,\n\t\t{HS Code - رمز المنسق الجمركي} as string,\n\t\t{Supplier CR - رقم السجل التجارى للمورد} as string,\n\t\t{Supplier Name - اسم المورد} as string,\n\t\t{Category Level 1 - تصنيف السلعة 1} as string,\n\t\t{Category Level 2 - تصنيف السلعة 2} as string,\n\t\t{Category Level 3 - تصنيف السلعة 3} as string,\n\t\t{Category Level 4 - تصنيف السلعة 4} as string,\n\t\t{Width - العرض} as string,\n\t\t{Height - الطول} as string,\n\t\t{Depth - الارتفاع} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tmoveFiles: ['Items','Archive']) ~> inputitemscontainer\nFilter1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\teach(match(type=='string'), $$ = replace(trim($$), '\\n', ''))) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\ninputitemscontainer select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 filter(isNull(iifNull(iifNull(iifNull(ItemCode , Barcode, ProductNameArabic) , iifNull(DescriptionArabic , ProductNameEnglish, DescriptionEnglish), iifNull(UnitItemBarcode , NoOfUnitItems, UnitWeightsize)),\r\niifNull(iifNull(UnitUOM , PackageUOM, CostPrice) , iifNull(SellingPrice , BrandTradeMarkEnglish, BrandTradeMarkArabic), iifNull(MoCIProductGroup , CountryofOragenName, CountryofOragenISO3)),\r\niifNull(iifNull(HSCode , SupplierCR, SupplierName) , iifNull(CategoryLevel11 , CategoryLevel22, CategoryLevel33), iifNull(CategoryLevel44 , Width, Height)))) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tITEMCODE as string,\n\t\tBARCODE as string,\n\t\tPRODUCTNAMEARABIC as string,\n\t\tDESCRIPTIONARABIC as string,\n\t\tPRODUCTNAMEENGLISH as string,\n\t\tDESCRIPTIONENGLISH as string,\n\t\tUNITITEMBARCODE as string,\n\t\tNOOFUNITITEMS as string,\n\t\tUNITWEIGHTSIZE as string,\n\t\tUNITUOM as string,\n\t\tPACKAGEUOM as string,\n\t\tCOSTPRICE as string,\n\t\tSELLINGPRICE as string,\n\t\tBRANDTRADEMARKENGLISH as string,\n\t\tBRANDTRADEMARKARABIC as string,\n\t\tMOCIPRODUCTGROUP as string,\n\t\tCOUNTRYOFORAGENNAME as string,\n\t\tCOUNTRYOFORAGENISO as string,\n\t\tHSCODE as string,\n\t\tSUPPLIERCR as string,\n\t\tSUPPLIERNAME as string,\n\t\tCATEGORYLEVEL11 as string,\n\t\tCATEGORYLEVEL12 as string,\n\t\tCATEGORYLEVEL13 as string,\n\t\tCATEGORYLEVEL14 as string,\n\t\tWIDTH as string,\n\t\tHEIGHT as string,\n\t\tDEPTH as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tITEMCODE = ItemCode,\n\t\tBARCODE = Barcode,\n\t\tPRODUCTNAMEARABIC = ProductNameArabic,\n\t\tDESCRIPTIONARABIC = DescriptionArabic,\n\t\tPRODUCTNAMEENGLISH = ProductNameEnglish,\n\t\tDESCRIPTIONENGLISH = DescriptionEnglish,\n\t\tUNITITEMBARCODE = UnitItemBarcode,\n\t\tNOOFUNITITEMS = NoOfUnitItems,\n\t\tUNITWEIGHTSIZE = UnitWeightsize,\n\t\tUNITUOM = UnitUOM,\n\t\tPACKAGEUOM = PackageUOM,\n\t\tCOSTPRICE = CostPrice,\n\t\tSELLINGPRICE = SellingPrice,\n\t\tBRANDTRADEMARKENGLISH = BrandTradeMarkEnglish,\n\t\tBRANDTRADEMARKARABIC = BrandTradeMarkArabic,\n\t\tMOCIPRODUCTGROUP = MoCIProductGroup,\n\t\tCOUNTRYOFORAGENNAME = CountryofOragenName,\n\t\tCOUNTRYOFORAGENISO = CountryofOragenISO3,\n\t\tHSCODE = HSCode,\n\t\tSUPPLIERCR = SupplierCR,\n\t\tSUPPLIERNAME = SupplierName,\n\t\tCATEGORYLEVEL11 = CategoryLevel11,\n\t\tCATEGORYLEVEL12 = CategoryLevel22,\n\t\tCATEGORYLEVEL13 = CategoryLevel33,\n\t\tCATEGORYLEVEL14 = CategoryLevel44,\n\t\tWIDTH = Width,\n\t\tHEIGHT = Height,\n\t\tDEPTH = Depth,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgProducts"
+					"script": "parameters{\n\tfileName as string ('58556')\n}\nsource(output(\n\t\t{Item Code-رقم الصنف} as string,\n\t\t{Barcode-الباركود} as string,\n\t\t{Product Name Arabic-اسم الصنف عربى} as string,\n\t\t{Description Arabic-وصف الصنف عربى} as string,\n\t\t{Product Name English-اسم الصنف انجليزى} as string,\n\t\t{Description English-وصف الصنف انجليزى} as string,\n\t\t{Unit Item Barcode-الباركود للوحدة } as string,\n\t\t{No Of Unit Items-عدد الوحدات} as string,\n\t\t{Unit Weight/size-وزن/سعة الوحدة} as string,\n\t\t{Unit UOM-وحدة القياس} as string,\n\t\t{Package UOM-وحدة قياس الحزمة-التغليف} as string,\n\t\t{Cost Price-سعر التكلفة} as string,\n\t\t{Selling Price-سعر البيع} as string,\n\t\t{Brand-Trade Mark English-اسم العلامة التجارية انجليزى} as string,\n\t\t{Brand-Trade Mark Arabic-اسم العلامة التجارية عربى} as string,\n\t\t{MoCI Product Group-المجموعة السلعية - بالوزارة} as string,\n\t\t{Country of Oragen Name-اسم بلد المنشأ} as string,\n\t\t{Country of Oragen ISO3-كود 3 لبلد المنشأ} as string,\n\t\t{HS Code-رمز المنسق الجمركي} as string,\n\t\t{Supplier CR-رقم السجل التجارى للمورد} as string,\n\t\t{Supplier Name-اسم المورد} as string,\n\t\t{Category Level 1-تصنيف السلعة 1} as string,\n\t\t{Category Level 2-تصنيف السلعة 2} as string,\n\t\t{Category Level 3-تصنيف السلعة 3} as string,\n\t\t{Category Level 4-تصنيف السلعة 4} as string,\n\t\t{Width-العرض} as string,\n\t\t{Height-الطول} as string,\n\t\t{Depth-الارتفاع} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tmoveFiles: ['Items','Archive']) ~> inputitemscontainer\nFilter1 derive(DS_FILENAME = $fileName,\n\t\tDT_FILETIME = left(toString(fromUTC(currentTimestamp(), 'Asia/Istanbul')),19),\n\t\teach(match(type=='string'), $$ = replace(trim($$), '\\n', ''))) ~> AddColumn\nAddColumn keyGenerate(output(ID_SK as long),\n\tstartAt: 1L) ~> SurrogateKey1\ninputitemscontainer select(mapColumn(\n\t\teach(match(true()),\n\t\t\tregexReplace($$,'[^0-9a-zA-Z]','') = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 filter(isNull(iifNull(iifNull(iifNull(ItemCode , Barcode, ProductNameArabic) , iifNull(DescriptionArabic , ProductNameEnglish, DescriptionEnglish), iifNull(UnitItemBarcode , NoOfUnitItems, UnitWeightsize)),\r\niifNull(iifNull(UnitUOM , PackageUOM, CostPrice) , iifNull(SellingPrice , BrandTradeMarkEnglish, BrandTradeMarkArabic), iifNull(MoCIProductGroup , CountryofOragenName, CountryofOragenISO33)),\r\niifNull(iifNull(HSCode , SupplierCR, SupplierName) , iifNull(CategoryLevel11 , CategoryLevel22, CategoryLevel33), iifNull(CategoryLevel44 , Width, Height)))) != true()) ~> Filter1\nSurrogateKey1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tITEMCODE as string,\n\t\tBARCODE as string,\n\t\tPRODUCTNAMEARABIC as string,\n\t\tDESCRIPTIONARABIC as string,\n\t\tPRODUCTNAMEENGLISH as string,\n\t\tDESCRIPTIONENGLISH as string,\n\t\tUNITITEMBARCODE as string,\n\t\tNOOFUNITITEMS as string,\n\t\tUNITWEIGHTSIZE as string,\n\t\tUNITUOM as string,\n\t\tPACKAGEUOM as string,\n\t\tCOSTPRICE as string,\n\t\tSELLINGPRICE as string,\n\t\tBRANDTRADEMARKENGLISH as string,\n\t\tBRANDTRADEMARKARABIC as string,\n\t\tMOCIPRODUCTGROUP as string,\n\t\tCOUNTRYOFORAGENNAME as string,\n\t\tCOUNTRYOFORAGENISO as string,\n\t\tHSCODE as string,\n\t\tSUPPLIERCR as string,\n\t\tSUPPLIERNAME as string,\n\t\tCATEGORYLEVEL11 as string,\n\t\tCATEGORYLEVEL12 as string,\n\t\tCATEGORYLEVEL13 as string,\n\t\tCATEGORYLEVEL14 as string,\n\t\tWIDTH as string,\n\t\tHEIGHT as string,\n\t\tDEPTH as string,\n\t\tID_SK as integer,\n\t\tDS_FILENAME as string,\n\t\tDT_FILETIME as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tITEMCODE = ItemCode,\n\t\tBARCODE = Barcode,\n\t\tPRODUCTNAMEARABIC = ProductNameArabic,\n\t\tDESCRIPTIONARABIC = DescriptionArabic,\n\t\tPRODUCTNAMEENGLISH = ProductNameEnglish,\n\t\tDESCRIPTIONENGLISH = DescriptionEnglish,\n\t\tUNITITEMBARCODE = UnitItemBarcode,\n\t\tNOOFUNITITEMS = NoOfUnitItems,\n\t\tUNITWEIGHTSIZE = UnitWeightsize,\n\t\tUNITUOM = UnitUOM,\n\t\tPACKAGEUOM = PackageUOM,\n\t\tCOSTPRICE = CostPrice,\n\t\tSELLINGPRICE = SellingPrice,\n\t\tBRANDTRADEMARKENGLISH = BrandTradeMarkEnglish,\n\t\tBRANDTRADEMARKARABIC = BrandTradeMarkArabic,\n\t\tMOCIPRODUCTGROUP = MoCIProductGroup,\n\t\tCOUNTRYOFORAGENNAME = CountryofOragenName,\n\t\tCOUNTRYOFORAGENISO = CountryofOragenISO33,\n\t\tHSCODE = HSCode,\n\t\tSUPPLIERCR = SupplierCR,\n\t\tSUPPLIERNAME = SupplierName,\n\t\tCATEGORYLEVEL11 = CategoryLevel11,\n\t\tCATEGORYLEVEL12 = CategoryLevel22,\n\t\tCATEGORYLEVEL13 = CategoryLevel33,\n\t\tCATEGORYLEVEL14 = CategoryLevel44,\n\t\tWIDTH = Width,\n\t\tHEIGHT = Height,\n\t\tDEPTH = Depth,\n\t\tID_SK,\n\t\tDS_FILENAME,\n\t\tDT_FILETIME\n\t)) ~> stgProducts"
 				}
 			},
 			"dependsOn": [
