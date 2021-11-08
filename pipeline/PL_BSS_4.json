@@ -102,14 +102,14 @@
 							{
 								"name": "MainCRNumber",
 								"value": {
-									"value": "@item().MainCRNumber",
+									"value": "@activity('LKP_CUSTOMS_DEC').output.value",
 									"type": "Expression"
 								}
 							},
 							{
 								"name": "CRNumber",
 								"value": {
-									"value": "@item().BRANCH_CR",
+									"value": "@activity('LKP_CUSTOMS_DEC').output.value",
 									"type": "Expression"
 								}
 							}
@@ -231,7 +231,7 @@
 							{
 								"name": "CRNumber_Key",
 								"value": {
-									"value": "@item().BRANCH_CR",
+									"value": "@activity('LKP_CUSTOMS_DEC').output.value",
 									"type": "Expression"
 								}
 							}
