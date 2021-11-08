@@ -612,7 +612,10 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "df_BSS_Registiration_Process_copy2",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"SourceCR": "\"test\""
+						}
 					},
 					"staging": {
 						"linkedService": {
