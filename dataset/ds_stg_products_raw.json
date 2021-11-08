@@ -77,7 +77,7 @@
 				"type": "nvarchar"
 			},
 			{
-				"name": "COUNTRYOFORAGENISO3",
+				"name": "COUNTRYOFORAGENISO",
 				"type": "nvarchar"
 			},
 			{
