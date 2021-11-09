@@ -2,7 +2,7 @@
 	"name": "BSS_Dataset",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Barbaros_BSS",
+			"referenceName": "LS_BSS",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
