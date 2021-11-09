@@ -13,550 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_entity_valid')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "RecordTypeName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EntityTypeName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MainCompanyCrNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CRNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CLNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NameEnglish",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NameArabic",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AddressArea",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AddressStreetName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AddressAreaNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AddressStreetNumber2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AddressBuildingNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AddressPostalCode",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PhoneNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MobilePhoneNumber",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PhoneExtension",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Fax",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Email",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WebSite",
-						"type": "nvarchar"
-					},
-					{
-						"name": "LocationURL",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WarehouseCapacity",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WarehouseTotalArea",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_ENTITY_VALID"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_file_list')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_ISEXPECTED",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_EMAIL",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "etl",
-					"table": "STG_FILE_LIST"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_products_raw')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "ITEMCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BARCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PRODUCTNAMEARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DESCRIPTIONARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PRODUCTNAMEENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DESCRIPTIONENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNITITEMBARCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NOOFUNITITEMS",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNITWEIGHTSIZE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNITUOM",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PACKAGEUOM",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COSTPRICE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SELLINGPRICE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BRANDTRADEMARKENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BRANDTRADEMARKARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MOCIPRODUCTGROUP",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COUNTRYOFORAGENNAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COUNTRYOFORAGENISO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "HSCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIERCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIERNAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL11",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL12",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL13",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL14",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WIDTH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "HEIGHT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DEPTH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_PRODUCTS_RAW"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_products_valid')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_dsqlpqtr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "CompanyCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ITEMCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BARCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PRODUCTNAMEARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DESCRIPTIONARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PRODUCTNAMEENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DESCRIPTIONENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNITITEMBARCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NOOFUNITITEMS",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNITWEIGHTSIZE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNITUOM",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PACKAGEUOM",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COSTPRICE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SELLINGPRICE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BRANDTRADEMARKENGLISH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BRANDTRADEMARKARABIC",
-						"type": "nvarchar"
-					},
-					{
-						"name": "MOCIPRODUCTGROUP",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COUNTRYOFORAGENNAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COUNTRYOFORAGENISO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "HSCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIERCR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIERNAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL11",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL12",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL13",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CATEGORYLEVEL14",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WIDTH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "HEIGHT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DEPTH",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "DT_CREATE",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "DT_UPDATE",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "STG_PRODUCTS_VALID"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_stg_transaction_error_log')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_psmsii_syntodsqlp",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Dedicated_SQL"
-				},
-				"annotations": [],
-				"type": "AzureSqlDWTable",
-				"schema": [
-					{
-						"name": "TRANSACTION_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSACTION_TYPE_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ITEM_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ITEM_BARCODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "YOUR_COMPANY_CR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "OTHER_ENTITY_CR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COMPANY_STORE_INVENTORY_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "QUANTITY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SELLING_PRICE_PER_UNIT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "COMMON_REFERANCE_NO",
-						"type": "nvarchar"
-					},
-					{
-						"name": "INTERNAL_TRANSFER_NUMBER_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "NUMBER_OF_CONSUMER_INVOICES",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ID_SK",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DS_FILENAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DT_FILETIME",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "DS_ERROR_CODE",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dwh",
-					"table": "stg_transaction_error_log"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ds_stg_transactions')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -933,602 +389,6 @@
 						"type": "Expression"
 					}
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Barbaros_BSS_PL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Registration-Branch details",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "XmlSource",
-								"storeSettings": {
-									"type": "HttpReadSettings",
-									"requestMethod": "POST",
-									"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialRegistration\"\n",
-									"requestBody": "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:onep=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n   <soapenv:Header/>\n   <soapenv:Body>\n      <onep:GetCommercialRegistrationInfoRequest_Input>\n         <onep:commercialRegistrationCode>51600</onep:commercialRegistrationCode>\n         <onep:RefNumber>?</onep:RefNumber>\n      </onep:GetCommercialRegistrationInfoRequest_Input>\n   </soapenv:Body>\n</soapenv:Envelope>",
-									"requestTimeout": ""
-								},
-								"formatSettings": {
-									"type": "XmlReadSettings",
-									"validationMode": "none",
-									"detectDataType": false,
-									"namespaces": true
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:MessageID']"
-										},
-										"sink": {
-											"ordinal": 1
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:Address']"
-										},
-										"sink": {
-											"ordinal": 2
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:ReferenceParameters']['instra:tracking.ecid']"
-										},
-										"sink": {
-											"ordinal": 3
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:ReplyTo']['wsa:ReferenceParameters']['instra:tracking.compositeInstanceCreatedTime']"
-										},
-										"sink": {
-											"ordinal": 4
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:Address']"
-										},
-										"sink": {
-											"ordinal": 5
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:ReferenceParameters']['instra:tracking.ecid']"
-										},
-										"sink": {
-											"ordinal": 6
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Header']['wsa:FaultTo']['wsa:ReferenceParameters']['instra:tracking.compositeInstanceCreatedTime']"
-										},
-										"sink": {
-											"ordinal": 7
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:location']"
-										},
-										"sink": {
-											"ordinal": 8
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:creationDate']"
-										},
-										"sink": {
-											"ordinal": 9
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:expiryDate']"
-										},
-										"sink": {
-											"ordinal": 10
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:arabicCommercialName']"
-										},
-										"sink": {
-											"ordinal": 11
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:companyStartDate']"
-										},
-										"sink": {
-											"ordinal": 12
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branchesCount']"
-										},
-										"sink": {
-											"ordinal": 13
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:commercialRegistrationEntityType']"
-										},
-										"sink": {
-											"ordinal": 14
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:addressPOBox']"
-										},
-										"sink": {
-											"ordinal": 15
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:telephone']"
-										},
-										"sink": {
-											"ordinal": 16
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:addressStreet']"
-										},
-										"sink": {
-											"ordinal": 17
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:addressArea']"
-										},
-										"sink": {
-											"ordinal": 18
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:companyCapital']"
-										},
-										"sink": {
-											"ordinal": 19
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:nameAr']"
-										},
-										"sink": {
-											"ordinal": 20
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:nationality']"
-										},
-										"sink": {
-											"ordinal": 21
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:nIN']"
-										},
-										"sink": {
-											"ordinal": 22
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:percentage']"
-										},
-										"sink": {
-											"ordinal": 23
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:nINType']['ns0:Code']"
-										},
-										"sink": {
-											"ordinal": 24
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:nINType']['ns0:description']"
-										},
-										"sink": {
-											"ordinal": 25
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:partnerType']['ns0:code']"
-										},
-										"sink": {
-											"ordinal": 26
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:partnerType']['ns0:description']"
-										},
-										"sink": {
-											"ordinal": 27
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:partnerStatus']['ns0:code']"
-										},
-										"sink": {
-											"ordinal": 28
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:humanPartners'][0]['ns0:partnerStatus']['ns0:description']"
-										},
-										"sink": {
-											"ordinal": 29
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nameAr']"
-										},
-										"sink": {
-											"ordinal": 30
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nationality']"
-										},
-										"sink": {
-											"ordinal": 31
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nIN']"
-										},
-										"sink": {
-											"ordinal": 32
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nINType']['ns0:Code']"
-										},
-										"sink": {
-											"ordinal": 33
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:nINType']['ns0:description']"
-										},
-										"sink": {
-											"ordinal": 34
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:partnerType']['ns0:code']"
-										},
-										"sink": {
-											"ordinal": 35
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:signatories'][0]['ns0:partnerType']['ns0:description']"
-										},
-										"sink": {
-											"ordinal": 36
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches'][0]['ns0:nameAr']"
-										},
-										"sink": {
-											"ordinal": 37
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches'][0]['ns0:serialNumber']"
-										},
-										"sink": {
-											"ordinal": 38
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches'][0]['ns0:statuses']['ns0:code']"
-										},
-										"sink": {
-											"ordinal": 39
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches'][0]['ns0:statuses']['ns0:description']"
-										},
-										"sink": {
-											"ordinal": 40
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:activities'][0]['ns0:title']"
-										},
-										"sink": {
-											"ordinal": 41
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:activities'][0]['ns0:activitySerial']"
-										},
-										"sink": {
-											"ordinal": 42
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:activities'][0]['ns0:cost']"
-										},
-										"sink": {
-											"ordinal": 43
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:commercialRegistrationCode']"
-										},
-										"sink": {
-											"ordinal": 44
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:statuses']['ns0:code']"
-										},
-										"sink": {
-											"ordinal": 45
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:statuses']['ns0:description']"
-										},
-										"sink": {
-											"ordinal": 46
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:InstanceType']['ns0:InstanceID']"
-										},
-										"sink": {
-											"ordinal": 47
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:InstanceType']['ns0:CaseID']"
-										},
-										"sink": {
-											"ordinal": 48
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Barbaros_BSS_Dataset",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Barbaros_BSS_Sink_CSV",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Permit-Entity Main Data",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "XmlSource",
-								"storeSettings": {
-									"type": "HttpReadSettings",
-									"requestMethod": "POST",
-									"additionalHeaders": "Content-Type: text/xml;charset=UTF-8\nSOAPAction: \"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment/StartServiceCommercialPermit\"\n",
-									"requestBody": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialPermitInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialPermitID></ns1:commercialPermitID>\n            <ns1:commercialRegistration>\n                <ns1:ID>51600</ns1:ID>\n                <ns1:branchNumber></ns1:branchNumber>\n            </ns1:commercialRegistration>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialPermitInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>",
-									"requestTimeout": ""
-								},
-								"formatSettings": {
-									"type": "XmlReadSettings",
-									"validationMode": "none",
-									"detectDataType": false,
-									"namespaces": true
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".csv"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:ID']"
-										},
-										"sink": {
-											"name": "DS_CRNUMBER",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameArabic']"
-										},
-										"sink": {
-											"name": "DS_COMPANY_ARB",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameEnglish']"
-										},
-										"sink": {
-											"name": "DS_COMPANY_ENG",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:municipalityName']['ns0:nameArabic']"
-										},
-										"sink": {
-											"name": "DS_MUNICIPALITY_NAME",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:number']"
-										},
-										"sink": {
-											"name": "DS_STREET_NUMBER",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:name']['ns0:nameArabic']"
-										},
-										"sink": {
-											"name": "DS_STREET_NAME",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:number']"
-										},
-										"sink": {
-											"name": "DS_ZONE_NUMBER",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:name']['ns0:nameArabic']"
-										},
-										"sink": {
-											"name": "DS_ZONE_NAME",
-											"type": "String"
-										}
-									}
-								],
-								"mapComplexValuesToString": false
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Barbaros_BSS_Dataset",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "BSS_Permit_DS",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -2637,472 +1497,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_BSS')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "LKP_CUSTOMS_DEC",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('LKP_CUSTOMS_DEC').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "CALL_BSS",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "XmlSource",
-											"storeSettings": {
-												"type": "HttpReadSettings",
-												"requestMethod": "POST",
-												"additionalHeaders": "Content-Type: application/soap+xml; charset=utf-8; action=\"http://tempuri.org/GetCommercialRegistrationInfoRequest\"",
-												"requestBody": {
-													"value": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <ns1:GetCommercialRegistrationInfoRequest_Input xmlns:ns1=\"http://mec.gov.qa/BSS/soa/OnePrimaryEstablishment\">\n            <ns1:commercialRegistrationCode>135104</ns1:commercialRegistrationCode>\n            <ns1:RefNumber></ns1:RefNumber>\n        </ns1:GetCommercialRegistrationInfoRequest_Input>\n    </soap:Body>\n</soap:Envelope>\n",
-													"type": "Expression"
-												},
-												"requestTimeout": ""
-											},
-											"formatSettings": {
-												"type": "XmlReadSettings",
-												"validationMode": "none",
-												"detectDataType": false,
-												"namespaces": false
-											}
-										},
-										"sink": {
-											"type": "SqlDWSink",
-											"tableOption": "autoCreate",
-											"disableMetricsCollection": false
-										},
-										"enableStaging": false
-									},
-									"inputs": [
-										{
-											"referenceName": "ds_soap",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "dsqlp_parametric",
-											"type": "DatasetReference",
-											"parameters": {
-												"schemaName": "dwh",
-												"tableName": "STG_SOAP_DENEME"
-											}
-										}
-									]
-								}
-							]
-						}
-					},
-					{
-						"name": "LKP_CUSTOMS_DEC",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlDWSource",
-								"sqlReaderQuery": "select 1 from [dwh].[DWL_CUSTOMS_DECLARATION] WHERE FLG_SUPPLIER_CHECK=1",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "dsqlp_parametric",
-								"type": "DatasetReference",
-								"parameters": {
-									"schemaName": "dwh",
-									"tableName": "DWL_CUSTOMS_DECLARATION"
-								}
-							},
-							"firstRowOnly": false
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "PL_CUSTOM"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_BSS_CHILD_SERVICE_CALL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Permit-Entity Main Data",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "XmlSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "XmlReadSettings",
-									"validationMode": "none",
-									"detectDataType": false,
-									"namespaces": true
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".csv"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:ID']"
-										},
-										"sink": {
-											"name": "CRNUMBER",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:commercialRegistration']['ns0:branchNumber']"
-										},
-										"sink": {
-											"name": "BRANCHNUMBER",
-											"type": "Int16"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameArabic']"
-										},
-										"sink": {
-											"name": "COMPANY_ARB",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:establishmentCommercialName']['ns0:nameEnglish']"
-										},
-										"sink": {
-											"name": "COMPANY_ENG",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:municipalityName']['ns0:nameArabic']"
-										},
-										"sink": {
-											"name": "MUNICIPALITY_NAME",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:number']"
-										},
-										"sink": {
-											"name": "STREET_NUMBER",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:street']['ns0:name']['ns0:nameArabic']"
-										},
-										"sink": {
-											"name": "STREET_NAME",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:number']"
-										},
-										"sink": {
-											"name": "ZONE_NUMBER",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:location']['ns0:zone']['ns0:name']['ns0:nameArabic']"
-										},
-										"sink": {
-											"name": "ZONE_NAME",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerQID']"
-										},
-										"sink": {
-											"name": "MANAGER_QID",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['env:Envelope']['env:Body']['GetCommercialPermitInfoResponse_Output']['ns0:commercialPermit']['ns0:managerName']"
-										},
-										"sink": {
-											"name": "MANAGER_NAME",
-											"type": "String"
-										}
-									}
-								],
-								"mapComplexValuesToString": false
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "BSS_Dataset",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "BSS_Permit_DS",
-								"type": "DatasetReference",
-								"parameters": {
-									"dsparamFileName": {
-										"value": "@pipeline().parameters.CR_Number",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "Registration",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Lookup1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "XmlSource",
-								"additionalColumns": [
-									{
-										"name": "MainCRNumber",
-										"value": {
-											"value": "@pipeline().parameters.CR_Number",
-											"type": "Expression"
-										}
-									}
-								],
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "XmlReadSettings",
-									"validationMode": "none",
-									"namespaces": true
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "[['ns0:serialNumber']"
-										},
-										"sink": {
-											"name": "BRANCH_CR",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "[['ns0:statuses']['ns0:code']"
-										},
-										"sink": {
-											"name": "BRANCH_STATUS",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['MainCRNumber']"
-										},
-										"sink": {
-											"name": "MainCRNumber",
-											"type": "String"
-										}
-									}
-								],
-								"collectionReference": "$['env:Envelope']['env:Body']['GetCommercialRegistrationInfoResponse_Output']['ns0:commercialRegistration']['ns0:branches']",
-								"mapComplexValuesToString": false
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "BSS_Dataset",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "BSS_Registration_DS",
-								"type": "DatasetReference",
-								"parameters": {
-									"dsparamFileName": {
-										"value": "@pipeline().parameters.CR_Number",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFileName": "16070_registration.csv",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"dataset": {
-								"referenceName": "ds_BSS_Files_Folder",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"CR_Number": {
-						"type": "string",
-						"defaultValue": "DefaultValue-ReplaceThis"
-					}
-				},
-				"folder": {
-					"name": "PL_CUSTOM"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_COPY_UI_TABLE')]",
@@ -5092,6 +3486,3340 @@
 				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
 				"[concat(variables('factoryId'), '/datasets/qtrsqldb')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_COPY_UI_TABLE_insert_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "To create the tables on DWH database based on dwl_copy_table_list table ",
+				"activities": [
+					{
+						"name": "Lookup Table List",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=1",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Table in List",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List').output.value\n",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "LKP_max_date",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date').output.firstRow.TheMin,'''',' )\nand status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								},
+								{
+									"name": "LKP_max_date",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderStoredProcedureName": "[[etl].[P_LKP_ODS_MAX_DATES]",
+											"storedProcedureParameters": {
+												"ods_schema_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().target_schema_name",
+														"type": "Expression"
+													}
+												},
+												"ods_table_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().table_name",
+														"type": "Expression"
+													}
+												}
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "dsqlpqtr",
+											"type": "DatasetReference",
+											"parameters": {}
+										},
+										"firstRowOnly": true
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "ForEach Table in List_4",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List4",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List4').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table4",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE  status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "ForEach Table in List_2",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List2').output.value\n",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table2",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE  status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup Table List2",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=2",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Lookup Table List4",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=4",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Lookup Table List3",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=3",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Table in List_3",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List3",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List3').output.value\n",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table3",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "LKP_max_date3",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date3').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date3').output.firstRow.TheMin,'''',' )\nand status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								},
+								{
+									"name": "LKP_max_date3",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderStoredProcedureName": "[[etl].[P_LKP_ODS_MAX_DATES]",
+											"storedProcedureParameters": {
+												"ods_schema_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().target_schema_name",
+														"type": "Expression"
+													}
+												},
+												"ods_table_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().table_name",
+														"type": "Expression"
+													}
+												}
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "dsqlpqtr",
+											"type": "DatasetReference",
+											"parameters": {}
+										},
+										"firstRowOnly": true
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup Table List5",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=5",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Table in List_5",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List5",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List5').output.value\n",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table5",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "LKP_max_date5",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date5').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date5').output.firstRow.TheMin,'''',' )\nand status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								},
+								{
+									"name": "LKP_max_date5",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderStoredProcedureName": "[[etl].[P_LKP_ODS_MAX_DATES]",
+											"storedProcedureParameters": {
+												"ods_schema_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().target_schema_name",
+														"type": "Expression"
+													}
+												},
+												"ods_table_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().table_name",
+														"type": "Expression"
+													}
+												}
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "dsqlpqtr",
+											"type": "DatasetReference",
+											"parameters": {}
+										},
+										"firstRowOnly": true
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup Table List7",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=7",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Table in List_7",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List7",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List7').output.value\n",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table7",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "LKP_max_date7",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date7').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date7').output.firstRow.TheMin,'''',' )\nand status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								},
+								{
+									"name": "LKP_max_date7",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderStoredProcedureName": "[[etl].[P_LKP_ODS_MAX_DATES]",
+											"storedProcedureParameters": {
+												"ods_schema_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().target_schema_name",
+														"type": "Expression"
+													}
+												},
+												"ods_table_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().table_name",
+														"type": "Expression"
+													}
+												}
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "dsqlpqtr",
+											"type": "DatasetReference",
+											"parameters": {}
+										},
+										"firstRowOnly": true
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup Table List9",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=9",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Table in List_9",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List9",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List9').output.value\n",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table9",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "LKP_max_date9",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE ( createdutc > ','''',activity('LKP_max_date9').output.firstRow.TheMin,'''',' OR\nupdatedutc>  ','''',activity('LKP_max_date9').output.firstRow.TheMin,'''',' )\nand status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								},
+								{
+									"name": "LKP_max_date9",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderStoredProcedureName": "[[etl].[P_LKP_ODS_MAX_DATES]",
+											"storedProcedureParameters": {
+												"ods_schema_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().target_schema_name",
+														"type": "Expression"
+													}
+												},
+												"ods_table_name": {
+													"type": "String",
+													"value": {
+														"value": "@item().table_name",
+														"type": "Expression"
+													}
+												}
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "dsqlpqtr",
+											"type": "DatasetReference",
+											"parameters": {}
+										},
+										"firstRowOnly": true
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "ForEach Table in List_6",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List6",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List6').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table6",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE  status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "ForEach Table in List_8",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List8",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List8').output.value\n",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table8",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE  status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup Table List8",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=8",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Lookup Table List6",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=6",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Table in List_10",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List10",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List10').output.value\n",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table10",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE  status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup Table List10",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere partition_id=10",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-25T14:24:40Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
+				"[concat(variables('factoryId'), '/datasets/qtrsqldb')]",
+				"[concat(variables('factoryId'), '/datasets/dsqlpqtr')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_COPY_UI_TABLE_product')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "To create the tables on DWH database based on dwl_copy_table_list table ",
+				"activities": [
+					{
+						"name": "Lookup Table List",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere target_table_name='Products'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Table in List",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List').output.value\n",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "ForEach Table in List_4",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List4",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List4').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table4",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE  status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "ForEach Table in List_2",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List2').output.value\n",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table2",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE  status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup Table List2",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "select * from  etl.dwl_copy_table_list\nwhere target_Table_name='MasterProducts'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Lookup Table List4",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "  select * from  etl.dwl_copy_table_list\nwhere target_Table_name in (\n'CompanyEntities',\n'ProductCategories',\n'ProductBrands')",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach Table in List_8",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table List8",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table List8').output.value\n",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Truncate and Insert Table8",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@CONCAT('SELECT * FROM \t\n','',item().schema_name,'','.','',item().table_name,'',' \nWHERE  status=1')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"preCopyScript": {
+												"value": "@{concat('TRUNCATE table ',item().target_schema_name,'.',item().table_name)}",
+												"type": "Expression"
+											},
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "qtrsqldb",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item().table_name",
+													"type": "Expression"
+												},
+												"schemaName": {
+													"value": "@item().schema_name",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "@item().target_schema_name",
+												"tableName": "@item().table_name"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup Table List8",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": " select * from  etl.dwl_copy_table_list\nwhere target_Table_name in (\n'ProductGroups',\n'MeasureUnits',\n'Countries')",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "dsqlp_parametric",
+								"type": "DatasetReference",
+								"parameters": {
+									"schemaName": "etl",
+									"tableName": "DWL_COPY_TABLE_LIST"
+								}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_TOOL"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-25T14:24:40Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]",
+				"[concat(variables('factoryId'), '/datasets/qtrsqldb')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_CSV_TO_STG')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_csv",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": "*.csv"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "IsFileNameCorrect",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "lookupFileName",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@equals(if(\nempty(activity('lookupFileName').output.value)\n,0,1),1)\n",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "Send E_Mail",
+												"type": "WebActivity",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
+													"connectVia": {
+														"referenceName": "integrationRuntime10min",
+														"type": "IntegrationRuntimeReference"
+													},
+													"method": "POST",
+													"headers": {},
+													"body": {
+														"value": "{\"EmailType\":\"NotExpectedFile\"}",
+														"type": "Expression"
+													},
+													"disableCertValidation": false
+												}
+											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "P_COPY_FILE_DATA",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "[[dwh].[P_COPY_FILE_DATA]",
+													"storedProcedureParameters": {
+														"FILENAME": {
+															"value": {
+																"value": "@item().name",
+																"type": "Expression"
+															},
+															"type": "String"
+														}
+													}
+												},
+												"linkedServiceName": {
+													"referenceName": "ls_dsqlpqtr",
+													"type": "LinkedServiceReference"
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "lookupFileName",
+									"type": "Lookup",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderQuery": {
+												"value": "@concat(\n'SELECT 1 as lkp_id FROM [etl].[DWL_FILE_LIST] where DS_FILENAME= '\n,''''\n,replace(item().name,'.csv','')\n,'''')",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "ds_dwl_file_list",
+											"type": "DatasetReference",
+											"parameters": {}
+										},
+										"firstRowOnly": false
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN_TRANSACTION"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:55:14Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_CSV_TO_STG_bulk_load')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_csv_folder",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "truncateStgTransactions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "P_COPY_FILE_DATA_copy1",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dwh].[P_COPY_FILE_DATA]",
+										"storedProcedureParameters": {
+											"FILENAME": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "ls_dsqlpqtr",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "truncateStgTransactions",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlDWSource",
+								"sqlReaderQuery": "truncate table [dwh].[STG_TRANSACTIONS];\nselect 1;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_stg_transactions",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					}
+				],
+				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:55:14Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_stg_transactions')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_CSV_TO_STG_initial')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetFileList",
+						"description": "Get file list from processing container",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dls_processing_csv",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileName": "*.csv"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEachFile",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetFileList",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetFileList').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "P_COPY_FILE_DATA",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dwh].[P_COPY_FILE_DATA]",
+										"storedProcedureParameters": {
+											"FILENAME": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "ls_dsqlpqtr",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"concurrency": 1,
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN_TRANSACTION"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:55:14Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_CUSTOM_TO_STG')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetXMLFiles",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "ds_custom_xml",
+								"type": "DatasetReference",
+								"parameters": {
+									"xmlfileName": "*"
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "GetXMLFiles",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('GetXMLFiles').output.childItems",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Copy_Dec",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "XmlSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": false,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "XmlReadSettings",
+												"validationMode": "none",
+												"detectDataType": true,
+												"namespaces": true
+											}
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['NotificationSender']"
+													},
+													"sink": {
+														"name": "NotificationSender",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['NotificationRef']"
+													},
+													"sink": {
+														"name": "NotificationRef",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['NotificationDate']"
+													},
+													"sink": {
+														"name": "NotificationDate",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['declarationNo']"
+													},
+													"sink": {
+														"name": "declarationNo",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['declarationStatus']"
+													},
+													"sink": {
+														"name": "declarationStatus",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['declarationType']"
+													},
+													"sink": {
+														"name": "declarationType",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['releaseOrderNumber']"
+													},
+													"sink": {
+														"name": "releaseOrderNumber",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['releasedDate']"
+													},
+													"sink": {
+														"name": "releasedDate",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['supplierCR']"
+													},
+													"sink": {
+														"name": "supplierCR",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['supplierCustomsCode']"
+													},
+													"sink": {
+														"name": "supplierCustomsCode",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['countryOfLoading']"
+													},
+													"sink": {
+														"name": "countryOfLoading",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['firstCountryOfLoading']"
+													},
+													"sink": {
+														"name": "firstCountryOfLoading",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['accountType']"
+													},
+													"sink": {
+														"name": "accountType",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['companyName']"
+													},
+													"sink": {
+														"name": "companyName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['establishmentId']"
+													},
+													"sink": {
+														"name": "establishmentId",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['companyNameAr']"
+													},
+													"sink": {
+														"name": "companyNameAr",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['email']"
+													},
+													"sink": {
+														"name": "email",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['address']"
+													},
+													"sink": {
+														"name": "address",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['portType']"
+													},
+													"sink": {
+														"name": "portType",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['entryOrExitPortName']"
+													},
+													"sink": {
+														"name": "entryOrExitPortName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['clearingAgencyCR']"
+													},
+													"sink": {
+														"name": "clearingAgencyCR",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['clearingAgencyNameEng']"
+													},
+													"sink": {
+														"name": "clearingAgencyNameEng",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['clearingAgencyNameAR']"
+													},
+													"sink": {
+														"name": "clearingAgencyNameAR",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['portOfLoading']"
+													},
+													"sink": {
+														"name": "portOfLoading",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['importerName']"
+													},
+													"sink": {
+														"name": "importerName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['exporterName']"
+													},
+													"sink": {
+														"name": "exporterName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['bolNumber']"
+													},
+													"sink": {
+														"name": "bolNumber",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['masterBolOrAWBNumber']"
+													},
+													"sink": {
+														"name": "masterBolOrAWBNumber",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['cargoManifestNumber']"
+													},
+													"sink": {
+														"name": "cargoManifestNumber",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['voyageOrFlightNumber']"
+													},
+													"sink": {
+														"name": "voyageOrFlightNumber",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['carrierName']"
+													},
+													"sink": {
+														"name": "carrierName",
+														"type": "String"
+													}
+												}
+											]
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_custom_xml",
+											"type": "DatasetReference",
+											"parameters": {
+												"xmlfileName": "@item().name"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "dwh",
+												"tableName": "STG_CUSTOMS_DEC"
+											}
+										}
+									]
+								},
+								{
+									"name": "stgcustomsdec",
+									"type": "Lookup",
+									"dependsOn": [
+										{
+											"activity": "Lookup1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderQuery": {
+												"value": "@concat('SELECT 1\nFROM [dwh].[STG_CUSTOMS_DEC] as SCD\nWHERE \n(\ntry_convert(nvarchar(200), NULLIF([NotificationSender], '''')) IS NULL\nOR try_convert(datetime, NULLIF([NotificationDate], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([NotificationRef], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([bolNumber], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationNo], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationStatus], '''')) IS NULL\nOR try_convert(nvarchar(200), NULLIF([declarationType], '''')) IS NULL\nOR NOT EXISTS (SELECT 1 FROM dwh.STG_CUSTOMS_ITEM AS SCI WHERE sci.declarationNo=SCD.declarationNo)\n)\nAND [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,'''')\n\n\n",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "ds_stg_customs_dec",
+											"type": "DatasetReference",
+											"parameters": {}
+										},
+										"firstRowOnly": false
+									}
+								},
+								{
+									"name": "If Condition1",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "stgcustomsdec",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@equals(if(\nempty(activity('stgcustomsdec').output.value)\n,0,1),0)",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "Web1",
+												"type": "WebActivity",
+												"dependsOn": [
+													{
+														"activity": "deletestgcustomsdec",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"url": "https://lapp-psmsii-dt-westeu-004.azurewebsites.net:443/api/lappwf_psmsii_dt_003/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gfkqhHVGM0XUwIyFoLgEKxzhSohusGVbGzkbginsRcg",
+													"connectVia": {
+														"referenceName": "integrationRuntime10min",
+														"type": "IntegrationRuntimeReference"
+													},
+													"method": "POST",
+													"headers": {},
+													"body": {
+														"EmailType": "CustomInvalidFile"
+													}
+												}
+											},
+											{
+												"name": "deletestgcustomsdec",
+												"type": "Lookup",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "SqlDWSource",
+														"sqlReaderQuery": {
+															"value": "@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,''';\nSELECT 1;\nDELETE FROM [dwh].[STG_CUSTOMS_ITEM] WHERE [declarationno] = ','''',activity('Lookup1').output.firstRow.NotificationRef,''';')",
+															"type": "Expression"
+														},
+														"queryTimeout": "02:00:00",
+														"partitionOption": "None"
+													},
+													"dataset": {
+														"referenceName": "ds_stg_customs_dec",
+														"type": "DatasetReference",
+														"parameters": {}
+													},
+													"firstRowOnly": false
+												}
+											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "Copy_Supv",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "XmlSource",
+														"storeSettings": {
+															"type": "AzureBlobFSReadSettings",
+															"recursive": true,
+															"enablePartitionDiscovery": false
+														},
+														"formatSettings": {
+															"type": "XmlReadSettings",
+															"validationMode": "none",
+															"detectDataType": true,
+															"namespaces": true
+														}
+													},
+													"sink": {
+														"type": "SqlDWSink",
+														"disableMetricsCollection": false
+													},
+													"enableStaging": false,
+													"translator": {
+														"type": "TabularTranslator",
+														"mappings": [
+															{
+																"source": {
+																	"path": "[['name']"
+																},
+																"sink": {
+																	"name": "name",
+																	"type": "String"
+																}
+															},
+															{
+																"source": {
+																	"path": "[['mobileNumber']"
+																},
+																"sink": {
+																	"name": "mobileNumber",
+																	"type": "String"
+																}
+															},
+															{
+																"source": {
+																	"path": "$['ReleaseNotification']['Declaration']['declarationNo']"
+																},
+																"sink": {
+																	"name": "declarationNo",
+																	"type": "String"
+																}
+															}
+														],
+														"collectionReference": "$['ReleaseNotification']['Declaration']['SupervisorDetails']['Supervisor']",
+														"mapComplexValuesToString": false
+													}
+												},
+												"inputs": [
+													{
+														"referenceName": "ds_custom_xml",
+														"type": "DatasetReference",
+														"parameters": {
+															"xmlfileName": "@item().name"
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "dsqlp_parametric",
+														"type": "DatasetReference",
+														"parameters": {
+															"schemaName": "dwh",
+															"tableName": "STG_CUSTOMS_SUPV"
+														}
+													}
+												]
+											}
+										]
+									}
+								},
+								{
+									"name": "Lookup1",
+									"type": "Lookup",
+									"dependsOn": [
+										{
+											"activity": "Copy_Item",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										},
+										{
+											"activity": "Copy_Dec",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "ds_stg_customs_dec",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									}
+								},
+								{
+									"name": "Copy_Item",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "XmlSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "XmlReadSettings",
+												"validationMode": "none",
+												"detectDataType": true,
+												"namespaces": true
+											}
+										},
+										"sink": {
+											"type": "SqlDWSink",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "[['hscode']"
+													},
+													"sink": {
+														"name": "hscode",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "[['itemQuantity']"
+													},
+													"sink": {
+														"name": "itemQuantity",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "[['itemQuantityUOM']"
+													},
+													"sink": {
+														"name": "itemQuantityUOM",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "[['netWeight']"
+													},
+													"sink": {
+														"name": "netWeight",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "[['netWeightUOM']"
+													},
+													"sink": {
+														"name": "netWeightUOM",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "[['countryOfOrigin']"
+													},
+													"sink": {
+														"name": "countryOfOrigin",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "[['declaredValue']"
+													},
+													"sink": {
+														"name": "declaredValue",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "[['foreignCurrency']"
+													},
+													"sink": {
+														"name": "foreignCurrency",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "[['declaredValueQAR']"
+													},
+													"sink": {
+														"name": "declaredValueQAR",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['ReleaseNotification']['Declaration']['declarationNo']"
+													},
+													"sink": {
+														"name": "declarationNo",
+														"type": "String"
+													}
+												}
+											],
+											"collectionReference": "$['ReleaseNotification']['Declaration']['ItemDetails']['Item']",
+											"mapComplexValuesToString": true
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_custom_xml",
+											"type": "DatasetReference",
+											"parameters": {
+												"xmlfileName": "@item().name"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dsqlp_parametric",
+											"type": "DatasetReference",
+											"parameters": {
+												"schemaName": "dwh",
+												"tableName": "STG_CUSTOMS_ITEM"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dsqlp_parametric')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_FILE_TRANSFER')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "from upload to processing folder",
+				"activities": [
+					{
+						"name": "fileTransfer",
+						"description": "file transfering from upload container to processing container on data lake.",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"deleteFilesAfterCompletion": false
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "dls_upload_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dls_processing_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "PL_MAIN_TRANSACTION"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:54:28Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_FILE_TRANSFER_xlsx')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "from upload to processing folder",
+				"activities": [
+					{
+						"name": "fileTransfer",
+						"description": "file transfering from upload container to processing container on data lake.",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*.xlsx",
+									"deleteFilesAfterCompletion": false
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "dls_upload_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dls_processing_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dev"
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-05-20T12:54:28Z"
+			},
+			"dependsOn": []
 		}
 	]
 }

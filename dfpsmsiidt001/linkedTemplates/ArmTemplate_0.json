@@ -15,7 +15,11 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_psmsii_syntodsqlp'"
 		},
-		"Barbaros_BSS_properties_typeProperties_url": {
+		"ls_psmsii_syntoobasesql_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_psmsii_syntoobasesql'"
+		},
+		"LS_BSS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "http://soa.mec.gov.qa:8001/soa-infra/services/MEC/BSS_Data_Exchange/OnePrimaryEstablishmentService_Client_ep"
 		},
@@ -522,14 +526,14 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Barbaros_BSS')]",
+			"name": "[concat(parameters('factoryName'), '/LS_BSS')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
 				"type": "HttpServer",
 				"typeProperties": {
-					"url": "[parameters('Barbaros_BSS_properties_typeProperties_url')]",
+					"url": "[parameters('LS_BSS_properties_typeProperties_url')]",
 					"enableServerCertificateValidation": false,
 					"authenticationType": "Anonymous"
 				},
@@ -720,7 +724,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Barbaros_BSS",
+					"referenceName": "LS_BSS",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -732,28 +736,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Barbaros_BSS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Barbaros_BSS_Dataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Barbaros_BSS",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Xml",
-				"typeProperties": {
-					"location": {
-						"type": "HttpServerLocation"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Barbaros_BSS')]"
+				"[concat(variables('factoryId'), '/linkedServices/LS_BSS')]"
 			]
 		},
 		{
@@ -849,6 +832,25 @@
 				"type": "AzureSqlDW",
 				"typeProperties": {
 					"connectionString": "[parameters('ls_psmsii_syntodsqlp_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime10min",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime10min')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_psmsii_syntoobasesql')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('ls_psmsii_syntoobasesql_connectionString')]"
 				},
 				"connectVia": {
 					"referenceName": "integrationRuntime10min",
