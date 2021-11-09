@@ -20,7 +20,7 @@
 					"value": "@dataset().dsparamFileName",
 					"type": "Expression"
 				},
-				"fileSystem": "stagingarea"
+				"fileSystem": "bss-staging"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
