@@ -30,7 +30,7 @@
 					"name": "Filter1"
 				}
 			],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\twildcardPaths:['*_regtemp.csv']) ~> source1\nsource1 derive(BRANCH_CR = toString(byName('BRANCH_CR')),\n\t\tBRANCH_STATUS = toString(byName('BRANCH_STATUS')),\n\t\tMainCRNumber = toString(byName('MainCRNumber'))) ~> MapDrifted3\nMapDrifted3 filter(equalsIgnoreCase(BRANCH_STATUS,'Active')) ~> Filter1\nFilter1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delimited',\n\tfileSystem: 'bss-staging',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: true,\n\tpartitionFileNames:['BSS_Source_CR_List.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpurgeFiles: true,\n\twildcardPaths:['*_regtemp.csv']) ~> source1\nsource1 derive(BRANCH_CR = toString(byName('BRANCH_CR')),\n\t\tBRANCH_STATUS = toString(byName('BRANCH_STATUS')),\n\t\tMainCRNumber = toString(byName('MainCRNumber'))) ~> MapDrifted3\nMapDrifted3 filter(equalsIgnoreCase(BRANCH_STATUS,'Active')) ~> Filter1\nFilter1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'delimited',\n\tfileSystem: 'bss-staging',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: true,\n\tpartitionFileNames:['BSS_Source_CR_List.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
 		}
 	}
 }
