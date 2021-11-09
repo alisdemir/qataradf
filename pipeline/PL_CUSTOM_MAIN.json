@@ -267,6 +267,38 @@
 												"type": "DatasetReference"
 											}
 										}
+									},
+									{
+										"name": "DWL_CUSTOMS_DECLARATION_INV",
+										"type": "Lookup",
+										"dependsOn": [
+											{
+												"activity": "P_DQ_Invalid_Customs",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "SqlDWSource",
+												"sqlReaderStoredProcedureName": "[dwh].[P_UPSERT_CUSTOMS_DECLARATION]",
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "ds_stg_customs_dec",
+												"type": "DatasetReference"
+											}
+										}
 									}
 								],
 								"ifTrueActivities": [
