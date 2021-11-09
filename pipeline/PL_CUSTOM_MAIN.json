@@ -267,42 +267,6 @@
 												"type": "DatasetReference"
 											}
 										}
-									},
-									{
-										"name": "deletestgcustomsdec",
-										"type": "Lookup",
-										"dependsOn": [
-											{
-												"activity": "Email",
-												"dependencyConditions": [
-													"Succeeded"
-												]
-											}
-										],
-										"policy": {
-											"timeout": "7.00:00:00",
-											"retry": 0,
-											"retryIntervalInSeconds": 30,
-											"secureOutput": false,
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"source": {
-												"type": "SqlDWSource",
-												"sqlReaderQuery": {
-													"value": "/*@concat(' DELETE FROM [dwh].[STG_CUSTOMS_DEC] WHERE [NotificationRef] = ','''',activity('Lookup1').output.firstRow.NotificationRef,''';\nSELECT 1;\nDELETE FROM [dwh].[STG_CUSTOMS_ITEM] WHERE [declarationno] = ','''',activity('Lookup1').output.firstRow.declarationno,''';\nSELECT 1;\nDELETE FROM [dwh].[STG_CUSTOMS_SUPV] WHERE [declarationno] = ','''',activity('Lookup1').output.firstRow.declarationno,''';')*/",
-													"type": "Expression"
-												},
-												"queryTimeout": "02:00:00",
-												"partitionOption": "None"
-											},
-											"dataset": {
-												"referenceName": "ds_stg_customs_dec",
-												"type": "DatasetReference"
-											},
-											"firstRowOnly": false
-										}
 									}
 								],
 								"ifTrueActivities": [
