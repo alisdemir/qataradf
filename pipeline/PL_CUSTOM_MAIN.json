@@ -412,7 +412,19 @@
 										"type": "SqlServerStoredProcedure",
 										"dependsOn": [
 											{
-												"activity": "P_DELETE_PENDING_INSPECTION",
+												"activity": "P_UPSERT_CUSTOMS_SUPV",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											},
+											{
+												"activity": "P_UPSERT_CUSTOMS_ITEM",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											},
+											{
+												"activity": "P_UPSERT_CUSTOMS_DEC",
 												"dependencyConditions": [
 													"Succeeded"
 												]
@@ -428,51 +440,6 @@
 										"userProperties": [],
 										"typeProperties": {
 											"storedProcedureName": "[dwh].[P_DWA_CUSTOMS_STOCK]"
-										},
-										"linkedServiceName": {
-											"referenceName": "ls_dsqlpqtr",
-											"type": "LinkedServiceReference"
-										}
-									},
-									{
-										"name": "P_DELETE_PENDING_INSPECTION",
-										"type": "SqlServerStoredProcedure",
-										"dependsOn": [
-											{
-												"activity": "P_UPSERT_CUSTOMS_DEC",
-												"dependencyConditions": [
-													"Succeeded"
-												]
-											},
-											{
-												"activity": "P_UPSERT_CUSTOMS_ITEM",
-												"dependencyConditions": [
-													"Succeeded"
-												]
-											},
-											{
-												"activity": "P_UPSERT_CUSTOMS_SUPV",
-												"dependencyConditions": [
-													"Succeeded"
-												]
-											}
-										],
-										"policy": {
-											"timeout": "7.00:00:00",
-											"retry": 0,
-											"retryIntervalInSeconds": 30,
-											"secureOutput": false,
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"storedProcedureName": "[dwh].[P_DELETE_PENDING_INSPECTION]",
-											"storedProcedureParameters": {
-												"param_day": {
-													"value": "90",
-													"type": "Int32"
-												}
-											}
 										},
 										"linkedServiceName": {
 											"referenceName": "ls_dsqlpqtr",
