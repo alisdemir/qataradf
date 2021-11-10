@@ -1102,9 +1102,57 @@
 							"typeProperties": {
 								"storedProcedureName": "[dbo].[DwhTransferEntity]",
 								"storedProcedureParameters": {
+									"AddressArea": {
+										"value": null,
+										"type": "String"
+									},
+									"AddressAreaNumber": {
+										"value": null,
+										"type": "String"
+									},
+									"AddressBuildingNumber": {
+										"value": null,
+										"type": "String"
+									},
+									"AddressPostalCode": {
+										"value": null,
+										"type": "String"
+									},
+									"AddressStreetName": {
+										"value": null,
+										"type": "String"
+									},
+									"AddressStreetNumber2": {
+										"value": null,
+										"type": "String"
+									},
+									"CLNumber": {
+										"value": null,
+										"type": "String"
+									},
+									"CRNumber": {
+										"value": null,
+										"type": "String"
+									},
+									"Email": {
+										"value": null,
+										"type": "String"
+									},
+									"EntityTypeName": {
+										"value": null,
+										"type": "String"
+									},
+									"Fax": {
+										"value": null,
+										"type": "String"
+									},
 									"IsInitialLoad": {
 										"value": "True",
 										"type": "Boolean"
+									},
+									"LocationURL": {
+										"value": null,
+										"type": "String"
 									},
 									"MainCompanyCrNumber": {
 										"value": {
@@ -1113,11 +1161,43 @@
 										},
 										"type": "String"
 									},
+									"MobilePhoneNumber": {
+										"value": null,
+										"type": "String"
+									},
+									"NameArabic": {
+										"value": null,
+										"type": "String"
+									},
 									"NameEnglish": {
 										"value": {
 											"value": "@item().MANAGER_NAME",
 											"type": "Expression"
 										},
+										"type": "String"
+									},
+									"PhoneExtension": {
+										"value": null,
+										"type": "String"
+									},
+									"PhoneNumber": {
+										"value": null,
+										"type": "String"
+									},
+									"RecordTypeName": {
+										"value": null,
+										"type": "String"
+									},
+									"WarehouseCapacity": {
+										"value": null,
+										"type": "Decimal"
+									},
+									"WarehouseTotalArea": {
+										"value": null,
+										"type": "Decimal"
+									},
+									"WebSite": {
+										"value": null,
 										"type": "String"
 									}
 								}
