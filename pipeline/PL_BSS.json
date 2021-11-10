@@ -629,7 +629,7 @@
 				}
 			},
 			{
-				"name": "Lookup2",
+				"name": "Main CR lar",
 				"type": "Lookup",
 				"dependsOn": [
 					{
@@ -650,7 +650,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "SELECT MAIN_CRNUMBER,\n       BRANCHNUMBER,\n       COMPANY_ARB,\n       COMPANY_ENG,\n       MUNICIPALITY_NAME,\n       STREET_NUMBER,\n       STREET_NAME,\n       ZONE_NUMBER,\n       ZONE_NAME,\n       --MANAGER_QID,\n       --MANAGER_NAME,\n       POBox,\n       Telephone,\n       CRNumber,\n\t   CASE BRANCHNUMBER WHEN 0 THEN 'Main' ELSE 'Branch' END AS RecordTypeName,\n\t   'Suppliers' AS EntityTypeName\n\t   FROM [tmp].[STG_BSS_DATA]",
+						"sqlReaderQuery": "SELECT MAIN_CRNUMBER,\n       BRANCHNUMBER,\n       COMPANY_ARB,\n       COMPANY_ENG,\n       MUNICIPALITY_NAME,\n       STREET_NUMBER,\n       STREET_NAME,\n       ZONE_NUMBER,\n       ZONE_NAME,\n       --MANAGER_QID,\n       --MANAGER_NAME,\n       POBox,\n       Telephone,\n       CRNumber,\n\t   CASE BRANCHNUMBER WHEN 0 THEN 'Main' ELSE 'Branch' END AS RecordTypeName,\n\t   'Suppliers' AS EntityTypeName\n\t   FROM [tmp].[STG_BSS_DATA]\n\t   WHERE BRANCHNUMBER =0",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -666,7 +666,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup2",
+						"activity": "Main CR lar",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -677,7 +677,363 @@
 					"items": {
 						"value": "@activity('Lookup2').output.value",
 						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Stored procedure1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[DwhTransferEntity]",
+								"storedProcedureParameters": {
+									"AddressArea": {
+										"value": {
+											"value": "@item().ZONE_NAME",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"AddressAreaNumber": {
+										"value": {
+											"value": "@item().ZONE_NUMBER",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"AddressBuildingNumber": {
+										"value": "",
+										"type": "String"
+									},
+									"AddressPostalCode": {
+										"value": {
+											"value": "@item().POBox",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"AddressStreetName": {
+										"value": {
+											"value": "@item().STREET_NAME",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"AddressStreetNumber2": {
+										"value": {
+											"value": "@item().STREET_NUMBER",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"CLNumber": {
+										"value": "",
+										"type": "String"
+									},
+									"CRNumber": {
+										"value": {
+											"value": "@item().CRNumber",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Email": {
+										"value": "",
+										"type": "String"
+									},
+									"EntityTypeName": {
+										"value": {
+											"value": "@item().EntityTypeName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Fax": {
+										"value": "",
+										"type": "String"
+									},
+									"IsInitialLoad": {
+										"value": "1",
+										"type": "Boolean"
+									},
+									"LocationURL": {
+										"value": "",
+										"type": "String"
+									},
+									"MainCompanyCrNumber": {
+										"value": {
+											"value": "@item().MAIN_CRNUMBER",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MobilePhoneNumber": {
+										"value": "",
+										"type": "String"
+									},
+									"NameArabic": {
+										"value": {
+											"value": "@item().COMPANY_ARB",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"NameEnglish": {
+										"value": {
+											"value": "@item().COMPANY_ENG",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"PhoneExtension": {
+										"value": "",
+										"type": "String"
+									},
+									"PhoneNumber": {
+										"value": {
+											"value": "@item().Telephone",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"RecordTypeName": {
+										"value": {
+											"value": "@item().RecordTypeName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"WarehouseCapacity": {
+										"value": "",
+										"type": "Decimal"
+									},
+									"WarehouseTotalArea": {
+										"value": "",
+										"type": "Decimal"
+									},
+									"WebSite": {
+										"value": "",
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_qtrsqldb",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Branch CR lar",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "ForEach2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "SELECT MAIN_CRNUMBER,\n       BRANCHNUMBER,\n       COMPANY_ARB,\n       COMPANY_ENG,\n       MUNICIPALITY_NAME,\n       STREET_NUMBER,\n       STREET_NAME,\n       ZONE_NUMBER,\n       ZONE_NAME,\n       --MANAGER_QID,\n       --MANAGER_NAME,\n       POBox,\n       Telephone,\n       CRNumber,\n\t   CASE BRANCHNUMBER WHEN 0 THEN 'Main' ELSE 'Branch' END AS RecordTypeName,\n\t   'Suppliers' AS EntityTypeName\n\t   FROM [tmp].[STG_BSS_DATA]\n\t   WHERE BRANCHNUMBER <>0",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_stg_warehouse_raw",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach2_copy1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Branch CR lar",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup2').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Stored procedure1_copy1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[DwhTransferEntity]",
+								"storedProcedureParameters": {
+									"AddressArea": {
+										"value": {
+											"value": "@item().ZONE_NAME",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"AddressAreaNumber": {
+										"value": {
+											"value": "@item().ZONE_NUMBER",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"AddressBuildingNumber": {
+										"value": "",
+										"type": "String"
+									},
+									"AddressPostalCode": {
+										"value": {
+											"value": "@item().POBox",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"AddressStreetName": {
+										"value": {
+											"value": "@item().STREET_NAME",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"AddressStreetNumber2": {
+										"value": {
+											"value": "@item().STREET_NUMBER",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"CLNumber": {
+										"value": "",
+										"type": "String"
+									},
+									"CRNumber": {
+										"value": {
+											"value": "@item().CRNumber",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Email": {
+										"value": "",
+										"type": "String"
+									},
+									"EntityTypeName": {
+										"value": {
+											"value": "@item().EntityTypeName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Fax": {
+										"value": "",
+										"type": "String"
+									},
+									"IsInitialLoad": {
+										"value": "1",
+										"type": "Boolean"
+									},
+									"LocationURL": {
+										"value": "",
+										"type": "String"
+									},
+									"MainCompanyCrNumber": {
+										"value": {
+											"value": "@item().MAIN_CRNUMBER",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"MobilePhoneNumber": {
+										"value": "",
+										"type": "String"
+									},
+									"NameArabic": {
+										"value": {
+											"value": "@item().COMPANY_ARB",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"NameEnglish": {
+										"value": {
+											"value": "@item().COMPANY_ENG",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"PhoneExtension": {
+										"value": "",
+										"type": "String"
+									},
+									"PhoneNumber": {
+										"value": {
+											"value": "@item().Telephone",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"RecordTypeName": {
+										"value": {
+											"value": "@item().RecordTypeName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"WarehouseCapacity": {
+										"value": "",
+										"type": "Decimal"
+									},
+									"WarehouseTotalArea": {
+										"value": "",
+										"type": "Decimal"
+									},
+									"WebSite": {
+										"value": "",
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_qtrsqldb",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
 				}
 			}
 		],
