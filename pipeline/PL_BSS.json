@@ -144,7 +144,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "SELECT \n'16070' as DS_SUPPLIER_CR\n/*FROM [dwh].[DWL_CUSTOMS_DECLARATION] WHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL*/",
+						"sqlReaderQuery": "SELECT JSON_VALUE(concat('[\"', REPLACE(CD.DS_SUPPLIER_CR, '/', '\",\"'), '\"]'), '$[0]') AS DS_SUPPLIER_CR FROM [dwh].[DWL_CUSTOMS_DECLARATION] AS CD\nWHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL AND NOT EXISTS(\nSELECT 1 FROM dwh.DWL_ENTITY \ninner JOIN [dwh].[DWL_CUSTOMS_DECLARATION] AS CD\non DS_ENTITY_CR =JSON_VALUE(concat('[\"', REPLACE(CD.DS_SUPPLIER_CR, '/', '\",\"'), '\"]'), '$[0]')\n)\nUNION  \nSELECT DS_SUPPLIER_CR FROM [dwh].[DWL_CUSTOMS_DECLARATION]\nWHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
