@@ -323,7 +323,7 @@
 											"source": {
 												"type": "SqlDWSource",
 												"sqlReaderQuery": {
-													"value": "@concat(\n'INSERT INTO STG.CUSTOMS_INVALID_ERRORS (DS_ERROR) SELECT'\n,''''\n,activity('P_DQ_Invalid_Customs').output.firstrow.error,'''')",
+													"value": "@concat(\n'INSERT INTO STG.CUSTOMS_INVALID_ERRORS (DS_ERROR) SELECT '\n,''''\n,activity('P_DQ_Invalid_Customs').output.firstrow.error,'''')",
 													"type": "Expression"
 												},
 												"queryTimeout": "02:00:00",
