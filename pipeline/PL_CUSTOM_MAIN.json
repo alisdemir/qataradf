@@ -269,8 +269,8 @@
 										}
 									},
 									{
-										"name": "DWL_CUSTOMS_DECLARATION_INV",
-										"type": "Lookup",
+										"name": "P_UPSERT_CUSTOMS_DECLARATION_INV",
+										"type": "SqlServerStoredProcedure",
 										"dependsOn": [
 											{
 												"activity": "P_DQ_Invalid_Customs",
@@ -288,16 +288,11 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"source": {
-												"type": "SqlDWSource",
-												"sqlReaderStoredProcedureName": "[dwh].[P_UPSERT_CUSTOMS_DECLARATION_INV]",
-												"queryTimeout": "02:00:00",
-												"partitionOption": "None"
-											},
-											"dataset": {
-												"referenceName": "ds_stg_customs_dec",
-												"type": "DatasetReference"
-											}
+											"storedProcedureName": "[dwh].[P_UPSERT_CUSTOMS_DECLARATION_INV]"
+										},
+										"linkedServiceName": {
+											"referenceName": "ls_dsqlpqtr",
+											"type": "LinkedServiceReference"
 										}
 									}
 								],
