@@ -760,7 +760,7 @@
 										"type": "String"
 									},
 									"IsInitialLoad": {
-										"value": "1",
+										"value": "True",
 										"type": "Boolean"
 									},
 									"LocationURL": {
@@ -964,7 +964,7 @@
 										"type": "String"
 									},
 									"IsInitialLoad": {
-										"value": "1",
+										"value": "True",
 										"type": "Boolean"
 									},
 									"LocationURL": {
@@ -1103,7 +1103,7 @@
 								"storedProcedureName": "[dbo].[DwhTransferEntity]",
 								"storedProcedureParameters": {
 									"IsInitialLoad": {
-										"value": "1",
+										"value": "True",
 										"type": "Boolean"
 									},
 									"MainCompanyCrNumber": {
