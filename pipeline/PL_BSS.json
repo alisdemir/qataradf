@@ -964,7 +964,7 @@
 										"type": "String"
 									},
 									"IsInitialLoad": {
-										"value": null,
+										"value": "True",
 										"type": "Boolean"
 									},
 									"LocationURL": {
