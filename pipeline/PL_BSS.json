@@ -1035,6 +1035,100 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Contacts",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "ForEach2_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "SELECT MAIN_CRNUMBER,\n       MANAGER_NAME\n\t   FROM [tmp].[STG_BSS_DATA]\n\t   WHERE BRANCHNUMBER=0",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_stg_warehouse_raw",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach2_copy1_copy1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Contacts",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup2').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Stored procedure1_copy1_copy1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[DwhTransferEntity]",
+								"storedProcedureParameters": {
+									"IsInitialLoad": {
+										"value": "1",
+										"type": "Boolean"
+									},
+									"MainCompanyCrNumber": {
+										"value": {
+											"value": "@item().MAIN_CRNUMBER",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"NameEnglish": {
+										"value": {
+											"value": "@item().MANAGER_NAME",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_qtrsqldb",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
 			}
 		],
 		"folder": {
