@@ -144,7 +144,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "SELECT '99391'\nUNION\nSELECT '99391/1'\n\n/*SELECT JSON_VALUE(concat('[\"', REPLACE(CD.DS_SUPPLIER_CR, '/', '\",\"'), '\"]'), '$[0]') AS DS_SUPPLIER_CR FROM [dwh].[DWL_CUSTOMS_DECLARATION] AS CD\nWHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL \nEXCEPT\nSELECT DS_ENTITY_CR FROM dwh.DWL_ENTITY \nUNION  \nSELECT DS_SUPPLIER_CR FROM [dwh].[DWL_CUSTOMS_DECLARATION]\nWHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL\n*/",
+						"sqlReaderQuery": "SELECT '99391' as DS_SUPPLIER_CR\nUNION\nSELECT '99391/1'\n\n/*SELECT JSON_VALUE(concat('[\"', REPLACE(CD.DS_SUPPLIER_CR, '/', '\",\"'), '\"]'), '$[0]') AS DS_SUPPLIER_CR FROM [dwh].[DWL_CUSTOMS_DECLARATION] AS CD\nWHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL \nEXCEPT\nSELECT DS_ENTITY_CR FROM dwh.DWL_ENTITY \nUNION  \nSELECT DS_SUPPLIER_CR FROM [dwh].[DWL_CUSTOMS_DECLARATION]\nWHERE FLG_SUPPLIER_CHECK=1\nAND DS_SUPPLIER_CR IS NOT NULL\n*/",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -675,7 +675,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup2').output.value",
+						"value": "@activity('Main CR lar').output.value",
 						"type": "Expression"
 					},
 					"activities": [
@@ -879,7 +879,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup2').output.value",
+						"value": "@activity('Branch CR lar').output.value",
 						"type": "Expression"
 					},
 					"activities": [
@@ -1083,7 +1083,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup2').output.value",
+						"value": "@activity('Contacts').output.value",
 						"type": "Expression"
 					},
 					"activities": [
