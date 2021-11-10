@@ -627,6 +627,58 @@
 					},
 					"traceLevel": "Fine"
 				}
+			},
+			{
+				"name": "Lookup2",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Data flow3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": "SELECT MAIN_CRNUMBER,\n       BRANCHNUMBER,\n       COMPANY_ARB,\n       COMPANY_ENG,\n       MUNICIPALITY_NAME,\n       STREET_NUMBER,\n       STREET_NAME,\n       ZONE_NUMBER,\n       ZONE_NAME,\n       --MANAGER_QID,\n       --MANAGER_NAME,\n       POBox,\n       Telephone,\n       CRNumber,\n\t   CASE BRANCHNUMBER WHEN 0 THEN 'Main' ELSE 'Branch' END AS RecordTypeName,\n\t   'Suppliers' AS EntityTypeName\n\t   FROM [tmp].[STG_BSS_DATA]",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_stg_warehouse_raw",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach2",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup2').output.value",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"folder": {
