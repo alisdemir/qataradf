@@ -709,7 +709,7 @@
 										"type": "String"
 									},
 									"AddressBuildingNumber": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"AddressPostalCode": {
@@ -734,7 +734,7 @@
 										"type": "String"
 									},
 									"CLNumber": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"CRNumber": {
@@ -745,7 +745,7 @@
 										"type": "String"
 									},
 									"Email": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"EntityTypeName": {
@@ -756,15 +756,15 @@
 										"type": "String"
 									},
 									"Fax": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"IsInitialLoad": {
-										"value": "True",
+										"value": null,
 										"type": "Boolean"
 									},
 									"LocationURL": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"MainCompanyCrNumber": {
@@ -775,7 +775,7 @@
 										"type": "String"
 									},
 									"MobilePhoneNumber": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"NameArabic": {
@@ -793,7 +793,7 @@
 										"type": "String"
 									},
 									"PhoneExtension": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"PhoneNumber": {
@@ -811,15 +811,15 @@
 										"type": "String"
 									},
 									"WarehouseCapacity": {
-										"value": "",
+										"value": null,
 										"type": "Decimal"
 									},
 									"WarehouseTotalArea": {
-										"value": "",
+										"value": null,
 										"type": "Decimal"
 									},
 									"WebSite": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									}
 								}
@@ -913,7 +913,7 @@
 										"type": "String"
 									},
 									"AddressBuildingNumber": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"AddressPostalCode": {
@@ -938,7 +938,7 @@
 										"type": "String"
 									},
 									"CLNumber": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"CRNumber": {
@@ -949,7 +949,7 @@
 										"type": "String"
 									},
 									"Email": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"EntityTypeName": {
@@ -960,15 +960,15 @@
 										"type": "String"
 									},
 									"Fax": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"IsInitialLoad": {
-										"value": "True",
+										"value": null,
 										"type": "Boolean"
 									},
 									"LocationURL": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"MainCompanyCrNumber": {
@@ -979,7 +979,7 @@
 										"type": "String"
 									},
 									"MobilePhoneNumber": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"NameArabic": {
@@ -997,7 +997,7 @@
 										"type": "String"
 									},
 									"PhoneExtension": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									},
 									"PhoneNumber": {
@@ -1015,15 +1015,15 @@
 										"type": "String"
 									},
 									"WarehouseCapacity": {
-										"value": "",
+										"value": null,
 										"type": "Decimal"
 									},
 									"WarehouseTotalArea": {
-										"value": "",
+										"value": null,
 										"type": "Decimal"
 									},
 									"WebSite": {
-										"value": "",
+										"value": null,
 										"type": "String"
 									}
 								}
