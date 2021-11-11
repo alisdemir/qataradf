@@ -760,7 +760,7 @@
 										"type": "String"
 									},
 									"IsInitialLoad": {
-										"value": "FALSE",
+										"value": "0",
 										"type": "Boolean"
 									},
 									"LocationURL": {
@@ -964,7 +964,7 @@
 										"type": "String"
 									},
 									"IsInitialLoad": {
-										"value": "FALSE",
+										"value": "0",
 										"type": "Boolean"
 									},
 									"LocationURL": {
@@ -1147,7 +1147,7 @@
 										"type": "String"
 									},
 									"IsInitialLoad": {
-										"value": "FALSE",
+										"value": "0",
 										"type": "Boolean"
 									},
 									"LocationURL": {
