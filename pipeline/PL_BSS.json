@@ -760,10 +760,7 @@
 										"type": "String"
 									},
 									"IsInitialLoad": {
-										"value": {
-											"value": "@item().InitialLoad",
-											"type": "Expression"
-										},
+										"value": "'false'",
 										"type": "Boolean"
 									},
 									"LocationURL": {
