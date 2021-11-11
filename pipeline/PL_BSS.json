@@ -760,7 +760,10 @@
 										"type": "String"
 									},
 									"IsInitialLoad": {
-										"value": "'false'",
+										"value": {
+											"value": "@equals(1,2)",
+											"type": "Expression"
+										},
 										"type": "Boolean"
 									},
 									"LocationURL": {
