@@ -761,7 +761,7 @@
 									},
 									"IsInitialLoad": {
 										"value": {
-											"value": "@activity('Main CR lar').output.firstrow.InitialLoad",
+											"value": "@item().InitialLoad",
 											"type": "Expression"
 										},
 										"type": "Boolean"
@@ -857,7 +857,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "SELECT MAIN_CRNUMBER,\n       BRANCHNUMBER,\n       COMPANY_ARB,\n       COMPANY_ENG,\n       MUNICIPALITY_NAME,\n       STREET_NUMBER,\n       STREET_NAME,\n       ZONE_NUMBER,\n       ZONE_NAME,\n       --MANAGER_QID,\n       --MANAGER_NAME,\n       POBox,\n       Telephone,\n       CRNumber,\n\t   CASE BRANCHNUMBER WHEN 0 THEN 'Main' ELSE 'Branch' END AS RecordTypeName,\n\t   'Suppliers' AS EntityTypeName\n\t   FROM [tmp].[STG_BSS_DATA]\n\t   WHERE BRANCHNUMBER <>0",
+						"sqlReaderQuery": "SELECT MAIN_CRNUMBER,\n       BRANCHNUMBER,\n       COMPANY_ARB,\n       COMPANY_ENG,\n       MUNICIPALITY_NAME,\n       STREET_NUMBER,\n       STREET_NAME,\n       ZONE_NUMBER,\n       ZONE_NAME,\n       --MANAGER_QID,\n       --MANAGER_NAME,\n       POBox,\n       Telephone,\n       CRNumber,\n\t   CASE BRANCHNUMBER WHEN 0 THEN 'Main' ELSE 'Branch' END AS RecordTypeName,\n\t   'Suppliers' AS EntityTypeName,\n0 as InitialLoad\n\t   FROM [tmp].[STG_BSS_DATA]\n\t   WHERE BRANCHNUMBER <>0",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -968,7 +968,7 @@
 									},
 									"IsInitialLoad": {
 										"value": {
-											"value": "@activity('Main CR lar').output.firstrow.InitialLoad",
+											"value": "@item().InitialLoad",
 											"type": "Expression"
 										},
 										"type": "Boolean"
@@ -1064,7 +1064,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
-						"sqlReaderQuery": "SELECT MAIN_CRNUMBER,\n       MANAGER_NAME\n\t   FROM [tmp].[STG_BSS_DATA]\n\t   WHERE BRANCHNUMBER=0",
+						"sqlReaderQuery": "SELECT MAIN_CRNUMBER,\n       MANAGER_NAME,\n0 as InitialLoad\n\t   FROM [tmp].[STG_BSS_DATA]\n\t   WHERE BRANCHNUMBER=0",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -1154,7 +1154,7 @@
 									},
 									"IsInitialLoad": {
 										"value": {
-											"value": "@activity('Main CR lar').output.firstrow.InitialLoad",
+											"value": "@item().InitialLoad",
 											"type": "Expression"
 										},
 										"type": "Boolean"
