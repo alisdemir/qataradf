@@ -967,7 +967,10 @@
 										"type": "String"
 									},
 									"IsInitialLoad": {
-										"value": "false",
+										"value": {
+											"value": "@activity('Main CR lar').output.InitialLoad",
+											"type": "Expression"
+										},
 										"type": "Boolean"
 									},
 									"LocationURL": {
@@ -1150,7 +1153,10 @@
 										"type": "String"
 									},
 									"IsInitialLoad": {
-										"value": "false",
+										"value": {
+											"value": "@activity('Main CR lar').output.InitialLoad",
+											"type": "Expression"
+										},
 										"type": "Boolean"
 									},
 									"LocationURL": {
