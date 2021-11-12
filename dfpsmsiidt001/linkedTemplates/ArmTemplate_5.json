@@ -2777,7 +2777,7 @@
 									"type": "Lookup",
 									"dependsOn": [
 										{
-											"activity": "df_custom_xml_to_db",
+											"activity": "TruncateStgCustoms",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -2988,51 +2988,6 @@
 													"referenceName": "ls_dsqlpqtr",
 													"type": "LinkedServiceReference"
 												}
-											},
-											{
-												"name": "TruncateStgCustoms_copy1",
-												"type": "Lookup",
-												"dependsOn": [
-													{
-														"activity": "Email",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													},
-													{
-														"activity": "P_UPSERT_CUSTOMS_DECLARATION_INV",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													},
-													{
-														"activity": "P_UPSERT_CUSTOMS_ITEM_INV",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "SqlDWSource",
-														"sqlReaderQuery": "TRUNCATE TABLE [dwh].[STG_CUSTOMS_DEC];\nTRUNCATE TABLE [dwh].[STG_CUSTOMS_SUPV];\nTRUNCATE TABLE [dwh].[STG_CUSTOMS_ITEM];\nselect 1;",
-														"queryTimeout": "02:00:00",
-														"partitionOption": "None"
-													},
-													"dataset": {
-														"referenceName": "ds_stg_customs_dec",
-														"type": "DatasetReference",
-														"parameters": {}
-													}
-												}
 											}
 										],
 										"ifTrueActivities": [
@@ -3175,41 +3130,41 @@
 													"referenceName": "ls_dsqlpqtr",
 													"type": "LinkedServiceReference"
 												}
-											},
-											{
-												"name": "TruncateStgCustoms",
-												"type": "Lookup",
-												"dependsOn": [
-													{
-														"activity": "P_DWA_CUSTOMS_STOCK",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "SqlDWSource",
-														"sqlReaderQuery": "TRUNCATE TABLE [dwh].[STG_CUSTOMS_DEC];\nTRUNCATE TABLE [dwh].[STG_CUSTOMS_SUPV];\nTRUNCATE TABLE [dwh].[STG_CUSTOMS_ITEM];\nselect 1;",
-														"queryTimeout": "02:00:00",
-														"partitionOption": "None"
-													},
-													"dataset": {
-														"referenceName": "ds_stg_customs_dec",
-														"type": "DatasetReference",
-														"parameters": {}
-													}
-												}
 											}
 										]
+									}
+								},
+								{
+									"name": "TruncateStgCustoms",
+									"type": "Lookup",
+									"dependsOn": [
+										{
+											"activity": "df_custom_xml_to_db",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlDWSource",
+											"sqlReaderQuery": "TRUNCATE TABLE [dwh].[STG_CUSTOMS_DEC];\nTRUNCATE TABLE [dwh].[STG_CUSTOMS_SUPV];\nTRUNCATE TABLE [dwh].[STG_CUSTOMS_ITEM];\nselect 1;",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"dataset": {
+											"referenceName": "ds_stg_customs_dec",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
 									}
 								}
 							]
