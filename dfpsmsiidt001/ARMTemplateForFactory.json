@@ -8180,7 +8180,14 @@
 								{
 									"name": "df_custom_xml_to_db",
 									"type": "ExecuteDataFlow",
-									"dependsOn": [],
+									"dependsOn": [
+										{
+											"activity": "TruncateStgCustoms",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
 									"policy": {
 										"timeout": "1.00:00:00",
 										"retry": 0,
@@ -8239,7 +8246,7 @@
 									"type": "Lookup",
 									"dependsOn": [
 										{
-											"activity": "TruncateStgCustoms",
+											"activity": "df_custom_xml_to_db",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -8599,14 +8606,7 @@
 								{
 									"name": "TruncateStgCustoms",
 									"type": "Lookup",
-									"dependsOn": [
-										{
-											"activity": "df_custom_xml_to_db",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
+									"dependsOn": [],
 									"policy": {
 										"timeout": "7.00:00:00",
 										"retry": 0,
